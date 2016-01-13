@@ -1,12 +1,16 @@
 package net.blay09.mods.refinedrelocation2.network;
 
+import net.blay09.mods.refinedrelocation2.ModItems;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiFilteredHopper;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiSortingChest;
+import net.blay09.mods.refinedrelocation2.client.gui.GuiToolbox;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilteredHopper;
 import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
+import net.blay09.mods.refinedrelocation2.container.ContainerToolbox;
 import net.blay09.mods.refinedrelocation2.tile.TileBetterHopper;
 import net.blay09.mods.refinedrelocation2.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -16,6 +20,7 @@ public class GuiHandler implements IGuiHandler {
 
     public static final int GUI_SORTING_CHEST = 1;
     public static final int GUI_HOPPER = 2;
+    public static final int GUI_TOOLBOX = 3;
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer entityPlayer, World world, int x, int y, int z) {
@@ -30,6 +35,11 @@ public class GuiHandler implements IGuiHandler {
             case GUI_HOPPER:
                 if(tileEntity instanceof TileBetterHopper) {
                     return new ContainerFilteredHopper(entityPlayer, (TileBetterHopper) tileEntity);
+                }
+                break;
+            case GUI_TOOLBOX:
+                if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() == ModItems.toolbox) {
+                    return new ContainerToolbox(entityPlayer, ModItems.toolbox.getInventory(entityPlayer));
                 }
                 break;
         }
@@ -49,6 +59,11 @@ public class GuiHandler implements IGuiHandler {
             case GUI_HOPPER:
                 if(tileEntity instanceof TileBetterHopper) {
                     return new GuiFilteredHopper(entityPlayer, (TileBetterHopper) tileEntity);
+                }
+                break;
+            case GUI_TOOLBOX:
+                if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() == ModItems.toolbox) {
+                    return new GuiToolbox(entityPlayer, ModItems.toolbox.getInventory(entityPlayer));
                 }
                 break;
         }

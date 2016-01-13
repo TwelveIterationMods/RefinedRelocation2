@@ -12,5 +12,6 @@ item.refinedrelocation2:toolbox.name=Toolbox
 container.refinedrelocation2:sorting_chest=Sorting Chest
 container.refinedrelocation2:better_hopper=Better Hopper
 container.refinedrelocation2:filtered_hopper=Filtered Hopper
+container.refinedrelocation2:toolbox=Toolbox
 
 itemGroup.refinedrelocation2=Refined Relocation 2

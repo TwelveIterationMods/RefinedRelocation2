@@ -8,6 +8,8 @@ import net.blay09.mods.refinedrelocation2.capability.SortingInventoryDefaultImpl
 import net.blay09.mods.refinedrelocation2.capability.SortingInventoryStorage;
 import net.blay09.mods.refinedrelocation2.capability.SortingMemberStorage;
 import net.blay09.mods.refinedrelocation2.network.GuiHandler;
+import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -28,9 +30,14 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedRelocation2.instance, new GuiHandler());
+        NetworkHandler.register();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
     }
 
+
+    public void addScheduledTask(Runnable runnable) {
+        MinecraftServer.getServer().addScheduledTask(runnable);
+    }
 }
