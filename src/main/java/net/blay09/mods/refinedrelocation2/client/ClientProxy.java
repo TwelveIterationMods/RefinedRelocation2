@@ -102,7 +102,7 @@ public class ClientProxy extends CommonProxy {
                 if(now - lastScrollTime >= SCROLL_COOLDOW) {
                     ((IScrollableItem) itemStack.getItem()).onScrolled(entityPlayer, itemStack, delta);
                     lastScrollTime = now;
-                    Minecraft.getMinecraft().ingameGUI.remainingHighlightTicks = 40;
+                    showItemHighlight();
                 }
                 event.setCanceled(true);
             }
@@ -121,7 +121,7 @@ public class ClientProxy extends CommonProxy {
                     if (keyCode > 0 && keyCode == Keyboard.getEventKey()) {
                         ((IScrollableItem) itemStack.getItem()).setScrollIndex(entityPlayer, itemStack, i == 5 ? 0 : i + 1);
                         mc.gameSettings.keyBindsHotbar[i].isPressed();
-                        Minecraft.getMinecraft().ingameGUI.remainingHighlightTicks = 40;
+                        showItemHighlight();
                         return;
                     }
                 }
@@ -132,5 +132,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void addScheduledTask(Runnable runnable) {
         Minecraft.getMinecraft().addScheduledTask(runnable);
+    }
+
+    @Override
+    public void showItemHighlight() {
+        Minecraft.getMinecraft().ingameGUI.remainingHighlightTicks = 40;
     }
 }

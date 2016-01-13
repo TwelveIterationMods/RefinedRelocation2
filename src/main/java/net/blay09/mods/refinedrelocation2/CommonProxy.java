@@ -40,4 +40,6 @@ public class CommonProxy {
     public void addScheduledTask(Runnable runnable) {
         MinecraftServer.getServer().addScheduledTask(runnable);
     }
+
+    public void showItemHighlight() {}
 }
