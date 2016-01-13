@@ -18,7 +18,9 @@ def MAVEN_REPO = System.getenv("MAVEN_REPO") ?: ""
 def MAVEN_USERNAME = System.getenv("MAVEN_USERNAME") ?: ""
 def MAVEN_PASSWORD = System.getenv("MAVEN_PASSWORD") ?: ""
 
-version = "1.0." + BUILD_NUMBER
+version = "2.0." + BUILD_NUMBER
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 group= "net.blay09.mods" 
 archivesBaseName = "refinedrelocation2"
 
@@ -41,7 +43,6 @@ dependencies {
     deobfCompile "MCMultiPart:MCMultiPart:1.0.4:universal"
 }
 
-
 processResources
 {
     inputs.property "version", project.version
@@ -55,5 +56,52 @@ processResources
         
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+jar {
+    appendix "mc" + minecraft.version
+}
+
+sourceJar {
+    appendix "mc" + minecraft.version
+}
+
+task jarDev(type: Jar) {
+    from sourceSets.main.output
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    classifier "dev"
+    appendix "mc" + minecraft.version
+}
+
+artifacts {
+    archives jarDev
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: MAVEN_REPO) {
+                authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)
+            }
+
+            pom {
+                groupId = project.group
+                version = project.version
+                artifactId = project.archivesBaseName
+            }
+
+            pom.withXml {
+                asNode().dependencies.dependency.findAll {
+                    it.scope.text() == "compile"
+                }.each {
+                    if(it.optional)
+                        it.optional.value = 'true'
+                    else
+                        it.appendNode('optional', 'true');
+                }
+            }
+        }
     }
 }
