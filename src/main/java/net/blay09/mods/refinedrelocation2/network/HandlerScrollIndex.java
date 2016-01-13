@@ -15,7 +15,7 @@ public class HandlerScrollIndex implements IMessageHandler<MessageScrollIndex, I
             EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
             ItemStack itemStack = entityPlayer.getHeldItem();
             if(itemStack != null && itemStack.getItem() instanceof IScrollableItem) {
-                ((IScrollableItem) itemStack.getItem()).receiveScrollIndex(entityPlayer, itemStack, message.getIndex());
+                ((IScrollableItem) itemStack.getItem()).setScrollIndex(entityPlayer, itemStack, message.getIndex());
             }
         });
         return null;

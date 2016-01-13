@@ -5,5 +5,5 @@ import net.minecraft.item.ItemStack;
 
 public interface IScrollableItem {
     void onScrolled(EntityPlayer entityPlayer, ItemStack itemStack, int delta);
-    void receiveScrollIndex(EntityPlayer entityPlayer, ItemStack itemStack, int index);
+    void setScrollIndex(EntityPlayer entityPlayer, ItemStack itemStack, int index);
 }

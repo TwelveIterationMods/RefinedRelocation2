@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,6 +25,9 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 public class ClientProxy extends CommonProxy {
@@ -89,18 +93,38 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onMouseWheel(MouseEvent event) {
-        if(event.dwheel != 0) {
-
+        int delta = event.dwheel;
+        if(delta != 0) {
             EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
             ItemStack itemStack = entityPlayer.getHeldItem();
             if(itemStack != null && itemStack.getItem() instanceof IScrollableItem && entityPlayer.isSneaking()) {
                 long now = System.currentTimeMillis();
                 if(now - lastScrollTime >= SCROLL_COOLDOW) {
-                    ((IScrollableItem) itemStack.getItem()).onScrolled(entityPlayer, itemStack, event.dwheel);
+                    ((IScrollableItem) itemStack.getItem()).onScrolled(entityPlayer, itemStack, delta);
                     lastScrollTime = now;
                     Minecraft.getMinecraft().ingameGUI.remainingHighlightTicks = 40;
                 }
                 event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onKeyDown(InputEvent.KeyInputEvent event) {
+        if(Keyboard.getEventKeyState()) {
+            EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
+            ItemStack itemStack = entityPlayer.getHeldItem();
+            if(itemStack != null && itemStack.getItem() instanceof IScrollableItem && entityPlayer.isSneaking()) {
+                Minecraft mc = Minecraft.getMinecraft();
+                for (int i = 0; i <= 5; i++) {
+                    int keyCode = mc.gameSettings.keyBindsHotbar[i].getKeyCode();
+                    if (keyCode > 0 && keyCode == Keyboard.getEventKey()) {
+                        ((IScrollableItem) itemStack.getItem()).setScrollIndex(entityPlayer, itemStack, i == 5 ? 0 : i + 1);
+                        mc.gameSettings.keyBindsHotbar[i].isPressed();
+                        Minecraft.getMinecraft().ingameGUI.remainingHighlightTicks = 40;
+                        return;
+                    }
+                }
             }
         }
     }

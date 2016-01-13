@@ -251,13 +251,15 @@ public class ItemToolbox extends Item implements IScrollableItem {
         }
         if(selectedIndex != oldIndex) {
             tagCompound.setByte("SelectedIndex", (byte) selectedIndex);
-            NetworkHandler.instance.sendToServer(new MessageScrollIndex(selectedIndex));
             toolboxCache.refreshActiveStack(entityPlayer, itemStack);
+            if(entityPlayer.getEntityWorld().isRemote) {
+                NetworkHandler.instance.sendToServer(new MessageScrollIndex(selectedIndex));
+            }
         }
     }
 
     @Override
-    public void receiveScrollIndex(EntityPlayer entityPlayer, ItemStack itemStack, int index) {
+    public void setScrollIndex(EntityPlayer entityPlayer, ItemStack itemStack, int index) {
         NBTTagCompound tagCompound = itemStack.getTagCompound();
         if(tagCompound == null) {
             return;
@@ -265,6 +267,9 @@ public class ItemToolbox extends Item implements IScrollableItem {
         if(index >= 0 && index <= tagCompound.getTagList("ItemList", Constants.NBT.TAG_COMPOUND).tagCount()) {
             tagCompound.setByte("SelectedIndex", (byte) index);
             toolboxCache.refreshActiveStack(entityPlayer, itemStack);
+            if(entityPlayer.getEntityWorld().isRemote) {
+                NetworkHandler.instance.sendToServer(new MessageScrollIndex(index));
+            }
         }
     }
 
