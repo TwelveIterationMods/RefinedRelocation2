@@ -1,0 +1,56 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "custom": {"flip-v": true},
+    "model": "refinedrelocation2:sorting_interface.obj",
+    "textures": {
+      "particle": "refinedrelocation2:blocks/sorting_interface"
+    },
+    "uvlock": false
+  },
+  "variants": {
+    "normal": [{}],
+    "multipart": [{}],
+    "inventory": [
+      {
+        "transform": {
+          "firstperson": {
+            "translation": [0.2, 0.25, 0],
+            "scale": 1.25
+          },
+          "thirdperson": {
+            "translation": [0, 0.2, 0],
+            "scale": 0.5
+          },
+          "gui": {
+            "rotation": {"x": -90},
+            "translation": [-0.3, -0.25, 0],
+            "scale": 1.25
+          }
+        }
+      }
+    ],
+    "facing": {
+      "down": {
+      },
+      "up": {
+        "x": 180
+      },
+      "north": {
+        "x": 90,
+        "y": 180
+      },
+      "south": {
+        "x": 90
+      },
+      "west": {
+        "x": 90,
+        "y": 90
+      },
+      "east": {
+        "x": 90,
+        "y": 270
+      }
+    }
+  }
+}

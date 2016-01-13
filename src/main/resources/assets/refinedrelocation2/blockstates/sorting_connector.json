@@ -1,0 +1,151 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "all": "refinedrelocation2:blocks/sorting_connector",
+      "particle": "refinedrelocation2:blocks/sorting_connector"
+    },
+    "uvlock": false
+  },
+  "variants": {
+    "normal": [
+      {}
+    ],
+    "multipart": [
+      {}
+    ],
+    "inventory": [
+      {
+        "model": "refinedrelocation2:sorting_connector_item",
+        "transform": {
+          "firstperson": {
+            "scale": 1.75
+          },
+          "thirdperson": {
+            "translation": [
+              0,
+              0.05,
+              -0.05
+            ],
+            "scale": 1.01
+          },
+          "gui": {
+            "scale": 2
+          }
+        }
+      }
+    ],
+    "down": {
+      "false": {
+        "submodel": {
+          "down": {
+            "model": "refinedrelocation2:sorting_connector_closed",
+            "x": 180
+          }
+        }
+      },
+      "true": {
+        "submodel": {
+          "down": {
+            "model": "refinedrelocation2:sorting_connector_open",
+            "x": 180
+          }
+        }
+      }
+    },
+    "up": {
+      "false": {
+        "submodel": {
+          "up": {
+            "model": "refinedrelocation2:sorting_connector_closed"
+          }
+        }
+      },
+      "true": {
+        "submodel": {
+          "up": {
+            "model": "refinedrelocation2:sorting_connector_open"
+          }
+        }
+      }
+    },
+    "north": {
+      "false": {
+        "submodel": {
+          "north": {
+            "model": "refinedrelocation2:sorting_connector_closed",
+            "x": 90
+          }
+        }
+      },
+      "true": {
+        "submodel": {
+          "north": {
+            "model": "refinedrelocation2:sorting_connector_open",
+            "x": 90
+          }
+        }
+      }
+    },
+    "south": {
+      "false": {
+        "submodel": {
+          "south": {
+            "model": "refinedrelocation2:sorting_connector_closed",
+            "x": 90,
+            "y": 180
+          }
+        }
+      },
+      "true": {
+        "submodel": {
+          "south": {
+            "model": "refinedrelocation2:sorting_connector_open",
+            "x": 90,
+            "y": 180
+          }
+        }
+      }
+    },
+    "west": {
+      "false": {
+        "submodel": {
+          "west": {
+            "model": "refinedrelocation2:sorting_connector_closed",
+            "x": 90,
+            "y": 270
+          }
+        }
+      },
+      "true": {
+        "submodel": {
+          "west": {
+            "model": "refinedrelocation2:sorting_connector_open",
+            "x": 90,
+            "y": 270
+          }
+        }
+      }
+    },
+    "east": {
+      "false": {
+        "submodel": {
+          "east": {
+            "model": "refinedrelocation2:sorting_connector_closed",
+            "x": 90,
+            "y": 90
+          }
+        }
+      },
+      "true": {
+        "submodel": {
+          "east": {
+            "model": "refinedrelocation2:sorting_connector_open",
+            "x": 90,
+            "y": 90
+          }
+        }
+      }
+    }
+  }
+}

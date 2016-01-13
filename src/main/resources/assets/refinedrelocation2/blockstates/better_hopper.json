@@ -1,0 +1,75 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "particle": "blocks/hopper_outside",
+      "top": "blocks/hopper_top",
+      "side": "blocks/hopper_outside",
+      "inside": "blocks/hopper_inside"
+    },
+    "model": "refinedrelocation2:better_hopper"
+  },
+  "variants": {
+    "normal": [{}],
+    "multipart": [{}],
+    "inventory": [{"model": "refinedrelocation2:better_hopper"}],
+    "enabled": {
+      "true": {},
+      "false": {}
+    },
+    "facing": {
+      "up": {},
+      "down": {
+        "submodel": {
+          "down": {
+            "model": "refinedrelocation2:hopper_output"
+          }
+        }
+      },
+      "north": {
+        "submodel": {
+          "north": {
+            "model": "refinedrelocation2:hopper_output",
+            "transform": {
+              "rotation": [{"x": 90}],
+              "translation": [0, -0.125, 0]
+            }
+          }
+        }
+      },
+      "south": {
+        "submodel": {
+          "south": {
+            "model": "refinedrelocation2:hopper_output",
+            "transform": {
+              "rotation": {"x": -90},
+              "translation": [0, -0.125, 0]
+            }
+          }
+        }
+      },
+      "west": {
+        "submodel": {
+          "west": {
+            "model": "refinedrelocation2:hopper_output",
+            "transform": {
+              "rotation": [{"z": -90}],
+              "translation": [0, -0.125, 0]
+            }
+          }
+        }
+      },
+      "east": {
+        "submodel": {
+          "east": {
+            "model": "refinedrelocation2:hopper_output",
+            "transform": {
+              "rotation": [{"z": 90}],
+              "translation": [0, -0.125, 0]
+            }
+          }
+        }
+      }
+    }
+  }
+}

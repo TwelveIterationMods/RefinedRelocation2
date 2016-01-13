@@ -1,0 +1,16 @@
+[
+{
+  "modid": "refinedrelocation2",
+  "name": "Refined Relocation 2",
+  "description": "Filter, sort and relocate!",
+  "version": "@VERSION@",
+  "mcversion": "@MCVERSION@",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["BlayTheNinth", "ZeroTheShinigami"],
+  "credits": "BlayTheNinth: developer; ZeroTheShinigami: artist; Dynious: original mod",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

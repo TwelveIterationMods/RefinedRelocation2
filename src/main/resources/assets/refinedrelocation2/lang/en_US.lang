@@ -1,0 +1,14 @@
+tile.refinedrelocation2:sorting_chest.name=Sorting Chest
+tile.refinedrelocation2:better_hopper.name=Better Hopper
+tile.refinedrelocation2:filtered_hopper.name=Filtered Hopper
+tile.refinedrelocation2:block_extender.name=Block Extender
+
+item.refinedrelocation2:sorting_connector.name=Sorting Connector
+item.refinedrelocation2:sorting_interface.name=Sorting Interface
+item.refinedrelocation2:input_pane.name=Input Pane
+
+container.refinedrelocation2:sorting_chest=Sorting Chest
+container.refinedrelocation2:better_hopper=Better Hopper
+container.refinedrelocation2:filtered_hopper=Filtered Hopper
+
+itemGroup.refinedrelocation2=Refined Relocation 2
