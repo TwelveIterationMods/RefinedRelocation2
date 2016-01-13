@@ -65,12 +65,12 @@ public class BlockExtender extends BlockContainer {
 
     @Override
     public EnumWorldBlockLayer getBlockLayer() {
-        return EnumWorldBlockLayer.SOLID;
+        return EnumWorldBlockLayer.CUTOUT;
     }
 
     @Override
     public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
-        return layer == EnumWorldBlockLayer.SOLID || layer == EnumWorldBlockLayer.TRANSLUCENT;
+        return layer == EnumWorldBlockLayer.CUTOUT || layer == EnumWorldBlockLayer.TRANSLUCENT;
     }
 
     @Override

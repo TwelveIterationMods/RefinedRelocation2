@@ -4,8 +4,8 @@
     "model": "forge:multi-layer",
     "custom": {
       "flip-v": true,
-      "base": "refinedrelocation2:block_extender#solid",
-      "Solid": "refinedrelocation2:block_extender#solid",
+      "base": "refinedrelocation2:block_extender#cutout",
+      "Cutout": "refinedrelocation2:block_extender#cutout",
       "Translucent": "refinedrelocation2:block_extender#translucent"
     },
     "transform": "forge:default-block"
@@ -13,7 +13,7 @@
   "variants": {
     "normal": [{}],
     "inventory": [{}],
-    "solid": [{
+    "cutout": [{
       "model": "refinedrelocation2:block_extender_base.obj"
     }],
     "translucent": [{
