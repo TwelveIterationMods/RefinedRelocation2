@@ -11,7 +11,7 @@ import net.blay09.mods.refinedrelocation2.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation2.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation2.filter.RootFilter;
 import net.blay09.mods.refinedrelocation2.grid.SortingGrid;
-import net.blay09.mods.refinedrelocation2.item.ItemToolbox;
+import net.blay09.mods.refinedrelocation2.item.toolbox.ItemToolbox;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;

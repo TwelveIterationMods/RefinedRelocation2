@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation2;
 
 import net.blay09.mods.refinedrelocation2.item.*;
+import net.blay09.mods.refinedrelocation2.item.toolbox.ItemToolbox;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
