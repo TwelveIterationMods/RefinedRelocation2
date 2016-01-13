@@ -79,9 +79,8 @@ public class ItemToolbox extends Item {
                 entityPlayer.inventory.mainInventory[entityPlayer.inventory.currentItem] = selectedWrench;
                 blockState.getBlock().onBlockActivated(world, pos, blockState, entityPlayer, side, hitX, hitY, hitZ);
                 entityPlayer.inventory.mainInventory[entityPlayer.inventory.currentItem] = itemStack;
+                updateWrench(itemStack, selectedWrench);
             }
-            updateWrench(itemStack, selectedWrench);
-            return true;
         }
         return false;
     }
@@ -95,6 +94,32 @@ public class ItemToolbox extends Item {
             return result;
         }
         return false;
+    }
+
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
+        super.onUpdate(itemStack, world, entity, itemSlot, isSelected);
+        if(world.isRemote) {
+            if (isSelected) {
+                if (cachedHeldItem != itemStack) {
+                    cachedHeldItem = itemStack;
+                    cachedSelectedStack = getSelectedWrench(cachedHeldItem);
+                }
+            } else {
+                cachedHeldItem = null;
+                cachedSelectedStack = null;
+            }
+        }
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack itemStack) {
+        return cachedHeldItem == itemStack && cachedSelectedStack != null && cachedSelectedStack.getItem().showDurabilityBar(cachedSelectedStack);
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack itemStack) {
+        return cachedSelectedStack != null ? cachedSelectedStack.getItem().getDurabilityForDisplay(cachedSelectedStack) : super.getDurabilityForDisplay(itemStack);
     }
 
     @SideOnly(Side.CLIENT)
@@ -130,37 +155,17 @@ public class ItemToolbox extends Item {
         }
         selectedIndex--;
         NBTTagList tagList = tagCompound.getTagList("WrenchList", Constants.NBT.TAG_COMPOUND);
-        if(selectedIndex < tagList.tagCount()) {
-            NBTTagCompound itemCompound = new NBTTagCompound();
-            wrenchStack.writeToNBT(itemCompound);
-            tagList.set(selectedIndex, itemCompound);
+        if(wrenchStack.stackSize <= 0) {
+            tagList.removeTag(selectedIndex);
+        } else {
+            if (selectedIndex < tagList.tagCount()) {
+                NBTTagCompound itemCompound = new NBTTagCompound();
+                wrenchStack.writeToNBT(itemCompound);
+                tagList.set(selectedIndex, itemCompound);
+            }
         }
         tagCompound.setTag("WrenchList", tagList);
         cachedSelectedStack = wrenchStack;
-    }
-
-    @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
-        super.onUpdate(itemStack, world, entity, itemSlot, isSelected);
-        if(isSelected && world.isRemote) {
-            if(cachedHeldItem != itemStack) {
-                cachedHeldItem = itemStack;
-                cachedSelectedStack = getSelectedWrench(cachedHeldItem);
-            }
-        } else {
-            cachedHeldItem = null;
-            cachedSelectedStack = null;
-        }
-    }
-
-    @Override
-    public boolean showDurabilityBar(ItemStack itemStack) {
-        return cachedHeldItem == itemStack && cachedSelectedStack != null;
-    }
-
-    @Override
-    public double getDurabilityForDisplay(ItemStack itemStack) {
-        return cachedSelectedStack != null ? cachedSelectedStack.getItem().getDurabilityForDisplay(cachedSelectedStack) : super.getDurabilityForDisplay(itemStack);
     }
 
 }

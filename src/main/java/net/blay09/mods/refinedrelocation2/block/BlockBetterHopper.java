@@ -26,6 +26,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -61,6 +62,7 @@ public class BlockBetterHopper extends BlockCoverable {
         setCreativeTab(RefinedRelocation2.creativeTab);
         setHardness(3f);
         setResistance(8f);
+        GameRegistry.registerBlock(this);
     }
 
     @Override

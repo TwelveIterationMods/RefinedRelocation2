@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,6 +32,7 @@ public class BlockExtender extends BlockContainer {
         setCreativeTab(RefinedRelocation2.creativeTab);
         setHardness(3f);
         setResistance(8f);
+        GameRegistry.registerBlock(this);
     }
 
     @Override

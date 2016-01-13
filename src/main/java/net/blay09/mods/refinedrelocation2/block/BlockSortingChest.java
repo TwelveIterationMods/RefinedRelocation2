@@ -28,6 +28,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,6 +45,7 @@ public class BlockSortingChest extends BlockContainer {
         setHardness(2.5f);
         setStepSound(soundTypeWood);
         setBlockBounds(0.0625f, 0f, 0.0625f, 0.9375f, 0.875f, 0.9375f);
+        GameRegistry.registerBlock(this);
     }
 
     @Override

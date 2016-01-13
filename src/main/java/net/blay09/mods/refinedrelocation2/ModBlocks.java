@@ -24,19 +24,15 @@ public class ModBlocks {
 
     public static void register() {
         sortingChest = new BlockSortingChest();
-        GameRegistry.registerBlock(sortingChest);
         GameRegistry.registerTileEntity(TileSortingChest.class, sortingChest.getRegistryName());
 
         betterHopper = new BlockBetterHopper();
-        GameRegistry.registerBlock(betterHopper);
         GameRegistry.registerTileEntity(TileBetterHopper.class, betterHopper.getRegistryName());
 
         filteredHopper = new BlockFilteredHopper();
-        GameRegistry.registerBlock(filteredHopper);
         GameRegistry.registerTileEntity(TileFilteredHopper.class, filteredHopper.getRegistryName());
 
         blockExtender = new BlockExtender();
-        GameRegistry.registerBlock(blockExtender);
         GameRegistry.registerTileEntity(TileBlockExtender.class, blockExtender.getRegistryName());
 
     }

@@ -27,7 +27,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(RefinedRelocation2.instance, new GuiHandler());
     }
 
     public void postInit(FMLPostInitializationEvent event) {
