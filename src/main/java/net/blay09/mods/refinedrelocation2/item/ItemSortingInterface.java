@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation2.item;
 
 import mcmultipart.item.ItemMultiPart;
 import mcmultipart.multipart.IMultipart;
+import mcmultipart.multipart.MultipartRegistry;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.part.PartSortingInterface;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -22,6 +24,11 @@ public class ItemSortingInterface extends ItemMultiPart {
         setRegistryName("sorting_interface");
         setUnlocalizedName(getRegistryName());
         setCreativeTab(RefinedRelocation2.creativeTab);
+
+        MultipartRegistry.registerPartFactory((s, b) -> {
+            return new PartSortingInterface();
+        }, getRegistryName());
+        GameRegistry.registerItem(this);
     }
 
     @Override

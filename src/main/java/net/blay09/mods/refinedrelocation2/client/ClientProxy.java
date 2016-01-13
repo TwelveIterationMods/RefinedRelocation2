@@ -40,7 +40,6 @@ public class ClientProxy extends CommonProxy {
 
         ModBlocks.registerModels(Minecraft.getMinecraft().getRenderItem().getItemModelMesher());
         ModItems.registerModels(Minecraft.getMinecraft().getRenderItem().getItemModelMesher());
-
     }
 
     @SubscribeEvent

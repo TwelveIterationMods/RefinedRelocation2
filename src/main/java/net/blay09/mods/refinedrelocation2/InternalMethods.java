@@ -11,7 +11,9 @@ import net.blay09.mods.refinedrelocation2.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation2.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation2.filter.RootFilter;
 import net.blay09.mods.refinedrelocation2.grid.SortingGrid;
+import net.blay09.mods.refinedrelocation2.item.ItemToolbox;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -19,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class InternalMethods implements IInternalMethods {
+
     @Override
     public IFilter createRootFilter() {
         return new RootFilter();
@@ -93,4 +96,10 @@ public class InternalMethods implements IInternalMethods {
         }
         sortingGrid.removeMember(sortingMember);
     }
+
+    @Override
+    public void registerToolboxItem(Item item) {
+        ItemToolbox.toolboxRegistry.add(item);
+    }
+
 }

@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation2.api.grid.IWorldPos;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 
 public class RefinedRelocationAPI {
 
@@ -35,5 +36,9 @@ public class RefinedRelocationAPI {
 
     public static void removeFromSortingGrid(ISortingGridMember sortingMember) {
         internalMethods.removeFromSortingGrid(sortingMember);
+    }
+
+    public static void registerToolboxItem(Item item) {
+        internalMethods.registerToolboxItem(item);
     }
 }

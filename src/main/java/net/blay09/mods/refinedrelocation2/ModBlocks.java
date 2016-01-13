@@ -22,7 +22,7 @@ public class ModBlocks {
     public static BlockFilteredHopper filteredHopper;
     public static BlockExtender blockExtender;
 
-    public static void init() {
+    public static void register() {
         sortingChest = new BlockSortingChest();
         GameRegistry.registerBlock(sortingChest);
         GameRegistry.registerTileEntity(TileSortingChest.class, sortingChest.getRegistryName());
