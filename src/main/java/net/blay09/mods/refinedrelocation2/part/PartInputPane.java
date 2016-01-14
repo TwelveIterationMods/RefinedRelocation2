@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-public class PartInputPane extends CapablePart implements IHitEffectsPart, IOccludingPart, ISlottedPart {
+public class PartInputPane extends Multipart implements IHitEffectsPart, IOccludingPart, ISlottedPart {
 
     private static final AxisAlignedBB[] BOUNDING_BOX = new AxisAlignedBB[]{
             new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.25, 0.875),         // Down

@@ -29,6 +29,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,7 +37,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-public class PartSortingConnector extends CapablePart implements ISlottedPart, IOccludingPart, IHitEffectsPart, ITickable, IWorldPos {
+public class PartSortingConnector extends Multipart implements ISlottedPart, IOccludingPart, IHitEffectsPart, ITickable, IWorldPos {
 
     private static final AxisAlignedBB BOUNDING_BOX_CENTER = new AxisAlignedBB(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
     private static final AxisAlignedBB[] BOUNDING_BOX = new AxisAlignedBB[]{
@@ -272,7 +273,7 @@ public class PartSortingConnector extends CapablePart implements ISlottedPart, I
             }
         }
 
-        if(CapablePart.hasCapability(getContainer(), RefinedRelocation2.SORTING_GRID_MEMBER, side)) {
+        if(hasCapabilityInside(RefinedRelocation2.SORTING_GRID_MEMBER, side)) {
             return true;
         }
 
@@ -286,11 +287,7 @@ public class PartSortingConnector extends CapablePart implements ISlottedPart, I
 
         EnumFacing opposite = side.getOpposite();
         TileEntity tileEntity = getWorld().getTileEntity(getPos().offset(side));
-        if(tileEntity instanceof TileMultipart) {
-            return CapablePart.hasCapability((TileMultipart) tileEntity, RefinedRelocation2.SORTING_GRID_MEMBER, opposite);
-        } else {
-            return tileEntity != null && tileEntity.hasCapability(RefinedRelocation2.SORTING_GRID_MEMBER, opposite);
-        }
+        return tileEntity != null && tileEntity.hasCapability(RefinedRelocation2.SORTING_GRID_MEMBER, opposite);
     }
 
     private PartSortingConnector getConnector(World world, BlockPos blockPos, EnumFacing side) {
@@ -311,6 +308,11 @@ public class PartSortingConnector extends CapablePart implements ISlottedPart, I
             return (PartSortingConnector) part;
         }
         return null;
+    }
+
+    public boolean hasCapabilityInside(Capability capability, EnumFacing slotSide) {
+        ISlottedPart part = getContainer().getPartInSlot(PartSlot.getFaceSlot(slotSide));
+        return part != null && part instanceof ICapabilityProvider && ((ICapabilityProvider) part).hasCapability(capability, null);
     }
 
     @Override

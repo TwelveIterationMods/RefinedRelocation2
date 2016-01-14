@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-public class PartSortingInterface extends CapablePart implements IHitEffectsPart, IOccludingPart, ISlottedPart, IWorldPos {
+public class PartSortingInterface extends Multipart implements IHitEffectsPart, IOccludingPart, ISlottedPart, IWorldPos {
 
     private static final AxisAlignedBB[] BOUNDING_BOX = new AxisAlignedBB[]{
             new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.25, 0.875),         // Down
@@ -165,7 +165,7 @@ public class PartSortingInterface extends CapablePart implements IHitEffectsPart
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if(capability == RefinedRelocation2.SORTING_GRID_MEMBER) {
+        if(facing == null && capability == RefinedRelocation2.SORTING_GRID_MEMBER) {
             return (T) sortingMember;
         }
         return null;
