@@ -8,11 +8,14 @@ import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.blay09.mods.refinedrelocation2.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation2.client.render.ItemModelToolbox;
 import net.blay09.mods.refinedrelocation2.item.IScrollableItem;
+import net.blay09.mods.refinedrelocation2.network.MessageOpenToolbox;
+import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +29,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -37,11 +41,14 @@ public class ClientProxy extends CommonProxy {
 
     private static final int SCROLL_COOLDOWN = 100;
 
+    private final KeyBinding keyOpenToolbox = new KeyBinding("key.refinedrelocation2:open_toolbox", Keyboard.KEY_X, "key.category.refinedrelocation2");
     private long lastScrollTime;
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+
+        ClientRegistry.registerKeyBinding(keyOpenToolbox);
 
         OBJLoader.instance.addDomain(RefinedRelocation2.MOD_ID);
 
@@ -125,14 +132,23 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onKeyDown(InputEvent.KeyInputEvent event) {
         if(Keyboard.getEventKeyState()) {
+            int keyCode = Keyboard.getEventKey();
+            if(keyOpenToolbox.getKeyCode() > 0 && keyOpenToolbox.getKeyCode() == keyCode) {
+                NetworkHandler.instance.sendToServer(new MessageOpenToolbox());
+            }
             EntityPlayer entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
             ItemStack itemStack = entityPlayer.getHeldItem();
             if(itemStack != null && itemStack.getItem() instanceof IScrollableItem && entityPlayer.isSneaking()) {
+                if(keyCode == Keyboard.KEY_GRAVE || keyCode == Keyboard.KEY_BACKSLASH) {
+                    ((IScrollableItem) itemStack.getItem()).setScrollIndex(entityPlayer, itemStack, 0);
+                    showItemHighlight();
+                    return;
+                }
                 Minecraft mc = Minecraft.getMinecraft();
-                for (int i = 0; i <= 5; i++) {
-                    int keyCode = mc.gameSettings.keyBindsHotbar[i].getKeyCode();
-                    if (keyCode > 0 && keyCode == Keyboard.getEventKey()) {
-                        ((IScrollableItem) itemStack.getItem()).setScrollIndex(entityPlayer, itemStack, i == 5 ? 0 : i + 1);
+                for (int i = 0; i < 5; i++) {
+                    int hotbarKey = mc.gameSettings.keyBindsHotbar[i].getKeyCode();
+                    if (hotbarKey > 0 && hotbarKey == keyCode) {
+                        ((IScrollableItem) itemStack.getItem()).setScrollIndex(entityPlayer, itemStack, i + 1);
                         mc.gameSettings.keyBindsHotbar[i].isPressed();
                         showItemHighlight();
                         return;

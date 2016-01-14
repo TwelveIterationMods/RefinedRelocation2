@@ -10,6 +10,7 @@ public class NetworkHandler {
 
     public static void register() {
         instance.registerMessage(HandlerScrollIndex.class, MessageScrollIndex.class, 1, Side.SERVER);
+        instance.registerMessage(HandlerOpenToolbox.class, MessageOpenToolbox.class, 2, Side.SERVER);
     }
 
 }

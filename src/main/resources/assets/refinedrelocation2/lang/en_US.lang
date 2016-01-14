@@ -15,3 +15,6 @@ container.refinedrelocation2:filtered_hopper=Filtered Hopper
 container.refinedrelocation2:toolbox=Toolbox
 
 itemGroup.refinedrelocation2=Refined Relocation 2
+
+key.refinedrelocation2:open_toolbox=Open Toolbox
+key.category.refinedrelocation2=Refined Relocation 2

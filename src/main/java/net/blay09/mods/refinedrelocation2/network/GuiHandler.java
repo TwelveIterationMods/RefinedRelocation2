@@ -38,7 +38,9 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case GUI_TOOLBOX:
-                if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() == ModItems.toolbox) {
+                int toolboxSlot = findToolboxSlot(entityPlayer);
+                if(toolboxSlot != -1) {
+                    entityPlayer.inventory.currentItem = toolboxSlot;
                     return new ContainerToolbox(entityPlayer, ModItems.toolbox.getInventory(entityPlayer));
                 }
                 break;
@@ -62,12 +64,28 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case GUI_TOOLBOX:
-                if(entityPlayer.getHeldItem() != null && entityPlayer.getHeldItem().getItem() == ModItems.toolbox) {
+                int toolboxSlot = findToolboxSlot(entityPlayer);
+                if(toolboxSlot != -1) {
+                    entityPlayer.inventory.currentItem = toolboxSlot;
                     return new GuiToolbox(entityPlayer, ModItems.toolbox.getInventory(entityPlayer));
                 }
                 break;
         }
         return null;
+    }
+
+    private int findToolboxSlot(EntityPlayer entityPlayer) {
+        ItemStack itemStack = entityPlayer.getHeldItem();
+        if(itemStack != null && itemStack.getItem() == ModItems.toolbox) {
+            return entityPlayer.inventory.currentItem;
+        }
+        for(int i = 0; i < 9; i++) {
+            ItemStack hotbarStack = entityPlayer.inventory.mainInventory[entityPlayer.inventory.mainInventory.length - 9 + i];
+            if(hotbarStack != null && hotbarStack.getItem() == ModItems.toolbox) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }
