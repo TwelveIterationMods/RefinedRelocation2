@@ -37,10 +37,15 @@ minecraft {
 
 repositories {
     maven { url "http://maven.amadornes.com/" }
+    maven {
+        name = "JEI"
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 }
 
 dependencies {
     deobfCompile "MCMultiPart:MCMultiPart:1.0.4:universal"
+    deobfCompile "mezz.jei:jei_1.8.9:2.14.0.67"
 }
 
 processResources

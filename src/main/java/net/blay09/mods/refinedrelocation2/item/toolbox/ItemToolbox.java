@@ -15,8 +15,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,6 +35,7 @@ import java.util.Set;
 public class ItemToolbox extends Item implements IScrollableItem {
 
     public static final List<Item> toolboxRegistry = Lists.newArrayList();
+    public static final List<Item> itemBlacklist = Lists.newArrayList();
 
     public final ToolboxCache toolboxCache = new ToolboxCache();
 
@@ -44,6 +45,13 @@ public class ItemToolbox extends Item implements IScrollableItem {
         setMaxStackSize(1);
         setCreativeTab(RefinedRelocation2.creativeTab);
         GameRegistry.registerItem(this);
+
+        itemBlacklist.add(Items.writable_book);
+        itemBlacklist.add(Items.written_book);
+        itemBlacklist.add(Items.map);
+        itemBlacklist.add(Items.filled_map);
+        itemBlacklist.add(Items.fishing_rod);
+        itemBlacklist.add(Items.lead);
     }
 
     @Override
@@ -53,6 +61,24 @@ public class ItemToolbox extends Item implements IScrollableItem {
             return activeStack.getAttributeModifiers();
         }
         return super.getAttributeModifiers(itemStack);
+    }
+
+    @Override
+    public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
+        ItemStack activeStack = toolboxCache.getActiveStack(itemStack);
+        if(activeStack != null) {
+            return activeStack.getItem().getColorFromItemStack(activeStack, renderPass);
+        }
+        return super.getColorFromItemStack(itemStack, renderPass);
+    }
+
+    @Override
+    public boolean hasEffect(ItemStack itemStack) {
+        ItemStack activeStack = toolboxCache.getActiveStack(itemStack);
+        if(activeStack != null) {
+            return activeStack.hasEffect();
+        }
+        return super.hasEffect(itemStack);
     }
 
     @Override
@@ -82,33 +108,6 @@ public class ItemToolbox extends Item implements IScrollableItem {
             updateActiveStack(itemStack, activeStack);
         }
         return false;
-    }
-
-    @Override
-    public EnumAction getItemUseAction(ItemStack itemStack) {
-        ItemStack activeStack = toolboxCache.getActiveStack(itemStack);
-        if(activeStack != null) {
-            return activeStack.getItemUseAction();
-        }
-        return EnumAction.NONE;
-    }
-
-    @Override
-    public int getMaxItemUseDuration(ItemStack itemStack) {
-        ItemStack activeStack = toolboxCache.getActiveStack(itemStack);
-        if(activeStack != null) {
-            return activeStack.getMaxItemUseDuration();
-        }
-        return 0;
-    }
-
-    @Override
-    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityPlayer entityPlayer, int timeLeft) {
-        ItemStack activeStack = toolboxCache.getActiveStack(entityPlayer, itemStack);
-        if(activeStack != null) {
-            activeStack.onPlayerStoppedUsing(world, entityPlayer, timeLeft);
-            updateActiveStack(itemStack, activeStack);
-        }
     }
 
     @Override
@@ -175,14 +174,6 @@ public class ItemToolbox extends Item implements IScrollableItem {
     }
 
     @Override
-    public void onUsingTick(ItemStack itemStack, EntityPlayer entityPlayer, int count) {
-        ItemStack activeStack = toolboxCache.getActiveStack(entityPlayer, itemStack);
-        if(activeStack != null) {
-            activeStack.getItem().onUsingTick(itemStack, entityPlayer, count);
-        }
-    }
-
-    @Override
     public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer entityPlayer) {
         ItemStack itemStack = entityPlayer.getHeldItem();
         if(itemStack != null && itemStack.getItem() == this) {
@@ -209,7 +200,7 @@ public class ItemToolbox extends Item implements IScrollableItem {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         ItemStack activeStack = toolboxCache.getActiveStack(entityPlayer, itemStack);
         if(activeStack != null) {
-            activeStack.useItemRightClick(world, entityPlayer);
+            activeStack = activeStack.useItemRightClick(world, entityPlayer);
             updateActiveStack(itemStack, activeStack);
         } else {
             entityPlayer.openGui(RefinedRelocation2.instance, GuiHandler.GUI_TOOLBOX, world, entityPlayer.getPosition().getX(), entityPlayer.getPosition().getY(), entityPlayer.getPosition().getZ());
@@ -251,16 +242,6 @@ public class ItemToolbox extends Item implements IScrollableItem {
             return result;
         }
         return false;
-    }
-
-    @Override
-    public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-        ItemStack activeStack = toolboxCache.getActiveStack(entityPlayer, itemStack);
-        if(activeStack != null) {
-            activeStack.onItemUseFinish(world, entityPlayer);
-            updateActiveStack(itemStack, activeStack);
-        }
-        return itemStack;
     }
 
     @Override

@@ -9,11 +9,15 @@ import net.blay09.mods.refinedrelocation2.capability.SortingInventoryStorage;
 import net.blay09.mods.refinedrelocation2.capability.SortingMemberStorage;
 import net.blay09.mods.refinedrelocation2.network.GuiHandler;
 import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy {
@@ -26,6 +30,8 @@ public class CommonProxy {
 
         ModBlocks.register();
         ModItems.register();
+
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void init(FMLInitializationEvent event) {
@@ -36,10 +42,14 @@ public class CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
     }
 
-
     public void addScheduledTask(Runnable runnable) {
         MinecraftServer.getServer().addScheduledTask(runnable);
     }
 
     public void showItemHighlight() {}
+
+    public boolean isTESRItem(ItemStack itemStack) {
+        return false;
+    }
+
 }

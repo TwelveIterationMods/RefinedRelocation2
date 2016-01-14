@@ -22,6 +22,7 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -148,5 +149,14 @@ public class ClientProxy extends CommonProxy {
             ItemModelToolbox customModel = new ItemModelToolbox((IFlexibleBakedModel) model);
             event.modelRegistry.putObject(ItemModelToolbox.resource, customModel);
         }
+    }
+
+    @Override
+    public boolean isTESRItem(ItemStack itemStack) {
+        IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(itemStack);
+        if(model.isBuiltInRenderer()) {
+            return true;
+        }
+        return false;
     }
 }

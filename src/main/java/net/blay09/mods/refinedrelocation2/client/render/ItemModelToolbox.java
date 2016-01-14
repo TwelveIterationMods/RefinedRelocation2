@@ -35,8 +35,16 @@ public class ItemModelToolbox implements ISmartItemModel, IPerspectiveAwareModel
     public IBakedModel handleItemState(ItemStack itemStack) {
         ItemStack activeStack = ModItems.toolbox.toolboxCache.getActiveStack(itemStack);
         if(activeStack != null) {
-            currentModel = (IPerspectiveAwareModel) Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(activeStack);
-            currentModelWithToolbox = new MultiModel.Baked(resource, true, new IFlexibleBakedModel.Wrapper(baseModel, DefaultVertexFormats.ITEM), ImmutableMap.of("overlay", new IFlexibleBakedModel.Wrapper(currentModel, DefaultVertexFormats.ITEM)));
+            IBakedModel itemModel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(activeStack);
+            if(itemModel instanceof IFlexibleBakedModel) {
+                currentModel = (IFlexibleBakedModel) itemModel;
+            } else {
+                currentModel = new IFlexibleBakedModel.Wrapper(itemModel, DefaultVertexFormats.ITEM);
+            }
+            if(currentModel.isBuiltInRenderer()) {
+                return baseModel;
+            }
+            currentModelWithToolbox = new MultiModel.Baked(resource, true, baseModel, ImmutableMap.of("overlay", currentModel));
             return this;
         }
         return baseModel;

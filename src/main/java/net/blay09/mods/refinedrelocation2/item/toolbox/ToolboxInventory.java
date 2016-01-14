@@ -2,8 +2,12 @@ package net.blay09.mods.refinedrelocation2.item.toolbox;
 
 import net.blay09.mods.refinedrelocation2.ModItems;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
+import net.blay09.mods.refinedrelocation2.api.RefinedRelocationAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -75,6 +79,17 @@ public class ToolboxInventory implements IInventory {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack itemStack) {
+        if(itemStack.getItemUseAction() != EnumAction.NONE) {
+            return false;
+        }
+        for(Item item : ItemToolbox.itemBlacklist) {
+            if(itemStack.getItem() == item) {
+                return false;
+            }
+        }
+        if(RefinedRelocation2.proxy.isTESRItem(itemStack)) {
+           return false;
+        }
 //            return toolboxRegistry.contains(itemStack.getItem());
         return true;
     }
@@ -95,10 +110,13 @@ public class ToolboxInventory implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {}
+    public void openInventory(EntityPlayer entityPlayer) {}
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(EntityPlayer entityPlayer) {
+        if(!isUseableByPlayer(entityPlayer)) {
+            return;
+        }
         NBTTagList tagList = new NBTTagList();
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] != null) {
