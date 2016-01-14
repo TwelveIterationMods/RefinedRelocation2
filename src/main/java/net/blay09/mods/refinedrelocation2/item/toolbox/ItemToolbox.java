@@ -36,7 +36,7 @@ public class ItemToolbox extends Item implements IScrollableItem {
 
     public static final List<Item> toolboxRegistry = Lists.newArrayList();
 
-    private final ToolboxCache toolboxCache = new ToolboxCache();
+    public final ToolboxCache toolboxCache = new ToolboxCache();
 
     public ItemToolbox() {
         setRegistryName("toolbox");
