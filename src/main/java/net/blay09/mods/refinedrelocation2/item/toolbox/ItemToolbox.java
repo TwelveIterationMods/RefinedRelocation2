@@ -202,6 +202,7 @@ public class ItemToolbox extends Item implements IScrollableItem {
         if(activeStack != null) {
             activeStack = activeStack.useItemRightClick(world, entityPlayer);
             updateActiveStack(itemStack, activeStack);
+            toolboxCache.refreshActiveStack(entityPlayer, itemStack);
         } else {
             entityPlayer.openGui(RefinedRelocation2.instance, GuiHandler.GUI_TOOLBOX, world, entityPlayer.getPosition().getX(), entityPlayer.getPosition().getY(), entityPlayer.getPosition().getZ());
         }
@@ -274,12 +275,17 @@ public class ItemToolbox extends Item implements IScrollableItem {
         if(tagCompound == null) {
             return;
         }
-        if(index >= 0 && index <= tagCompound.getTagList("ItemList", Constants.NBT.TAG_COMPOUND).tagCount()) {
-            tagCompound.setByte("SelectedIndex", (byte) index);
-            toolboxCache.refreshActiveStack(entityPlayer, itemStack);
-            if(entityPlayer.getEntityWorld().isRemote) {
-                NetworkHandler.instance.sendToServer(new MessageScrollIndex(index));
-            }
+        int tagCount = tagCompound.getTagList("ItemList", Constants.NBT.TAG_COMPOUND).tagCount();
+        if(index < 0) {
+            index = 0;
+        }
+        if(index > tagCount) {
+            index = tagCount;
+        }
+        tagCompound.setByte("SelectedIndex", (byte) index);
+        toolboxCache.refreshActiveStack(entityPlayer, itemStack);
+        if(entityPlayer.getEntityWorld().isRemote) {
+            NetworkHandler.instance.sendToServer(new MessageScrollIndex(index));
         }
     }
 
