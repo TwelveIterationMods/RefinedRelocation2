@@ -40,6 +40,80 @@
         "x": 90,
         "y": 270
       }
+    },
+    "down": {
+      "true": {
+        "submodel": {
+          "down": {
+            "model": "refinedrelocation2:block_extender_cable.obj",
+            "custom": { "flip-v": true }
+          }
+        }
+      },
+      "false": {}
+    },
+    "up": {
+      "true": {
+        "submodel": {
+          "up": {
+            "model": "refinedrelocation2:block_extender_cable.obj",
+            "x": 180,
+            "custom": { "flip-v": true }
+          }
+        }
+      },
+      "false": {}
+    },
+    "north": {
+      "true": {
+        "submodel": {
+          "north": {
+            "model": "refinedrelocation2:block_extender_cable.obj",
+            "x": 90,
+            "y": 180,
+            "custom": { "flip-v": true }
+          }
+        }
+      },
+      "false": {}
+    },
+    "south": {
+      "true": {
+        "submodel": {
+          "south": {
+            "model": "refinedrelocation2:block_extender_cable.obj",
+            "x": 90,
+            "custom": { "flip-v": true }
+          }
+        }
+      },
+      "false": {}
+    },
+    "west": {
+      "true": {
+        "submodel": {
+          "west": {
+            "model": "refinedrelocation2:block_extender_cable.obj",
+            "x": 90,
+            "y": 90,
+            "custom": { "flip-v": true }
+          }
+        }
+      },
+      "false": {}
+    },
+    "east": {
+      "true": {
+        "submodel": {
+          "east": {
+            "model": "refinedrelocation2:block_extender_cable.obj",
+            "x": 90,
+            "y": 270,
+            "custom": { "flip-v": true }
+          }
+        }
+      },
+      "false": {}
     }
   }
 }

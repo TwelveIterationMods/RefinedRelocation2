@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 
 public class TileBetterHopper extends TileCoverable implements IInventory, ITickable {
@@ -318,4 +319,12 @@ public class TileBetterHopper extends TileCoverable implements IInventory, ITick
         this.customName = customName;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if(capability == RefinedRelocation2.HOPPER) {
+            return (T) RefinedRelocation2.HOPPER.getDefaultInstance();
+        }
+        return null;
+    }
 }

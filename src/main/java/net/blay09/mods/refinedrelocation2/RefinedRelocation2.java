@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation2;
 
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
+import net.blay09.mods.refinedrelocation2.capability.IHopper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,6 +21,13 @@ public class RefinedRelocation2 {
 
     @CapabilityInject(ISortingInventory.class)
     public static Capability<ISortingInventory> SORTING_INVENTORY = null;
+
+    /**
+     * @deprecated Switching over to Forge's hopper/item injector capability once it exists
+     */
+    @CapabilityInject(ISortingInventory.class)
+    @Deprecated
+    public static Capability<IHopper> HOPPER = null;
 
     public static final String MOD_ID = "refinedrelocation2";
 

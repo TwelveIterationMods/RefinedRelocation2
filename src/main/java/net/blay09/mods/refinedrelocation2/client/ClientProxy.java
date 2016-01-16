@@ -6,6 +6,7 @@ import net.blay09.mods.refinedrelocation2.ModItems;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.blay09.mods.refinedrelocation2.api.grid.ISortingGrid;
+import net.blay09.mods.refinedrelocation2.client.gui.GuiRefinedRelocation;
 import net.blay09.mods.refinedrelocation2.client.render.ItemModelToolbox;
 import net.blay09.mods.refinedrelocation2.item.IScrollableItem;
 import net.blay09.mods.refinedrelocation2.network.MessageOpenToolbox;
@@ -25,7 +26,6 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -61,6 +61,8 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
+        GuiRefinedRelocation.init();
+
         ModBlocks.registerModels(Minecraft.getMinecraft().getRenderItem().getItemModelMesher());
         ModItems.registerModels(Minecraft.getMinecraft().getRenderItem().getItemModelMesher());
     }
@@ -75,27 +77,29 @@ public class ClientProxy extends CommonProxy {
             if(tileEntity != null) {
                 ISortingGridMember sortingMember = tileEntity.getCapability(RefinedRelocation2.SORTING_GRID_MEMBER, event.target.sideHit);
                 if(sortingMember != null) {
-                    GlStateManager.enableBlend();
-                    GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-                    GlStateManager.color(1f, 1f, 1f, 1f);
-                    GL11.glLineWidth(2f);
-                    GlStateManager.disableTexture2D();
-                    GlStateManager.depthMask(false);
-                    double expansion = 0.002;
-                    double offsetX = event.player.lastTickPosX + (event.player.posX - event.player.lastTickPosX) * (double) event.partialTicks;
-                    double offsetY = event.player.lastTickPosY + (event.player.posY - event.player.lastTickPosY) * (double) event.partialTicks;
-                    double offsetZ = event.player.lastTickPosZ + (event.player.posZ - event.player.lastTickPosZ) * (double) event.partialTicks;
                     ISortingGrid sortingGrid = sortingMember.getSortingGrid();
-                    for(ISortingGridMember member : sortingGrid.getMembers()) {
-                        IBlockState blockState = member.getWorld().getBlockState(member.getPos());
-                        blockState.getBlock().setBlockBoundsBasedOnState(member.getWorld(), member.getPos());
-                        AxisAlignedBB aabb = blockState.getBlock().getSelectedBoundingBox(member.getWorld(), member.getPos()).expand(expansion, expansion, expansion).offset(-offsetX, -offsetY, -offsetZ);
-                        RenderGlobal.drawOutlinedBoundingBox(aabb, 255, 255, 0, 192);
+                    if(sortingGrid != null) {
+                        GlStateManager.enableBlend();
+                        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+                        GlStateManager.color(1f, 1f, 1f, 1f);
+                        GL11.glLineWidth(2f);
+                        GlStateManager.disableTexture2D();
+                        GlStateManager.depthMask(false);
+                        double expansion = 0.002;
+                        double offsetX = event.player.lastTickPosX + (event.player.posX - event.player.lastTickPosX) * (double) event.partialTicks;
+                        double offsetY = event.player.lastTickPosY + (event.player.posY - event.player.lastTickPosY) * (double) event.partialTicks;
+                        double offsetZ = event.player.lastTickPosZ + (event.player.posZ - event.player.lastTickPosZ) * (double) event.partialTicks;
+                        for (ISortingGridMember member : sortingGrid.getMembers()) {
+                            IBlockState blockState = member.getWorld().getBlockState(member.getPos());
+                            blockState.getBlock().setBlockBoundsBasedOnState(member.getWorld(), member.getPos());
+                            AxisAlignedBB aabb = blockState.getBlock().getSelectedBoundingBox(member.getWorld(), member.getPos()).expand(expansion, expansion, expansion).offset(-offsetX, -offsetY, -offsetZ);
+                            RenderGlobal.drawOutlinedBoundingBox(aabb, 255, 255, 0, 192);
+                        }
+                        GlStateManager.depthMask(true);
+                        GlStateManager.enableTexture2D();
+                        GlStateManager.disableBlend();
+                        event.setCanceled(true);
                     }
-                    GlStateManager.depthMask(true);
-                    GlStateManager.enableTexture2D();
-                    GlStateManager.disableBlend();
-                    event.setCanceled(true);
                 }
             }
         }
@@ -170,9 +174,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public boolean isTESRItem(ItemStack itemStack) {
         IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(itemStack);
-        if(model.isBuiltInRenderer()) {
-            return true;
-        }
-        return false;
+        return model.isBuiltInRenderer();
     }
 }

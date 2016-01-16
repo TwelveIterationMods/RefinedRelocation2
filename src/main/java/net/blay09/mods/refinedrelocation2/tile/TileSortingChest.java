@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.api.grid.IWorldPos;
 import net.blay09.mods.refinedrelocation2.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
+import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -149,8 +150,6 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
             }
             numPlayersUsing++;
             worldObj.addBlockEvent(pos, getBlockType(), 1, numPlayersUsing);
-            worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
-            worldObj.notifyNeighborsOfStateChange(pos.down(), getBlockType());
         }
     }
 
@@ -159,8 +158,6 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
         if (!player.isSpectator()) {
             numPlayersUsing--;
             worldObj.addBlockEvent(pos, getBlockType(), 1, numPlayersUsing);
-            worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
-            worldObj.notifyNeighborsOfStateChange(pos.down(), getBlockType());
         }
     }
 
@@ -237,12 +234,13 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
         if (!worldObj.isRemote && numPlayersUsing != 0 && (ticksSinceSync + x + y + z) % 200 == 0) {
             numPlayersUsing = 0;
             float range = 5f;
-            worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range)).stream().filter(entityPlayer -> entityPlayer.openContainer instanceof ContainerChest).forEach(entityPlayer -> {
-                IInventory inventory = ((ContainerChest) entityPlayer.openContainer).getLowerChestInventory();
-                if (inventory == this || inventory instanceof InventoryLargeChest && ((InventoryLargeChest) inventory).isPartOfLargeChest(this)) {
+            worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range)).stream().filter(entityPlayer -> entityPlayer.openContainer instanceof ContainerSortingChest).forEach(entityPlayer -> {
+                IInventory inventory = ((ContainerSortingChest) entityPlayer.openContainer).getChestInventory();
+                if (inventory == this) {
                     numPlayersUsing++;
                 }
             });
+            worldObj.addBlockEvent(pos, getBlockType(), 1, numPlayersUsing);
         }
 
         prevLidAngle = lidAngle;

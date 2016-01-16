@@ -68,4 +68,8 @@ public class ContainerSortingChest extends Container {
         super.onContainerClosed(entityPlayer);
         chestInventory.closeInventory(entityPlayer);
     }
+
+    public IInventory getChestInventory() {
+        return chestInventory;
+    }
 }

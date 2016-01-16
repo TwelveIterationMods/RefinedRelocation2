@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation2.client.gui;
 
+import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilteredHopper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,6 +21,12 @@ public class GuiFilteredHopper extends GuiContainer {
         playerInventory = entityPlayer.inventory;
         allowUserInput = false;
         ySize = 133;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        buttonList.add(new GuiButtonEditFilter(0, 0, 0));
     }
 
     @Override
