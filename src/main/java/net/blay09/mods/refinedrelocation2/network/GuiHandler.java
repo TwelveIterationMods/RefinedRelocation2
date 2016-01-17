@@ -1,13 +1,17 @@
 package net.blay09.mods.refinedrelocation2.network;
 
 import net.blay09.mods.refinedrelocation2.ModItems;
-import net.blay09.mods.refinedrelocation2.client.gui.GuiFilteredHopper;
+import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
+import net.blay09.mods.refinedrelocation2.api.capability.IRootFilterProvider;
+import net.blay09.mods.refinedrelocation2.client.gui.GuiBetterHopper;
+import net.blay09.mods.refinedrelocation2.client.gui.GuiFilter;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiSortingChest;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiToolbox;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilteredHopper;
 import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation2.container.ContainerToolbox;
 import net.blay09.mods.refinedrelocation2.tile.TileBetterHopper;
+import net.blay09.mods.refinedrelocation2.tile.TileFilteredHopper;
 import net.blay09.mods.refinedrelocation2.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,6 +25,7 @@ public class GuiHandler implements IGuiHandler {
     public static final int GUI_SORTING_CHEST = 1;
     public static final int GUI_HOPPER = 2;
     public static final int GUI_TOOLBOX = 3;
+    public static final int GUI_ROOTFILTER = 4;
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer entityPlayer, World world, int x, int y, int z) {
@@ -44,6 +49,14 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerToolbox(entityPlayer, ModItems.toolbox.getInventory(entityPlayer));
                 }
                 break;
+            case GUI_ROOTFILTER:
+                if(tileEntity != null) {
+                    IRootFilterProvider rootFilterProvider = tileEntity.getCapability(RefinedRelocation2.ROOT_FILTER_PROVIDER, null);
+                    if (rootFilterProvider != null) {
+                        return new ContainerFilteredHopper(entityPlayer, (TileBetterHopper) tileEntity);
+                    }
+                }
+                break;
         }
         return null;
     }
@@ -60,7 +73,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case GUI_HOPPER:
                 if(tileEntity instanceof TileBetterHopper) {
-                    return new GuiFilteredHopper(entityPlayer, (TileBetterHopper) tileEntity);
+                    return new GuiBetterHopper(entityPlayer, (TileBetterHopper) tileEntity, tileEntity instanceof TileFilteredHopper);
                 }
                 break;
             case GUI_TOOLBOX:
@@ -68,6 +81,14 @@ public class GuiHandler implements IGuiHandler {
                 if(toolboxSlot != -1) {
                     entityPlayer.inventory.currentItem = toolboxSlot;
                     return new GuiToolbox(entityPlayer, ModItems.toolbox.getInventory(entityPlayer));
+                }
+                break;
+            case GUI_ROOTFILTER:
+                if(tileEntity != null) {
+                    IRootFilterProvider rootFilterProvider = tileEntity.getCapability(RefinedRelocation2.ROOT_FILTER_PROVIDER, null);
+                    if (rootFilterProvider != null) {
+                        return new GuiFilter(entityPlayer);
+                    }
                 }
                 break;
         }

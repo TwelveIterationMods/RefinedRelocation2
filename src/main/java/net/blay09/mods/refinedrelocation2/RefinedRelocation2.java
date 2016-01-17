@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation2;
 
+import net.blay09.mods.refinedrelocation2.api.capability.IRootFilterProvider;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.blay09.mods.refinedrelocation2.capability.IHopper;
@@ -21,6 +22,9 @@ public class RefinedRelocation2 {
 
     @CapabilityInject(ISortingInventory.class)
     public static Capability<ISortingInventory> SORTING_INVENTORY = null;
+
+    @CapabilityInject(IRootFilterProvider.class)
+    public static Capability<IRootFilterProvider> ROOT_FILTER_PROVIDER = null;
 
     /**
      * @deprecated Switching over to Forge's hopper/item injector capability once it exists

@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation2.client.gui;
 
+import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
 import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,6 +23,12 @@ public class GuiSortingChest extends GuiContainer {
         allowUserInput = false;
         inventoryRows = chestInventory.getSizeInventory() / 9;
         ySize = 114 + inventoryRows * 18;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        buttonList.add(new GuiButtonEditFilter(0, guiLeft + xSize - 20, guiTop + 4, true));
     }
 
     @Override

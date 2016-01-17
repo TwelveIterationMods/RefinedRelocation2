@@ -281,4 +281,8 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
         return super.getCapability(capability, facing);
     }
 
+    @Override
+    public boolean canRenderBreaking() {
+        return true;
+    }
 }

@@ -1,5 +1,10 @@
 {
     "sprites": [
-        "refinedrelocation2:edit_filter_button"
+        "refinedrelocation2:filter_button",
+        "refinedrelocation2:filter_button_hover",
+        "refinedrelocation2:filter_button_disabled",
+        "refinedrelocation2:small_filter_button",
+        "refinedrelocation2:small_filter_button_hover",
+        "refinedrelocation2:small_filter_button_disabled"
     ]
 }

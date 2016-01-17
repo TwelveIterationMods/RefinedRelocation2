@@ -2,22 +2,28 @@ package net.blay09.mods.refinedrelocation2.client.gui;
 
 import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilteredHopper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiFilteredHopper extends GuiContainer {
+import java.io.IOException;
+
+public class GuiBetterHopper extends GuiContainer {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/gui/container/hopper.png");
 
     private final IInventory hopperInventory;
     private final IInventory playerInventory;
+    private final boolean isFiltered;
 
-    public GuiFilteredHopper(EntityPlayer entityPlayer, IInventory hopperInventory) {
+    public GuiBetterHopper(EntityPlayer entityPlayer, IInventory hopperInventory, boolean isFiltered) {
         super(new ContainerFilteredHopper(entityPlayer, hopperInventory));
         this.hopperInventory = hopperInventory;
+        this.isFiltered = isFiltered;
         playerInventory = entityPlayer.inventory;
         allowUserInput = false;
         ySize = 133;
@@ -26,7 +32,18 @@ public class GuiFilteredHopper extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        buttonList.add(new GuiButtonEditFilter(0, 0, 0));
+        if(isFiltered) {
+            buttonList.add(new GuiButtonEditFilter(0, guiLeft + xSize - 22, guiTop + 5, false));
+        }
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        switch (button.id) {
+            case 0:
+                Minecraft.getMinecraft().displayGuiScreen(new GuiFilter(null));
+                break;
+        }
     }
 
     @Override

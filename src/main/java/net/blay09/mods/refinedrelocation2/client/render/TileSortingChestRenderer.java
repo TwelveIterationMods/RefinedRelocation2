@@ -27,6 +27,7 @@ public class TileSortingChestRenderer extends TileEntitySpecialRenderer<TileSort
         }
 
         if (destroyStage >= 0) {
+            System.out.println(destroyStage);
             bindTexture(DESTROY_STAGES[destroyStage]);
             GlStateManager.matrixMode(GL11.GL_TEXTURE);
             GlStateManager.pushMatrix();

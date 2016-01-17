@@ -9,10 +9,22 @@ import net.minecraft.client.renderer.GlStateManager;
 public class GuiButtonEditFilter extends GuiButton {
 
     private final TextureAtlasRegion background;
+    private final TextureAtlasRegion backgroundHover;
+    private final TextureAtlasRegion backgroundDisabled;
 
-    public GuiButtonEditFilter(int id, int x, int y) {
+    public GuiButtonEditFilter(int id, int x, int y, boolean smallVersion) {
         super(id, x, y, "");
-        background = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:edit_filter_button");
+        if(smallVersion) {
+            background = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:small_filter_button");
+            backgroundHover = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:small_filter_button_hover");
+            backgroundDisabled = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:small_filter_button_disabled");
+        } else {
+            background = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:filter_button");
+            backgroundHover = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:filter_button_hover");
+            backgroundDisabled = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:filter_button_disabled");
+        }
+        width = background.getIconWidth();
+        height = background.getIconHeight();
     }
 
     @Override
@@ -21,7 +33,11 @@ public class GuiButtonEditFilter extends GuiButton {
             GlStateManager.color(1f, 1f, 1f, 1f);
             hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
             int hoverState = getHoverState(hovered);
-            background.draw(xPosition, yPosition, zLevel);
+            switch(hoverState) {
+                case 0: backgroundDisabled.draw(xPosition, yPosition, zLevel); break;
+                case 1: background.draw(xPosition, yPosition, zLevel); break;
+                case 2: backgroundHover.draw(xPosition, yPosition, zLevel); break;
+            }
         }
     }
 
