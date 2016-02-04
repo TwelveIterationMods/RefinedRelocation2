@@ -15,6 +15,7 @@ public class NetworkHandler {
         instance.registerMessage(HandlerOpenToolbox.class, MessageOpenToolbox.class, 2, Side.SERVER);
         instance.registerMessage(HandlerContainerAction.class, MessageContainerAction.class, 3, Side.SERVER);
         instance.registerMessage(HandlerContainerAction.class, MessageContainerAction.class, 4, Side.CLIENT);
+        instance.registerMessage(HandlerOpenFilter.class, MessageOpenFilter.class, 5, Side.SERVER);
     }
 
 }

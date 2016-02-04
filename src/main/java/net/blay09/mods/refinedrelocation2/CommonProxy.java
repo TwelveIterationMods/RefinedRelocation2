@@ -20,7 +20,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         CapabilityManager.INSTANCE.register(ISortingGridMember.class, new SortingMemberStorage(), SortingGridMemberDefaultImpl.class);
         CapabilityManager.INSTANCE.register(ISortingInventory.class, new SortingInventoryStorage(), SortingInventoryDefaultImpl.class);
-        CapabilityManager.INSTANCE.register(IHopper.class, new HopperStorage(), HopperDefaultImpl.class);
 
         RefinedRelocationAPI.setupAPI(new InternalMethods());
 

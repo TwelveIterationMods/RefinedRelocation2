@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -25,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class TextureAtlas extends AbstractTexture implements ITickableTextureObject {
+public class TextureAtlas extends AbstractTexture implements ITickableTextureObject, IResourceManagerReloadListener {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -175,4 +176,8 @@ public class TextureAtlas extends AbstractTexture implements ITickableTextureObj
         return new ResourceLocation(resource.getResourceDomain(), String.format("%s/%s%s", basePath, resource.getResourcePath(), ".png"));
     }
 
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager) {
+        loadSprites(resourceManager);
+    }
 }

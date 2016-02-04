@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation2.block;
 import mcmultipart.block.BlockCoverable;
 import mcmultipart.block.BlockMultipart;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
+import net.blay09.mods.refinedrelocation2.balyware.ItemUtils;
 import net.blay09.mods.refinedrelocation2.network.GuiHandler;
 import net.blay09.mods.refinedrelocation2.tile.TileBetterHopper;
 import net.minecraft.block.Block;
@@ -17,7 +18,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -67,20 +67,23 @@ public class BlockBetterHopper extends BlockCoverable {
 
     @Override
     public void setBlockBoundsBasedOnStateDefault(IBlockAccess world, BlockPos pos) {
-        IExtendedBlockState blockState = getExtendedState(world.getBlockState(pos), world, pos);
-        switch (rayTracePass) {
-            case 0:
-                setBlockBounds(0.0625f, 0f, 0.0625f, 0.9375f, 1f, 0.9375f);
-                break;
-            case 1:
-                setBlockBounds(BOUNDING_BOX[0]);
-                break;
-            case 2:
-                setBlockBounds(BOUNDING_BOX[1]);
-                break;
-            case 3:
-                setBlockBounds(BOUNDING_BOX_FACING[blockState.getValue(FACING).ordinal()]);
-                break;
+        IBlockState blockState = world.getBlockState(pos);
+        if(blockState.getBlock() == this) {
+            IExtendedBlockState extendedState = getExtendedState(blockState, world, pos);
+            switch (rayTracePass) {
+                case 0:
+                    setBlockBounds(0.0625f, 0f, 0.0625f, 0.9375f, 1f, 0.9375f);
+                    break;
+                case 1:
+                    setBlockBounds(BOUNDING_BOX[0]);
+                    break;
+                case 2:
+                    setBlockBounds(BOUNDING_BOX[1]);
+                    break;
+                case 3:
+                    setBlockBounds(BOUNDING_BOX_FACING[extendedState.getValue(FACING).ordinal()]);
+                    break;
+            }
         }
     }
 
@@ -180,13 +183,13 @@ public class BlockBetterHopper extends BlockCoverable {
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof TileBetterHopper) {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (TileBetterHopper) tileEntity);
-            worldIn.updateComparatorOutputLevel(pos, this);
+            ItemUtils.dropInventoryItems(world, pos, ((TileBetterHopper) tileEntity).getItemHandler());
+            world.updateComparatorOutputLevel(pos, this);
         }
-        super.breakBlock(worldIn, pos, state);
+        super.breakBlock(world, pos, state);
     }
 
     @Override

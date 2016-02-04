@@ -25,7 +25,7 @@ group= "net.blay09.mods"
 archivesBaseName = "refinedrelocation2"
 
 minecraft {
-    version = "1.8.9-11.15.0.1697"
+    version = "1.8.9-11.15.0.1718"
     runDir = "run"
     
     mappings = "stable_20"
@@ -44,8 +44,8 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "MCMultiPart:MCMultiPart-experimental:1.0.5_20:universal"
-    deobfCompile "mezz.jei:jei_1.8.9:2.17.0.80"
+    deobfCompile "MCMultiPart:MCMultiPart-experimental:1.0.5_29:universal"
+    deobfCompile "mezz.jei:jei_1.8.9:2.21.1.100"
 }
 
 processResources

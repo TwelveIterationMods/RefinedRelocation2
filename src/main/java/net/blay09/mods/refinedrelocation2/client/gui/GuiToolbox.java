@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation2.client.gui;
 
 import net.blay09.mods.refinedrelocation2.container.ContainerToolbox;
+import net.blay09.mods.refinedrelocation2.item.toolbox.ToolboxItemHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,10 +12,10 @@ public class GuiToolbox extends GuiContainer {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/gui/container/hopper.png");
 
-    private final IInventory toolboxInventory;
+    private final ToolboxItemHandler toolboxInventory;
     private final IInventory playerInventory;
 
-    public GuiToolbox(EntityPlayer entityPlayer, IInventory toolboxInventory) {
+    public GuiToolbox(EntityPlayer entityPlayer, ToolboxItemHandler toolboxInventory) {
         super(new ContainerToolbox(entityPlayer, toolboxInventory));
         this.toolboxInventory = toolboxInventory;
         playerInventory = entityPlayer.inventory;

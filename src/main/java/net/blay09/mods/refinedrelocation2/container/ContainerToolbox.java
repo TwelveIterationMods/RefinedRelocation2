@@ -1,22 +1,23 @@
 package net.blay09.mods.refinedrelocation2.container;
 
+import net.blay09.mods.refinedrelocation2.item.toolbox.ToolboxItemHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerToolbox extends Container {
 
-    private final IInventory toolboxInventory;
+    private final ToolboxItemHandler toolboxInventory;
 
-    public ContainerToolbox(EntityPlayer entityPlayer, IInventory toolboxInventory) {
+    public ContainerToolbox(EntityPlayer entityPlayer, ToolboxItemHandler toolboxInventory) {
         this.toolboxInventory = toolboxInventory;
-        toolboxInventory.openInventory(entityPlayer);
         int offsetY = 51;
 
-        for (int j = 0; j < toolboxInventory.getSizeInventory(); ++j) {
-            this.addSlotToContainer(new FilteredSlot(toolboxInventory, j, 44 + j * 18, 20));
+        for (int j = 0; j < toolboxInventory.getSlots(); ++j) {
+            this.addSlotToContainer(new SlotItemHandler(toolboxInventory, j, 44 + j * 18, 20));
         }
 
         for (int i = 0; i < 3; i++) {
@@ -42,11 +43,11 @@ public class ContainerToolbox extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             itemStack = slotStack.copy();
-            if (index < toolboxInventory.getSizeInventory()) {
-                if (!mergeItemStack(slotStack, toolboxInventory.getSizeInventory(), inventorySlots.size(), true)) {
+            if (index < toolboxInventory.getSlots()) {
+                if (!mergeItemStack(slotStack, toolboxInventory.getSlots(), inventorySlots.size(), true)) {
                     return null;
                 }
-            } else if (!mergeItemStack(slotStack, 0, toolboxInventory.getSizeInventory(), false)) {
+            } else if (!mergeItemStack(slotStack, 0, toolboxInventory.getSlots(), false)) {
                 return null;
             }
 

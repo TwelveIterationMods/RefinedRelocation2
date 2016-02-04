@@ -1,22 +1,24 @@
 package net.blay09.mods.refinedrelocation2.container;
 
+import net.blay09.mods.refinedrelocation2.tile.TileBetterHopper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFilteredHopper extends Container {
 
-    private final IInventory hopperInventory;
+    private final TileBetterHopper tileEntity;
 
-    public ContainerFilteredHopper(EntityPlayer entityPlayer, IInventory hopperInventory) {
-        this.hopperInventory = hopperInventory;
-        hopperInventory.openInventory(entityPlayer);
+    public ContainerFilteredHopper(EntityPlayer entityPlayer, TileBetterHopper tileEntity) {
+        this.tileEntity = tileEntity;
+        IItemHandler itemHandler = tileEntity.getItemHandler();
         int offsetY = 51;
 
-        for (int j = 0; j < hopperInventory.getSizeInventory(); ++j) {
-            this.addSlotToContainer(new FilteredSlot(hopperInventory, j, 44 + j * 18, 20));
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            this.addSlotToContainer(new SlotItemHandler(itemHandler, i, 44 + i * 18, 20));
         }
 
         for (int i = 0; i < 3; i++) {
@@ -32,21 +34,22 @@ public class ContainerFilteredHopper extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return hopperInventory.isUseableByPlayer(entityPlayer);
+        return tileEntity.isUseableByPlayer(entityPlayer);
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int index) {
+        IItemHandler itemHandler = tileEntity.getItemHandler();
         ItemStack itemStack = null;
         Slot slot = inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             itemStack = slotStack.copy();
-            if (index < hopperInventory.getSizeInventory()) {
-                if (!mergeItemStack(slotStack, hopperInventory.getSizeInventory(), inventorySlots.size(), true)) {
+            if (index < itemHandler.getSlots()) {
+                if (!mergeItemStack(slotStack, itemHandler.getSlots(), inventorySlots.size(), true)) {
                     return null;
                 }
-            } else if (!mergeItemStack(slotStack, 0, hopperInventory.getSizeInventory(), false)) {
+            } else if (!mergeItemStack(slotStack, 0, itemHandler.getSlots(), false)) {
                 return null;
             }
 
@@ -57,12 +60,6 @@ public class ContainerFilteredHopper extends Container {
             }
         }
         return itemStack;
-    }
-
-    @Override
-    public void onContainerClosed(EntityPlayer entityPlayer) {
-        super.onContainerClosed(entityPlayer);
-        hopperInventory.closeInventory(entityPlayer);
     }
 
 }

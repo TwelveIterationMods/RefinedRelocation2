@@ -356,8 +356,8 @@ public class ItemToolbox extends Item implements IScrollableItem {
         tagCompound.setTag("ItemList", tagList);
     }
 
-    public IInventory getInventory(EntityPlayer entityPlayer) {
-        return new ToolboxInventory(entityPlayer);
+    public ToolboxItemHandler createItemHandler(EntityPlayer entityPlayer) {
+        return new ToolboxItemHandler(entityPlayer.getHeldItem());
     }
 
 }

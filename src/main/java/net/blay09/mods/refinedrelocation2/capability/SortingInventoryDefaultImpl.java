@@ -2,9 +2,9 @@ package net.blay09.mods.refinedrelocation2.capability;
 
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation2.balyware.ItemUtils;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class SortingInventoryDefaultImpl extends SortingGridMemberDefaultImpl implements ISortingInventory {
 
@@ -35,7 +35,7 @@ public class SortingInventoryDefaultImpl extends SortingGridMemberDefaultImpl im
         for(int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack slotStack = inventory.getStackInSlot(i);
             if(slotStack != null) {
-                if(ItemUtils.canMergeItems(itemStack, slotStack)) {
+                if(ItemHandlerHelper.canItemStacksStack(itemStack, slotStack)) {
                     int spaceLeft = Math.min(inventory.getInventoryStackLimit(), slotStack.getMaxStackSize() - slotStack.stackSize);
                     if(spaceLeft > 0) {
                         ItemStack insertStack = itemStack.splitStack(Math.min(spaceLeft, itemStack.stackSize));

@@ -2,11 +2,17 @@ package net.blay09.mods.refinedrelocation2.client.gui;
 
 import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
 import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
+import net.blay09.mods.refinedrelocation2.network.MessageOpenFilter;
+import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation2.network.container.MessageContainerAction;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
 
 public class GuiSortingChest extends GuiContainer {
 
@@ -28,7 +34,14 @@ public class GuiSortingChest extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        buttonList.add(new GuiButtonEditFilter(0, guiLeft + xSize - 20, guiTop + 4, true));
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+        if(button.id == 0) {
+            NetworkHandler.instance.sendToServer(new MessageOpenFilter());
+        }
     }
 
     @Override
