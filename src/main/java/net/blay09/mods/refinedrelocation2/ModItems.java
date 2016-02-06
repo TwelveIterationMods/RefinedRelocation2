@@ -17,7 +17,7 @@ public class ModItems {
     public static void register() {
         sortingConnector = new ItemSortingConnector();
         sortingInterface = new ItemSortingInterface();
-//        inputPane = new ItemInputPane();
+        inputPane = new ItemInputPane();
 //        sortingUpgrade = new ItemSortingUpgrade();
         toolbox = new ItemToolbox();
     }
@@ -27,7 +27,7 @@ public class ModItems {
         sortingConnector.registerModels(mesher);
         sortingInterface.registerModels(mesher);
 //        sortingUpgrade.registerModels(mesher);
-//        inputPane.registerModels(mesher);
+        inputPane.registerModels(mesher);
         toolbox.registerModels(mesher);
     }
 

@@ -274,7 +274,7 @@ public class PartSortingConnector extends Multipart implements ISlottedPart, IOc
         }
 
         if(hasCapabilityInside(RefinedRelocation2.SORTING_GRID_MEMBER, side)) {
-            return true;
+//            return true;
         }
 
         if (!OcclusionHelper.occlusionTest(getContainer().getParts(), this, BOUNDING_BOX[side.ordinal()])) {

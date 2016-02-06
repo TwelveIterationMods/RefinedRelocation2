@@ -6,6 +6,9 @@ import mcmultipart.multipart.*;
 import mcmultipart.raytrace.PartMOP;
 import net.blay09.mods.refinedrelocation2.ModItems;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
+import net.blay09.mods.refinedrelocation2.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
+import net.blay09.mods.refinedrelocation2.api.grid.IWorldPos;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
@@ -26,7 +29,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-public class PartInputPane extends Multipart implements IHitEffectsPart, IOccludingPart, ISlottedPart {
+public class PartInputPane extends Multipart implements IHitEffectsPart, IOccludingPart, ISlottedPart, IWorldPos {
 
     private static final AxisAlignedBB[] BOUNDING_BOX = new AxisAlignedBB[]{
             new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.25, 0.875),         // Down
@@ -38,12 +41,15 @@ public class PartInputPane extends Multipart implements IHitEffectsPart, IOcclud
     };
     private static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
 
+    private ISortingGridMember sortingMember;
     private EnumFacing facing;
 
     public PartInputPane() {
+        sortingMember = RefinedRelocationAPI.createSortingMember(this);
     }
 
     public PartInputPane(EnumFacing facing) {
+        this();
         this.facing = facing;
     }
 
@@ -157,7 +163,11 @@ public class PartInputPane extends Multipart implements IHitEffectsPart, IOcclud
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if(facing == null && capability == RefinedRelocation2.SORTING_GRID_MEMBER) {
+            return (T) sortingMember;
+        }
         return null;
     }
 }

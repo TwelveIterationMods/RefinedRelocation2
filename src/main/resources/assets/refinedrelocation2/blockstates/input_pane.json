@@ -2,9 +2,9 @@
   "forge_marker": 1,
   "defaults": {
     "custom": {"flip-v": true},
-    "model": "refinedrelocation2:sorting_interface.obj",
+    "model": "refinedrelocation2:input_pane.obj",
     "textures": {
-      "particle": "refinedrelocation2:blocks/sorting_interface",
+      "particle": "refinedrelocation2:blocks/input_pane",
       "connector": "refinedrelocation2:blocks/sorting_connector"
     },
     "uvlock": false

@@ -8,4 +8,4 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd refinedrelocation2:blocks/item_panel.png
+map_Kd refinedrelocation2:blocks/input_pane
