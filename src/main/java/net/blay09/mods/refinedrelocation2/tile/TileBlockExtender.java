@@ -18,7 +18,7 @@ public class TileBlockExtender extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if(firstTick && blockType == ModBlocks.blockExtender) {
+        if(firstTick) {
             facing = worldObj.getBlockState(getPos()).getValue(BlockExtender.FACING);
             connectedTileEntity = worldObj.getTileEntity(getPos().offset(facing));
             firstTick = false;
@@ -56,7 +56,7 @@ public class TileBlockExtender extends TileEntity implements ITickable {
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if(connectedTileEntity != null) {
             if (capability == RefinedRelocation2.ITEM_HANDLER) {
-                return connectedTileEntity.getCapability(capability, facing);
+                return connectedTileEntity.getCapability(capability, getIOSide(this.facing));
             }
         }
         return super.getCapability(capability, facing);
