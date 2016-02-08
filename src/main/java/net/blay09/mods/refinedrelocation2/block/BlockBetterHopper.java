@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -199,7 +198,7 @@ public class BlockBetterHopper extends BlockCoverable {
 
     @Override
     public int getComparatorInputOverride(World world, BlockPos pos) {
-        return Container.calcRedstone(world.getTileEntity(pos));
+        return ItemUtils.calcRedstoneFromItemHandler(world.getTileEntity(pos));
     }
 
     private void updateState(World world, BlockPos pos, IBlockState state) {

@@ -1,160 +1,96 @@
 package net.blay09.mods.refinedrelocation2.tile;
 
+import com.google.common.collect.Sets;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.api.grid.IWorldPos;
 import net.blay09.mods.refinedrelocation2.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntityLockable;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class TileSortingChest extends TileEntityLockable implements ITickable, IInventory, IWorldPos {
+import java.util.Iterator;
+import java.util.Set;
 
-    private ISortingInventory sortingInventory;
+public class TileSortingChest extends TileEntity implements ITickable, IWorldPos {
 
-    private ItemStack[] inventory = new ItemStack[27];
+    private final ItemStackHandler itemHandler;
+    private final ISortingInventory sortingInventory;
+    private final Set<EntityPlayer> chestPlayers = Sets.newHashSet();
+
     public float lidAngle;
     public float prevLidAngle;
-    private int numPlayersUsing;
     private int ticksSinceSync;
+    private int numPlayersUsing;
+
     private String customName;
 
     public TileSortingChest() {
-        sortingInventory = RefinedRelocationAPI.createSortingInventory(this, this, true);
+        itemHandler = new ItemStackHandler(27);
+        sortingInventory = RefinedRelocationAPI.createSortingInventory(this, itemHandler, true);
     }
 
-    @Override
-    public int getSizeInventory() {
-        return 27;
+    public ItemStackHandler getItemHandler() {
+        return itemHandler;
     }
 
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return inventory[index];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        if (inventory[index] != null) {
-            if (inventory[index].stackSize <= count) {
-                ItemStack itemStack = inventory[index];
-                inventory[index] = null;
-                markDirty();
-                return itemStack;
-            } else {
-                ItemStack itemStack = inventory[index].splitStack(count);
-                if (inventory[index].stackSize == 0) {
-                    inventory[index] = null;
-                }
-                markDirty();
-                return itemStack;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack itemStack = inventory[index];
-        inventory[index] = null;
-        return itemStack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack itemStack) {
-        inventory[index] = itemStack;
-        if (itemStack != null && itemStack.stackSize > getInventoryStackLimit()) {
-            itemStack.stackSize = getInventoryStackLimit();
-        }
-        markDirty();
-        sortingInventory.slotChanged(index);
-    }
-
-    @Override
     public String getName() {
         return hasCustomName() ? customName : "container." + RefinedRelocation2.MOD_ID + ":sorting_chest";
+    }
+
+    public IChatComponent getDisplayName() {
+        return hasCustomName() ? new ChatComponentText(getName()) : new ChatComponentTranslation(getName());
     }
 
     public void setCustomName(String customName) {
         this.customName = customName;
     }
 
-    @Override
     public boolean hasCustomName() {
         return customName != null && customName.length() > 0;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        NBTTagList tagList = compound.getTagList("Items", Constants.NBT.TAG_COMPOUND);
-        inventory = new ItemStack[getSizeInventory()];
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
-            int slot = tagCompound.getByte("Slot");
-            if (slot >= 0 && slot < inventory.length) {
-                inventory[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
-            }
-        }
-        if (compound.hasKey("CustomName", Constants.NBT.TAG_STRING)) {
-            customName = compound.getString("CustomName");
-        }
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        RefinedRelocation2.ITEM_HANDLER.getStorage().readNBT(RefinedRelocation2.ITEM_HANDLER, itemHandler, null, tagCompound.getTagList("ItemHandler", Constants.NBT.TAG_COMPOUND));
+        customName = tagCompound.getString("CustomName");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        NBTTagList tagList = new NBTTagList();
-        for (int i = 0; i < inventory.length; i++) {
-            if (inventory[i] != null) {
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                tagCompound.setByte("Slot", (byte) i);
-                inventory[i].writeToNBT(tagCompound);
-                tagList.appendTag(tagCompound);
-            }
+    public void writeToNBT(NBTTagCompound tagCompound) {
+        super.writeToNBT(tagCompound);
+        NBTBase itemHandlerNBT = RefinedRelocation2.ITEM_HANDLER.getStorage().writeNBT(RefinedRelocation2.ITEM_HANDLER, itemHandler, null);
+        if(itemHandlerNBT != null) {
+            tagCompound.setTag("ItemHandler", itemHandlerNBT);
         }
-        compound.setTag("Items", tagList);
         if (hasCustomName()) {
-            compound.setString("CustomName", customName);
+            tagCompound.setString("CustomName", customName);
         }
     }
 
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
+    public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
+        return worldObj.getTileEntity(pos) == this && entityPlayer.getDistanceSq(pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d) <= 64d;
     }
 
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return worldObj.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d) <= 64d;
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        if (!player.isSpectator()) {
-            if (numPlayersUsing < 0) {
-                numPlayersUsing = 0;
-            }
-            numPlayersUsing++;
+    public void openInventory(EntityPlayer entityPlayer) {
+        if (!entityPlayer.isSpectator()) {
+            chestPlayers.add(entityPlayer);
+            numPlayersUsing = chestPlayers.size();
             worldObj.addBlockEvent(pos, getBlockType(), 1, numPlayersUsing);
         }
     }
 
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        if (!player.isSpectator()) {
-            numPlayersUsing--;
+    public void closeInventory(EntityPlayer entityPlayer) {
+        if (!entityPlayer.isSpectator()) {
+            chestPlayers.remove(entityPlayer);
+            numPlayersUsing = chestPlayers.size();
             worldObj.addBlockEvent(pos, getBlockType(), 1, numPlayersUsing);
         }
     }
@@ -169,45 +105,9 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        for (int i = 0; i < inventory.length; i++) {
-            inventory[i] = null;
-        }
-    }
-
-    @Override
     public void invalidate() {
         super.invalidate();
         sortingInventory.invalidate();
-    }
-
-    @Override
-    public String getGuiID() {
-        return null;
-    }
-
-    @Override
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer entityPlayer) {
-        return null;
     }
 
     @Override
@@ -230,14 +130,14 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
         int y = pos.getY();
         int z = pos.getZ();
         if (!worldObj.isRemote && numPlayersUsing != 0 && (ticksSinceSync + x + y + z) % 200 == 0) {
-            numPlayersUsing = 0;
-            float range = 5f;
-            worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range)).stream().filter(entityPlayer -> entityPlayer.openContainer instanceof ContainerSortingChest).forEach(entityPlayer -> {
-                IInventory inventory = ((ContainerSortingChest) entityPlayer.openContainer).getChestInventory();
-                if (inventory == this) {
-                    numPlayersUsing++;
+            Iterator<EntityPlayer> it = chestPlayers.iterator();
+            while(it.hasNext()) {
+                EntityPlayer entityPlayer = it.next();
+                if(entityPlayer.isDead || ((ContainerSortingChest) entityPlayer.openContainer).getTileEntity() != this) {
+                    it.remove();
                 }
-            });
+            }
+            numPlayersUsing = chestPlayers.size();
             worldObj.addBlockEvent(pos, getBlockType(), 1, numPlayersUsing);
         }
 
@@ -275,6 +175,9 @@ public class TileSortingChest extends TileEntityLockable implements ITickable, I
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if(capability == RefinedRelocation2.SORTING_INVENTORY || capability == RefinedRelocation2.SORTING_GRID_MEMBER) {
             return (T) sortingInventory;
+        }
+        if(capability == RefinedRelocation2.ITEM_HANDLER) {
+            return (T) itemHandler;
         }
         return super.getCapability(capability, facing);
     }

@@ -9,9 +9,15 @@ import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation2.api.grid.ISortingGrid;
+import net.blay09.mods.refinedrelocation2.api.gui.IRootFilterGui;
+import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
 import net.blay09.mods.refinedrelocation2.filter.RootFilter;
 import net.blay09.mods.refinedrelocation2.grid.SortingGrid;
 import net.blay09.mods.refinedrelocation2.item.toolbox.ItemToolbox;
+import net.blay09.mods.refinedrelocation2.network.MessageOpenFilter;
+import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +25,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
 
 public class InternalMethods implements IInternalMethods {
 
@@ -35,14 +44,26 @@ public class InternalMethods implements IInternalMethods {
     }
 
     @Override
-    public ISortingInventory createSortingInventory(IWorldPos worldPos, IInventory inventory, boolean useRootFilter) {
+    public ISortingInventory createSortingInventory(IWorldPos worldPos, IItemHandler itemHandler, boolean useRootFilter) {
         ISortingInventory sortingInventory = RefinedRelocation2.SORTING_INVENTORY.getDefaultInstance();
         sortingInventory.setWorldPos(worldPos);
-        sortingInventory.setInventory(inventory);
+        sortingInventory.setItemHandler(itemHandler);
         if(useRootFilter) {
             sortingInventory.setFilter(createRootFilter());
         }
         return sortingInventory;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiButton createOpenFilterButton(GuiContainer guiContainer) {
+        return new GuiButtonEditFilter(0, guiContainer.guiLeft + guiContainer.xSize - 20, guiContainer.guiTop + 4, true);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void openRootFilterGui(BlockPos blockPos) {
+        NetworkHandler.instance.sendToServer(new MessageOpenFilter(blockPos));
     }
 
     @Override

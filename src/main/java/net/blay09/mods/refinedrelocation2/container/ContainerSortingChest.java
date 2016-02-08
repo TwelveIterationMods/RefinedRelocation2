@@ -1,26 +1,30 @@
 package net.blay09.mods.refinedrelocation2.container;
 
+import net.blay09.mods.refinedrelocation2.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerSortingChest extends Container {
 
     private final int numRows;
-    private final IInventory chestInventory;
+    private final TileSortingChest tileEntity;
 
-    public ContainerSortingChest(EntityPlayer entityPlayer, IInventory chestInventory) {
-        this.chestInventory = chestInventory;
-        this.numRows = chestInventory.getSizeInventory() / 9;
+    public ContainerSortingChest(EntityPlayer entityPlayer, TileSortingChest tileEntity) {
+        this.tileEntity = tileEntity;
+        IItemHandler itemHandler = tileEntity.getItemHandler();
+        this.numRows = itemHandler.getSlots() / 9;
         int offsetY = (numRows - 4) * 18;
 
-        chestInventory.openInventory(entityPlayer);
+        tileEntity.openInventory(entityPlayer);
 
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < 9; j++) {
-                addSlotToContainer(new Slot(chestInventory, j + i * 9, 8 + j * 18, 18 + i * 18));
+                addSlotToContainer(new SlotItemHandler(itemHandler, j + i * 9, 8 + j * 18, 18 + i * 18));
             }
         }
 
@@ -37,7 +41,7 @@ public class ContainerSortingChest extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return chestInventory.isUseableByPlayer(entityPlayer);
+        return tileEntity.isUseableByPlayer(entityPlayer);
     }
 
     @Override
@@ -66,10 +70,10 @@ public class ContainerSortingChest extends Container {
     @Override
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
-        chestInventory.closeInventory(entityPlayer);
+        tileEntity.closeInventory(entityPlayer);
     }
 
-    public IInventory getChestInventory() {
-        return chestInventory;
+    public TileSortingChest getTileEntity() {
+        return tileEntity;
     }
 }

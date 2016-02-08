@@ -4,13 +4,14 @@ import net.blay09.mods.refinedrelocation2.CommonProxy;
 import net.blay09.mods.refinedrelocation2.ModBlocks;
 import net.blay09.mods.refinedrelocation2.ModItems;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
+import net.blay09.mods.refinedrelocation2.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.blay09.mods.refinedrelocation2.api.grid.ISortingGrid;
+import net.blay09.mods.refinedrelocation2.api.gui.IRootFilterGui;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiRefinedRelocation;
 import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
 import net.blay09.mods.refinedrelocation2.client.render.ItemModelToolbox;
 import net.blay09.mods.refinedrelocation2.item.IScrollableItem;
-import net.blay09.mods.refinedrelocation2.network.MessageOpenFilter;
 import net.blay09.mods.refinedrelocation2.network.MessageOpenToolbox;
 import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +22,6 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -33,7 +33,6 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -181,14 +180,8 @@ public class ClientProxy extends CommonProxy {
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
         if(event.gui instanceof GuiContainer) {
             GuiContainer guiContainer = (GuiContainer) event.gui;
-            for(Slot slot : guiContainer.inventorySlots.inventorySlots) {
-                if(slot.inventory instanceof TileEntity) {
-                    TileEntity tileEntity = (TileEntity) slot.inventory;
-                    if(tileEntity.hasCapability(RefinedRelocation2.SORTING_INVENTORY, null)) {
-                        event.buttonList.add(new GuiButtonEditFilter(0, guiContainer.guiLeft + guiContainer.xSize - 20, guiContainer.guiTop + 4, true));
-                        return;
-                    }
-                }
+            if(guiContainer instanceof IRootFilterGui && ((IRootFilterGui) guiContainer).hasFilterButton()) {
+                event.buttonList.add(RefinedRelocationAPI.createOpenFilterButton(guiContainer));
             }
         }
     }
@@ -198,14 +191,8 @@ public class ClientProxy extends CommonProxy {
         if(event.button instanceof GuiButtonEditFilter) {
             if (event.gui instanceof GuiContainer) {
                 GuiContainer guiContainer = (GuiContainer) event.gui;
-                for (Slot slot : guiContainer.inventorySlots.inventorySlots) {
-                    if (slot.inventory instanceof TileEntity) {
-                        TileEntity tileEntity = (TileEntity) slot.inventory;
-                        if (tileEntity.hasCapability(RefinedRelocation2.SORTING_INVENTORY, null)) {
-                            NetworkHandler.instance.sendToServer(new MessageOpenFilter(tileEntity.getPos()));
-                            return;
-                        }
-                    }
+                if(guiContainer instanceof IRootFilterGui && ((IRootFilterGui) guiContainer).hasFilterButton()) {
+                    RefinedRelocationAPI.openRootFilterGui(((IRootFilterGui) guiContainer).getBlockPos());
                 }
             }
             event.button.playPressSound(Minecraft.getMinecraft().getSoundHandler());

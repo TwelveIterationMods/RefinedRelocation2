@@ -72,7 +72,7 @@ public class ItemSortingUpgrade extends Item {
         world.setBlockState(pos, newState);
         TileSortingChest tileSortingChest = (TileSortingChest) world.getTileEntity(pos);
         for(int i = 0; i < inventory.length; i++) {
-            tileSortingChest.setInventorySlotContents(i, inventory[i]);
+            tileSortingChest.getItemHandler().setStackInSlot(i, inventory[i]);
         }
         return true;
     }

@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation2.Compatibility;
 import net.blay09.mods.refinedrelocation2.ModBlocks;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.block.BlockExtender;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -19,9 +20,12 @@ public class TileBlockExtender extends TileEntity implements ITickable {
     @Override
     public void update() {
         if(firstTick) {
-            facing = worldObj.getBlockState(getPos()).getValue(BlockExtender.FACING);
-            connectedTileEntity = worldObj.getTileEntity(getPos().offset(facing));
-            firstTick = false;
+            IBlockState blockState = worldObj.getBlockState(pos);
+            if(blockState.getBlock() == ModBlocks.blockExtender) {
+                facing = blockState.getValue(BlockExtender.FACING);
+                connectedTileEntity = worldObj.getTileEntity(pos.offset(facing));
+                firstTick = false;
+            }
         }
     }
 

@@ -1,33 +1,34 @@
 package net.blay09.mods.refinedrelocation2.client.gui;
 
-import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonEditFilter;
+import net.blay09.mods.refinedrelocation2.api.gui.IRootFilterGui;
 import net.blay09.mods.refinedrelocation2.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation2.network.MessageOpenFilter;
 import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
-import net.blay09.mods.refinedrelocation2.network.container.MessageContainerAction;
+import net.blay09.mods.refinedrelocation2.tile.TileSortingChest;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 
-public class GuiSortingChest extends GuiContainer {
+public class GuiSortingChest extends GuiContainer implements IRootFilterGui {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/gui/container/generic_54.png");
 
-    private final IInventory chestInventory;
+    private final TileSortingChest tileEntity;
     private final IInventory playerInventory;
     private int inventoryRows;
 
-    public GuiSortingChest(EntityPlayer entityPlayer, IInventory chestInventory) {
-        super(new ContainerSortingChest(entityPlayer, chestInventory));
-        this.chestInventory = chestInventory;
+    public GuiSortingChest(EntityPlayer entityPlayer, TileSortingChest tileEntity) {
+        super(new ContainerSortingChest(entityPlayer, tileEntity));
+        this.tileEntity = tileEntity;
         playerInventory = entityPlayer.inventory;
         allowUserInput = false;
-        inventoryRows = chestInventory.getSizeInventory() / 9;
+        inventoryRows = tileEntity.getItemHandler().getSlots() / 9;
         ySize = 114 + inventoryRows * 18;
     }
 
@@ -56,8 +57,12 @@ public class GuiSortingChest extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        fontRendererObj.drawString(chestInventory.getDisplayName().getUnformattedText(), 8, 6, 4210752);
+        fontRendererObj.drawString(tileEntity.getDisplayName().getUnformattedText(), 8, 6, 4210752);
         fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
     }
 
+    @Override
+    public BlockPos getBlockPos() {
+        return tileEntity.getPos();
+    }
 }

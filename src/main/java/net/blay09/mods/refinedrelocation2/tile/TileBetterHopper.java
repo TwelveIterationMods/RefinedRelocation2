@@ -20,7 +20,7 @@ public class TileBetterHopper extends TileCoverable implements ITickable {
 
     protected String customName;
     private int cooldown;
-    private ItemStackHandler itemHandler;
+    protected ItemStackHandler itemHandler;
 
     public TileBetterHopper() {
         itemHandler = createItemHandler();

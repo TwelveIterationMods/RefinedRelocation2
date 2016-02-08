@@ -1,14 +1,17 @@
 package net.blay09.mods.refinedrelocation2.client.gui;
 
+import net.blay09.mods.refinedrelocation2.api.gui.IRootFilterGui;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilteredHopper;
 import net.blay09.mods.refinedrelocation2.tile.TileBetterHopper;
+import net.blay09.mods.refinedrelocation2.tile.TileFilteredHopper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiBetterHopper extends GuiContainer {
+public class GuiBetterHopper extends GuiContainer implements IRootFilterGui {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/gui/container/hopper.png");
 
@@ -38,4 +41,13 @@ public class GuiBetterHopper extends GuiContainer {
         fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
     }
 
+    @Override
+    public boolean hasFilterButton() {
+        return tileEntity instanceof TileFilteredHopper;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return tileEntity.getPos();
+    }
 }

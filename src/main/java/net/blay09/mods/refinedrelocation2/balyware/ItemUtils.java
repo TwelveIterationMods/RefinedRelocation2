@@ -1,9 +1,12 @@
 package net.blay09.mods.refinedrelocation2.balyware;
 
+import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -21,7 +24,7 @@ public class ItemUtils {
 
         int firstEmptySlot = -1;
         for (int i = 0; i < dest.getSlots(); i++) {
-            if(dest.getStackInSlot(i) == null) {
+            if (dest.getStackInSlot(i) == null) {
                 firstEmptySlot = i;
             } else {
                 itemStack = dest.insertItem(i, itemStack, simulate);
@@ -30,9 +33,9 @@ public class ItemUtils {
                 }
             }
         }
-        if(firstEmptySlot != -1) {
+        if (firstEmptySlot != -1) {
             itemStack = dest.insertItem(firstEmptySlot, itemStack, simulate);
-            if(itemStack == null || itemStack.stackSize <= 0) {
+            if (itemStack == null || itemStack.stackSize <= 0) {
                 return null;
             }
         }
@@ -69,4 +72,21 @@ public class ItemUtils {
         }
     }
 
+    public static int calcRedstoneFromItemHandler(TileEntity tileEntity) {
+        IItemHandler itemHandler = tileEntity.getCapability(RefinedRelocation2.ITEM_HANDLER, null);
+        if (itemHandler == null) {
+            return 0;
+        }
+        int stackCount = 0;
+        float usedCapacity = 0f;
+        for (int j = 0; j < itemHandler.getSlots(); ++j) {
+            ItemStack itemStack = itemHandler.getStackInSlot(j);
+            if (itemStack != null) {
+                usedCapacity += (float) itemStack.stackSize / (float) Math.min(64, itemStack.getMaxStackSize());
+                stackCount++;
+            }
+        }
+        usedCapacity = usedCapacity / (float) itemHandler.getSlots();
+        return MathHelper.floor_float(usedCapacity * 14.0F) + (stackCount > 0 ? 1 : 0);
+    }
 }
