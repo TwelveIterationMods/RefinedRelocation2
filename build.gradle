@@ -44,6 +44,7 @@ repositories {
 }
 
 dependencies {
+    deobfCompile "cpw.mods:ironchest:1.8.9-6.0.125.770"
     deobfCompile "MCMultiPart:MCMultiPart-experimental:1.0.6_35:universal"
     deobfCompile "mezz.jei:jei_1.8.9:2.21.1.100"
 }

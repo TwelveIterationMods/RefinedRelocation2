@@ -2,15 +2,19 @@ package net.blay09.mods.refinedrelocation2.client.render;
 
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.tile.TileSortingChest;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 
 public class TileSortingChestRenderer extends TileEntitySpecialRenderer<TileSortingChest> {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefinedRelocation2.MOD_ID, "textures/entity/sorting_chest.png");
+    private static final ResourceLocation texture = new ResourceLocation("textures/entity/chest/normal.png");
+    private static final ResourceLocation textureOverlay = new ResourceLocation(RefinedRelocation2.MOD_ID, "textures/entity/sorting_chest_overlay.png");
 
     private ModelChest model = new ModelChest();
 
@@ -27,7 +31,6 @@ public class TileSortingChestRenderer extends TileEntitySpecialRenderer<TileSort
         }
 
         if (destroyStage >= 0) {
-            System.out.println(destroyStage);
             bindTexture(DESTROY_STAGES[destroyStage]);
             GlStateManager.matrixMode(GL11.GL_TEXTURE);
             GlStateManager.pushMatrix();
@@ -76,6 +79,13 @@ public class TileSortingChestRenderer extends TileEntitySpecialRenderer<TileSort
         lidAngle = 1f - lidAngle * lidAngle * lidAngle;
         model.chestLid.rotateAngleX = -(lidAngle * (float) Math.PI / 2f);
         model.renderAll();
+        if(destroyStage == -1) {
+            GlStateManager.translate(0, -0.01f, 0);
+            bindTexture(textureOverlay);
+            GlStateManager.enableBlend();
+            model.renderAll();
+            GlStateManager.disableBlend();
+        }
         GlStateManager.disableRescaleNormal();
         GlStateManager.popMatrix();
         GlStateManager.color(1f, 1f, 1f, 1f);
