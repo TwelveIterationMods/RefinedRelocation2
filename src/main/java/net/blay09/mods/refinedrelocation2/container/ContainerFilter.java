@@ -6,7 +6,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerFilter extends Container {
+public class ContainerFilter extends Container implements IPriorityHandler {
+
+    private int priority;
 
     public ContainerFilter(EntityPlayer entityPlayer, ISortingInventory sortingInventory) {
         addSlotToContainer(new Slot(entityPlayer.inventory, 0, 8, 29)); // this should not be entityPlayer.inventory
@@ -51,4 +53,15 @@ public class ContainerFilter extends Container {
         }
         return itemStack;
     }
+
+    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    @Override
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
 }

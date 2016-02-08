@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 public class TileSortingChestRenderer extends TileEntitySpecialRenderer<TileSortingChest> {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/entity/chest/normal.png");
-    private static final ResourceLocation textureOverlay = new ResourceLocation(RefinedRelocation2.MOD_ID, "textures/entity/sorting_chest_overlay.png");
+    private static final ResourceLocation textureOverlay = new ResourceLocation(RefinedRelocation2.MOD_ID, "textures/entity/sorting_overlay_wood.png");
 
     private ModelChest model = new ModelChest();
 

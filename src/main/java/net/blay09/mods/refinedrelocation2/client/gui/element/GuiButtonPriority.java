@@ -1,19 +1,25 @@
 package net.blay09.mods.refinedrelocation2.client.gui.element;
 
+import net.blay09.mods.refinedrelocation2.api.grid.Priority;
 import net.blay09.mods.refinedrelocation2.balyware.TextureAtlasRegion;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiRefinedRelocation;
+import net.blay09.mods.refinedrelocation2.container.IPriorityHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class GuiButtonPriority extends GuiButton {
+public class GuiButtonPriority extends GuiButton implements IButtonHandler {
 
     private final TextureAtlasRegion background;
     private final TextureAtlasRegion backgroundHover;
     private final TextureAtlasRegion backgroundDisabled;
 
-    public GuiButtonPriority(int id, int x, int y) {
+    private final IPriorityHandler handler;
+    private int lastPriority;
+
+    public GuiButtonPriority(int id, int x, int y, IPriorityHandler handler) {
         super(id, x, y, "0");
+        this.handler = handler;
         background = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:small_button");
         backgroundHover = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:small_button_hover");
         backgroundDisabled = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:small_button_disabled");
@@ -24,6 +30,10 @@ public class GuiButtonPriority extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (visible) {
+            if(handler.getPriority() != lastPriority) {
+                displayString = Priority.fromValue(handler.getPriority()).getButtonString();
+                lastPriority = handler.getPriority();
+            }
             GlStateManager.color(1f, 1f, 1f, 1f);
             hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
             int hoverState = getHoverState(hovered);
@@ -47,6 +57,15 @@ public class GuiButtonPriority extends GuiButton {
                 color = 16777120;
             }
             drawCenteredString(mc.fontRendererObj, displayString, xPosition + width / 2, yPosition + (height - 8) / 2, color);
+        }
+    }
+
+    @Override
+    public void handleClick(int mouseX, int mouseY, int mouseButton) {
+        if(mouseButton == 0) {
+            handler.setPriority(handler.getPriority() + 1);
+        } else if(mouseButton == 1) {
+            handler.setPriority(handler.getPriority() - 1);
         }
     }
 

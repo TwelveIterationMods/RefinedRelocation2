@@ -11,9 +11,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -143,21 +141,11 @@ public class BlockSortingChest extends BlockContainer {
     }
 
     private boolean isBlocked(World world, BlockPos pos) {
-        return isBelowSolidBlock(world, pos) || isOcelotSittingOnChest(world, pos);
+        return isBelowSolidBlock(world, pos);
     }
 
     private boolean isBelowSolidBlock(World world, BlockPos pos) {
         return world.isSideSolid(pos.up(), EnumFacing.DOWN, false);
-    }
-
-    private boolean isOcelotSittingOnChest(World world, BlockPos pos) {
-        for (Entity entity : world.getEntitiesWithinAABB(EntityOcelot.class, new AxisAlignedBB((double) pos.getX(), (double) (pos.getY() + 1), (double) pos.getZ(), (double) (pos.getX() + 1), (double) (pos.getY() + 2), (double) (pos.getZ() + 1)))) {
-            EntityOcelot entityocelot = (EntityOcelot) entity;
-            if (entityocelot.isSitting()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @SideOnly(Side.CLIENT)
