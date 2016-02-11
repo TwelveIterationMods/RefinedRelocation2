@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation2;
 
 import net.blay09.mods.refinedrelocation2.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation2.api.capability.IFilterProvider;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.capability.*;
@@ -20,6 +21,7 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         CapabilityManager.INSTANCE.register(ISortingGridMember.class, new SortingMemberStorage(), SortingGridMemberDefaultImpl.class);
         CapabilityManager.INSTANCE.register(ISortingInventory.class, new SortingInventoryStorage(), SortingInventoryDefaultImpl.class);
+        CapabilityManager.INSTANCE.register(IFilterProvider.class, new FilterProviderStorage(), FilterProviderDefaultImpl.class);
 
         RefinedRelocationAPI.setupAPI(new InternalMethods());
 

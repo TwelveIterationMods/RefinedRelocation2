@@ -1,4 +1,4 @@
-package net.blay09.mods.refinedrelocation2.container;
+package net.blay09.mods.refinedrelocation2.container.handler;
 
 public interface IPriorityHandler {
     int getPriority();

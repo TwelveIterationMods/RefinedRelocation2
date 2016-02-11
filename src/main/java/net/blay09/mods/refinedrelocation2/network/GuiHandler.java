@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation2.network;
 
 import net.blay09.mods.refinedrelocation2.ModItems;
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
+import net.blay09.mods.refinedrelocation2.api.capability.IFilterProvider;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiBetterHopper;
 import net.blay09.mods.refinedrelocation2.client.gui.GuiFilter;
@@ -86,9 +87,9 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case GUI_FILTER:
                 if(tileEntity != null) {
-                    ISortingInventory sortingInventory = tileEntity.getCapability(RefinedRelocation2.SORTING_INVENTORY, null);
-                    if (sortingInventory != null && sortingInventory.getFilter() instanceof RootFilter) {
-                        return new GuiFilter(entityPlayer, sortingInventory);
+                    IFilterProvider provider = tileEntity.getCapability(RefinedRelocation2.FILTER_PROVIDER, null);
+                    if (provider != null && provider.getFilter() instanceof RootFilter) {
+                        return new GuiFilter(entityPlayer, provider);
                     }
                 }
                 break;

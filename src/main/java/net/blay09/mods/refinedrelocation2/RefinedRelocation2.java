@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation2;
 
+import net.blay09.mods.refinedrelocation2.api.capability.IFilterProvider;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingGridMember;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,6 +24,9 @@ public class RefinedRelocation2 {
 
     @CapabilityInject(ISortingInventory.class)
     public static Capability<ISortingInventory> SORTING_INVENTORY = null;
+
+    @CapabilityInject(IFilterProvider.class)
+    public static Capability<IFilterProvider> FILTER_PROVIDER = null;
 
     @CapabilityInject(IItemHandler.class)
     public static Capability<IItemHandler> ITEM_HANDLER = null;

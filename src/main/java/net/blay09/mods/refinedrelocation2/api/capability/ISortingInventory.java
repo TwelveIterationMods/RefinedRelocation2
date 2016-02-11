@@ -1,14 +1,11 @@
 package net.blay09.mods.refinedrelocation2.api.capability;
 
-import net.blay09.mods.refinedrelocation2.api.filter.IFilter;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
-public interface ISortingInventory extends ISortingGridMember {
+public interface ISortingInventory extends ISortingGridMember, IFilterProvider {
     void setItemHandler(IItemHandler itemHandler);
     IItemHandler getItemHandler();
-    void setFilter(IFilter filter);
-    IFilter getFilter();
+    int getPriority();
+    void setPriority(int priority);
     void slotChanged(int slotIndex);
 }

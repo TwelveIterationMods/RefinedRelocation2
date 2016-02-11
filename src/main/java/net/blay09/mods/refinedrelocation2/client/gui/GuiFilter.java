@@ -1,10 +1,13 @@
 package net.blay09.mods.refinedrelocation2.client.gui;
 
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
-import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
+import net.blay09.mods.refinedrelocation2.api.capability.IFilterProvider;
 import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonPriority;
 import net.blay09.mods.refinedrelocation2.client.gui.element.IButtonHandler;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilter;
+import net.blay09.mods.refinedrelocation2.container.handler.IPriorityHandler;
+import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation2.network.container.MessageContainerInteger;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,8 +24,8 @@ public class GuiFilter extends GuiContainer {
     private final ContainerFilter container;
     private final IInventory playerInventory;
 
-    public GuiFilter(EntityPlayer entityPlayer, ISortingInventory rootFilterProvider) {
-        super(new ContainerFilter(entityPlayer, rootFilterProvider));
+    public GuiFilter(EntityPlayer entityPlayer, IFilterProvider provider) {
+        super(new ContainerFilter(entityPlayer, provider));
         container = (ContainerFilter) inventorySlots;
         playerInventory = entityPlayer.inventory;
 
@@ -33,7 +36,18 @@ public class GuiFilter extends GuiContainer {
     public void initGui() {
         super.initGui();
 
-        buttonList.add(new GuiButtonPriority(0, guiLeft + 30, guiTop + 29, container));
+        buttonList.add(new GuiButtonPriority(0, guiLeft + 30, guiTop + 29, new IPriorityHandler() {
+            @Override
+            public int getPriority() {
+                return container.getPriority();
+            }
+
+            @Override
+            public void setPriority(int priority) {
+                container.setPriority(priority);
+                NetworkHandler.instance.sendToServer(new MessageContainerInteger("priority", priority));
+            }
+        }));
     }
 
     @Override

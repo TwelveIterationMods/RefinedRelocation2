@@ -6,8 +6,9 @@ import net.minecraftforge.items.IItemHandler;
 
 public class SortingInventoryDefaultImpl extends SortingGridMemberDefaultImpl implements ISortingInventory {
 
-    private IFilter filter;
     private IItemHandler itemHandler;
+    private IFilter filter;
+    private int priority;
 
     @Override
     public void setItemHandler(IItemHandler itemHandler) {
@@ -17,6 +18,16 @@ public class SortingInventoryDefaultImpl extends SortingGridMemberDefaultImpl im
     @Override
     public IItemHandler getItemHandler() {
         return itemHandler;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    @Override
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     @Override

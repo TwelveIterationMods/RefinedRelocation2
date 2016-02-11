@@ -1,16 +1,26 @@
 package net.blay09.mods.refinedrelocation2.container;
 
 import net.blay09.mods.refinedrelocation2.api.capability.ISortingInventory;
+import net.blay09.mods.refinedrelocation2.api.capability.IFilterProvider;
+import net.blay09.mods.refinedrelocation2.container.handler.IPriorityHandler;
+import net.blay09.mods.refinedrelocation2.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation2.network.container.MessageContainerInteger;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerFilter extends Container implements IPriorityHandler {
 
-    private int priority;
+    private final EntityPlayer entityPlayer;
+    private final IFilterProvider provider;
 
-    public ContainerFilter(EntityPlayer entityPlayer, ISortingInventory sortingInventory) {
+    private int lastPriority;
+
+    public ContainerFilter(EntityPlayer entityPlayer, IFilterProvider provider) {
+        this.entityPlayer = entityPlayer;
+        this.provider = provider;
         addSlotToContainer(new Slot(entityPlayer.inventory, 0, 8, 29)); // this should not be entityPlayer.inventory
 
         int inventoryY = 128;
@@ -22,6 +32,18 @@ public class ContainerFilter extends Container implements IPriorityHandler {
 
         for (int i = 0; i < 9; i++) {
             addSlotToContainer(new Slot(entityPlayer.inventory, i, 8 + i * 18, 58 + inventoryY));
+        }
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        if(!entityPlayer.worldObj.isRemote) {
+            int priority = getPriority();
+            if (lastPriority != priority) {
+                NetworkHandler.instance.sendTo(new MessageContainerInteger("priority", priority), (EntityPlayerMP) entityPlayer);
+            }
         }
     }
 
@@ -56,12 +78,18 @@ public class ContainerFilter extends Container implements IPriorityHandler {
 
     @Override
     public int getPriority() {
-        return priority;
+        if(provider instanceof ISortingInventory) {
+            return ((ISortingInventory) provider).getPriority();
+        }
+        return 0;
     }
 
     @Override
     public void setPriority(int priority) {
-        this.priority = priority;
+        this.lastPriority = priority;
+        if(provider instanceof ISortingInventory) {
+            ((ISortingInventory) provider).setPriority(priority);
+        }
     }
 
 }

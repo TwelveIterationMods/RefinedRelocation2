@@ -7,13 +7,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class HandlerContainerAction implements IMessageHandler<MessageContainerAction, IMessage> {
+public class HandlerContainerInteger implements IMessageHandler<MessageContainerInteger, IMessage> {
     @Override
-    public IMessage onMessage(MessageContainerAction message, MessageContext ctx) {
+    public IMessage onMessage(MessageContainerInteger message, MessageContext ctx) {
         RefinedRelocation2.proxy.addScheduledTask(() -> {
             EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
             if(entityPlayer.openContainer instanceof IContainerNetworked) {
-                ((IContainerNetworked) entityPlayer.openContainer).receiveAction(message.getName());
+                ((IContainerNetworked) entityPlayer.openContainer).receiveInteger(message.getName(), message.getValue());
             }
         });
         return null;
