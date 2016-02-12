@@ -173,7 +173,7 @@ public class TileSortingChest extends TileEntity implements ITickable, IWorldPos
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if(capability == RefinedRelocation2.SORTING_INVENTORY || capability == RefinedRelocation2.SORTING_GRID_MEMBER) {
+        if(capability == RefinedRelocation2.SORTING_INVENTORY || capability == RefinedRelocation2.SORTING_GRID_MEMBER || capability == RefinedRelocation2.FILTER_PROVIDER) {
             return (T) sortingInventory;
         }
         if(capability == RefinedRelocation2.ITEM_HANDLER) {

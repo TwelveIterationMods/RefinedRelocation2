@@ -8,6 +8,8 @@
         "refinedrelocation2:small_filter_button_disabled",
         "refinedrelocation2:small_button",
         "refinedrelocation2:small_button_hover",
-        "refinedrelocation2:small_button_disabled"
+        "refinedrelocation2:small_button_disabled",
+        "refinedrelocation2:filter_and",
+        "refinedrelocation2:filter_or"
     ]
 }

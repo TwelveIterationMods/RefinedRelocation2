@@ -2,6 +2,8 @@ package net.blay09.mods.refinedrelocation2.client.gui;
 
 import net.blay09.mods.refinedrelocation2.RefinedRelocation2;
 import net.blay09.mods.refinedrelocation2.api.capability.IFilterProvider;
+import net.blay09.mods.refinedrelocation2.balyware.TextureAtlasRegion;
+import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonFilterLink;
 import net.blay09.mods.refinedrelocation2.client.gui.element.GuiButtonPriority;
 import net.blay09.mods.refinedrelocation2.client.gui.element.IButtonHandler;
 import net.blay09.mods.refinedrelocation2.container.ContainerFilter;
@@ -23,6 +25,8 @@ public class GuiFilter extends GuiContainer {
 
     private final ContainerFilter container;
     private final IInventory playerInventory;
+    private TextureAtlasRegion textureOR;
+    private TextureAtlasRegion textureAND;
 
     public GuiFilter(EntityPlayer entityPlayer, IFilterProvider provider) {
         super(new ContainerFilter(entityPlayer, provider));
@@ -30,6 +34,9 @@ public class GuiFilter extends GuiContainer {
         playerInventory = entityPlayer.inventory;
 
         ySize = 209;
+
+        textureOR = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:filter_or");
+        textureAND = GuiRefinedRelocation.textureMap.getSprite("refinedrelocation2:filter_and");
     }
 
     @Override
@@ -48,6 +55,9 @@ public class GuiFilter extends GuiContainer {
                 NetworkHandler.instance.sendToServer(new MessageContainerInteger("priority", priority));
             }
         }));
+        buttonList.add(new GuiButtonFilterLink(1, guiLeft + 7, guiTop + 50, 0));
+        buttonList.add(new GuiButtonFilterLink(2, guiLeft + 7, guiTop + 70, 1));
+        buttonList.add(new GuiButtonFilterLink(3, guiLeft + 7, guiTop + 90, 2));
     }
 
     @Override
@@ -62,9 +72,9 @@ public class GuiFilter extends GuiContainer {
         fontRendererObj.drawString("Setup Filter", 8, 8, 4210752);
         fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
 
-        drawCenteredString(fontRendererObj, "No Filter", 40, 54, 14737632);
-        drawCenteredString(fontRendererObj, "No Filter", 40, 74, 14737632);
-        drawCenteredString(fontRendererObj, "No Filter", 40, 94, 14737632);
+        GlStateManager.color(1f, 1f, 1f, 1f);
+        textureOR.draw(37, 67, zLevel);
+        textureOR.draw(37, 87, zLevel);
     }
 
     @Override
