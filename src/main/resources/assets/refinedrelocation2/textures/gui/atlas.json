@@ -10,6 +10,8 @@
         "refinedrelocation2:small_button_hover",
         "refinedrelocation2:small_button_disabled",
         "refinedrelocation2:filter_and",
-        "refinedrelocation2:filter_or"
+        "refinedrelocation2:filter_or",
+        "refinedrelocation2:filter_blacklist",
+        "refinedrelocation2:filter_delete"
     ]
 }
