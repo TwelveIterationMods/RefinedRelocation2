@@ -1,0 +1,22 @@
+{
+  "elements": [
+    { "from": [ 6, 10, 6 ],
+      "to": [ 10, 16, 10 ],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "east":  { "texture": "#all" }
+      }
+    },
+    { "from": [ 10, 16, 10 ],
+      "to": [ 6, 10, 6 ],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "east":  { "texture": "#all" }
+      }
+    }
+  ]
+}

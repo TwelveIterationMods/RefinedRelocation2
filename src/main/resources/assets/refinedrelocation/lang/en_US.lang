@@ -1,0 +1,5 @@
+tile.refinedrelocation:sortingChest.name=Sorting Chest
+
+container.refinedrelocation:sortingChest=Sorting Chest
+
+itemGroup.refinedrelocation=Refined Relocation 2

@@ -1,0 +1,4 @@
+dependencies {
+    deobfCompile "mezz.jei:jei_1.10:3.7.0.218"
+    deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
+}
