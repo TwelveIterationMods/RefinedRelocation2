@@ -3,20 +3,19 @@ package net.blay09.mods.refinedrelocation.grid;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.tileentity.TileEntity;
 
 public class SortingGridMember implements ISortingGridMember {
 
-	private GridContainer gridContainer;
+	private TileWrapper tileWrapper;
 	private boolean isInvalid;
 	private ISortingGrid sortingGrid;
 
 	private boolean isFirstTick = true;
 
-	@Override
-	public GridContainer getGridContainer() {
-		return gridContainer;
+	public TileWrapper getTileWrapper() {
+		return tileWrapper;
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class SortingGridMember implements ISortingGridMember {
 	@Override
 	public final void onUpdate(TileEntity tileEntity) {
 		if(isFirstTick) {
-			gridContainer = new GridContainer(tileEntity);
+			tileWrapper = new TileWrapper(tileEntity);
 			onFirstTick();
 			isFirstTick = false;
 		}

@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.api;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +19,6 @@ public interface InternalMethods {
 
 	GuiButton createOpenFilterButton(GuiContainer guiContainer, int buttonId);
 
-	void openRootFilterGui(GridContainer pos);
+	void openRootFilterGui(TileWrapper pos);
 
 }

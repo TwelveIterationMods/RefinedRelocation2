@@ -26,16 +26,19 @@ public class DoorAnimator {
 		this.eventForcedOpen = eventForcedOpen;
 	}
 
-	public void setSoundEventOpen(SoundEvent soundEventOpen) {
+	public DoorAnimator setSoundEventOpen(SoundEvent soundEventOpen) {
 		this.soundEventOpen = soundEventOpen;
+		return this;
 	}
 
-	public void setSoundEventClose(SoundEvent soundEventClose) {
+	public DoorAnimator setSoundEventClose(SoundEvent soundEventClose) {
 		this.soundEventClose = soundEventClose;
+		return this;
 	}
 
-	public void setOpenRadius(float openRadius) {
+	public DoorAnimator setOpenRadius(float openRadius) {
 		this.openRadius = openRadius;
+		return this;
 	}
 
 	public void update() {

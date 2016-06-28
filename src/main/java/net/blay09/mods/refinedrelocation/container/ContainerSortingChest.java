@@ -11,7 +11,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
 
-public class ContainerSortingChest extends Container implements IContainerWithDoor {
+public class ContainerSortingChest extends ContainerMod implements IContainerWithDoor {
 
 	private final TileSortingChest tileEntity;
 

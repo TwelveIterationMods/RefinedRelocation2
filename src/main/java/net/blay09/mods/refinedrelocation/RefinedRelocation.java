@@ -14,36 +14,37 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings("unused")
 public class RefinedRelocation {
 
-    public static final String MOD_ID = "refinedrelocation";
+	public static final String MOD_ID = "refinedrelocation";
 
-    @Mod.Instance(MOD_ID)
-    public static RefinedRelocation instance;
 
-    public static final Logger logger = LogManager.getLogger();
+	@Mod.Instance(MOD_ID)
+	public static RefinedRelocation instance;
 
-    @SidedProxy(clientSide = "net.blay09.mods.refinedrelocation.client.ClientProxy", serverSide = "net.blay09.mods.refinedrelocation.CommonProxy")
-    public static CommonProxy proxy;
+	public static final Logger logger = LogManager.getLogger();
 
-    public static CreativeTabs creativeTab = new CreativeTabs(MOD_ID) {
-        @Override
-        public Item getTabIconItem() {
-            return Item.getItemFromBlock(ModBlocks.sortingChest);
-        }
-    };
+	@SidedProxy(clientSide = "net.blay09.mods.refinedrelocation.client.ClientProxy", serverSide = "net.blay09.mods.refinedrelocation.CommonProxy")
+	public static CommonProxy proxy;
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit(event);
-    }
+	public static CreativeTabs creativeTab = new CreativeTabs(MOD_ID) {
+		@Override
+		public Item getTabIconItem() {
+			return Item.getItemFromBlock(ModBlocks.sortingChest);
+		}
+	};
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        proxy.init(event);
-    }
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		proxy.preInit(event);
+	}
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit(event);
-    }
+	@Mod.EventHandler
+	public void init(FMLInitializationEvent event) {
+		proxy.init(event);
+	}
+
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		proxy.postInit(event);
+	}
 
 }

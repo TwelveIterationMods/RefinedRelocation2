@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.util;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -9,11 +8,11 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
 
-public class GridContainer {
+public class TileWrapper {
 
 	private final TileEntity tileEntity;
 
-	public GridContainer(TileEntity tileEntity) {
+	public TileWrapper(TileEntity tileEntity) {
 		this.tileEntity = tileEntity;
 	}
 

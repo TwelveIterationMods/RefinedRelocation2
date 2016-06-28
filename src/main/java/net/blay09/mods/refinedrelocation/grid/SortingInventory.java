@@ -5,10 +5,8 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
-import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -44,8 +42,8 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 	@Override
 	protected void onFirstTick() {
 		super.onFirstTick();
-		itemHandler = getGridContainer().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		filter = getGridContainer().getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
+		itemHandler = getTileWrapper().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		filter = getTileWrapper().getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 
 	@Override
 	public void onSlotChanged(int slotIndex) {
-		if(!getSortingGrid().isSortingActive() && !getGridContainer().getWorld().isRemote) {
+		if(!getSortingGrid().isSortingActive() && !getTileWrapper().getWorld().isRemote) {
 			ItemStack itemStack = itemHandler.getStackInSlot(slotIndex);
 			if(itemStack != null) {
 				sortingStackList.add(new SortingStack(itemHandler, slotIndex, itemStack));

@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,12 +26,12 @@ public class NameFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(GridContainer pos) {
+	public boolean isFilterUsable(TileWrapper pos) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(GridContainer tilePos, ItemStack itemStack) {
+	public boolean passes(TileWrapper tilePos, ItemStack itemStack) {
 		String itemName = itemStack.getDisplayName();
 		Pattern[] patterns = getPatterns();
 		for(Pattern pattern : patterns) {

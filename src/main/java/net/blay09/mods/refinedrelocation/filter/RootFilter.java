@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +20,7 @@ public class RootFilter implements IRootFilter {
 	}
 
 	@Override
-	public boolean passes(GridContainer pos, ItemStack itemStack) {
+	public boolean passes(TileWrapper pos, ItemStack itemStack) {
 		boolean passes = false;
 		for(IFilter filter : filterList) {
 			passes = filter.passes(pos, itemStack);

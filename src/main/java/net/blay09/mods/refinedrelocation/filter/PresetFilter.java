@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class PresetFilter implements IFilter {
 
-	private static final String ID = RefinedRelocation.MOD_ID + ":PresetFilter";
+	public static final String ID = RefinedRelocation.MOD_ID + ":PresetFilter";
 
 	public abstract static class Preset {
 		private final String id;
@@ -128,12 +128,12 @@ public class PresetFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(GridContainer pos) {
+	public boolean isFilterUsable(TileWrapper pos) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(GridContainer tilePos, ItemStack itemStack) {
+	public boolean passes(TileWrapper tilePos, ItemStack itemStack) {
 		int[] oreIDs = OreDictionary.getOreIDs(itemStack);
 		String[] oreNames = new String[oreIDs.length];
 		for(int i = 0; i < oreIDs.length; i++) {

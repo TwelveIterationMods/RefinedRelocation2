@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.client.gui;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -39,7 +39,7 @@ public class GuiSortingChest extends GuiContainerMod {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if(button == btnOpenFilter) {
-			RefinedRelocationAPI.openRootFilterGui(new GridContainer(tileEntity));
+			RefinedRelocationAPI.openRootFilterGui(new TileWrapper(tileEntity));
 		}
 	}
 

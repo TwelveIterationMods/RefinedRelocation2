@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.api;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -32,7 +32,7 @@ public class RefinedRelocationAPI {
 		return internalMethods.createOpenFilterButton(guiContainer, buttonId);
 	}
 
-	public static void openRootFilterGui(GridContainer pos) {
+	public static void openRootFilterGui(TileWrapper pos) {
 		internalMethods.openRootFilterGui(pos);
 	}
 

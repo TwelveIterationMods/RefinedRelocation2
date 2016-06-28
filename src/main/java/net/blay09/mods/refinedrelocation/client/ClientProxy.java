@@ -5,10 +5,17 @@ import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlas;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
+import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -38,13 +45,29 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
-		if(resourceManager instanceof IReloadableResourceManager) {
+		if (resourceManager instanceof IReloadableResourceManager) {
 			((IReloadableResourceManager) resourceManager).registerReloadListener(TEXTURE_ATLAS);
 		} else {
 			try {
 				TEXTURE_ATLAS.loadTexture(resourceManager);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	@Override
+	public void addScheduledTask(Runnable runnable) {
+		Minecraft.getMinecraft().addScheduledTask(runnable);
+	}
+
+	@Override
+	public void openGui(EntityPlayer player, MessageOpenGui message) {
+		super.openGui(player, message);
+		if (player instanceof EntityPlayerSP) {
+			GuiScreen guiScreen = guiHandler.getGuiScreen(message.getId(), player, message);
+			if (guiScreen != null) {
+				Minecraft.getMinecraft().displayGuiScreen(guiScreen);
 			}
 		}
 	}

@@ -10,7 +10,10 @@ public class NetworkHandler {
 	public static final SimpleNetworkWrapper wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(RefinedRelocation.MOD_ID);
 
 	public static void init() {
-		wrapper.registerMessage(HandlerOpenFilter.class, MessageOpenFilter.class, 1, Side.SERVER);
+		wrapper.registerMessage(HandlerOpenGui.class, MessageOpenGui.class, 1, Side.CLIENT);
+		wrapper.registerMessage(HandlerOpenGui.class, MessageOpenGui.class, 2, Side.SERVER);
+		wrapper.registerMessage(HandlerContainer.class, MessageContainer.class, 3, Side.SERVER);
+		wrapper.registerMessage(HandlerContainer.class, MessageContainer.class, 4, Side.CLIENT);
 	}
 
 }

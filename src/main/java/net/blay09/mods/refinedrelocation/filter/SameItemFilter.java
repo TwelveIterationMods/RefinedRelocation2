@@ -4,7 +4,7 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,12 +23,12 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(GridContainer pos) {
+	public boolean isFilterUsable(TileWrapper pos) {
 		return pos.hasCapability(CapabilitySortingInventory.CAPABILITY, null);
 	}
 
 	@Override
-	public boolean passes(GridContainer pos, ItemStack itemStack) {
+	public boolean passes(TileWrapper pos, ItemStack itemStack) {
 		ISortingInventory sortingInventory = pos.getCapability(CapabilitySortingInventory.CAPABILITY, null);
 		if(sortingInventory != null) {
 			IItemHandler itemHandler = sortingInventory.getItemHandler();

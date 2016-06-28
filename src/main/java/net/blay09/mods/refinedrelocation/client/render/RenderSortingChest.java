@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
 import net.blay09.mods.refinedrelocation.ModBlocks;
+import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.model.ModelChest;
@@ -67,7 +68,7 @@ public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 
 	@Override
 	protected boolean shouldRenderNameTag(TileSortingChest tileEntity) {
-		return tileEntity.hasCustomName();
+		return tileEntity.hasCustomName() && RefinedRelocationConfig.renderChestNameTags;
 	}
 
 }

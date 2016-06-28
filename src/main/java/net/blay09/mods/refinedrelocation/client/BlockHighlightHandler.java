@@ -36,8 +36,8 @@ public class BlockHighlightHandler {
 						double offsetY = event.getPlayer().lastTickPosY + (event.getPlayer().posY - event.getPlayer().lastTickPosY) * (double) event.getPartialTicks();
 						double offsetZ = event.getPlayer().lastTickPosZ + (event.getPlayer().posZ - event.getPlayer().lastTickPosZ) * (double) event.getPartialTicks();
 						for (ISortingGridMember member : sortingGrid.getMembers()) {
-							IBlockState blockState = member.getGridContainer().getWorld().getBlockState(member.getGridContainer().getPos());
-							AxisAlignedBB aabb = blockState.getBlock().getSelectedBoundingBox(blockState, member.getGridContainer().getWorld(), member.getGridContainer().getPos()).expand(expansion, expansion, expansion).offset(-offsetX, -offsetY, -offsetZ);
+							IBlockState blockState = member.getTileWrapper().getWorld().getBlockState(member.getTileWrapper().getPos());
+							AxisAlignedBB aabb = blockState.getBlock().getSelectedBoundingBox(blockState, member.getTileWrapper().getWorld(), member.getTileWrapper().getPos()).expand(expansion, expansion, expansion).offset(-offsetX, -offsetY, -offsetZ);
 							RenderGlobal.func_189697_a(aabb, 1f, 1f, 0f, 0.75f);
 						}
 						GlStateManager.depthMask(true);

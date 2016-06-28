@@ -1,10 +1,10 @@
 package net.blay09.mods.refinedrelocation.api.grid;
 
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.tileentity.TileEntity;
 
 public interface ISortingGridMember {
-	GridContainer getGridContainer();
+	TileWrapper getTileWrapper();
 
 	boolean isInvalid();
 

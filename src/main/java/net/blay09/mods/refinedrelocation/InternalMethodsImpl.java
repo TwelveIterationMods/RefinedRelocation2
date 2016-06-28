@@ -11,8 +11,7 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.grid.SortingGrid;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
-import net.blay09.mods.refinedrelocation.util.GridContainer;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -39,8 +38,8 @@ public class InternalMethodsImpl implements InternalMethods {
 		if (sortingGrid != null) {
 			return;
 		}
-		World world = member.getGridContainer().getWorld();
-		BlockPos pos = member.getGridContainer().getPos();
+		World world = member.getTileWrapper().getWorld();
+		BlockPos pos = member.getTileWrapper().getPos();
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
 			if (tileEntity != null) {
@@ -88,7 +87,7 @@ public class InternalMethodsImpl implements InternalMethods {
 		for(ISortingGridMember member : sortingGrid.getMembers()) {
 			if(member instanceof ISortingInventory) {
 				ISortingInventory memberInventory = (ISortingInventory) member;
-				boolean passes = memberInventory.getFilter().passes(memberInventory.getGridContainer(), itemStack);
+				boolean passes = memberInventory.getFilter().passes(memberInventory.getTileWrapper(), itemStack);
 				if(passes) {
 					passingList.add(memberInventory);
 				}
@@ -145,7 +144,7 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
-	public void openRootFilterGui(GridContainer pos) {
+	public void openRootFilterGui(TileWrapper pos) {
 
 	}
 

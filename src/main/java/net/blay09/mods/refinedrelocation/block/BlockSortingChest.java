@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.VanillaPacketHandler;
 import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
@@ -116,7 +117,7 @@ public class BlockSortingChest extends BlockModTile {
 				}
 				return true;
 			}
-			player.openGui(RefinedRelocation.instance, GuiHandler.GUI_SORTING_CHEST, world, pos.getX(), pos.getY(), pos.getZ());
+			RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, pos));
 			return true;
 		}
 		return true;
