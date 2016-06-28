@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
+import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.blay09.mods.refinedrelocation.filter.SameItemFilter;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
@@ -28,6 +29,7 @@ public class CommonProxy {
 		CapabilitySortingInventory.register();
 
 		RefinedRelocationAPI.registerFilter(SameItemFilter.ID, SameItemFilter.class);
+		RefinedRelocationAPI.registerFilter(NameFilter.ID, NameFilter.class);
 	}
 
 	public void init(FMLInitializationEvent event) {
@@ -37,5 +39,9 @@ public class CommonProxy {
 
 	public void postInit(FMLPostInitializationEvent event) {
 		ModRecipes.init();
+	}
+
+	public void addScheduledTask(Runnable runnable) {
+
 	}
 }

@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.util;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -40,4 +41,5 @@ public class GridContainer {
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		return tileEntity.getCapability(capability, facing);
 	}
+
 }
