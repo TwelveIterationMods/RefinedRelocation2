@@ -90,7 +90,15 @@ public class GuiElement extends Gui {
 	}
 
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if(parent != null) {
+			parent.mouseClicked(mouseX, mouseY, mouseButton);
+		}
+	}
 
+	public void mouseWheelMoved(int mouseX, int mouseY, int delta) {
+		if(parent != null) {
+			parent.mouseWheelMoved(mouseX, mouseY, delta);
+		}
 	}
 
 	@OverridingMethodsMustInvokeSuper
@@ -165,6 +173,12 @@ public class GuiElement extends Gui {
 	public void addTooltip(List<String> list) {
 		if(parent != null) {
 			parent.addTooltip(list);
+		}
+	}
+
+	public void mouseReleased(int mouseX, int mouseY, int state) {
+		for(GuiElement child : children) {
+			child.mouseReleased(mouseX, mouseY, state);
 		}
 	}
 

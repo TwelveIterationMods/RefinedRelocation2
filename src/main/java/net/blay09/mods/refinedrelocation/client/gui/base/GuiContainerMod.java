@@ -2,10 +2,12 @@ package net.blay09.mods.refinedrelocation.client.gui.base;
 
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiElement;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Container;
+import org.lwjgl.input.Mouse;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
@@ -33,6 +35,23 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		rootNode.getElementAt(mouseX, mouseY).mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		int delta = Mouse.getEventDWheel();
+		if(delta != 0) {
+			int mouseX = Mouse.getEventX() * width / mc.displayWidth;
+			int mouseY = height - Mouse.getEventY() * height / mc.displayHeight - 1;
+			rootNode.getElementAt(mouseX, mouseY).mouseWheelMoved(mouseX, mouseY, delta);
+		}
+	}
+
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int state) {
+		super.mouseReleased(mouseX, mouseY, state);
+		rootNode.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
