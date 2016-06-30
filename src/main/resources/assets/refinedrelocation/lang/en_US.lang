@@ -1,5 +1,10 @@
 tile.refinedrelocation:sortingChest.name=Sorting Chest
 
 container.refinedrelocation:sortingChest=Sorting Chest
+container.refinedrelocation:rootFilter=Edit Filter
 
 itemGroup.refinedrelocation=Refined Relocation 2
+
+filter.refinedrelocation:NameFilter=Name Filter
+filter.refinedrelocation:PresetFilter=Preset Filter
+filter.refinedrelocation:SameItemFilter=Item Match Filter

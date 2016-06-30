@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class RootFilter implements IRootFilter {
@@ -16,7 +17,26 @@ public class RootFilter implements IRootFilter {
 	private final List<IFilter> filterList = Lists.newArrayList();
 
 	public RootFilter() {
-		filterList.add(new SameItemFilter()); // TODO test code
+//		filterList.add(new SameItemFilter()); // TODO test code
+	}
+
+	@Override
+	public int getFilterCount() {
+		return filterList.size();
+	}
+
+	@Override
+	@Nullable
+	public IFilter getFilter(int index) {
+		if(index < 0 || index >= filterList.size()) {
+			return null;
+		}
+		return filterList.get(index);
+	}
+
+	@Override
+	public void addFilter(IFilter filter) {
+		filterList.add(filter);
 	}
 
 	@Override
@@ -42,11 +62,13 @@ public class RootFilter implements IRootFilter {
 
 	@Override
 	public void deserializeNBT(NBTBase nbt) {
+		filterList.clear();
 		NBTTagList list = (NBTTagList) nbt;
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tagCompound = list.getCompoundTagAt(i);
 			IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
 			filter.deserializeNBT(tagCompound.getTag("Data"));
+			filterList.add(filter);
 		}
 	}
 

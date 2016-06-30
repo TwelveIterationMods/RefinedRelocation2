@@ -1,8 +1,9 @@
 package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.container.IContainerNetworked;
+import net.blay09.mods.refinedrelocation.api.container.IContainerNetworked;
 import net.minecraft.inventory.Container;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -18,11 +19,14 @@ public class HandlerContainer implements IMessageHandler<MessageContainer, IMess
 		RefinedRelocation.proxy.addScheduledTask(new Runnable() {
 			@Override
 			public void run() {
-				Container container = ctx.getServerHandler().playerEntity.openContainer;
-				if(container instanceof IContainerNetworked) {
-					if(ctx.side == Side.CLIENT) {
+				if(ctx.side == Side.CLIENT) {
+					Container container = FMLClientHandler.instance().getClientPlayerEntity().openContainer;
+					if (container instanceof IContainerNetworked) {
 						((IContainerNetworked) container).receivedMessageClient(message);
-					} else {
+					}
+				} else {
+					Container container = ctx.getServerHandler().playerEntity.openContainer;
+					if (container instanceof IContainerNetworked) {
 						((IContainerNetworked) container).receivedMessageServer(message);
 					}
 				}

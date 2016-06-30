@@ -3,7 +3,9 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -11,6 +13,8 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
@@ -164,4 +168,15 @@ public class PresetFilter implements IFilter {
 		}
 	}
 
+
+	@Override
+	public String getLangKey() {
+		return "filter.refinedrelocation:PresetFilter";
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IFilterIcon getFilterIcon() {
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_PresetFilter");
+	}
 }

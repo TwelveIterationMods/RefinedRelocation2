@@ -38,6 +38,7 @@ public class ClientProxy extends CommonProxy {
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.sortingChest), 0, TileSortingChest.class);
 
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
+		MinecraftForge.EVENT_BUS.register(new OpenFilterButtonHandler());
 	}
 
 	@Override
@@ -68,6 +69,7 @@ public class ClientProxy extends CommonProxy {
 			GuiScreen guiScreen = guiHandler.getGuiScreen(message.getId(), player, message);
 			if (guiScreen != null) {
 				Minecraft.getMinecraft().displayGuiScreen(guiScreen);
+				player.openContainer.windowId = message.getWindowId();
 			}
 		}
 	}

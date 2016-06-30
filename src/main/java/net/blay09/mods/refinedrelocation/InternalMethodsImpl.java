@@ -1,20 +1,27 @@
 package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
+import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.client.gui.GuiOpenFilterButton;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.grid.SortingGrid;
+import net.blay09.mods.refinedrelocation.network.MessageContainer;
+import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +31,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class InternalMethodsImpl implements InternalMethods {
+
+	private static final Map<Class<? extends TileEntity>, ITileGuiHandler> tileGuiHandlerMap = Maps.newHashMap();
 
 	@Override
 	public void registerFilter(String id, Class<? extends IFilter> filterClass) {
@@ -139,13 +149,46 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
-	public GuiButton createOpenFilterButton(GuiContainer guiContainer, int buttonId) {
-		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 20, guiContainer.guiTop + 4, true);
+	public GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
+		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 20, guiContainer.guiTop + 4, new TileWrapper(tileEntity));
 	}
 
 	@Override
-	public void openRootFilterGui(TileWrapper pos) {
+	public void sendContainerMessageToServer(String key, String value) {
+		NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
+	}
 
+	@Override
+	public void sendContainerMessageToServer(String key, int value) {
+		NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
+	}
+
+	@Override
+	public void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners) {
+		for(IContainerListener listener : listeners) {
+			if (listener instanceof EntityPlayerMP) {
+				NetworkHandler.wrapper.sendTo(new MessageContainer(key, value), (EntityPlayerMP) listener);
+			}
+		}
+	}
+
+	@Override
+	public void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
+		for(IContainerListener listener : listeners) {
+			if (listener instanceof EntityPlayerMP) {
+				NetworkHandler.wrapper.sendTo(new MessageContainer(key, value), (EntityPlayerMP) listener);
+			}
+		}
+	}
+
+	@Override
+	public void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler) {
+		tileGuiHandlerMap.put(tileClass, handler);
+	}
+
+	@Nullable
+	public static ITileGuiHandler getGuiHandler(Class<? extends TileEntity> tileClass) {
+		return tileGuiHandlerMap.get(tileClass);
 	}
 
 }

@@ -1,8 +1,12 @@
 package net.blay09.mods.refinedrelocation.network;
 
+import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
+import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiSortingChest;
+import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -26,6 +30,8 @@ public class GuiHandler {
 		switch(id) {
 			case GUI_SORTING_CHEST:
 				return tileEntity instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) tileEntity) : null;
+			case GUI_ROOT_FILTER:
+				return tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerRootFilter(player, new TileWrapper(tileEntity)) : null;
 		}
 		return null;
 	}
@@ -37,6 +43,8 @@ public class GuiHandler {
 		switch(id) {
 			case GUI_SORTING_CHEST:
 				return tileEntity instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) tileEntity) : null;
+			case GUI_ROOT_FILTER:
+				return tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiRootFilter(player, new TileWrapper(tileEntity)) : null;
 		}
 		return null;
 	}

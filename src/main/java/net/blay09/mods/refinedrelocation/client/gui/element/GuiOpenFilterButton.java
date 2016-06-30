@@ -1,10 +1,13 @@
-package net.blay09.mods.refinedrelocation.client.gui;
+package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
+import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.util.concurrent.Callable;
 
 public class GuiOpenFilterButton extends GuiButton {
 
@@ -12,17 +15,20 @@ public class GuiOpenFilterButton extends GuiButton {
 	private final TextureAtlasRegion backgroundHover;
 	private final TextureAtlasRegion backgroundDisabled;
 
-	public GuiOpenFilterButton(int id, int x, int y, boolean smallVersion) {
+	private final TileWrapper tileWrapper;
+
+	public GuiOpenFilterButton(int id, int x, int y, TileWrapper tileWrapper) {
 		super(id, x, y, "");
-		if(smallVersion) {
-			background = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:small_filter_button");
-			backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:small_filter_button_hover");
-			backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:small_filter_button_disabled");
-		} else {
-			background = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_button");
-			backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_button_hover");
-			backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_button_disabled");
-		}
+		this.tileWrapper = tileWrapper;
+//		if(smallVersion) {
+		background = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:small_filter_button");
+		backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:small_filter_button_hover");
+		backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:small_filter_button_disabled");
+//		} else {
+//		background = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_button");
+//		backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_button_hover");
+//		backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_button_disabled");
+//		}
 		width = background.getIconWidth();
 		height = background.getIconHeight();
 	}
@@ -39,6 +45,10 @@ public class GuiOpenFilterButton extends GuiButton {
 				case 2: backgroundHover.draw(xPosition, yPosition, zLevel); break;
 			}
 		}
+	}
+
+	public TileWrapper getTileWrapper() {
+		return tileWrapper;
 	}
 
 }

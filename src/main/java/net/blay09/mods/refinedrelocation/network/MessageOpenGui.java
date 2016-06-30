@@ -9,6 +9,7 @@ public class MessageOpenGui implements IMessage {
 	private static final int TYPE_BLOCK = 0;
 	private static final int TYPE_INVENTORY = 1;
 
+	private int windowId;
 	private int id;
 	private int type;
 
@@ -31,9 +32,15 @@ public class MessageOpenGui implements IMessage {
 		this.slotIndex = slotIndex;
 	}
 
+	public MessageOpenGui setWindowId(int windowId) {
+		this.windowId = windowId;
+		return this;
+	}
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		id = buf.readByte();
+		windowId = buf.readInt();
 		type = buf.readByte();
 		if(type == TYPE_BLOCK) {
 			pos = BlockPos.fromLong(buf.readLong());
@@ -45,6 +52,7 @@ public class MessageOpenGui implements IMessage {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeByte(id);
+		buf.writeInt(windowId);
 		buf.writeByte(type);
 		if(type == 0) {
 			buf.writeLong(pos.toLong());
@@ -55,6 +63,10 @@ public class MessageOpenGui implements IMessage {
 
 	public int getId() {
 		return id;
+	}
+
+	public int getWindowId() {
+		return windowId;
 	}
 
 	public boolean isBlock() {

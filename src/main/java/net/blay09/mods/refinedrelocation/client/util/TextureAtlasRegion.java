@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.util;
 
+import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -8,7 +9,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class TextureAtlasRegion extends TextureAtlasSprite {
+public class TextureAtlasRegion extends TextureAtlasSprite implements IFilterIcon {
 
 	private TextureAtlas atlas;
 
@@ -21,6 +22,7 @@ public class TextureAtlasRegion extends TextureAtlasSprite {
 		this(atlas, location.toString());
 	}
 
+	@Override
 	public void draw(double x, double y, double zLevel) {
 		draw(x, y, getIconWidth(), getIconHeight(), zLevel);
 	}

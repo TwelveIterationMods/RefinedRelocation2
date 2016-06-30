@@ -1,11 +1,19 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +25,7 @@ public class NameFilter implements IFilter {
 	private static final Pattern WILDCARD_PATTERN = Pattern.compile("[^*]+|(\\*)");
 	private static final Matcher WILDCARD_MATCHER = WILDCARD_PATTERN.matcher("");
 
-	private String patterns = "";
+	private String value = "";
 	private Pattern[] cachedPatterns;
 
 	@Override
@@ -42,9 +50,17 @@ public class NameFilter implements IFilter {
 		return false;
 	}
 
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
 	public Pattern[] getPatterns() {
 		if(cachedPatterns == null) {
-			String[] patternsSplit = patterns.split("[\n,]");
+			String[] patternsSplit = value.split("[\n,]");
 			cachedPatterns = new Pattern[patternsSplit.length];
 			for(int i = 0; i < patternsSplit.length; i++) {
 				WILDCARD_MATCHER.reset(patternsSplit[i]);
@@ -66,13 +82,24 @@ public class NameFilter implements IFilter {
 	@Override
 	public NBTBase serializeNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
-		compound.setString("Patterns", patterns);
+		compound.setString("Patterns", value);
 		return compound;
 	}
 
 	@Override
 	public void deserializeNBT(NBTBase nbt) {
 		NBTTagCompound compound = (NBTTagCompound) nbt;
-		patterns = compound.getString("Patterns");
+		value = compound.getString("Patterns");
+	}
+
+	@Override
+	public String getLangKey() {
+		return "filter.refinedrelocation:NameFilter";
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IFilterIcon getFilterIcon() {
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_NameFilter");
 	}
 }

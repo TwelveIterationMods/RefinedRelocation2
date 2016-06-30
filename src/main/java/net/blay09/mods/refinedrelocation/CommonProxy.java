@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation;
 
+import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
@@ -11,10 +12,12 @@ import net.blay09.mods.refinedrelocation.filter.SameItemFilter;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -41,6 +44,14 @@ public class CommonProxy {
 		RefinedRelocationAPI.registerFilter(SameItemFilter.ID, SameItemFilter.class);
 		RefinedRelocationAPI.registerFilter(NameFilter.ID, NameFilter.class);
 		RefinedRelocationAPI.registerFilter(PresetFilter.ID, PresetFilter.class);
+
+		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, new ITileGuiHandler() {
+			@Override
+			public void openGui(EntityPlayer player, TileEntity tileEntity) {
+				RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos()));
+			}
+		});
+
 	}
 
 	public void init(FMLInitializationEvent event) {
@@ -63,7 +74,7 @@ public class CommonProxy {
 				entityPlayer.getNextWindowId();
 				entityPlayer.closeContainer();
 				int windowId = entityPlayer.currentWindowId;
-				NetworkHandler.wrapper.sendTo(message, entityPlayer);
+				NetworkHandler.wrapper.sendTo(message.setWindowId(windowId), entityPlayer);
 				entityPlayer.openContainer = container;
 				entityPlayer.openContainer.windowId = windowId;
 				entityPlayer.openContainer.addListener(entityPlayer);

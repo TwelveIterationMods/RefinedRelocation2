@@ -24,15 +24,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 			}
 		}
 
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 103 + i * 18 - 18));
-			}
-		}
-
-		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 161 - 18));
-		}
+		addPlayerInventory(player, 85);
 
 		tileEntity.getDoorAnimator().openContainer(player);
 	}

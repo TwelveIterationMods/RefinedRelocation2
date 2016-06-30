@@ -14,6 +14,7 @@ public class NetworkHandler {
 		wrapper.registerMessage(HandlerOpenGui.class, MessageOpenGui.class, 2, Side.SERVER);
 		wrapper.registerMessage(HandlerContainer.class, MessageContainer.class, 3, Side.SERVER);
 		wrapper.registerMessage(HandlerContainer.class, MessageContainer.class, 4, Side.CLIENT);
+		wrapper.registerMessage(HandlerReturnGUI.class, MessageReturnGUI.class, 5, Side.SERVER);
 	}
 
 }

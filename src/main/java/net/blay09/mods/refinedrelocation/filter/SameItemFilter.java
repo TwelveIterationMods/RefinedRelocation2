@@ -1,13 +1,17 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
+import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
 public class SameItemFilter implements IFilter {
@@ -66,4 +70,15 @@ public class SameItemFilter implements IFilter {
 		ignoreNBT = compound.getBoolean("IgnoreNBT");
 	}
 
+
+	@Override
+	public String getLangKey() {
+		return "filter.refinedrelocation:SameItemFilter";
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IFilterIcon getFilterIcon() {
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_PresetFilter");
+	}
 }
