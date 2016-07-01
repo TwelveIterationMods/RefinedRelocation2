@@ -16,14 +16,11 @@ import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @SuppressWarnings("unused")
 public class CommonProxy {
@@ -41,9 +38,9 @@ public class CommonProxy {
 		CapabilitySortingGridMember.register();
 		CapabilitySortingInventory.register();
 
-		RefinedRelocationAPI.registerFilter(SameItemFilter.ID, SameItemFilter.class);
-		RefinedRelocationAPI.registerFilter(NameFilter.ID, NameFilter.class);
-		RefinedRelocationAPI.registerFilter(PresetFilter.ID, PresetFilter.class);
+		RefinedRelocationAPI.registerFilter(SameItemFilter.class);
+		RefinedRelocationAPI.registerFilter(NameFilter.class);
+		RefinedRelocationAPI.registerFilter(PresetFilter.class);
 
 		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, new ITileGuiHandler() {
 			@Override

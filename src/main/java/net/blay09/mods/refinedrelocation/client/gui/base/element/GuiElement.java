@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.gui.Gui;
 
 import javax.annotation.Nullable;
@@ -21,9 +21,7 @@ public class GuiElement extends Gui {
 	private boolean isDirty;
 	private boolean visible = true;
 
-	public GuiElement() {
-
-	}
+	public GuiElement() {}
 
 	public GuiElement getParent() {
 		return parent;
@@ -89,10 +87,23 @@ public class GuiElement extends Gui {
 		}
 	}
 
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if(parent != null) {
-			parent.mouseClicked(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		return parent != null && parent.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	public void mouseReleased(int mouseX, int mouseY, int state) {
+		for(GuiElement child : children) {
+			child.mouseReleased(mouseX, mouseY, state);
 		}
+	}
+
+	public boolean keyTyped(char typedChar, int keyCode) {
+		for(GuiElement child : children) {
+			if(child.keyTyped(typedChar, keyCode)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void mouseWheelMoved(int mouseX, int mouseY, int delta) {
@@ -109,16 +120,16 @@ public class GuiElement extends Gui {
 	}
 
 	@OverridingMethodsMustInvokeSuper
-	public void drawBackground(Minecraft mc, int mouseX, int mouseY) {
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
 		for(GuiElement child : children) {
-			child.drawBackground(mc, mouseX, mouseY);
+			child.drawBackground(parentScreen, mouseX, mouseY);
 		}
 	}
 
 	@OverridingMethodsMustInvokeSuper
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
 		for(GuiElement child : children) {
-			child.drawForeground(mc, mouseX, mouseY);
+			child.drawForeground(parentScreen, mouseX, mouseY);
 		}
 	}
 
@@ -166,6 +177,10 @@ public class GuiElement extends Gui {
 		children.clear();
 	}
 
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	public boolean isVisible() {
 		return visible;
 	}
@@ -176,10 +191,9 @@ public class GuiElement extends Gui {
 		}
 	}
 
-	public void mouseReleased(int mouseX, int mouseY, int state) {
-		for(GuiElement child : children) {
-			child.mouseReleased(mouseX, mouseY, state);
-		}
+	@Nullable
+	public IParentScreen getParentScreen() {
+		return parent != null ? parent.getParentScreen() : null;
 	}
 
 }

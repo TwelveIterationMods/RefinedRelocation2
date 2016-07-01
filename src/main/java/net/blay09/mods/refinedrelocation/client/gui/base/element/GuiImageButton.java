@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -25,24 +26,24 @@ public class GuiImageButton extends GuiElement {
 	}
 
 	@Override
-	public final void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
+	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1f));
 		actionPerformed();
+		return true;
 	}
 
 	@Override
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawForeground(mc, mouseX, mouseY);
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawForeground(parentScreen, mouseX, mouseY);
 		if (isVisible()) {
 			GlStateManager.color(1f, 1f, 1f, 1f);
 			if(!enabled) {
-				backgroundDisabled.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
+				backgroundDisabled.draw(getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), zLevel);
 			} else {
 				if(isInside(mouseX, mouseY)) {
-					backgroundHover.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
+					backgroundHover.draw(getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), zLevel);
 				} else {
-					background.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
+					background.draw(getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), zLevel);
 				}
 			}
 		}

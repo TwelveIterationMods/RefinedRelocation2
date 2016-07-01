@@ -5,7 +5,9 @@ import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiAddFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -18,6 +20,7 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/addFilter.png");
 
 	private final GuiRootFilter parentGui;
+	private final GuiAddFilterButton[] filterButtons = new GuiAddFilterButton[3];
 
 	private int currentOffset;
 
@@ -35,7 +38,18 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 		GuiScrollBar scrollBar = new GuiScrollBar(guiLeft + xSize - 16, guiTop + 28, 78, this);
 		rootNode.addChild(scrollBar);
 
-		rootNode.addChild(new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 28, 152, 80));
+		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 28, 152, 80);
+		rootNode.addChild(scrollPane);
+
+		int y = 0;
+		for(int i = 0; i < filterButtons.length; i++) {
+			filterButtons[i] = new GuiAddFilterButton(this);
+			filterButtons[i].setPosition(0, y);
+			scrollPane.addChild(filterButtons[i]);
+			y += filterButtons[i].getHeight();
+		}
+
+		setCurrentOffset(0);
 	}
 
 	@Override
@@ -65,12 +79,12 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 
 	@Override
 	public int getVisibleRows() {
-		return 3;
+		return filterButtons.length;
 	}
 
 	@Override
 	public int getRowCount() {
-		return 9;
+		return FilterRegistry.getFilterCount();
 	}
 
 	@Override
@@ -81,5 +95,14 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 	@Override
 	public void setCurrentOffset(int offset) {
 		this.currentOffset = offset;
+
+		for(int i = 0; i < filterButtons.length; i++) {
+			filterButtons[i].setCurrentFilter(FilterRegistry.getFilterInstance(currentOffset + i));
+		}
 	}
+
+	public GuiRootFilter getParentGui() {
+		return parentGui;
+	}
+
 }

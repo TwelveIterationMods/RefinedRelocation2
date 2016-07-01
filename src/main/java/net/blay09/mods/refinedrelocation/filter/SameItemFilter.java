@@ -7,9 +7,11 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -27,8 +29,8 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileWrapper pos) {
-		return pos.hasCapability(CapabilitySortingInventory.CAPABILITY, null);
+	public boolean isFilterUsable(TileEntity tileEntity) {
+		return tileEntity.hasCapability(CapabilitySortingInventory.CAPABILITY, null);
 	}
 
 	@Override
@@ -77,8 +79,19 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
+	public String getDescriptionLangKey() {
+		return "filter.refinedrelocation:SameItemFilter.description";
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_PresetFilter");
 	}
+
+	@Override
+	public void openSettingsGui(EntityPlayer player, TileEntity tileEntity, int filterIndex) {
+		// TODO SIF GUI
+	}
+
 }

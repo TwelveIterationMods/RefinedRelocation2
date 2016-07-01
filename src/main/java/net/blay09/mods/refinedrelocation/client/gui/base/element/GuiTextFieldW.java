@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -19,8 +19,8 @@ public class GuiTextFieldW extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawForeground(mc, mouseX, mouseY);
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawForeground(parentScreen, mouseX, mouseY);
 		textField.xPosition = getAbsoluteX();
 		textField.yPosition = getAbsoluteY();
 		textField.width = getWidth();

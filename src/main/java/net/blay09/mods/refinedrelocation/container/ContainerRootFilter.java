@@ -20,6 +20,7 @@ public class ContainerRootFilter extends ContainerMod {
 	public static final String KEY_FILTER = "Filter";
 	public static final String KEY_ADD_FILTER = "AddFilter";
 	public static final String KEY_EDIT_FILTER = "EditFilter";
+	public static final String KEY_DELETE_FILTER = "DeleteFilter";
 
 	private final EntityPlayer entityPlayer;
 	private final TileWrapper tileWrapper;
@@ -102,13 +103,23 @@ public class ContainerRootFilter extends ContainerMod {
 				// Client tried to edit a filter that doesn't exist. Bad client!
 				return;
 			}
-			// TODO do the things here
+			IFilter filter = rootFilter.getFilter(index);
+			if(filter != null) {
+				filter.openSettingsGui(entityPlayer, tileWrapper.getTileEntity(), index);
+			}
+		} else if(message.getKey().equals(KEY_DELETE_FILTER)) {
+			int index = message.getIntValue();
+			if(index < 0 || index >= rootFilter.getFilterCount()) {
+				// Client tried to delete a filter that doesn't exist. Bad client!
+				return;
+			}
+			rootFilter.removeFilter(index);
 		}
 	}
 
 	@Override
 	public void receivedMessageClient(IMessageContainer message) {
-		if(message.getKey().startsWith(KEY_FILTER)) {
+		if(message.getKey().equals(KEY_FILTER)) {
 			rootFilter.deserializeNBT(message.getNBTValue().getTag("FilterList"));
 		}
 	}

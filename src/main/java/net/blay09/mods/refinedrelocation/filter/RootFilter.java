@@ -16,10 +16,6 @@ public class RootFilter implements IRootFilter {
 
 	private final List<IFilter> filterList = Lists.newArrayList();
 
-	public RootFilter() {
-//		filterList.add(new SameItemFilter()); // TODO test code
-	}
-
 	@Override
 	public int getFilterCount() {
 		return filterList.size();
@@ -37,6 +33,11 @@ public class RootFilter implements IRootFilter {
 	@Override
 	public void addFilter(IFilter filter) {
 		filterList.add(filter);
+	}
+
+	@Override
+	public void removeFilter(int index) {
+		filterList.remove(index);
 	}
 
 	@Override

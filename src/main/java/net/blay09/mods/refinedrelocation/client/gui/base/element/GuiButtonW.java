@@ -1,9 +1,8 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.init.SoundEvents;
 
 public class GuiButtonW extends GuiElement {
 
@@ -20,23 +19,25 @@ public class GuiButtonW extends GuiElement {
 	}
 
 	@Override
-	public final void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		Minecraft mc = Minecraft.getMinecraft();
 		if (button.mousePressed(mc, mouseX, mouseY)) {
 			button.playPressSound(mc.getSoundHandler());
 			actionPerformed();
+			return true;
 		}
+		return false;
 	}
 
 	@Override
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawForeground(mc, mouseX, mouseY);
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawForeground(parentScreen, mouseX, mouseY);
 		button.xPosition = getAbsoluteX();
 		button.yPosition = getAbsoluteY();
 		button.width = getWidth();
 		button.height = getHeight();
-		button.drawButton(mc, mouseX, mouseY);
+		button.drawButton(parentScreen.getMinecraft(), mouseX, mouseY);
 	}
 
 	public void actionPerformed() {

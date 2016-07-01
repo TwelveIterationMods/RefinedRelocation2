@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +18,7 @@ public class GuiTextFieldMultiLine extends GuiElement {
 
 	private final FontRenderer fontRenderer;
 
-	private String text;
+	private String text = "";
 	private int maxLength = Integer.MAX_VALUE;
 	private boolean isEnabled = true;
 	private boolean visible = true;
@@ -61,6 +61,9 @@ public class GuiTextFieldMultiLine extends GuiElement {
 	}
 
 	private int getStartOfWord(int position) {
+		if(text.isEmpty()) {
+			return 0;
+		}
 		position = Math.max(Math.min(position, text.length() - 1), 0);
 		if (text.charAt(position) == '\n') {
 			return position;
@@ -80,26 +83,20 @@ public class GuiTextFieldMultiLine extends GuiElement {
 		return 0;
 	}
 
-	private int getStartOfNextWord(int position)
-	{
+	private int getStartOfNextWord(int position) {
 		position = Math.max(Math.min(position, text.length() - 1), 0);
-		if (text.charAt(position) == '\n')
-		{
+		if (text.charAt(position) == '\n') {
 			return position;
 		}
 		boolean foundNonAlphabetic = false;
-		for (int i = position; i < text.length(); i++)
-		{
+		for (int i = position; i < text.length(); i++) {
 			char c = text.charAt(i);
-			if (c == '\n')
-			{
+			if (c == '\n') {
 				return i;
 			}
-			if (!Character.isAlphabetic(c))
-			{
+			if (!Character.isAlphabetic(c)) {
 				foundNonAlphabetic = true;
-			} else if (foundNonAlphabetic)
-			{
+			} else if (foundNonAlphabetic) {
 				return i;
 			}
 		}
@@ -149,44 +146,38 @@ public class GuiTextFieldMultiLine extends GuiElement {
 		scrollOffset = Math.max(scrollOffset + y, 0);
 	}
 
-	private void deleteBack(boolean wholeWord)
-	{
+	private void deleteBack(boolean wholeWord) {
 		int deleteCount = 1;
-		if (wholeWord)
-		{
+		if (wholeWord) {
 			deleteCount = cursorPosition - getStartOfWord(cursorPosition);
 		}
-		if (cursorPosition > 0)
-		{
+		if (cursorPosition > 0) {
 			text = text.substring(0, cursorPosition - deleteCount) + text.substring(cursorPosition);
 			setCursorPosition(cursorPosition - deleteCount);
 			renderCache = null;
 		}
 	}
 
-	private void deleteFront(boolean wholeWord)
-	{
+	private void deleteFront(boolean wholeWord) {
 		int deleteCount = 1;
-		if (wholeWord)
-		{
+		if (wholeWord) {
 			deleteCount = getStartOfNextWord(cursorPosition) - cursorPosition;
 		}
-		if (cursorPosition < text.length())
-		{
+		if (cursorPosition < text.length()) {
 			text = text.substring(0, cursorPosition) + text.substring(cursorPosition + deleteCount);
 			renderCache = null;
 		}
 	}
 
-	private void writeText(String s)
-	{
+	private void writeText(String s) {
 		text = (cursorPosition > 0 ? text.substring(0, cursorPosition) : "") + s + (text.length() > cursorPosition ? text.substring(cursorPosition) : "");
 		setCursorPosition(cursorPosition + s.length());
 		renderCache = null;
 	}
 
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		boolean isInside = mouseX >= getAbsoluteX() && mouseX < getAbsoluteX() + getWidth() && mouseY >= getAbsoluteY() && mouseY < getAbsoluteY() + getHeight();
+	@Override
+	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		boolean isInside = isInside(mouseX, mouseY);
 
 		if (canLoseFocus) {
 			setFocused(isInside);
@@ -194,17 +185,19 @@ public class GuiTextFieldMultiLine extends GuiElement {
 
 		if (isFocused && isInside && mouseButton == 0) {
 			int relX = mouseX - getAbsoluteX();
-			int relY = mouseY - getAbsoluteY();
+			int relY = mouseY - getAbsoluteY(); // TODO clicked y position isn't accurate to line
 			int lineNumber = Math.round((float) relY / (float) fontRenderer.FONT_HEIGHT) + scrollOffset + 1;
 			int startOfLine = getStartOfLine(getEndOfLine(0, lineNumber), 1);
 			int endOfLine = getEndOfLine(startOfLine, 1);
 			String renderText = fontRenderer.trimStringToWidth(this.text.substring(Math.max(startOfLine + lineScrollOffset, 0), endOfLine), getWidth() - PADDING);
 			setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, relX).length() + lineScrollOffset);
+			return true;
 		}
+		return false;
 	}
 
-
-	public boolean textboxKeyTyped(char typedChar, int keyCode) {
+	@Override
+	public boolean keyTyped(char typedChar, int keyCode) {
 		if (!isFocused) {
 			return false;
 		}
@@ -286,8 +279,8 @@ public class GuiTextFieldMultiLine extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawForeground(mc, mouseX, mouseY);
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawForeground(parentScreen, mouseX, mouseY);
 		if (visible) {
 			drawRect(getAbsoluteX() - 1, getAbsoluteY() - 1, getAbsoluteX() + getWidth() + 1, getAbsoluteY() + getHeight() + 1, 0xFFEEEEEE);
 			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0xFF000000);
@@ -317,7 +310,7 @@ public class GuiTextFieldMultiLine extends GuiElement {
 				}
 			}
 			if (cursorCounter / 6 % 2 == 0 && (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT >= 0 && (cursorLine - scrollOffset + 1) * fontRenderer.FONT_HEIGHT < getHeight() + PADDING) {
-				drawCursor(getAbsoluteX() + fontRenderer.getStringWidth(text.substring(lastLineIdx + lineScrollOffset, cursorPosition)) + PADDING, getAbsoluteY() + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT +PADDING);
+				drawCursor(getAbsoluteX() + fontRenderer.getStringWidth(text.substring(lastLineIdx + lineScrollOffset, cursorPosition)) + PADDING, getAbsoluteY() + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING);
 			}
 		}
 	}
@@ -329,10 +322,10 @@ public class GuiTextFieldMultiLine extends GuiElement {
 		GlStateManager.enableColorLogic();
 		GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);
 		tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0);
-		tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0);
-		tessellator.getBuffer().pos(x + 1, y, 0);
-		tessellator.getBuffer().pos(x, y, 0);
+		tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
+		tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
+		tessellator.getBuffer().pos(x + 1, y, 0).endVertex();
+		tessellator.getBuffer().pos(x, y, 0).endVertex();
 		tessellator.draw();
 		GlStateManager.disableColorLogic();
 		GlStateManager.enableTexture2D();
@@ -383,6 +376,8 @@ public class GuiTextFieldMultiLine extends GuiElement {
 		} else {
 			this.text = text;
 		}
+		setCursorPosition(cursorPosition);
+		renderCache = null;
 	}
 
 	public int getMaxLength() {

@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.gui.FontRenderer;
 
 public class GuiLabel extends GuiElement {
@@ -16,8 +16,8 @@ public class GuiLabel extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawForeground(mc, mouseX, mouseY);
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawForeground(parentScreen, mouseX, mouseY);
 		fontRenderer.drawString(text, getAbsoluteX(), getAbsoluteY(), textColor);
 	}
 

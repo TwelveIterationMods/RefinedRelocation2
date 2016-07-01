@@ -7,4 +7,5 @@ public interface IRootFilter extends ISimpleFilter {
 	@Nullable
 	IFilter getFilter(int index);
 	void addFilter(IFilter filter);
+	void removeFilter(int index);
 }

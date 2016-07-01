@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.GuiAddFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiElement;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
@@ -32,14 +33,14 @@ public class GuiFilterSlot extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawBackground(mc, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawBackground(parentScreen, mouseX, mouseY);
 		texture.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
 	}
 
 	@Override
-	public void drawForeground(Minecraft mc, int mouseX, int mouseY) {
-		super.drawForeground(mc, mouseX, mouseY);
+	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawForeground(parentScreen, mouseX, mouseY);
 		IFilter filter = rootFilter.getFilter(index);
 		if(filter != null) {
 			IFilterIcon filterIcon = filter.getFilterIcon();
@@ -47,19 +48,20 @@ public class GuiFilterSlot extends GuiElement {
 				filterIcon.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
 			}
 		}
-		if(isInside(mouseX, mouseY)) {
+		if(parentScreen.getMouseElement() == this) {
 			drawRect(getAbsoluteX() + 1, getAbsoluteY() + 1, getAbsoluteX() + getWidth() - 1, getAbsoluteY() + getHeight() - 1, 0x99FFFFFF);
 		}
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		IFilter filter = rootFilter.getFilter(index);
 		if(filter == null) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiAddFilter(parentGui));
 		} else {
 			RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_EDIT_FILTER, index);
 		}
+		return true;
 	}
 
 	@Override
@@ -74,4 +76,11 @@ public class GuiFilterSlot extends GuiElement {
 		}
 	}
 
+	public int getFilterIndex() {
+		return index;
+	}
+
+	public boolean hasFilter() {
+		return rootFilter.getFilter(index) != null;
+	}
 }

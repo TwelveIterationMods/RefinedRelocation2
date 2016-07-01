@@ -38,8 +38,8 @@ public class InternalMethodsImpl implements InternalMethods {
 	private static final Map<Class<? extends TileEntity>, ITileGuiHandler> tileGuiHandlerMap = Maps.newHashMap();
 
 	@Override
-	public void registerFilter(String id, Class<? extends IFilter> filterClass) {
-		FilterRegistry.registerFilter(id, filterClass);
+	public void registerFilter(Class<? extends IFilter> filterClass) {
+		FilterRegistry.registerFilter(filterClass);
 	}
 
 	@Override

@@ -6,5 +6,8 @@ container.refinedrelocation:rootFilter=Edit Filter
 itemGroup.refinedrelocation=Refined Relocation 2
 
 filter.refinedrelocation:NameFilter=Name Filter
+filter.refinedrelocation:NameFilter.description=Text-based item name filter
 filter.refinedrelocation:PresetFilter=Preset Filter
+filter.refinedrelocation:PresetFilter.description=Checklist based on the\nmost common things
 filter.refinedrelocation:SameItemFilter=Item Match Filter
+filter.refinedrelocation:SameItemFilter.description=Lets items that already exist\nin this inventory pass

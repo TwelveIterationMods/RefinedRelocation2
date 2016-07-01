@@ -4,13 +4,17 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,7 +38,7 @@ public class NameFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileWrapper pos) {
+	public boolean isFilterUsable(TileEntity tileEntity) {
 		return true;
 	}
 
@@ -98,8 +102,19 @@ public class NameFilter implements IFilter {
 	}
 
 	@Override
+	public String getDescriptionLangKey() {
+		return "filter.refinedrelocation:NameFilter.description";
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_NameFilter");
 	}
+
+	@Override
+	public void openSettingsGui(EntityPlayer player, TileEntity tileEntity, int filterIndex) {
+		RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_NAME_FILTER, tileEntity.getPos(), filterIndex));
+	}
+
 }

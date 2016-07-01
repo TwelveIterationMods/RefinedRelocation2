@@ -26,8 +26,8 @@ public class RefinedRelocationAPI {
 		internalMethods.removeFromSortingGrid(member);
 	}
 
-	public static void registerFilter(String id, Class<? extends IFilter> filterClass) {
-		internalMethods.registerFilter(id, filterClass);
+	public static void registerFilter(Class<? extends IFilter> filterClass) {
+		internalMethods.registerFilter(filterClass);
 	}
 
 	public static GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
@@ -57,5 +57,7 @@ public class RefinedRelocationAPI {
 	public static void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler) {
 		internalMethods.registerGuiHandler(tileClass, handler);
 	}
+
+	// TODO provide some default way of opening a filter in a GUI
 
 }

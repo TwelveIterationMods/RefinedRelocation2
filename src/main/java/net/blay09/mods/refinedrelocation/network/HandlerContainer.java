@@ -23,11 +23,15 @@ public class HandlerContainer implements IMessageHandler<MessageContainer, IMess
 					Container container = FMLClientHandler.instance().getClientPlayerEntity().openContainer;
 					if (container instanceof IContainerNetworked) {
 						((IContainerNetworked) container).receivedMessageClient(message);
+					} else {
+						System.err.println("Got container message but open container is not networked: " + container);
 					}
 				} else {
 					Container container = ctx.getServerHandler().playerEntity.openContainer;
 					if (container instanceof IContainerNetworked) {
 						((IContainerNetworked) container).receivedMessageServer(message);
+					} else {
+						System.err.println("Got container message but open container is not networked: " + container);
 					}
 				}
 			}

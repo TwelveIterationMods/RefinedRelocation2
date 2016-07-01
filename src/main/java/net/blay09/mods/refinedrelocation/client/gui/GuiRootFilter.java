@@ -6,6 +6,7 @@ import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiDeleteFilterButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiFilterSlot;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
@@ -24,6 +25,9 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> {
 	private final EntityPlayer player;
 	private final TileWrapper tileWrapper;
 
+	private final GuiFilterSlot[] filterSlots = new GuiFilterSlot[3];
+	private final GuiDeleteFilterButton[] deleteButtons = new GuiDeleteFilterButton[3];
+
 	public GuiRootFilter(EntityPlayer player, TileWrapper tileWrapper) {
 		super(new ContainerRootFilter(player, tileWrapper));
 		this.player = player;
@@ -36,17 +40,16 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> {
 	public void initGui() {
 		super.initGui();
 
-		GuiFilterSlot filterSlot = new GuiFilterSlot(this, container.getRootFilter(), 0);
-		filterSlot.setPosition(guiLeft + 10, guiTop + 30);
-		rootNode.addChild(filterSlot);
+		int x = guiLeft + 10;
+		for(int i = 0; i < filterSlots.length; i++) {
+			filterSlots[i] = new GuiFilterSlot(this, container.getRootFilter(), i);
+			filterSlots[i].setPosition(x, guiTop + 30);
+			rootNode.addChild(filterSlots[i]);
 
-		filterSlot = new GuiFilterSlot(this, container.getRootFilter(), 1);
-		filterSlot.setPosition(guiLeft + 50, guiTop + 30);
-		rootNode.addChild(filterSlot);
-
-		filterSlot = new GuiFilterSlot(this, container.getRootFilter(), 2);
-		filterSlot.setPosition(guiLeft + 90, guiTop + 30);
-		rootNode.addChild(filterSlot);
+			deleteButtons[i] = new GuiDeleteFilterButton(x + 19, guiTop + 27, filterSlots[i]);
+			rootNode.addChild(deleteButtons[i]);
+			x += 40;
+		}
 
 		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(tileWrapper.getTileEntity().getClass());
 		if(tileGuiHandler != null) {

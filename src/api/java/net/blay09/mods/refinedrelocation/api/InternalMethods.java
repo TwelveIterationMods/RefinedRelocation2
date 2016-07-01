@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface InternalMethods {
 
-	void registerFilter(String id, Class<? extends IFilter> filterClass);
+	void registerFilter(Class<? extends IFilter> filterClass);
 
 	void addToSortingGrid(ISortingGridMember member);
 	void removeFromSortingGrid(ISortingGridMember member);

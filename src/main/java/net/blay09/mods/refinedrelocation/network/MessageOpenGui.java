@@ -6,14 +6,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageOpenGui implements IMessage {
 
-	private static final int TYPE_BLOCK = 0;
-	private static final int TYPE_INVENTORY = 1;
+	private static final int TYPE_POS = 0;
+	private static final int TYPE_INT = 1;
+	private static final int TYPE_POS_INT = 2;
 
 	private int windowId;
 	private int id;
 	private int type;
 
-	private int slotIndex;
+	private int intValue;
 
 	private BlockPos pos;
 
@@ -22,14 +23,21 @@ public class MessageOpenGui implements IMessage {
 
 	public MessageOpenGui(int id, BlockPos pos) {
 		this.id = id;
-		this.type = TYPE_BLOCK;
+		this.type = TYPE_POS;
 		this.pos = pos;
 	}
 
-	public MessageOpenGui(int id, int slotIndex) {
+	public MessageOpenGui(int id, int intValue) {
 		this.id = id;
-		this.type = TYPE_INVENTORY;
-		this.slotIndex = slotIndex;
+		this.type = TYPE_INT;
+		this.intValue = intValue;
+	}
+
+	public MessageOpenGui(int id, BlockPos pos, int intValue) {
+		this.id = id;
+		this.type = TYPE_POS_INT;
+		this.pos = pos;
+		this.intValue = intValue;
 	}
 
 	public MessageOpenGui setWindowId(int windowId) {
@@ -42,10 +50,13 @@ public class MessageOpenGui implements IMessage {
 		id = buf.readByte();
 		windowId = buf.readInt();
 		type = buf.readByte();
-		if(type == TYPE_BLOCK) {
+		if(type == TYPE_POS) {
 			pos = BlockPos.fromLong(buf.readLong());
-		} else if(type == TYPE_INVENTORY) {
-			slotIndex = buf.readShort();
+		} else if(type == TYPE_INT) {
+			intValue = buf.readInt();
+		} else if(type == TYPE_POS_INT) {
+			pos = BlockPos.fromLong(buf.readLong());
+			intValue = buf.readInt();
 		}
 	}
 
@@ -54,10 +65,13 @@ public class MessageOpenGui implements IMessage {
 		buf.writeByte(id);
 		buf.writeInt(windowId);
 		buf.writeByte(type);
-		if(type == 0) {
+		if(type == TYPE_POS) {
 			buf.writeLong(pos.toLong());
-		} else if(type == 1) {
-			buf.writeShort(slotIndex);
+		} else if(type == TYPE_INT) {
+			buf.writeInt(intValue);
+		} else if(type == TYPE_POS_INT) {
+			buf.writeLong(pos.toLong());
+			buf.writeInt(intValue);
 		}
 	}
 
@@ -69,19 +83,20 @@ public class MessageOpenGui implements IMessage {
 		return windowId;
 	}
 
-	public boolean isBlock() {
-		return type == TYPE_BLOCK;
+	public boolean hasPosition() {
+		return type == TYPE_POS || type == TYPE_POS_INT;
 	}
 
-	public boolean isInventory() {
-		return type == TYPE_INVENTORY;
+	public boolean isInt() {
+		return type == TYPE_INT || type == TYPE_POS_INT;
 	}
 
-	public int getSlotIndex() {
-		return slotIndex;
+	public int getIntValue() {
+		return intValue;
 	}
 
 	public BlockPos getPos() {
 		return pos;
 	}
+
 }

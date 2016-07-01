@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 
 public class GuiScrollBar extends GuiElement {
 
@@ -33,11 +33,13 @@ public class GuiScrollBar extends GuiElement {
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (mouseButton == 0 && mouseX >= getAbsoluteX() && mouseX < getAbsoluteX() + getWidth() /*&& mouseY >= barY && mouseY < barY + barHeight*/) {
+	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (mouseButton == 0 && mouseX >= getAbsoluteX() && mouseX < getAbsoluteX() + getWidth() /*&& mouseY >= barY && mouseY < barY + barHeight*/) { // TODO this shouldn't be commented out
 			mouseClickY = mouseY;
 			indexWhenClicked = scrollTarget.getCurrentOffset();
+			return true;
 		}
+		return false;
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class GuiScrollBar extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(Minecraft mc, int mouseX, int mouseY) {
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
 		if (mouseClickY != -1) {
 			float pixelsPerFilter = (getHeight() - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
 			if (pixelsPerFilter != 0) {
@@ -63,7 +65,7 @@ public class GuiScrollBar extends GuiElement {
 
 		drawRect(getAbsoluteX(), barY, getAbsoluteX() + getWidth(), barY + barHeight, 0xFFAAAAAA);
 
-		super.drawBackground(mc, mouseX, mouseY);
+		super.drawBackground(parentScreen, mouseX, mouseY);
 	}
 
 	public void setCurrentOffset(int offset) {
