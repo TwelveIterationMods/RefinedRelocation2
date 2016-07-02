@@ -1,5 +1,7 @@
 package net.blay09.mods.refinedrelocation.network;
 
+import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
@@ -40,8 +42,10 @@ public class GuiHandler {
 					IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
 					if (rootFilter != null) {
 						IFilter filter = rootFilter.getFilter(message.getIntValue());
-						if(filter != null) {
-							return filter.createContainer(player, new TileWrapper(tileEntity));
+						if(filter instanceof IConfigurableFilter) {
+							return ((IConfigurableFilter) filter).createContainer(player, new TileWrapper(tileEntity));
+						} else if(filter instanceof IChecklistFilter) {
+							// TODO open default checklist gui
 						}
 					}
 				}
@@ -64,8 +68,10 @@ public class GuiHandler {
 					Container container = player.openContainer;
 					if (container instanceof ContainerRootFilter) {
 						IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(message.getIntValue());
-						if (filter != null) {
-							return filter.createGuiScreen(player, new TileWrapper(tileEntity));
+						if (filter instanceof IConfigurableFilter) {
+							return ((IConfigurableFilter) filter).createGuiScreen(player, new TileWrapper(tileEntity));
+						} else if(filter instanceof IChecklistFilter) {
+							// TODO open default checklist filter
 						}
 					}
 				}

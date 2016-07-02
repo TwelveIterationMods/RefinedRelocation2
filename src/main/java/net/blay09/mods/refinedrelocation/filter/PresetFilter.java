@@ -5,28 +5,22 @@ import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
-import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class PresetFilter implements IFilter {
+public class PresetFilter implements IChecklistFilter {
 
 	public static final String ID = RefinedRelocation.MOD_ID + ":PresetFilter";
 
@@ -45,6 +39,7 @@ public class PresetFilter implements IFilter {
 	}
 
 	private static final Map<String, Preset> presetMap = Maps.newHashMap();
+	private static final List<Preset> presetList = Lists.newArrayList();
 
 	public static final Preset ORES = new Preset("ORES") {
 		@Override
@@ -128,9 +123,11 @@ public class PresetFilter implements IFilter {
 		presetMap.put(DYES.getId(), DYES);
 		presetMap.put(FOOD.getId(), FOOD);
 		presetMap.put(FUEL_ITEMS.getId(), FUEL_ITEMS);
+
+		presetList.addAll(presetMap.values());
 	}
 
-	private final List<Preset> presets = Lists.newArrayList();
+	private final boolean[] presetStates = new boolean[presetList.size()];
 
 	@Override
 	public String getIdentifier() {
@@ -149,8 +146,8 @@ public class PresetFilter implements IFilter {
 		for(int i = 0; i < oreIDs.length; i++) {
 			oreNames[i] = OreDictionary.getOreName(oreIDs[i]);
 		}
-		for (Preset preset : presets) {
-			if (preset.passes(itemStack, oreNames)) {
+		for (int i = 0; i < presetList.size(); i++) {
+			if (presetStates[i] && presetList.get(i).passes(itemStack, oreNames)) {
 				return true;
 			}
 		}
@@ -160,8 +157,10 @@ public class PresetFilter implements IFilter {
 	@Override
 	public NBTBase serializeNBT() {
 		NBTTagList list = new NBTTagList();
-		for(Preset preset : presets) {
-			list.appendTag(new NBTTagString(preset.getId()));
+		for(int i = 0; i < presetStates.length; i++) {
+			if(presetStates[i]) {
+				list.appendTag(new NBTTagString(presetList.get(i).getId()));
+			}
 		}
 		return list;
 	}
@@ -170,7 +169,13 @@ public class PresetFilter implements IFilter {
 	public void deserializeNBT(NBTBase nbt) {
 		NBTTagList list = (NBTTagList) nbt;
 		for(int i = 0; i < list.tagCount(); i++) {
-			presets.add(presetMap.get(list.getStringTagAt(i)));
+			Preset preset = presetMap.get(list.getStringTagAt(i));
+			if(preset != null) {
+				int index = presetList.indexOf(preset);
+				if(index != -1) {
+					presetStates[index] = true;
+				}
+			}
 		}
 	}
 
@@ -192,17 +197,23 @@ public class PresetFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isConfigurable() {
-		return false;
+	public String getOptionName(int option) {
+		return presetList.get(option).getId();
 	}
 
 	@Override
-	public Container createContainer(EntityPlayer player, TileOrMultipart tileEntity) {
-		return null;
+	public void setOptionChecked(int option, boolean checked) {
+		presetStates[option] = checked;
 	}
 
 	@Override
-	public GuiScreen createGuiScreen(EntityPlayer player, TileOrMultipart tileEntity) {
-		return null;
+	public boolean isOptionChecked(int option) {
+		return presetStates[option];
 	}
+
+	@Override
+	public int getOptionCount() {
+		return presetMap.size();
+	}
+
 }

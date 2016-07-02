@@ -2,6 +2,8 @@ package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
@@ -72,7 +74,7 @@ public class GuiFilterSlot extends GuiElement {
 			list.add(TextFormatting.YELLOW + "Click to add filter");
 		} else {
 			list.add(I18n.format(filter.getLangKey()));
-			if(filter.isConfigurable()) {
+			if(filter instanceof IConfigurableFilter || filter instanceof IChecklistFilter) {
 				list.add(TextFormatting.YELLOW + "Click to configure");
 			} else {
 				list.add(TextFormatting.GRAY + "Not configurable");

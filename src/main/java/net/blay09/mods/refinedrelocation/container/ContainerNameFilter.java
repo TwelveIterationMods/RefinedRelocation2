@@ -22,6 +22,8 @@ public class ContainerNameFilter extends ContainerMod {
 		this.player = player;
 		this.tileEntity = tileEntity;
 		this.filter = filter;
+
+		addPlayerInventory(player, 128);
 	}
 
 	@Override

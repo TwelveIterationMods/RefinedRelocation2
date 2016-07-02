@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RootFilter implements IRootFilter {
 
-	private final List<IFilter> filterList = Lists.newArrayList();
+	private final List<SubFilterWrapper> filterList = Lists.newArrayList();
 
 	@Override
 	public int getFilterCount() {
@@ -27,12 +27,12 @@ public class RootFilter implements IRootFilter {
 		if(index < 0 || index >= filterList.size()) {
 			return null;
 		}
-		return filterList.get(index);
+		return filterList.get(index).getFilter();
 	}
 
 	@Override
 	public void addFilter(IFilter filter) {
-		filterList.add(filter);
+		filterList.add(new SubFilterWrapper(filter));
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class RootFilter implements IRootFilter {
 	@Override
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
 		boolean passes = false;
-		for(IFilter filter : filterList) {
-			passes = filter.passes(tileEntity, itemStack);
+		for(SubFilterWrapper filter : filterList) {
+			passes = filter.getFilter().passes(tileEntity, itemStack); // TODO respect isBlacklist here
 		}
 		return passes;
 	}
@@ -52,10 +52,9 @@ public class RootFilter implements IRootFilter {
 	@Override
 	public NBTBase serializeNBT() {
 		NBTTagList list = new NBTTagList();
-		for(IFilter filter : filterList) {
+		for(SubFilterWrapper filter : filterList) {
 			NBTTagCompound tagCompound = new NBTTagCompound();
-			tagCompound.setString("Type", filter.getIdentifier());
-			tagCompound.setTag("Data", filter.serializeNBT());
+			filter.writeNBT(tagCompound);
 			list.appendTag(tagCompound);
 		}
 		return list;
@@ -67,11 +66,11 @@ public class RootFilter implements IRootFilter {
 		NBTTagList list = (NBTTagList) nbt;
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tagCompound = list.getCompoundTagAt(i);
-			IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
+			SubFilterWrapper filter = SubFilterWrapper.loadFromNBT(tagCompound);
 			if(filter != null) {
-				filter.deserializeNBT(tagCompound.getTag("Data"));
 				filterList.add(filter);
 			}
+
 		}
 	}
 
