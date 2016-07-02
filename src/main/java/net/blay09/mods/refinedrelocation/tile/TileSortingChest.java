@@ -54,11 +54,12 @@ public class TileSortingChest extends TileMod implements ITickable {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
+		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
+		rootFilter.deserializeNBT(compound.getTag("RootFilter"));
 	}
 
 	@Override
 	public void readFromNBTSynced(NBTTagCompound compound) {
-		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
 		customName = compound.getString("CustomName");
 	}
 
@@ -66,12 +67,13 @@ public class TileSortingChest extends TileMod implements ITickable {
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setTag("ItemHandler", itemHandler.serializeNBT());
+		compound.setTag("SortingInventory", sortingInventory.serializeNBT());
+		compound.setTag("RootFilter", rootFilter.serializeNBT());
 		return compound;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
-		compound.setTag("SortingInventory", sortingInventory.serializeNBT());
 		compound.setString("CustomName", customName);
 		return compound;
 	}

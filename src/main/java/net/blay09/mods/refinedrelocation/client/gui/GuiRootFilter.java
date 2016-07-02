@@ -7,8 +7,11 @@ import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonPriority;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiDeleteFilterButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiFilterSlot;
+import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
@@ -23,6 +26,8 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> {
 	// TODO Whitelist/Blacklist Toggle
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/rootFilter.png");
+
+	private final TextureAtlasRegion textureSeparator;
 
 	public GuiRootFilter(EntityPlayer player, TileOrMultipart tileEntity) {
 		super(new ContainerRootFilter(player, tileEntity));
@@ -53,6 +58,11 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> {
 			};
 			rootNode.addChild(btnReturn);
 		}
+
+		rootNode.addChild(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:rootFilter.priority"), 0x404040));
+		rootNode.addChild(new GuiButtonPriority(10, 80, 100, 20));
+
+		textureSeparator = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_separator");
 	}
 
 	@Override
@@ -62,10 +72,11 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		final int x = guiLeft + 10;
-		final int y = guiTop + 30;
+		final int y = guiTop + 37;
 		GlStateManager.enableBlend();
-		ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_separator").draw(x + 30, y + 7, zLevel);
-		ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_separator").draw(x + 70, y + 7, zLevel);
+		textureSeparator.draw(x + 30, y, zLevel);
+		textureSeparator.draw(x + 70, y, zLevel);
+		GlStateManager.disableBlend();
 
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
@@ -73,10 +84,10 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		fontRendererObj.drawString("Sorting Chest (Filter)", 8, 6, 4210752);
-		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 
-		fontRendererObj.drawSplitString("Configure up to three filters by clicking the empty slots above.", 10, 70, 120, 4210752);
+		String tileDisplayName = container.getTileEntity().getDisplayName();
+		fontRendererObj.drawString(tileDisplayName.isEmpty() ? I18n.format("container.refinedrelocation:rootFilter") : I18n.format("container.refinedrelocation:rootFilterWithName", tileDisplayName), 8, 6, 4210752);
+		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 }

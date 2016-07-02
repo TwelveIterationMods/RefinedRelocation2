@@ -175,27 +175,28 @@ public class InternalMethodsImpl implements InternalMethods {
 
 	@Override
 	public void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners) {
-		for(IContainerListener listener : listeners) {
-			if (listener instanceof EntityPlayerMP) {
-				NetworkHandler.wrapper.sendTo(new MessageContainer(key, value), (EntityPlayerMP) listener);
-			}
-		}
+		syncContainerValue(new MessageContainer(key, value), listeners);
+	}
+
+	@Override
+	public void syncContainerValue(String key, int value, Iterable<IContainerListener> listeners) {
+		syncContainerValue(new MessageContainer(key, value), listeners);
 	}
 
 	@Override
 	public void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners) {
-		for(IContainerListener listener : listeners) {
-			if (listener instanceof EntityPlayerMP) {
-				NetworkHandler.wrapper.sendTo(new MessageContainer(key, value), (EntityPlayerMP) listener);
-			}
-		}
+		syncContainerValue(new MessageContainer(key, value), listeners);
 	}
 
 	@Override
 	public void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
+		syncContainerValue(new MessageContainer(key, value), listeners);
+	}
+
+	private void syncContainerValue(MessageContainer message, Iterable<IContainerListener> listeners) {
 		for(IContainerListener listener : listeners) {
 			if (listener instanceof EntityPlayerMP) {
-				NetworkHandler.wrapper.sendTo(new MessageContainer(key, value), (EntityPlayerMP) listener);
+				NetworkHandler.wrapper.sendTo(message, (EntityPlayerMP) listener);
 			}
 		}
 	}

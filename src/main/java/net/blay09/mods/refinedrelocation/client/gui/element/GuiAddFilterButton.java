@@ -2,6 +2,8 @@ package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiAddFilter;
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
@@ -28,7 +30,9 @@ public class GuiAddFilterButton extends GuiElement {
 	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if(currentFilter != null) {
 			RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_ADD_FILTER, currentFilter.getIdentifier());
-			Minecraft.getMinecraft().displayGuiScreen(parentGui.getParentGui());
+			if(!(currentFilter instanceof IConfigurableFilter) && !(currentFilter instanceof IChecklistFilter)) {
+				Minecraft.getMinecraft().displayGuiScreen(parentGui.getParentGui());
+			}
 			return true;
 		}
 		return false;

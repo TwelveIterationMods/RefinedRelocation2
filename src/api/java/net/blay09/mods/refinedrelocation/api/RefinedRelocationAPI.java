@@ -56,6 +56,10 @@ public class RefinedRelocationAPI {
 		internalMethods.syncContainerValue(key, value, listeners);
 	}
 
+	public static void syncContainerValue(String key, int value, Iterable<IContainerListener> listeners) {
+		internalMethods.syncContainerValue(key, value, listeners);
+	}
+
 	public static void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners) {
 		internalMethods.syncContainerValue(key, value, listeners);
 	}

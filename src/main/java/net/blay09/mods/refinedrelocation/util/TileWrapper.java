@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -55,4 +56,14 @@ public class TileWrapper implements TileOrMultipart {
 		return tileEntity.getCapability(capability, facing);
 	}
 
+	@Override
+	public void markDirty() {
+		tileEntity.markDirty();
+	}
+
+	@Override
+	public String getDisplayName() {
+		ITextComponent displayName = tileEntity.getDisplayName();
+		return displayName != null ? displayName.getUnformattedText() : "";
+	}
 }

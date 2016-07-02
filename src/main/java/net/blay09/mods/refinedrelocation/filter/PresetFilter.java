@@ -41,7 +41,7 @@ public class PresetFilter implements IChecklistFilter {
 	private static final Map<String, Preset> presetMap = Maps.newHashMap();
 	private static final List<Preset> presetList = Lists.newArrayList();
 
-	public static final Preset ORES = new Preset("ORES") {
+	public static final Preset ORES = new Preset("Ores") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -53,7 +53,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset INGOTS = new Preset("INGOTS") {
+	public static final Preset INGOTS = new Preset("Ingots") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -65,7 +65,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset NUGGETS = new Preset("NUGGETS") {
+	public static final Preset NUGGETS = new Preset("Nuggets") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -77,7 +77,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset GEMS = new Preset("GEMS") {
+	public static final Preset GEMS = new Preset("Gems") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -89,7 +89,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset DYES = new Preset("DYES") {
+	public static final Preset DYES = new Preset("Dyes") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -101,14 +101,14 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset FOOD = new Preset("FOOD") {
+	public static final Preset FOOD = new Preset("Food") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			return itemStack.getItem() instanceof ItemFood;
 		}
 	};
 
-	public static final Preset FUEL_ITEMS = new Preset("FUEL") {
+	public static final Preset FUEL_ITEMS = new Preset("Fuel") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			return TileEntityFurnace.getItemBurnTime(itemStack) > 0;
@@ -197,8 +197,8 @@ public class PresetFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public String getOptionName(int option) {
-		return presetList.get(option).getId();
+	public String getOptionLangKey(int option) {
+		return "filter.refinedrelocation:PresetFilter.option" + presetList.get(option).getId();
 	}
 
 	@Override

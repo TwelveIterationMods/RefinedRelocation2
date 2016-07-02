@@ -57,4 +57,13 @@ public class PartWrapper implements TileOrMultipart {
 		return part.getCapability(capability, facing);
 	}
 
+	@Override
+	public void markDirty() {
+		// TODO How to mark a part dirty?
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "";
+	}
 }

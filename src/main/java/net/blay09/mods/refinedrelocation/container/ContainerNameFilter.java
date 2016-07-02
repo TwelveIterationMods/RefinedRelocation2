@@ -48,6 +48,7 @@ public class ContainerNameFilter extends ContainerMod {
 	public void receivedMessageServer(IContainerMessage message) {
 		if(message.getKey().equals(KEY_VALUE)) {
 			filter.setValue(message.getStringValue());
+			tileEntity.markDirty();
 			lastValue = filter.getValue();
 		}
 	}

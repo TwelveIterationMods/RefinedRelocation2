@@ -6,19 +6,18 @@ import net.minecraft.client.gui.FontRenderer;
 public class GuiLabel extends GuiElement {
 
 	private String text;
-	private FontRenderer fontRenderer;
 	private int textColor;
 
-	public GuiLabel(String text, FontRenderer fontRenderer, int textColor) {
+	public GuiLabel(int x, int y, String text, int textColor) {
 		this.text = text;
-		this.fontRenderer = fontRenderer;
 		this.textColor = textColor;
+		setPosition(x, y);
 	}
 
 	@Override
 	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
 		super.drawForeground(parentScreen, mouseX, mouseY);
-		fontRenderer.drawString(text, getAbsoluteX(), getAbsoluteY(), textColor);
+		parentScreen.getFontRenderer().drawString(text, getAbsoluteX(), getAbsoluteY(), textColor);
 	}
 
 	public String getText() {

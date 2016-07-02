@@ -15,6 +15,7 @@ public class GuiDeleteFilterButton extends GuiImageButton {
 		super(x, y, "filter_delete");
 		this.parentSlot = parentSlot;
 		setSize(8, 8);
+		setVisible(false);
 	}
 
 	@Override

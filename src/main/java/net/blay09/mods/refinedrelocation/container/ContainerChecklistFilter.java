@@ -64,6 +64,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 				return;
 			}
 			filter.setOptionChecked(index, true);
+			tileEntity.markDirty();
 			lastStates[index] = 1;
 		} else if(message.getKey().equals(KEY_UNCHECK)) {
 			int index = message.getIntValue();
@@ -72,6 +73,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 				return;
 			}
 			filter.setOptionChecked(index, false);
+			tileEntity.markDirty();
 			lastStates[index] = 0;
 		}
 	}

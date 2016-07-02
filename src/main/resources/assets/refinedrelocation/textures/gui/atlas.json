@@ -24,6 +24,8 @@
         "refinedrelocation:scrollbar_top",
         "refinedrelocation:scrollbar_middle",
         "refinedrelocation:scrollbar_bottom",
+        "refinedrelocation:checklist",
+        "refinedrelocation:checklist_checked",
         "refinedrelocation:icon_NameFilter",
         "refinedrelocation:icon_PresetFilter"
     ]
