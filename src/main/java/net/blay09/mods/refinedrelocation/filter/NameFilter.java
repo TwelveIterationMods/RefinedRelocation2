@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.filter;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.GuiNameFilter;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NameFilter implements IFilter {
+public class NameFilter implements IFilter, IConfigurableFilter {
 
 	public static final String ID = RefinedRelocation.MOD_ID + ":NameFilter";
 
@@ -108,11 +109,6 @@ public class NameFilter implements IFilter {
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_NameFilter");
-	}
-
-	@Override
-	public boolean isConfigurable() {
-		return false;
 	}
 
 	@Override

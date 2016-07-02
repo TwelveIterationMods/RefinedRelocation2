@@ -7,9 +7,6 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -90,18 +87,4 @@ public class SameItemFilter implements IFilter {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_PresetFilter");
 	}
 
-	@Override
-	public boolean isConfigurable() {
-		return false;
-	}
-
-	@Override
-	public Container createContainer(EntityPlayer player, TileOrMultipart tileEntity) {
-		return null;
-	}
-
-	@Override
-	public GuiScreen createGuiScreen(EntityPlayer player, TileOrMultipart tileEntity) {
-		return null;
-	}
 }
