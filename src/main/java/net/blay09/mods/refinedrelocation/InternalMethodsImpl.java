@@ -183,6 +183,15 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
+	public void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners) {
+		for(IContainerListener listener : listeners) {
+			if (listener instanceof EntityPlayerMP) {
+				NetworkHandler.wrapper.sendTo(new MessageContainer(key, value), (EntityPlayerMP) listener);
+			}
+		}
+	}
+
+	@Override
 	public void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
 		for(IContainerListener listener : listeners) {
 			if (listener instanceof EntityPlayerMP) {

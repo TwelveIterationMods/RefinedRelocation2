@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.container.IContainerNetworked;
-import net.blay09.mods.refinedrelocation.api.container.IMessageContainer;
+import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -14,12 +14,12 @@ public class ContainerMod extends Container implements IContainerNetworked {
 	}
 
 	@Override
-	public void receivedMessageClient(IMessageContainer message) {
+	public void receivedMessageClient(IContainerMessage message) {
 
 	}
 
 	@Override
-	public void receivedMessageServer(IMessageContainer message) {
+	public void receivedMessageServer(IContainerMessage message) {
 
 	}
 

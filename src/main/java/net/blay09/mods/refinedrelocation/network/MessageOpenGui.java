@@ -37,6 +37,7 @@ public class MessageOpenGui implements IMessage {
 	}
 
 	public MessageOpenGui(int id, Multipart part) {
+		// TODO Support Multiparts in MOG
 		throw new NotImplementedException("MOG doesn't support parts yet");
 	}
 

@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
-import net.blay09.mods.refinedrelocation.api.container.IMessageContainer;
+import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -37,7 +37,7 @@ public class ContainerNameFilter extends ContainerMod {
 	}
 
 	@Override
-	public void receivedMessageClient(IMessageContainer message) {
+	public void receivedMessageClient(IContainerMessage message) {
 		if(message.getKey().equals(KEY_VALUE)) {
 			filter.setValue(message.getStringValue());
 			markGuiNeedsUpdate(true);
@@ -45,7 +45,7 @@ public class ContainerNameFilter extends ContainerMod {
 	}
 
 	@Override
-	public void receivedMessageServer(IMessageContainer message) {
+	public void receivedMessageServer(IContainerMessage message) {
 		if(message.getKey().equals(KEY_VALUE)) {
 			filter.setValue(message.getStringValue());
 			lastValue = filter.getValue();

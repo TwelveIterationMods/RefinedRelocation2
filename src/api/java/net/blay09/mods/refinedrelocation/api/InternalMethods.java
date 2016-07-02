@@ -28,6 +28,7 @@ public interface InternalMethods {
 	void sendContainerMessageToServer(String key, int value);
 
 	void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners);
+	void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners);
 	void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners);
 
 	void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler);

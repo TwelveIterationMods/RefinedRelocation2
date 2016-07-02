@@ -1,14 +1,15 @@
 package net.blay09.mods.refinedrelocation.network;
 
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
-import net.blay09.mods.refinedrelocation.client.gui.GuiNameFilter;
+import net.blay09.mods.refinedrelocation.client.gui.GuiChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiSortingChest;
-import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
+import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
@@ -22,7 +23,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-// TODO Support for Multiparts
 public class GuiHandler {
 
 	public static final int GUI_SORTING_CHEST = 1;
@@ -31,21 +31,22 @@ public class GuiHandler {
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity tileEntity = message.hasPosition() ? player.worldObj.getTileEntity(message.getPos()) : null;
+		TileEntity actualTile = message.hasPosition() ? player.worldObj.getTileEntity(message.getPos()) : null;
+		TileOrMultipart tileEntity = actualTile != null ? new TileWrapper(actualTile) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:
-				return tileEntity instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) tileEntity) : null;
+				return actualTile instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) actualTile) : null;
 			case GUI_ROOT_FILTER:
-				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerRootFilter(player, new TileWrapper(tileEntity)) : null) : null;
+				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerRootFilter(player, tileEntity) : null) : null;
 			case GUI_ANY_FILTER:
 				if(tileEntity != null) {
 					IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
 					if (rootFilter != null) {
 						IFilter filter = rootFilter.getFilter(message.getIntValue());
 						if(filter instanceof IConfigurableFilter) {
-							return ((IConfigurableFilter) filter).createContainer(player, new TileWrapper(tileEntity));
+							return ((IConfigurableFilter) filter).createContainer(player, tileEntity);
 						} else if(filter instanceof IChecklistFilter) {
-							// TODO open default checklist gui
+							return new ContainerChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
 						}
 					}
 				}
@@ -57,21 +58,22 @@ public class GuiHandler {
 	@Nullable
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGuiScreen(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity tileEntity = message.hasPosition() ? player.worldObj.getTileEntity(message.getPos()) : null;
+		TileEntity actualTile = message.hasPosition() ? player.worldObj.getTileEntity(message.getPos()) : null;
+		TileOrMultipart tileEntity = actualTile != null ? new TileWrapper(actualTile) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:
-				return tileEntity instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) tileEntity) : null;
+				return actualTile instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) actualTile) : null;
 			case GUI_ROOT_FILTER:
-				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiRootFilter(player, new TileWrapper(tileEntity)) : null) : null;
+				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiRootFilter(player, tileEntity) : null) : null;
 			case GUI_ANY_FILTER:
 				if(tileEntity != null) {
 					Container container = player.openContainer;
 					if (container instanceof ContainerRootFilter) {
 						IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(message.getIntValue());
 						if (filter instanceof IConfigurableFilter) {
-							return ((IConfigurableFilter) filter).createGuiScreen(player, new TileWrapper(tileEntity));
+							return ((IConfigurableFilter) filter).createGuiScreen(player, tileEntity);
 						} else if(filter instanceof IChecklistFilter) {
-							// TODO open default checklist filter
+							return new GuiChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
 						}
 					}
 				}

@@ -1,22 +1,24 @@
 package net.blay09.mods.refinedrelocation.network;
 
 import io.netty.buffer.ByteBuf;
-import net.blay09.mods.refinedrelocation.api.container.IMessageContainer;
+import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class MessageContainer implements IMessage, IMessageContainer {
+public class MessageContainer implements IMessage, IContainerMessage {
 
 	public static final int TYPE_INT = 0;
 	public static final int TYPE_STRING = 1;
 	public static final int TYPE_NBT = 2;
+	public static final int TYPE_BYTE_ARRAY = 3;
 
 	private int type;
 	private String key;
 	private int intValue;
 	private String stringValue;
 	private NBTTagCompound nbtValue;
+	private byte[] byteArrayValue;
 
 	public MessageContainer() {
 	}
@@ -39,6 +41,12 @@ public class MessageContainer implements IMessage, IMessageContainer {
 		this.nbtValue = value;
 	}
 
+	public MessageContainer(String key, byte[] value) {
+		this.key = key;
+		this.type = TYPE_BYTE_ARRAY;
+		this.byteArrayValue = value;
+	}
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		key = ByteBufUtils.readUTF8String(buf);
@@ -49,6 +57,9 @@ public class MessageContainer implements IMessage, IMessageContainer {
 			stringValue = ByteBufUtils.readUTF8String(buf);
 		} else if(type == TYPE_NBT) {
 			nbtValue = ByteBufUtils.readTag(buf);
+		} else if(type == TYPE_BYTE_ARRAY) {
+			byteArrayValue = new byte[buf.readShort()];
+			buf.readBytes(byteArrayValue);
 		}
 	}
 
@@ -62,6 +73,9 @@ public class MessageContainer implements IMessage, IMessageContainer {
 			ByteBufUtils.writeUTF8String(buf, stringValue);
 		} else if(type == TYPE_NBT) {
 			ByteBufUtils.writeTag(buf, nbtValue);
+		} else if(type == TYPE_BYTE_ARRAY) {
+			buf.writeShort(byteArrayValue.length);
+			buf.writeBytes(byteArrayValue);
 		}
 	}
 
@@ -83,5 +97,10 @@ public class MessageContainer implements IMessage, IMessageContainer {
 	@Override
 	public NBTTagCompound getNBTValue() {
 		return nbtValue;
+	}
+
+	@Override
+	public byte[] getByteArrayValue() {
+		return byteArrayValue;
 	}
 }

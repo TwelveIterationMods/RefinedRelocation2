@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.container;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
-import net.blay09.mods.refinedrelocation.api.container.IMessageContainer;
+import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
@@ -91,7 +91,7 @@ public class ContainerRootFilter extends ContainerMod {
 	}
 
 	@Override
-	public void receivedMessageServer(IMessageContainer message) {
+	public void receivedMessageServer(IContainerMessage message) {
 		if(message.getKey().equals(KEY_ADD_FILTER)) {
 			String typeId = message.getStringValue();
 			IFilter filter = FilterRegistry.createFilter(typeId);
@@ -128,7 +128,7 @@ public class ContainerRootFilter extends ContainerMod {
 	}
 
 	@Override
-	public void receivedMessageClient(IMessageContainer message) {
+	public void receivedMessageClient(IContainerMessage message) {
 		if(message.getKey().equals(KEY_FILTER)) {
 			rootFilter.deserializeNBT(message.getNBTValue().getTag("FilterList"));
 		}
