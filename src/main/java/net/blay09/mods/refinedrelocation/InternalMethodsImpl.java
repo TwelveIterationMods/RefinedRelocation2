@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
@@ -13,11 +14,15 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.grid.SortingGrid;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageContainer;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation.util.PartWrapper;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
@@ -35,7 +40,7 @@ import java.util.Map;
 
 public class InternalMethodsImpl implements InternalMethods {
 
-	private static final Map<Class<? extends TileEntity>, ITileGuiHandler> tileGuiHandlerMap = Maps.newHashMap();
+	private static final Map<Class, ITileGuiHandler> tileGuiHandlerMap = Maps.newHashMap();
 
 	@Override
 	public void registerFilter(Class<? extends IFilter> filterClass) {
@@ -48,8 +53,8 @@ public class InternalMethodsImpl implements InternalMethods {
 		if (sortingGrid != null) {
 			return;
 		}
-		World world = member.getTileWrapper().getWorld();
-		BlockPos pos = member.getTileWrapper().getPos();
+		World world = member.getTileEntity().getWorld();
+		BlockPos pos = member.getTileEntity().getPos();
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
 			if (tileEntity != null) {
@@ -97,7 +102,7 @@ public class InternalMethodsImpl implements InternalMethods {
 		for(ISortingGridMember member : sortingGrid.getMembers()) {
 			if(member instanceof ISortingInventory) {
 				ISortingInventory memberInventory = (ISortingInventory) member;
-				boolean passes = memberInventory.getFilter().passes(memberInventory.getTileWrapper(), itemStack);
+				boolean passes = memberInventory.getFilter().passes(memberInventory.getTileEntity(), itemStack);
 				if(passes) {
 					passingList.add(memberInventory);
 				}
@@ -150,7 +155,12 @@ public class InternalMethodsImpl implements InternalMethods {
 
 	@Override
 	public GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
-		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 20, guiContainer.guiTop + 4, new TileWrapper(tileEntity));
+		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new TileWrapper(tileEntity));
+	}
+
+	@Override
+	public GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
+		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new PartWrapper(part));
 	}
 
 	@Override
@@ -182,13 +192,22 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
-	public void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler) {
+	public void registerGuiHandler(Class tileClass, ITileGuiHandler handler) {
 		tileGuiHandlerMap.put(tileClass, handler);
 	}
 
 	@Nullable
-	public static ITileGuiHandler getGuiHandler(Class<? extends TileEntity> tileClass) {
+	public static ITileGuiHandler getGuiHandler(Class tileClass) {
 		return tileGuiHandlerMap.get(tileClass);
 	}
 
+	@Override
+	public void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
+		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
+	}
+
+	@Override
+	public void openRootFilterGui(EntityPlayer player, Multipart part) {
+		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, part));
+	}
 }

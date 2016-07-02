@@ -14,7 +14,7 @@ public class SortingGridMember implements ISortingGridMember {
 
 	private boolean isFirstTick = true;
 
-	public TileWrapper getTileWrapper() {
+	public TileWrapper getTileEntity() {
 		return tileWrapper;
 	}
 

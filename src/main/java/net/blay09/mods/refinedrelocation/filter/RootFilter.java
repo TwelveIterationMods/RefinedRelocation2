@@ -1,9 +1,9 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import com.google.common.collect.Lists;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,10 +41,10 @@ public class RootFilter implements IRootFilter {
 	}
 
 	@Override
-	public boolean passes(TileWrapper pos, ItemStack itemStack) {
+	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
 		boolean passes = false;
 		for(IFilter filter : filterList) {
-			passes = filter.passes(pos, itemStack);
+			passes = filter.passes(tileEntity, itemStack);
 		}
 		return passes;
 	}
@@ -68,8 +68,10 @@ public class RootFilter implements IRootFilter {
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tagCompound = list.getCompoundTagAt(i);
 			IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
-			filter.deserializeNBT(tagCompound.getTag("Data"));
-			filterList.add(filter);
+			if(filter != null) {
+				filter.deserializeNBT(tagCompound.getTag("Data"));
+				filterList.add(filter);
+			}
 		}
 	}
 

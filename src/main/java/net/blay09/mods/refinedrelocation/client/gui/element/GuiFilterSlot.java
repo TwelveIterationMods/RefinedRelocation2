@@ -72,7 +72,11 @@ public class GuiFilterSlot extends GuiElement {
 			list.add(TextFormatting.YELLOW + "Click to add filter");
 		} else {
 			list.add(I18n.format(filter.getLangKey()));
-			list.add(TextFormatting.YELLOW + "Click to configure");
+			if(filter.isConfigurable()) {
+				list.add(TextFormatting.YELLOW + "Click to configure");
+			} else {
+				list.add(TextFormatting.GRAY + "Not configurable");
+			}
 		}
 	}
 

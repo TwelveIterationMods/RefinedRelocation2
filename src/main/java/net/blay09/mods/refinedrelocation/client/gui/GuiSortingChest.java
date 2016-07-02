@@ -1,12 +1,8 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiButtonW;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonW;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
-import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -20,21 +16,13 @@ public class GuiSortingChest extends GuiContainerMod<ContainerSortingChest> {
 	private final EntityPlayer player;
 	private final TileSortingChest tileEntity;
 
-	private GuiButtonW btnOpenFilter;
-
 	public GuiSortingChest(EntityPlayer player, TileSortingChest tileEntity) {
 		super(new ContainerSortingChest(player, tileEntity));
 		this.player = player;
 		this.tileEntity = tileEntity;
 		this.ySize = 168;
-	}
 
-	@Override
-	public void initGui() {
-		super.initGui();
-
-		btnOpenFilter = new GuiOpenFilterButtonW(this, tileEntity, 0);
-		rootNode.addChild(btnOpenFilter);
+		rootNode.addChild(new GuiOpenFilterButtonW(this, tileEntity, 0));
 	}
 
 	@Override

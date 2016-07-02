@@ -1,21 +1,18 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
-import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.blay09.mods.refinedrelocation.client.gui.GuiNameFilter;
+import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,12 +35,12 @@ public class NameFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileEntity tileEntity) {
+	public boolean isFilterUsable(TileOrMultipart tileEntity) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(TileWrapper tilePos, ItemStack itemStack) {
+	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
 		String itemName = itemStack.getDisplayName();
 		Pattern[] patterns = getPatterns();
 		for(Pattern pattern : patterns) {
@@ -56,6 +53,7 @@ public class NameFilter implements IFilter {
 
 	public void setValue(String value) {
 		this.value = value;
+		this.cachedPatterns = null;
 	}
 
 	public String getValue() {
@@ -113,8 +111,18 @@ public class NameFilter implements IFilter {
 	}
 
 	@Override
-	public void openSettingsGui(EntityPlayer player, TileEntity tileEntity, int filterIndex) {
-		RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_NAME_FILTER, tileEntity.getPos(), filterIndex));
+	public boolean isConfigurable() {
+		return false;
 	}
 
+	@Override
+	public Container createContainer(EntityPlayer player, TileOrMultipart tileEntity) {
+		return new ContainerNameFilter(player, tileEntity, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen createGuiScreen(EntityPlayer player, TileOrMultipart tileEntity) {
+		return new GuiNameFilter(player, tileEntity, this);
+	}
 }

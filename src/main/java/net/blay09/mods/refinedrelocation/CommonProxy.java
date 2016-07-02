@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
@@ -16,7 +17,6 @@ import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -44,7 +44,7 @@ public class CommonProxy {
 
 		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, new ITileGuiHandler() {
 			@Override
-			public void openGui(EntityPlayer player, TileEntity tileEntity) {
+			public void openGui(EntityPlayer player, TileOrMultipart tileEntity) {
 				RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos()));
 			}
 		});

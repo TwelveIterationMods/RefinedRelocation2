@@ -3,11 +3,14 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -19,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -134,12 +138,12 @@ public class PresetFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileEntity tileEntity) {
+	public boolean isFilterUsable(TileOrMultipart tileEntity) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(TileWrapper tilePos, ItemStack itemStack) {
+	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
 		int[] oreIDs = OreDictionary.getOreIDs(itemStack);
 		String[] oreNames = new String[oreIDs.length];
 		for(int i = 0; i < oreIDs.length; i++) {
@@ -188,7 +192,17 @@ public class PresetFilter implements IFilter {
 	}
 
 	@Override
-	public void openSettingsGui(EntityPlayer player, TileEntity tileEntity, int filterIndex) {
-		// TODO PF GUI
+	public boolean isConfigurable() {
+		return false;
+	}
+
+	@Override
+	public Container createContainer(EntityPlayer player, TileOrMultipart tileEntity) {
+		return null;
+	}
+
+	@Override
+	public GuiScreen createGuiScreen(EntityPlayer player, TileOrMultipart tileEntity) {
+		return null;
 	}
 }

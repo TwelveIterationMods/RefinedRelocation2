@@ -87,6 +87,12 @@ public class GuiElement extends Gui {
 		}
 	}
 
+	public void initGui(IParentScreen parentScreen) {
+		for(GuiElement child : children) {
+			child.initGui(parentScreen);
+		}
+	}
+
 	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		return parent != null && parent.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -196,4 +202,11 @@ public class GuiElement extends Gui {
 		return parent != null ? parent.getParentScreen() : null;
 	}
 
+	public int getRelativeX() {
+		return relX;
+	}
+
+	public int getRelativeY() {
+		return relY;
+	}
 }

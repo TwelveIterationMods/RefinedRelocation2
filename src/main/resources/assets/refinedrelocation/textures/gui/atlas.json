@@ -19,6 +19,9 @@
         "refinedrelocation:chest_button",
         "refinedrelocation:chest_button_hover",
         "refinedrelocation:chest_button_disabled",
+        "refinedrelocation:scrollbar_top",
+        "refinedrelocation:scrollbar_middle",
+        "refinedrelocation:scrollbar_bottom",
         "refinedrelocation:icon_NameFilter",
         "refinedrelocation:icon_PresetFilter"
     ]

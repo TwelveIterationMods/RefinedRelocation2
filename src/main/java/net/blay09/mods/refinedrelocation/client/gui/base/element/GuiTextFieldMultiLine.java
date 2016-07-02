@@ -1,23 +1,24 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
+import org.apache.logging.log4j.core.net.MimeMessageBuilder;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class GuiTextFieldMultiLine extends GuiElement {
+public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 
 	private static final int ENABLED_COLOR = 0xE0E0E0;
 	private static final int DISABLED_COLOR = 0x707070;
 	private static final int PADDING = 2;
 
-	private final FontRenderer fontRenderer;
-
+	private FontRenderer fontRenderer;
 	private String text = "";
 	private int maxLength = Integer.MAX_VALUE;
 	private boolean isEnabled = true;
@@ -29,12 +30,20 @@ public class GuiTextFieldMultiLine extends GuiElement {
 	private int cursorCounter;
 	private int scrollOffset;
 	private int lineScrollOffset;
-	private String[] renderCache;
 
-	public GuiTextFieldMultiLine(FontRenderer fontRenderer, int x, int y, int width, int height) {
-		this.fontRenderer = fontRenderer;
+	private String[] renderCache;
+	private int lastRowCount;
+
+	public GuiTextFieldMultiLine(int x, int y, int width, int height) {
+		fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 		setPosition(x, y);
 		setSize(width, height);
+	}
+
+	@Override
+	public void initGui(IParentScreen parentScreen) {
+		super.initGui(parentScreen);
+		fontRenderer = parentScreen.getFontRenderer();
 	}
 
 	private int getStartOfLine(int position, int iterations) {
@@ -386,6 +395,29 @@ public class GuiTextFieldMultiLine extends GuiElement {
 
 	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
+	}
+
+	@Override
+	public int getVisibleRows() {
+		return getHeight() / fontRenderer.FONT_HEIGHT;
+	}
+
+	@Override
+	public int getRowCount() {
+		if(renderCache != null) {
+			lastRowCount = renderCache.length;
+		}
+		return lastRowCount;
+	}
+
+	@Override
+	public int getCurrentOffset() {
+		return scrollOffset;
+	}
+
+	@Override
+	public void setCurrentOffset(int offset) {
+		this.scrollOffset = offset;
 	}
 
 }

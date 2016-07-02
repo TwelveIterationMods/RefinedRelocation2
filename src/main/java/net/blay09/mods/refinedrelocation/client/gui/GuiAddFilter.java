@@ -29,16 +29,11 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 		this.parentGui = parentGui;
 
 		ySize = 210;
-	}
 
-	@Override
-	public void initGui() {
-		super.initGui();
-
-		GuiScrollBar scrollBar = new GuiScrollBar(guiLeft + xSize - 16, guiTop + 28, 78, this);
+		GuiScrollBar scrollBar = new GuiScrollBar(xSize - 16, 28, 78, this);
 		rootNode.addChild(scrollBar);
 
-		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 28, 152, 80);
+		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 28, 152, 80);
 		rootNode.addChild(scrollPane);
 
 		int y = 0;

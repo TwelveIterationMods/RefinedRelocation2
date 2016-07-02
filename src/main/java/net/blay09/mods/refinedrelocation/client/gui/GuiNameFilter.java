@@ -2,42 +2,55 @@ package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonW;
 import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
+import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
 
 public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> {
+
+	// TODO consider a help tooltip button
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/rootFilter.png");
 
 	private static final int UPDATE_INTERVAL = 20;
 
-	private GuiTextFieldMultiLine txtFilter;
+	private final EntityPlayer player;
+	private final TileOrMultipart tileEntity;
+	private final GuiTextFieldMultiLine txtFilter;
+
 	private int ticksSinceUpdate;
 	private String lastSentText = "";
 
-	public GuiNameFilter(EntityPlayer player, TileWrapper tileWrapper, int filterIndex) {
-		super(new ContainerNameFilter(player, tileWrapper, filterIndex));
+	public GuiNameFilter(EntityPlayer player, TileOrMultipart tileEntity, NameFilter filter) {
+		super(new ContainerNameFilter(player, tileEntity, filter));
+		this.player = player;
+		this.tileEntity = tileEntity;
 
 		ySize = 210;
 		shouldKeyRepeat = true;
-	}
 
-	@Override
-	public void initGui() {
-		super.initGui();
-
-		txtFilter = new GuiTextFieldMultiLine(fontRendererObj, guiLeft + 8, guiTop + 20, 160, 90);
+		txtFilter = new GuiTextFieldMultiLine(0, 0, 150, 90);
 		txtFilter.setFocused(true);
 		txtFilter.setCanLoseFocus(false);
 		txtFilter.setText(container.getValue());
-		rootNode.addChild(txtFilter);
+
+		GuiScrollBar scrollBar = new GuiScrollBar(161, 20, 89, txtFilter);
+		rootNode.addChild(scrollBar);
+
+		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 20, 150, 90);
+		rootNode.addChild(scrollPane);
+		scrollPane.addChild(txtFilter);
+
+		rootNode.addChild(new GuiOpenFilterButtonW(this, container.getTileEntity(), 0));
 	}
 
 	@Override
@@ -79,9 +92,11 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> {
 	}
 
 	@Override
-	public void onGuiAboutToClose() {
+	public boolean onGuiAboutToClose() {
 		super.onGuiAboutToClose();
 		container.sendValueToServer(txtFilter.getText());
+		RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+		return false;
 	}
 
 }

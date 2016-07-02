@@ -1,13 +1,16 @@
 package net.blay09.mods.refinedrelocation.container;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.IMessageContainer;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -23,15 +26,15 @@ public class ContainerRootFilter extends ContainerMod {
 	public static final String KEY_DELETE_FILTER = "DeleteFilter";
 
 	private final EntityPlayer entityPlayer;
-	private final TileWrapper tileWrapper;
+	private final TileOrMultipart tileEntity;
 	private final IRootFilter rootFilter;
 
 	private int lastFilterCount = -1;
 
-	public ContainerRootFilter(EntityPlayer player, TileWrapper tileWrapper) {
+	public ContainerRootFilter(EntityPlayer player, TileOrMultipart tileEntity) {
 		this.entityPlayer = player;
-		this.tileWrapper = tileWrapper;
-		IRootFilter rootFilter = tileWrapper.getCapability(CapabilityRootFilter.CAPABILITY, null);
+		this.tileEntity = tileEntity;
+		IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
 		if(rootFilter == null) {
 			rootFilter = new RootFilter();
 		}
@@ -45,15 +48,19 @@ public class ContainerRootFilter extends ContainerMod {
 		super.detectAndSendChanges();
 
 		if(rootFilter.getFilterCount() != lastFilterCount) {
-			NBTTagCompound tagCompound = new NBTTagCompound();
-			tagCompound.setTag("FilterList", rootFilter.serializeNBT());
-			RefinedRelocationAPI.syncContainerValue(KEY_FILTER, tagCompound, listeners);
-			lastFilterCount = rootFilter.getFilterCount();
+			syncFilterList();
 		}
 	}
 
-	public TileWrapper getTileWrapper() {
-		return tileWrapper;
+	private void syncFilterList() {
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		tagCompound.setTag("FilterList", rootFilter.serializeNBT());
+		RefinedRelocationAPI.syncContainerValue(KEY_FILTER, tagCompound, listeners);
+		lastFilterCount = rootFilter.getFilterCount();
+	}
+
+	public TileOrMultipart getTileEntity() {
+		return tileEntity;
 	}
 
 	@Nullable
@@ -97,6 +104,9 @@ public class ContainerRootFilter extends ContainerMod {
 				return;
 			}
 			rootFilter.addFilter(filter);
+			lastFilterCount = rootFilter.getFilterCount();
+			syncFilterList();
+			RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), rootFilter.getFilterCount() - 1));
 		} else if(message.getKey().equals(KEY_EDIT_FILTER)) {
 			int index = message.getIntValue();
 			if(index < 0 || index >= rootFilter.getFilterCount()) {
@@ -105,7 +115,7 @@ public class ContainerRootFilter extends ContainerMod {
 			}
 			IFilter filter = rootFilter.getFilter(index);
 			if(filter != null) {
-				filter.openSettingsGui(entityPlayer, tileWrapper.getTileEntity(), index);
+				RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), index));
 			}
 		} else if(message.getKey().equals(KEY_DELETE_FILTER)) {
 			int index = message.getIntValue();

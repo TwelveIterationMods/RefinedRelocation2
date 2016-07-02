@@ -10,49 +10,51 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
 
-public class TileWrapper implements TileOrMultipart {
+public class PartWrapper implements TileOrMultipart {
 
-	private final TileEntity tileEntity;
+	private final Multipart part;
 
-	public TileWrapper(TileEntity tileEntity) {
-		this.tileEntity = tileEntity;
+	public PartWrapper(Multipart part) {
+		this.part = part;
+	}
+
+	@Override
+	public boolean isMultipart() {
+		return true;
 	}
 
 	@Override
 	public TileEntity getTileEntity() {
-		return tileEntity;
+		if(part.getContainer() instanceof TileEntity) {
+			return (TileEntity) part.getContainer();
+		}
+		return part.getWorld().getTileEntity(part.getPos());
 	}
 
 	@Nullable
 	@Override
 	public Multipart getMultipart() {
-		return null;
+		return part;
 	}
 
 	@Override
 	public World getWorld() {
-		return tileEntity.getWorld();
+		return part.getWorld();
 	}
 
 	@Override
 	public BlockPos getPos() {
-		return tileEntity.getPos();
-	}
-
-	@Override
-	public boolean isMultipart() {
-		return false;
+		return part.getPos();
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		return tileEntity.hasCapability(capability, facing);
+		return part.hasCapability(capability, facing);
 	}
 
-	@Nullable
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		return tileEntity.getCapability(capability, facing);
+		return part.getCapability(capability, facing);
 	}
 
 }

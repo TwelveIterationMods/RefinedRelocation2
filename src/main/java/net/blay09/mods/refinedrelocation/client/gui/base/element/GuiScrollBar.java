@@ -1,9 +1,14 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
+import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 
 public class GuiScrollBar extends GuiElement {
 
+	private final TextureAtlasRegion scrollbarTop;
+	private final TextureAtlasRegion scrollbarMiddle;
+	private final TextureAtlasRegion scrollbarBottom;
 	private final IScrollTarget scrollTarget;
 	private int barY;
 	private int barHeight;
@@ -11,11 +16,19 @@ public class GuiScrollBar extends GuiElement {
 	private int lastNumberOfMoves;
 	private int mouseClickY = -1;
 
+	private int lastRowCount;
+	private int lastVisibleRows;
+	private int lastOffset;
+
 	public GuiScrollBar(int x, int y, int height, IScrollTarget scrollTarget) {
 		this.scrollTarget = scrollTarget;
 		setPosition(x, y);
 		setSize(7, height);
 		updatePosition();
+
+		scrollbarTop = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:scrollbar_top");
+		scrollbarMiddle = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:scrollbar_middle");
+		scrollbarBottom = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:scrollbar_bottom");
 	}
 
 	@Override
@@ -51,6 +64,25 @@ public class GuiScrollBar extends GuiElement {
 	}
 
 	@Override
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
+
+		updatePosition();
+	}
+
+	@Override
+	public void update() {
+		super.update();
+
+		if(lastRowCount != scrollTarget.getRowCount() || lastVisibleRows != scrollTarget.getVisibleRows() || lastOffset != scrollTarget.getCurrentOffset()) {
+			updatePosition();
+			lastRowCount = scrollTarget.getRowCount();
+			lastVisibleRows = scrollTarget.getVisibleRows();
+			lastOffset = scrollTarget.getCurrentOffset();
+		}
+	}
+
+	@Override
 	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
 		if (mouseClickY != -1) {
 			float pixelsPerFilter = (getHeight() - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
@@ -62,6 +94,10 @@ public class GuiScrollBar extends GuiElement {
 				}
 			}
 		}
+
+		scrollbarTop.draw(getAbsoluteX() - 2, getAbsoluteY() - 1, zLevel);
+		scrollbarBottom.draw(getAbsoluteX() - 2, getAbsoluteY() + getHeight() - 1, zLevel);
+		scrollbarMiddle.draw(getAbsoluteX() - 2, getAbsoluteY() + 2, scrollbarMiddle.getIconWidth(), getHeight() - 3, zLevel);
 
 		drawRect(getAbsoluteX(), barY, getAbsoluteX() + getWidth(), barY + barHeight, 0xFFAAAAAA);
 

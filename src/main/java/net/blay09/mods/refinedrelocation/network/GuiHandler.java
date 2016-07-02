@@ -1,5 +1,7 @@
 package net.blay09.mods.refinedrelocation.network;
 
+import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiNameFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
@@ -18,11 +20,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
+// TODO Support for Multiparts
 public class GuiHandler {
 
 	public static final int GUI_SORTING_CHEST = 1;
 	public static final int GUI_ROOT_FILTER = 2;
-	public static final int GUI_NAME_FILTER = 3;
+	public static final int GUI_ANY_FILTER = 3;
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
@@ -32,8 +35,17 @@ public class GuiHandler {
 				return tileEntity instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) tileEntity) : null;
 			case GUI_ROOT_FILTER:
 				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerRootFilter(player, new TileWrapper(tileEntity)) : null) : null;
-			case GUI_NAME_FILTER:
-				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerNameFilter(player, new TileWrapper(tileEntity), message.getIntValue()) : null) : null;
+			case GUI_ANY_FILTER:
+				if(tileEntity != null) {
+					IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
+					if (rootFilter != null) {
+						IFilter filter = rootFilter.getFilter(message.getIntValue());
+						if(filter != null) {
+							return filter.createContainer(player, new TileWrapper(tileEntity));
+						}
+					}
+				}
+				break;
 		}
 		return null;
 	}
@@ -47,8 +59,17 @@ public class GuiHandler {
 				return tileEntity instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) tileEntity) : null;
 			case GUI_ROOT_FILTER:
 				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiRootFilter(player, new TileWrapper(tileEntity)) : null) : null;
-			case GUI_NAME_FILTER:
-				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiNameFilter(player, new TileWrapper(tileEntity), message.getIntValue()) : null) : null;
+			case GUI_ANY_FILTER:
+				if(tileEntity != null) {
+					Container container = player.openContainer;
+					if (container instanceof ContainerRootFilter) {
+						IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(message.getIntValue());
+						if (filter != null) {
+							return filter.createGuiScreen(player, new TileWrapper(tileEntity));
+						}
+					}
+				}
+				break;
 		}
 		return null;
 	}

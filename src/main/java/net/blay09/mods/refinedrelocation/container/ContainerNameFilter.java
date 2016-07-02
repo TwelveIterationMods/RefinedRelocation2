@@ -1,13 +1,9 @@
 package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.IMessageContainer;
-import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
-import net.blay09.mods.refinedrelocation.filter.RootFilter;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerNameFilter extends ContainerMod {
@@ -15,30 +11,17 @@ public class ContainerNameFilter extends ContainerMod {
 	public static final String KEY_VALUE = "Value";
 
 	private final EntityPlayer player;
-	private final TileWrapper tileWrapper;
-	private final IRootFilter rootFilter;
-	private final int filterIndex;
+	private final TileOrMultipart tileEntity;
 	private final NameFilter filter;
 
 	private String lastValue = "";
 
 	private boolean guiNeedsUpdate;
 
-	public ContainerNameFilter(EntityPlayer player, TileWrapper tileWrapper, int filterIndex) {
+	public ContainerNameFilter(EntityPlayer player, TileOrMultipart tileEntity, NameFilter filter) {
 		this.player = player;
-		this.tileWrapper = tileWrapper;
-		this.filterIndex = filterIndex;
-		IRootFilter rootFilter = tileWrapper.getCapability(CapabilityRootFilter.CAPABILITY, null);
-		if(rootFilter == null) {
-			rootFilter = new RootFilter();
-		}
-		this.rootFilter = rootFilter;
-		IFilter filter = rootFilter.getFilter(filterIndex);
-		if(filter instanceof NameFilter) {
-			this.filter = (NameFilter) filter;
-		} else {
-			this.filter = new NameFilter();
-		}
+		this.tileEntity = tileEntity;
+		this.filter = filter;
 	}
 
 	@Override
@@ -81,5 +64,9 @@ public class ContainerNameFilter extends ContainerMod {
 
 	public boolean doesGuiNeedUpdate() {
 		return guiNeedsUpdate;
+	}
+
+	public TileOrMultipart getTileEntity() {
+		return tileEntity;
 	}
 }

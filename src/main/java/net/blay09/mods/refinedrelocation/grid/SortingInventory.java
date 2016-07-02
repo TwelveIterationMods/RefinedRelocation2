@@ -42,8 +42,8 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 	@Override
 	protected void onFirstTick() {
 		super.onFirstTick();
-		itemHandler = getTileWrapper().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		filter = getTileWrapper().getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
+		itemHandler = getTileEntity().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		filter = getTileEntity().getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 
 	@Override
 	public void onSlotChanged(int slotIndex) {
-		if(!getSortingGrid().isSortingActive() && !getTileWrapper().getWorld().isRemote) {
+		if(!getSortingGrid().isSortingActive() && !getTileEntity().getWorld().isRemote) {
 			ItemStack itemStack = itemHandler.getStackInSlot(slotIndex);
 			if(itemStack != null) {
 				sortingStackList.add(new SortingStack(itemHandler, slotIndex, itemStack));

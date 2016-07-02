@@ -1,10 +1,12 @@
 package net.blay09.mods.refinedrelocation.api;
 
+import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +36,10 @@ public class RefinedRelocationAPI {
 		return internalMethods.createOpenFilterButton(guiContainer, tileEntity, buttonId);
 	}
 
+	public static GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
+		return internalMethods.createOpenFilterButton(guiContainer, part, buttonId);
+	}
+
 	public static void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {
 		internalMethods.insertIntoSortingGrid(sortingInventory, fromSlotIndex, itemStack);
 	}
@@ -54,10 +60,24 @@ public class RefinedRelocationAPI {
 		internalMethods.syncContainerValue(key, value, listeners);
 	}
 
-	public static void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler) {
-		internalMethods.registerGuiHandler(tileClass, handler);
+	public static void registerGuiHandler(Class clazz, ITileGuiHandler handler) {
+		internalMethods.registerGuiHandler(clazz, handler);
 	}
 
-	// TODO provide some default way of opening a filter in a GUI
+	public static void openRootFilterGui(EntityPlayer player, TileOrMultipart tileEntity) {
+		if(tileEntity.isMultipart()) {
+			openRootFilterGui(player, tileEntity.getMultipart());
+		}  else {
+			openRootFilterGui(player, tileEntity.getTileEntity());
+		}
+	}
+
+	public static void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
+		internalMethods.openRootFilterGui(player, tileEntity);
+	}
+
+	public static void openRootFilterGui(EntityPlayer player, Multipart part) {
+		internalMethods.openRootFilterGui(player, part);
+	}
 
 }

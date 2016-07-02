@@ -14,4 +14,17 @@ public class GuiRootNode extends GuiElement {
 	public IParentScreen getParentScreen() {
 		return parentScreen;
 	}
+
+	@Override
+	public void update() {
+		super.update();
+
+		if(getRelativeX() != parentScreen.getLeft() || getRelativeY() != parentScreen.getTop()) {
+			setPosition(parentScreen.getLeft(), parentScreen.getTop());
+		}
+
+		if(getWidth() != parentScreen.getWidth() || getHeight() != parentScreen.getHeight()) {
+			setSize(parentScreen.getWidth(), parentScreen.getHeight());
+		}
+	}
 }

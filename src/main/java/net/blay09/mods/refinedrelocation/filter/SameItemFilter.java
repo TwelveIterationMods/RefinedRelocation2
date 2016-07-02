@@ -1,17 +1,18 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -29,13 +30,13 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileEntity tileEntity) {
+	public boolean isFilterUsable(TileOrMultipart tileEntity) {
 		return tileEntity.hasCapability(CapabilitySortingInventory.CAPABILITY, null);
 	}
 
 	@Override
-	public boolean passes(TileWrapper pos, ItemStack itemStack) {
-		ISortingInventory sortingInventory = pos.getCapability(CapabilitySortingInventory.CAPABILITY, null);
+	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+		ISortingInventory sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY, null);
 		if(sortingInventory != null) {
 			IItemHandler itemHandler = sortingInventory.getItemHandler();
 			for(int i = 0; i < itemHandler.getSlots(); i++) {
@@ -90,8 +91,17 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
-	public void openSettingsGui(EntityPlayer player, TileEntity tileEntity, int filterIndex) {
-		// TODO SIF GUI
+	public boolean isConfigurable() {
+		return false;
 	}
 
+	@Override
+	public Container createContainer(EntityPlayer player, TileOrMultipart tileEntity) {
+		return null;
+	}
+
+	@Override
+	public GuiScreen createGuiScreen(EntityPlayer player, TileOrMultipart tileEntity) {
+		return null;
+	}
 }

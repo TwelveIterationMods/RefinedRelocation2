@@ -10,4 +10,9 @@ public interface IParentScreen {
 	Minecraft getMinecraft();
 	FontRenderer getFontRenderer();
 
+	int getLeft();
+	int getTop();
+	int getWidth();
+	int getHeight();
+
 }

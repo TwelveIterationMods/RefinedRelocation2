@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class GuiContainerMod<T extends Container> extends GuiContainer implements IParentScreen {
 
 	protected final T container;
-	protected final GuiRootNode rootNode = new GuiRootNode(this); // TODO should probably have its position set to guiLeft, guiTop
+	protected final GuiRootNode rootNode = new GuiRootNode(this);
 	private final List<String> tooltip = Lists.newArrayList();
 
 	private GuiElement mouseElement;
@@ -34,15 +34,17 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		super.initGui();
-		rootNode.removeAllChildren();
+		rootNode.setPosition(guiLeft, guiTop);
+		rootNode.setSize(xSize, ySize);
+		rootNode.initGui(this);
 
 		if (shouldKeyRepeat) {
 			Keyboard.enableRepeatEvents(true);
 		}
 	}
 
-	public void onGuiAboutToClose() {
-
+	public boolean onGuiAboutToClose() {
+		return true;
 	}
 
 	@Override
@@ -86,8 +88,9 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if (!rootNode.keyTyped(typedChar, keyCode)) {
 			if (keyCode == Keyboard.KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
-				onGuiAboutToClose();
-				mc.thePlayer.closeScreen();
+				if(onGuiAboutToClose()) {
+					mc.thePlayer.closeScreen();
+				}
 				return;
 			}
 			super.keyTyped(typedChar, keyCode);
@@ -147,4 +150,25 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 	public Minecraft getMinecraft() {
 		return mc;
 	}
+
+	@Override
+	public int getLeft() {
+		return guiLeft;
+	}
+
+	@Override
+	public int getTop() {
+		return guiTop;
+	}
+
+	@Override
+	public int getWidth() {
+		return xSize;
+	}
+
+	@Override
+	public int getHeight() {
+		return ySize;
+	}
+
 }
