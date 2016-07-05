@@ -151,6 +151,7 @@ public class ContainerRootFilter extends ContainerMod {
 			tileEntity.markDirty();
 			lastFilterCount = rootFilter.getFilterCount();
 			syncFilterList();
+			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
 			RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), rootFilter.getFilterCount() - 1));
 		} else if(message.getKey().equals(KEY_EDIT_FILTER)) {
 			int index = message.getIntValue();

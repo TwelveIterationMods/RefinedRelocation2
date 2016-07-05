@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
+import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
@@ -15,7 +16,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter> implements IScrollTarget {
+public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter> implements IScrollTarget, IFilterPreviewGui {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/checklistFilter.png");
 

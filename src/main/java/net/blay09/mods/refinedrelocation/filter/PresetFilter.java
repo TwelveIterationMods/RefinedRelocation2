@@ -22,6 +22,9 @@ import java.util.Map;
 
 public class PresetFilter implements IChecklistFilter {
 
+	// TODO All Blocks Preset
+	// TODO Non-stackable Items Preset
+
 	public static final String ID = RefinedRelocation.MOD_ID + ":PresetFilter";
 
 	public abstract static class Preset {

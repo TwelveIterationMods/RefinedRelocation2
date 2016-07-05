@@ -46,6 +46,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 			}
 			if (anyChanges) {
 				RefinedRelocationAPI.syncContainerValue(KEY_STATES, lastStates, listeners);
+				RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 			}
 			ticksSinceUpdate = 0;
 		}
@@ -66,6 +67,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 			filter.setOptionChecked(index, true);
 			tileEntity.markDirty();
 			lastStates[index] = 1;
+			RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 		} else if(message.getKey().equals(KEY_UNCHECK)) {
 			int index = message.getIntValue();
 			if(index < 0 || index >= lastStates.length) {
@@ -75,6 +77,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 			filter.setOptionChecked(index, false);
 			tileEntity.markDirty();
 			lastStates[index] = 0;
+			RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 		}
 	}
 

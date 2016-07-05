@@ -13,6 +13,8 @@ import javax.annotation.Nullable;
 
 public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 
+	// TODO render sorting overlay texture
+
 	private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/chest/normal.png");
 
 	private final ModelChest model = new ModelChest();

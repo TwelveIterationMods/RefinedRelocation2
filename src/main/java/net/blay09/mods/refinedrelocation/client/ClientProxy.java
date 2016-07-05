@@ -35,7 +35,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.sortingChest), 0, TileSortingChest.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.sortingChest), 0, TileSortingChest.class); // TODO chest has missing model in inventory
 
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
 		MinecraftForge.EVENT_BUS.register(new FilterPreviewHandler());
