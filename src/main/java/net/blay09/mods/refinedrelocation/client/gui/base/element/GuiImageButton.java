@@ -10,19 +10,21 @@ import net.minecraft.init.SoundEvents;
 
 public class GuiImageButton extends GuiElement {
 
-	private final TextureAtlasRegion background;
-	private final TextureAtlasRegion backgroundHover;
-	private final TextureAtlasRegion backgroundDisabled;
+	private TextureAtlasRegion background;
+	private TextureAtlasRegion backgroundHover;
+	private TextureAtlasRegion backgroundDisabled;
 	private boolean enabled = true;
 
 	public GuiImageButton(int x, int y, String textureName) {
 		setPosition(x, y);
+		setButtonTexture(textureName);
+		setSize(background.getIconWidth(), background.getIconHeight());
+	}
 
+	public void setButtonTexture(String textureName) {
 		background = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:" + textureName);
 		backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:" + textureName + "_hover");
 		backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:" + textureName + "_disabled");
-
-		setSize(background.getIconWidth(), background.getIconHeight());
 	}
 
 	@Override

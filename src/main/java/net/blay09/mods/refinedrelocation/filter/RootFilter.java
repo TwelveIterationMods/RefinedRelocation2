@@ -31,6 +31,22 @@ public class RootFilter implements IRootFilter {
 	}
 
 	@Override
+	public boolean isBlacklist(int index) {
+		if(index < 0 || index >= filterList.size()) {
+			return false;
+		}
+		return filterList.get(index).isBlacklist();
+	}
+
+	@Override
+	public void setIsBlacklist(int index, boolean isBlacklist) {
+		if(index < 0 || index >= filterList.size()) {
+			return;
+		}
+		filterList.get(index).setBlacklist(isBlacklist);
+	}
+
+	@Override
 	public void addFilter(IFilter filter) {
 		filterList.add(new SubFilterWrapper(filter));
 	}

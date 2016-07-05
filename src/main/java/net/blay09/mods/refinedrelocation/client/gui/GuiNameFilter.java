@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.client.gui;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
+import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
@@ -15,7 +16,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> {
+public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implements IFilterPreviewGui {
 
 	// TODO consider a help tooltip button
 

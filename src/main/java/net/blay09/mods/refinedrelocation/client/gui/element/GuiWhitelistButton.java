@@ -1,29 +1,59 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
+import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
+import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
 public class GuiWhitelistButton extends GuiImageButton {
 
-	private final int filterIndex;
+	private final GuiRootFilter parentGui;
+	private final GuiFilterSlot parentSlot;
 
-	public GuiWhitelistButton(int x, int y, int filterIndex) {
+	private boolean lastBlacklist;
+
+	public GuiWhitelistButton(int x, int y, GuiRootFilter parentGui, GuiFilterSlot parentSlot) {
 		super(x, y, "filter_whitelist");
-		this.filterIndex = filterIndex;
+		this.parentGui = parentGui;
+		this.parentSlot = parentSlot;
+		setSize(8, 8);
+		setVisible(false);
+	}
+
+	@Override
+	public void update() {
+		super.update();
+
+		boolean nowBlacklist = parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
+		if (lastBlacklist != nowBlacklist) {
+			setButtonTexture(nowBlacklist ? "filter_blacklist" : "filter_whitelist");
+			lastBlacklist = nowBlacklist;
+		}
+
+		setVisible(parentSlot.hasFilter());
 	}
 
 	@Override
 	public void actionPerformed() {
 		super.actionPerformed();
 
-		// TODO whitelist/blacklist toggle
+		boolean isBlacklist = !parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		tagCompound.setInteger(ContainerRootFilter.KEY_BLACKLIST_INDEX, parentSlot.getFilterIndex());
+		tagCompound.setBoolean(ContainerRootFilter.KEY_BLACKLIST, isBlacklist);
+		RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_BLACKLIST, tagCompound);
+		parentGui.getContainer().getRootFilter().setIsBlacklist(parentSlot.getFilterIndex(), isBlacklist);
 	}
 
 	@Override
 	public void addTooltip(List<String> list) {
-		list.add(TextFormatting.WHITE + "Whitelist");
+		boolean nowBlacklist = parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
+		list.add(TextFormatting.WHITE + (nowBlacklist ? "Blacklist" : "Whitelist"));
+		list.add(TextFormatting.YELLOW + "Click to toggle");
 	}
 
 }

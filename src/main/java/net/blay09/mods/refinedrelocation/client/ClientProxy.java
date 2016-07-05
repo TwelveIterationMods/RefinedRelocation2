@@ -38,6 +38,7 @@ public class ClientProxy extends CommonProxy {
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.sortingChest), 0, TileSortingChest.class);
 
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
+		MinecraftForge.EVENT_BUS.register(new FilterPreviewHandler());
 		MinecraftForge.EVENT_BUS.register(new OpenFilterButtonHandler());
 	}
 

@@ -2,11 +2,13 @@ package net.blay09.mods.refinedrelocation.api;
 
 import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +27,7 @@ public interface InternalMethods {
 	GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId);
 
 	void sendContainerMessageToServer(String key, String value);
+	void sendContainerMessageToServer(String key, NBTTagCompound value);
 	void sendContainerMessageToServer(String key, int value);
 
 	void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners);
@@ -36,4 +39,6 @@ public interface InternalMethods {
 
 	void openRootFilterGui(EntityPlayer player, TileEntity tileEntity);
 	void openRootFilterGui(EntityPlayer player, Multipart part);
+
+	void updateFilterPreview(EntityPlayer player, TileOrMultipart tileEntity, ISimpleFilter filter);
 }

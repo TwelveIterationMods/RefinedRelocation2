@@ -8,4 +8,6 @@ public interface IRootFilter extends ISimpleFilter {
 	IFilter getFilter(int index);
 	void addFilter(IFilter filter);
 	void removeFilter(int index);
+	boolean isBlacklist(int index);
+	void setIsBlacklist(int index, boolean isBlacklist);
 }

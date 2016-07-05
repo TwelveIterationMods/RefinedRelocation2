@@ -2,11 +2,13 @@ package net.blay09.mods.refinedrelocation.api;
 
 import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,6 +50,10 @@ public class RefinedRelocationAPI {
 		internalMethods.sendContainerMessageToServer(key, value);
 	}
 
+	public static void sendContainerMessageToServer(String key, NBTTagCompound value) {
+		internalMethods.sendContainerMessageToServer(key, value);
+	}
+
 	public static void sendContainerMessageToServer(String key, int value) {
 		internalMethods.sendContainerMessageToServer(key, value);
 	}
@@ -66,6 +72,10 @@ public class RefinedRelocationAPI {
 
 	public static void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
 		internalMethods.syncContainerValue(key, value, listeners);
+	}
+
+	public static void updateFilterPreview(EntityPlayer player, TileOrMultipart tileEntity, ISimpleFilter filter) {
+		internalMethods.updateFilterPreview(player, tileEntity, filter);
 	}
 
 	public static void registerGuiHandler(Class clazz, ITileGuiHandler handler) {

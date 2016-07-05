@@ -7,7 +7,9 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -16,6 +18,7 @@ import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.grid.SortingGrid;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageContainer;
+import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.util.PartWrapper;
@@ -24,6 +27,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -169,6 +173,12 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
+	public void sendContainerMessageToServer(String key, NBTTagCompound value) {
+		NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
+	}
+
+
+	@Override
 	public void sendContainerMessageToServer(String key, int value) {
 		NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
 	}
@@ -219,5 +229,19 @@ public class InternalMethodsImpl implements InternalMethods {
 	@Override
 	public void openRootFilterGui(EntityPlayer player, Multipart part) {
 		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, part));
+	}
+
+	@Override
+	public void updateFilterPreview(EntityPlayer entityPlayer, TileOrMultipart tileEntity, ISimpleFilter filter) {
+		if(!entityPlayer.worldObj.isRemote) {
+			byte[] slotStates = new byte[MessageFilterPreview.INVENTORY_SLOT_COUNT];
+			for (int i = 0; i < slotStates.length; i++) {
+				ItemStack itemStack = entityPlayer.inventory.getStackInSlot(i);
+				if (itemStack != null) {
+					slotStates[i] = (byte) (filter.passes(tileEntity, itemStack) ? MessageFilterPreview.STATE_SUCCESS : MessageFilterPreview.STATE_FAILURE);
+				}
+			}
+			NetworkHandler.wrapper.sendTo(new MessageFilterPreview(slotStates), (EntityPlayerMP) entityPlayer);
+		}
 	}
 }

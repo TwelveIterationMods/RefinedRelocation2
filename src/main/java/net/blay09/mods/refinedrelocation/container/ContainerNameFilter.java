@@ -32,6 +32,7 @@ public class ContainerNameFilter extends ContainerMod {
 
 		if (!lastValue.equals(filter.getValue())) {
 			RefinedRelocationAPI.syncContainerValue(KEY_VALUE, filter.getValue(), listeners);
+			RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 			lastValue = filter.getValue();
 		}
 	}
@@ -50,6 +51,7 @@ public class ContainerNameFilter extends ContainerMod {
 			filter.setValue(message.getStringValue());
 			tileEntity.markDirty();
 			lastValue = filter.getValue();
+			RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 		}
 	}
 

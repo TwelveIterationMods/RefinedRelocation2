@@ -14,8 +14,12 @@ import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.grid.SortingInventory;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
+import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,6 +33,8 @@ public class ContainerRootFilter extends ContainerMod {
 	public static final String KEY_EDIT_FILTER = "EditFilter";
 	public static final String KEY_DELETE_FILTER = "DeleteFilter";
 	public static final String KEY_PRIORITY = "Priority";
+	public static final String KEY_BLACKLIST = "Blacklist";
+	public static final String KEY_BLACKLIST_INDEX = "FilterIndex";
 
 	private final EntityPlayer entityPlayer;
 	private final TileOrMultipart tileEntity;
@@ -38,6 +44,7 @@ public class ContainerRootFilter extends ContainerMod {
 
 	private int lastFilterCount = -1;
 	private int lastPriority;
+	private boolean[] lastBlacklist = new boolean[3];
 
 	public ContainerRootFilter(EntityPlayer player, TileOrMultipart tileEntity) {
 		this.entityPlayer = player;
@@ -58,6 +65,18 @@ public class ContainerRootFilter extends ContainerMod {
 
 		if(rootFilter.getFilterCount() != lastFilterCount) {
 			syncFilterList();
+			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
+		}
+
+		for(int i = 0; i < lastBlacklist.length; i++) {
+			boolean nowBlacklist = rootFilter.isBlacklist(i);
+			if(lastBlacklist[i] != nowBlacklist) {
+				NBTTagCompound compound = new NBTTagCompound();
+				compound.setInteger(KEY_BLACKLIST_INDEX, i);
+				compound.setBoolean(KEY_BLACKLIST, nowBlacklist);
+				RefinedRelocationAPI.syncContainerValue(KEY_BLACKLIST, compound, listeners);
+				lastBlacklist[i] = true;
+			}
 		}
 
 		if(sortingInventory != null && sortingInventory.getPriority() != lastPriority) {
@@ -66,11 +85,22 @@ public class ContainerRootFilter extends ContainerMod {
 		}
 	}
 
+	@Nullable
+	@Override
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
+		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
+		RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
+		return itemStack;
+	}
+
 	private void syncFilterList() {
 		NBTTagCompound tagCompound = new NBTTagCompound();
 		tagCompound.setTag(KEY_FILTER_LIST, rootFilter.serializeNBT());
 		RefinedRelocationAPI.syncContainerValue(KEY_FILTER_LIST, tagCompound, listeners);
 		lastFilterCount = rootFilter.getFilterCount();
+		for(int i = 0; i < lastBlacklist.length; i++) {
+			lastBlacklist[i] = rootFilter.isBlacklist(i);
+		}
 	}
 
 	public TileOrMultipart getTileEntity() {
@@ -152,6 +182,16 @@ public class ContainerRootFilter extends ContainerMod {
 			}
 			sortingInventory.setPriority(value);
 			tileEntity.markDirty();
+		} else if(message.getKey().equals(KEY_BLACKLIST)) {
+			NBTTagCompound tagCompound = message.getNBTValue();
+			int index = tagCompound.getInteger(KEY_BLACKLIST_INDEX);
+			if(index < 0 || index >= rootFilter.getFilterCount()) {
+				// Client tried to delete a filter that doesn't exist. Bad client!
+				return;
+			}
+			rootFilter.setIsBlacklist(index, tagCompound.getBoolean(KEY_BLACKLIST));
+			tileEntity.markDirty();
+			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
 		}
 	}
 
@@ -160,11 +200,7 @@ public class ContainerRootFilter extends ContainerMod {
 		if(message.getKey().equals(KEY_FILTER_LIST)) {
 			rootFilter.deserializeNBT(message.getNBTValue().getTag(KEY_FILTER_LIST));
 		} else if(message.getKey().equals(KEY_PRIORITY)) {
-			if(sortingInventory == null) {
-				// Create a dummy sorting inventory for the client to store its settings.
-				sortingInventory = new SortingInventory();
-			}
-			sortingInventory.setPriority(message.getIntValue());
+			getSortingInventory().setPriority(message.getIntValue());
 		}
 	}
 
@@ -172,4 +208,11 @@ public class ContainerRootFilter extends ContainerMod {
 		return rootFilter;
 	}
 
+	public ISortingInventory getSortingInventory() {
+		if(sortingInventory == null) {
+			// Create a dummy sorting inventory for the client to store its settings.
+			sortingInventory = new SortingInventory();
+		}
+		return sortingInventory;
+	}
 }

@@ -12,6 +12,7 @@ gui.refinedrelocation:rootFilter.priorityLow=Low
 gui.refinedrelocation:rootFilter.priorityNormal=Normal
 gui.refinedrelocation:rootFilter.priorityHigh=High
 gui.refinedrelocation:rootFilter.priorityHighest=Highest
+gui.refinedrelocation:rootFilter.priorityCustom=Custom: %d
 
 itemGroup.refinedrelocation=Refined Relocation 2
 
