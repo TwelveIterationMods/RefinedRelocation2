@@ -5,6 +5,10 @@ import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nullable;
 
 public class ContainerChecklistFilter extends ContainerMod {
 
@@ -50,6 +54,14 @@ public class ContainerChecklistFilter extends ContainerMod {
 			}
 			ticksSinceUpdate = 0;
 		}
+	}
+
+	@Nullable
+	@Override
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
+		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
+		RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
+		return itemStack;
 	}
 
 	public TileOrMultipart getTileEntity() {

@@ -60,7 +60,11 @@ public class RootFilter implements IRootFilter {
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
 		boolean passes = false;
 		for(SubFilterWrapper filter : filterList) {
-			passes = filter.getFilter().passes(tileEntity, itemStack); // TODO respect isBlacklist here
+			boolean filterPasses = filter.getFilter().passes(tileEntity, itemStack);
+			if(filterPasses && filter.isBlacklist()) {
+				return false;
+			}
+			passes = passes || filterPasses;
 		}
 		return passes;
 	}

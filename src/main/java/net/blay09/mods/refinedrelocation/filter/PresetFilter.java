@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -21,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PresetFilter implements IChecklistFilter {
-
-	// TODO All Blocks Preset
-	// TODO Non-stackable Items Preset
 
 	public static final String ID = RefinedRelocation.MOD_ID + ":PresetFilter";
 
@@ -118,6 +116,20 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
+	public static final Preset BLOCKS = new Preset("Blocks") {
+		@Override
+		public boolean passes(ItemStack itemStack, String[] oreNames) {
+			return itemStack.getItem() instanceof ItemBlock;
+		}
+	};
+
+	public static final Preset UNSTACKABLE = new Preset("Unstackable") {
+		@Override
+		public boolean passes(ItemStack itemStack, String[] oreNames) {
+			return itemStack.getMaxStackSize() <= 1;
+		}
+	};
+
 	static {
 		presetMap.put(ORES.getId(), ORES);
 		presetMap.put(INGOTS.getId(), INGOTS);
@@ -126,6 +138,8 @@ public class PresetFilter implements IChecklistFilter {
 		presetMap.put(DYES.getId(), DYES);
 		presetMap.put(FOOD.getId(), FOOD);
 		presetMap.put(FUEL_ITEMS.getId(), FUEL_ITEMS);
+		presetMap.put(BLOCKS.getId(), BLOCKS);
+		presetMap.put(UNSTACKABLE.getId(), UNSTACKABLE);
 
 		presetList.addAll(presetMap.values());
 	}
