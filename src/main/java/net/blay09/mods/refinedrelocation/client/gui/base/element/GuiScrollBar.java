@@ -47,7 +47,7 @@ public class GuiScrollBar extends GuiElement {
 
 	@Override
 	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (mouseButton == 0 && mouseX >= getAbsoluteX() && mouseX < getAbsoluteX() + getWidth() /*&& mouseY >= barY && mouseY < barY + barHeight*/) { // TODO this shouldn't be commented out
+		if (mouseButton == 0 && mouseX >= getAbsoluteX() && mouseX < getAbsoluteX() + getWidth() && mouseY >= barY && mouseY < barY + barHeight) {
 			mouseClickY = mouseY;
 			indexWhenClicked = scrollTarget.getCurrentOffset();
 			return true;

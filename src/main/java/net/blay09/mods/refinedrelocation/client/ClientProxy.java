@@ -19,6 +19,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -35,7 +36,6 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.sortingChest), 0, TileSortingChest.class); // TODO chest has missing model in inventory
 
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
 		MinecraftForge.EVENT_BUS.register(new FilterPreviewHandler());
@@ -56,6 +56,8 @@ public class ClientProxy extends CommonProxy {
 				throw new RuntimeException(e);
 			}
 		}
+
+		ModBlocks.registerModels();
 	}
 
 	@Override

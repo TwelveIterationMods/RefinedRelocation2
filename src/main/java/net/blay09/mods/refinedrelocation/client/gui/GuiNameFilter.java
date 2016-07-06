@@ -18,8 +18,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implements IFilterPreviewGui {
 
-	// TODO consider a help tooltip button
-
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/rootFilter.png");
 
 	private static final int UPDATE_INTERVAL = 20;

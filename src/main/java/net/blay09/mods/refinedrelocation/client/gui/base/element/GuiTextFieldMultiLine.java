@@ -194,7 +194,7 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 
 		if (isFocused && isInside && mouseButton == 0) {
 			int relX = mouseX - getAbsoluteX();
-			int relY = mouseY - getAbsoluteY(); // TODO clicked y position isn't accurate to line
+			int relY = mouseY - getAbsoluteY() - fontRenderer.FONT_HEIGHT + 5;
 			int lineNumber = Math.round((float) relY / (float) fontRenderer.FONT_HEIGHT) + scrollOffset + 1;
 			int startOfLine = getStartOfLine(getEndOfLine(0, lineNumber), 1);
 			int endOfLine = getEndOfLine(startOfLine, 1);

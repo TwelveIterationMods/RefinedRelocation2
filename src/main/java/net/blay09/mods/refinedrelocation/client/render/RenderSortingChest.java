@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
 import net.blay09.mods.refinedrelocation.ModBlocks;
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.state.IBlockState;
@@ -13,9 +14,8 @@ import javax.annotation.Nullable;
 
 public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 
-	// TODO render sorting overlay texture
-
 	private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/chest/normal.png");
+	private static final ResourceLocation TEXTURE_OVERLAY = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/entity/sorting_overlay_wood.png");
 
 	private final ModelChest model = new ModelChest();
 
@@ -57,6 +57,11 @@ public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 		float lidAngle = tileEntity.getDoorAnimator().getRenderAngle(partialTicks);
 		model.chestLid.rotateAngleX = -(lidAngle * ((float) Math.PI / 2f));
 		model.renderAll();
+		if(destroyStage == -1) {
+			bindTexture(TEXTURE_OVERLAY);
+			GlStateManager.translate(0f, -0.001f, 0f);
+			model.renderAll();
+		}
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 		GlStateManager.color(1f, 1f, 1f, 1f);

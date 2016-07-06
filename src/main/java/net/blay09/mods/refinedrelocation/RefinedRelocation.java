@@ -14,8 +14,9 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings("unused")
 public class RefinedRelocation {
 
-	public static final String MOD_ID = "refinedrelocation";
+	// TODO Localization
 
+	public static final String MOD_ID = "refinedrelocation";
 
 	@Mod.Instance(MOD_ID)
 	public static RefinedRelocation instance;
