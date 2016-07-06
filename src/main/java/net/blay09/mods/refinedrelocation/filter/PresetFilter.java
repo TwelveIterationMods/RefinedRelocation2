@@ -131,6 +131,7 @@ public class PresetFilter implements IChecklistFilter {
 	};
 
 	static {
+		// TODO proper order
 		presetMap.put(ORES.getId(), ORES);
 		presetMap.put(INGOTS.getId(), INGOTS);
 		presetMap.put(NUGGETS.getId(), NUGGETS);

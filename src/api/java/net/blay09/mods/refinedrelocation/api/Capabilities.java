@@ -21,4 +21,7 @@ public class Capabilities {
 	@CapabilityInject(ISortingInventory.class)
 	public static Capability<ISortingInventory> SORTING_INVENTORY;
 
+	@CapabilityInject(ISortingUpgradable.class)
+	public static Capability<ISortingUpgradable> SORTING_UPGRADABLE;
+
 }

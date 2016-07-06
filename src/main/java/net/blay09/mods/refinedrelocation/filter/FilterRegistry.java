@@ -12,6 +12,9 @@ import java.util.Map;
 
 public class FilterRegistry {
 
+	// TODO Creative Tab Filter
+	// TODO Mod Filter
+
 	private static final Map<String, Class<? extends IFilter>> filterMap = Maps.newHashMap();
 	private static final List<Class<? extends IFilter>> filterList = Lists.newArrayList();
 	private static final ClassToInstanceMap<IFilter> defaultInstances = MutableClassToInstanceMap.create();

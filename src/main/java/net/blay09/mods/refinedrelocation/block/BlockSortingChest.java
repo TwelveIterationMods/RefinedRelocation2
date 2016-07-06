@@ -22,6 +22,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -95,23 +96,26 @@ public class BlockSortingChest extends BlockModTile {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack) {
+		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor_double((double) (placer.rotationYaw * 4f / 360f) + 0.5) & 3).getOpposite();
+		state = state.withProperty(FACING, facing);
 		if (itemStack.hasDisplayName()) {
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (tileEntity instanceof TileSortingChest) {
 				((TileSortingChest) tileEntity).setCustomName(itemStack.getDisplayName());
 			}
 		}
+		world.setBlockState(pos, state, 1|2);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			if(heldItem != null && heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
+			if (heldItem != null && heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
 				TileEntity tileEntity = world.getTileEntity(pos);
-				if(tileEntity instanceof TileSortingChest) {
+				if (tileEntity instanceof TileSortingChest) {
 					((TileSortingChest) tileEntity).setCustomName(heldItem.getDisplayName());
 					VanillaPacketHandler.sendTileEntityUpdate(tileEntity);
-					if(!player.capabilities.isCreativeMode) {
+					if (!player.capabilities.isCreativeMode) {
 						heldItem.stackSize--;
 					}
 				}

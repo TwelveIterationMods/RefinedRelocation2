@@ -26,7 +26,7 @@ public abstract class BlockMod extends Block {
 	public void registerModel(ItemModelMesher mesher) {
 		Item item = Item.getItemFromBlock(this);
 		if(item != null) {
-			mesher.register(item, 0, new ModelResourceLocation(getRegistryName().toString(), "inventory"));
+			mesher.register(item, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 		}
 	}
 }

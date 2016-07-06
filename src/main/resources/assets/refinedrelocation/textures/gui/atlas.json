@@ -27,6 +27,9 @@
         "refinedrelocation:checklist",
         "refinedrelocation:checklist_checked",
         "refinedrelocation:icon_NameFilter",
-        "refinedrelocation:icon_PresetFilter"
+        "refinedrelocation:icon_PresetFilter",
+        "refinedrelocation:icon_SameItemFilter",
+        "refinedrelocation:icon_CreativeTabFilter",
+        "refinedrelocation:icon_ModFilter"
     ]
 }

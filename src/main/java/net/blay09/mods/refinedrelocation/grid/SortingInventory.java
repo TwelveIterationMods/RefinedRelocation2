@@ -62,7 +62,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 
 	@Override
 	public void onSlotChanged(int slotIndex) {
-		if(!getSortingGrid().isSortingActive() && !getTileEntity().getWorld().isRemote) {
+		if(getSortingGrid() != null && !getSortingGrid().isSortingActive() && !getTileEntity().getWorld().isRemote) {
 			ItemStack itemStack = itemHandler.getStackInSlot(slotIndex);
 			if(itemStack != null) {
 				sortingStackList.add(new SortingStack(itemHandler, slotIndex, itemStack));

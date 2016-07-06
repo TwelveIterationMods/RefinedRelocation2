@@ -47,7 +47,7 @@ public class GuiFilterSlot extends GuiElement {
 		if(filter != null) {
 			IFilterIcon filterIcon = filter.getFilterIcon();
 			if(filterIcon != null) {
-				filterIcon.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
+				filterIcon.draw(getAbsoluteX(), getAbsoluteY(), 24, 24, zLevel);
 			}
 		}
 		if(parentScreen.getMouseElement() == this) {
@@ -70,14 +70,14 @@ public class GuiFilterSlot extends GuiElement {
 	public void addTooltip(List<String> list) {
 		IFilter filter = rootFilter.getFilter(index);
 		if(filter == null) {
-			list.add(TextFormatting.GRAY + "No filter set");
-			list.add(TextFormatting.YELLOW + "Click to add filter");
+			list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:rootFilter.noFilterSet"));
+			list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:rootFilter.clickToAddFilter"));
 		} else {
 			list.add(I18n.format(filter.getLangKey()));
 			if(filter instanceof IConfigurableFilter || filter instanceof IChecklistFilter) {
-				list.add(TextFormatting.YELLOW + "Click to configure");
+				list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:rootFilter.clickToConfigure"));
 			} else {
-				list.add(TextFormatting.GRAY + "Not configurable");
+				list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:rootFilter.notConfigurable"));
 			}
 		}
 	}

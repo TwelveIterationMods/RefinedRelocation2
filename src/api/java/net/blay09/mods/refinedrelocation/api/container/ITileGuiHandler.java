@@ -1,5 +1,6 @@
-package net.blay09.mods.refinedrelocation.api;
+package net.blay09.mods.refinedrelocation.api.container;
 
+import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 

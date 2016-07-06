@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.InternalMethodsImpl;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
+import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
@@ -70,7 +70,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 			rootNode.addChild(btnReturn);
 		}
 
-		rootNode.addChild(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:rootFilter.priority"), 0x404040));
+		rootNode.addChild(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:rootFilter.priorityLabel"), 0x404040));
 		rootNode.addChild(new GuiButtonPriority(10, 80, 100, 20, container.getSortingInventory()));
 
 		textureSeparator = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_separator");

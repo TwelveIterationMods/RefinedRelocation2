@@ -36,7 +36,7 @@ public class ItemHandlerHelper2 {
 
 			EntityItem entityItem = new EntityItem(world, x + offsetX, y + offsetY, z + offsetZ, new ItemStack(itemStack.getItem(), stackSize, itemStack.getMetadata()));
 			if (itemStack.hasTagCompound()) {
-				entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+				entityItem.getEntityItem().setTagCompound(itemStack.getTagCompound().copy());
 			}
 			float motion = 0.05f;
 			entityItem.motionX = rand.nextGaussian() * motion;

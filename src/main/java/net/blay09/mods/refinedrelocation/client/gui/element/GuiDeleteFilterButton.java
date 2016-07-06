@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.client.gui.element;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class GuiDeleteFilterButton extends GuiImageButton {
 
 	@Override
 	public void addTooltip(List<String> list) {
-		list.add(TextFormatting.RED + "Delete Filter");
+		list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:rootFilter.deleteFilter"));
 	}
 
 }

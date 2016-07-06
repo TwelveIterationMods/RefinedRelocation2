@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.InternalMethodsImpl;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
+import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.inventory.Container;

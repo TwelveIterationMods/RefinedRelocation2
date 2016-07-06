@@ -49,7 +49,7 @@ public class GuiAddFilterButton extends GuiElement {
 		if(currentFilter != null) {
 			IFilterIcon filterIcon = currentFilter.getFilterIcon();
 			if(filterIcon != null) {
-				filterIcon.draw(getAbsoluteX() + 2, getAbsoluteY() + getHeight() / 2 - 12, zLevel);
+				filterIcon.draw(getAbsoluteX() + 2, getAbsoluteY() + getHeight() / 2 - 12, 24, 24, zLevel);
 			}
 			drawString(parentScreen.getFontRenderer(), I18n.format(currentFilter.getLangKey()), getAbsoluteX() + 32, getAbsoluteY() + getHeight() / 2 - parentScreen.getFontRenderer().FONT_HEIGHT / 2, 0xFFFFFF);
 		}

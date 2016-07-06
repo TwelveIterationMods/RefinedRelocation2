@@ -1,22 +1,26 @@
 package net.blay09.mods.refinedrelocation;
 
-import net.blay09.mods.refinedrelocation.api.ITileGuiHandler;
+import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
+import net.blay09.mods.refinedrelocation.filter.CreativeTabFilter;
+import net.blay09.mods.refinedrelocation.filter.ModFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.blay09.mods.refinedrelocation.filter.PresetFilter;
 import net.blay09.mods.refinedrelocation.filter.SameItemFilter;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.LoginSyncHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -31,6 +35,7 @@ public class CommonProxy {
 		ModBlocks.init();
 		ModItems.init();
 		NetworkHandler.init();
+		MinecraftForge.EVENT_BUS.register(new LoginSyncHandler());
 
 		RefinedRelocationAPI.__internal__setupAPI(new InternalMethodsImpl());
 		CapabilitySimpleFilter.register();
@@ -41,6 +46,8 @@ public class CommonProxy {
 		RefinedRelocationAPI.registerFilter(SameItemFilter.class);
 		RefinedRelocationAPI.registerFilter(NameFilter.class);
 		RefinedRelocationAPI.registerFilter(PresetFilter.class);
+		RefinedRelocationAPI.registerFilter(CreativeTabFilter.class);
+		RefinedRelocationAPI.registerFilter(ModFilter.class);
 
 		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, new ITileGuiHandler() {
 			@Override
@@ -57,6 +64,9 @@ public class CommonProxy {
 
 	public void postInit(FMLPostInitializationEvent event) {
 		ModRecipes.init();
+
+		CreativeTabFilter.gatherCreativeTabs();
+		ModFilter.gatherMods();
 	}
 
 	public void addScheduledTask(Runnable runnable) {

@@ -22,11 +22,11 @@ public class TextureAtlasRegion extends TextureAtlasSprite implements IFilterIco
 		this(atlas, location.toString());
 	}
 
-	@Override
 	public void draw(double x, double y, double zLevel) {
 		draw(x, y, getIconWidth(), getIconHeight(), zLevel);
 	}
 
+	@Override
 	public void draw(double x, double y, double width, double height, double zLevel) {
 		GlStateManager.enableAlpha();
 		GlStateManager.bindTexture(atlas.getGlTextureId());

@@ -28,7 +28,7 @@ public class SameItemFilter implements IFilter {
 
 	@Override
 	public boolean isFilterUsable(TileOrMultipart tileEntity) {
-		return tileEntity.hasCapability(CapabilitySortingInventory.CAPABILITY, null);
+		return tileEntity.hasCapability(CapabilitySortingInventory.CAPABILITY, null); // TODO this should be IItemhandler, not ISortingInventory
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class SameItemFilter implements IFilter {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
-		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_PresetFilter");
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_SameItemFilter");
 	}
 
 }

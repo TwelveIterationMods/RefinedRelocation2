@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.client;
 
 import net.blay09.mods.refinedrelocation.CommonProxy;
 import net.blay09.mods.refinedrelocation.ModBlocks;
+import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlas;
@@ -58,6 +59,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		ModBlocks.registerModels();
+		ModItems.registerModels();
 	}
 
 	@Override

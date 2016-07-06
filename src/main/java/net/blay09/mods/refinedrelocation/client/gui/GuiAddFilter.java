@@ -68,7 +68,7 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString("Select Filter Type", 8, 6, 4210752);
+		fontRendererObj.drawString(I18n.format("container.refinedrelocation:addFilter"), 8, 6, 4210752);
 		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 

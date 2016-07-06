@@ -86,7 +86,7 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString("Sorting Chest (Name Filter)", 8, 6, 4210752);
+		fontRendererObj.drawString(I18n.format("container.refinedrelocation:nameFilter"), 8, 6, 4210752);
 		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 

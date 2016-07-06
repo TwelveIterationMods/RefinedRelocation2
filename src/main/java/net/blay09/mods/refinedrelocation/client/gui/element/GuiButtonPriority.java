@@ -79,15 +79,15 @@ public class GuiButtonPriority extends GuiTextButton {
 	@Override
 	public void addTooltip(List<String> list) {
 		if(!GuiScreen.isShiftKeyDown()) {
-			list.add(TextFormatting.GREEN + "Left-click to increase");
-			list.add(TextFormatting.RED + "Right-click to decrease");
+			list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:rootFilter.priorityIncrease"));
+			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:rootFilter.priorityDecrease"));
 		} else {
-			list.add(TextFormatting.GREEN + "Left-click to increase by 10");
-			list.add(TextFormatting.RED + "Right-click to decrease by 10");
+			list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:rootFilter.priorityIncrease10"));
+			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:rootFilter.priorityDecrease10"));
 		}
 		if(currentIndex != -1) {
 			list.add("");
-			list.add("Priority: " + values[currentIndex].getPriority());
+			list.add(I18n.format("gui.refinedrelocation:rootFilter.priorityTooltip", values[currentIndex].getPriority()));
 		}
 	}
 

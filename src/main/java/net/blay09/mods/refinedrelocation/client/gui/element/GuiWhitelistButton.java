@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
@@ -52,8 +53,8 @@ public class GuiWhitelistButton extends GuiImageButton {
 	@Override
 	public void addTooltip(List<String> list) {
 		boolean nowBlacklist = parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
-		list.add(TextFormatting.WHITE + (nowBlacklist ? "Blacklist" : "Whitelist"));
-		list.add(TextFormatting.YELLOW + "Click to toggle");
+		list.add(TextFormatting.WHITE + (nowBlacklist ? I18n.format("gui.refinedrelocation:rootFilter.blacklist") : I18n.format("gui.refinedrelocation:rootFilter.whitelist")));
+		list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:rootFilter.clickToToggle"));
 	}
 
 }
