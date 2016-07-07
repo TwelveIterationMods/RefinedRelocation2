@@ -1,6 +1,6 @@
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10:3.7.0.218"
+    deobfCompile "mezz.jei:jei_1.10.2:3.7.4.226"
     deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
-    deobfCompile "MCMultiPart:MCMultiPart-experimental:1.2.0_73:universal"
+    deobfCompile "MCMultiPart:MCMultiPart-experimental:1.2.0_74:universal"
     //deobfCompile "Charset:Charset:0.3.0"
 }
