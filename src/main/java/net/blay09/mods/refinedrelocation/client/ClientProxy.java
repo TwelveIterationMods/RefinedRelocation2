@@ -30,7 +30,7 @@ import java.io.IOException;
 
 public class ClientProxy extends CommonProxy {
 
-	public static final TextureAtlas TEXTURE_ATLAS = new TextureAtlas(new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/atlas.json"), "textures/gui/");
+	public static final TextureAtlas TEXTURE_ATLAS = new TextureAtlas(new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/atlas.json"), "textures/gui");
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
