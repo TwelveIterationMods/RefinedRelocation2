@@ -1,8 +1,8 @@
 [
 {
-  "modid": "refinedrelocation2",
-  "name": "Refined Relocation 2",
-  "description": "Filter, sort and relocate!",
+  "modid": "refinedrelocation",
+  "name": "Refined Relocation",
+  "description": "Sorting Chests. More to come soon.",
   "version": "@VERSION@",
   "mcversion": "@MCVERSION@",
   "url": "",
