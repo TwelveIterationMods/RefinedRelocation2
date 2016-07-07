@@ -30,7 +30,8 @@ public class GuiOpenFilterButtonW extends GuiButtonW {
 
 	private static GuiButton createOpenFilterButton(GuiContainer guiContainer, TileOrMultipart tileEntity, int buttonId) {
 		if(tileEntity.isMultipart()) {
-			return RefinedRelocationAPI.createOpenFilterButton(guiContainer, tileEntity.getMultipart(), buttonId);
+//			return RefinedRelocationAPI.createOpenFilterButton(guiContainer, tileEntity.getMultipart(), buttonId); // @McMultipart
+			return null;
 		} else {
 			return RefinedRelocationAPI.createOpenFilterButton(guiContainer, tileEntity.getTileEntity(), buttonId);
 		}

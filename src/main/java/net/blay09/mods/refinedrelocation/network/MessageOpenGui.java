@@ -1,11 +1,9 @@
 package net.blay09.mods.refinedrelocation.network;
 
 import io.netty.buffer.ByteBuf;
-import mcmultipart.multipart.Multipart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import org.apache.commons.lang3.NotImplementedException;
 
 public class MessageOpenGui implements IMessage {
 
@@ -36,10 +34,10 @@ public class MessageOpenGui implements IMessage {
 		this.pos = tileEntity.getPos();
 	}
 
-	public MessageOpenGui(int id, Multipart part) {
-		// TODO Support Multiparts in MOG
-		throw new NotImplementedException("MOG doesn't support parts yet");
-	}
+//	public MessageOpenGui(int id, Multipart part) {  // @McMultipart
+//		 TODO Support Multiparts in MOG
+//		throw new NotImplementedException("MOG doesn't support parts yet");
+//	}
 
 	public MessageOpenGui(int id, int intValue) {
 		this.id = id;

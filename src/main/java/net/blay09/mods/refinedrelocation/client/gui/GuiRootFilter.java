@@ -57,7 +57,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 			x += 40;
 		}
 
-		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(tileEntity.isMultipart() ? tileEntity.getMultipart().getClass() : tileEntity.getTileEntity().getClass());
+		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(/*tileEntity.isMultipart() ? tileEntity.getMultipart().getClass() : */tileEntity.getTileEntity().getClass()); // @McMultipart
 		if(tileGuiHandler != null) {
 			GuiImageButton btnReturn = new GuiImageButton(guiLeft + xSize - 20, guiTop + 4, "chest_button") {
 				@Override

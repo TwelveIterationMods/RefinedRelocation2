@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.util;
 
-import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -24,11 +23,11 @@ public class TileWrapper implements TileOrMultipart {
 		return tileEntity;
 	}
 
-	@Nullable
-	@Override
-	public Multipart getMultipart() {
-		return null;
-	}
+//	@Nullable
+//	@Override
+//	public Multipart getMultipart() {
+//		return null;  // @McMultipart
+//	}
 
 	@Override
 	public World getWorld() {

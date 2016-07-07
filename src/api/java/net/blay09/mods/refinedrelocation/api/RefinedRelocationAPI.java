@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.api;
 
-import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
@@ -41,10 +40,10 @@ public class RefinedRelocationAPI {
 		return internalMethods.createOpenFilterButton(guiContainer, tileEntity, buttonId);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public static GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
-		return internalMethods.createOpenFilterButton(guiContainer, part, buttonId);
-	}
+//	@SideOnly(Side.CLIENT)
+//	public static GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
+//		return internalMethods.createOpenFilterButton(guiContainer, part, buttonId); // @McMultipart
+//	}
 
 	public static void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {
 		internalMethods.insertIntoSortingGrid(sortingInventory, fromSlotIndex, itemStack);
@@ -88,7 +87,7 @@ public class RefinedRelocationAPI {
 
 	public static void openRootFilterGui(EntityPlayer player, TileOrMultipart tileEntity) {
 		if(tileEntity.isMultipart()) {
-			openRootFilterGui(player, tileEntity.getMultipart());
+//			openRootFilterGui(player, tileEntity.getMultipart()); // @McMultipart
 		}  else {
 			openRootFilterGui(player, tileEntity.getTileEntity());
 		}
@@ -98,8 +97,8 @@ public class RefinedRelocationAPI {
 		internalMethods.openRootFilterGui(player, tileEntity);
 	}
 
-	public static void openRootFilterGui(EntityPlayer player, Multipart part) {
-		internalMethods.openRootFilterGui(player, part);
-	}
+//	public static void openRootFilterGui(EntityPlayer player, Multipart part) {
+//		internalMethods.openRootFilterGui(player, part); // @McMultipart
+//	}
 
 }

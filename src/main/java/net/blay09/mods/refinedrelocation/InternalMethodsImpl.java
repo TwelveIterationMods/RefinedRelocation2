@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
@@ -21,7 +20,6 @@ import net.blay09.mods.refinedrelocation.network.MessageContainer;
 import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
-import net.blay09.mods.refinedrelocation.util.PartWrapper;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -164,11 +162,11 @@ public class InternalMethodsImpl implements InternalMethods {
 		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new TileWrapper(tileEntity));
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
-		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new PartWrapper(part));
-	}
+//	@Override
+//	@SideOnly(Side.CLIENT)
+//	public GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
+//		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new PartWrapper(part));  // @McMultipart
+//	}
 
 	@Override
 	public void sendContainerMessageToServer(String key, String value) {
@@ -229,10 +227,10 @@ public class InternalMethodsImpl implements InternalMethods {
 		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
 	}
 
-	@Override
-	public void openRootFilterGui(EntityPlayer player, Multipart part) {
-		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, part));
-	}
+//	@Override
+//	public void openRootFilterGui(EntityPlayer player, Multipart part) {
+//		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, part));  // @McMultipart
+//	}
 
 	@Override
 	public void updateFilterPreview(EntityPlayer entityPlayer, TileOrMultipart tileEntity, ISimpleFilter filter) {

@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.api;
 
-import mcmultipart.multipart.Multipart;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
@@ -27,8 +26,8 @@ public interface InternalMethods {
 
 	@SideOnly(Side.CLIENT)
 	GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId);
-	@SideOnly(Side.CLIENT)
-	GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId);
+//	@SideOnly(Side.CLIENT)
+//	GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId); // @McMultipart
 
 	void sendContainerMessageToServer(String key, String value);
 	void sendContainerMessageToServer(String key, NBTTagCompound value);
@@ -42,7 +41,7 @@ public interface InternalMethods {
 	void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler);
 
 	void openRootFilterGui(EntityPlayer player, TileEntity tileEntity);
-	void openRootFilterGui(EntityPlayer player, Multipart part);
+//	void openRootFilterGui(EntityPlayer player, Multipart part); // @McMultipart
 
 	void updateFilterPreview(EntityPlayer player, TileOrMultipart tileEntity, ISimpleFilter filter);
 }
