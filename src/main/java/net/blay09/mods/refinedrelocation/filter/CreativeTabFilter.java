@@ -26,7 +26,7 @@ public class CreativeTabFilter implements IChecklistFilter {
 			if(CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.INVENTORY || CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.SEARCH) {
 				continue;
 			}
-			creativeTabs[i] = CreativeTabs.CREATIVE_TAB_ARRAY[j].getTabLabel();
+			creativeTabs[i] = CreativeTabs.CREATIVE_TAB_ARRAY[j].tabLabel;
 			i++;
 		}
 	}
@@ -47,11 +47,11 @@ public class CreativeTabFilter implements IChecklistFilter {
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
 		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
 		for (CreativeTabs itemTab : itemTabs) {
-			int shiftedTabIndex = itemTab.getTabIndex();
-			if(itemTab.getTabIndex() >= CreativeTabs.SEARCH.getTabIndex()) {
+			int shiftedTabIndex = itemTab.tabIndex;
+			if(itemTab.tabIndex >= CreativeTabs.SEARCH.tabIndex) {
 				shiftedTabIndex--;
 			}
-			if(itemTab.getTabIndex() >= CreativeTabs.INVENTORY.getTabIndex()) {
+			if(itemTab.tabIndex >= CreativeTabs.INVENTORY.tabIndex) {
 				shiftedTabIndex--;
 			}
 			if (itemTab != null && tabStates[shiftedTabIndex]) {

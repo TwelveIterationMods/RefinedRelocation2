@@ -198,8 +198,12 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 			int lineNumber = Math.round((float) relY / (float) fontRenderer.FONT_HEIGHT) + scrollOffset + 1;
 			int startOfLine = getStartOfLine(getEndOfLine(0, lineNumber), 1);
 			int endOfLine = getEndOfLine(startOfLine, 1);
-			String renderText = fontRenderer.trimStringToWidth(this.text.substring(Math.max(startOfLine + lineScrollOffset, 0), endOfLine), getWidth() - PADDING);
-			setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, relX).length() + lineScrollOffset);
+			if(startOfLine == endOfLine) {
+				setCursorPosition(startOfLine);
+			} else {
+				String renderText = fontRenderer.trimStringToWidth(this.text.substring(Math.max(startOfLine + lineScrollOffset, 0), Math.max(0, endOfLine)), getWidth() - PADDING);
+			  	setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, relX).length() + lineScrollOffset);
+			}
 			return true;
 		}
 		return false;

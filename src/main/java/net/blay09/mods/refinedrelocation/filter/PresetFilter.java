@@ -131,18 +131,22 @@ public class PresetFilter implements IChecklistFilter {
 	};
 
 	static {
-		// TODO proper order
-		presetMap.put(ORES.getId(), ORES);
-		presetMap.put(INGOTS.getId(), INGOTS);
-		presetMap.put(NUGGETS.getId(), NUGGETS);
-		presetMap.put(GEMS.getId(), GEMS);
-		presetMap.put(DYES.getId(), DYES);
-		presetMap.put(FOOD.getId(), FOOD);
-		presetMap.put(FUEL_ITEMS.getId(), FUEL_ITEMS);
-		presetMap.put(BLOCKS.getId(), BLOCKS);
-		presetMap.put(UNSTACKABLE.getId(), UNSTACKABLE);
+		registerPreset(BLOCKS);
+		registerPreset(ORES);
+		registerPreset(INGOTS);
+		registerPreset(NUGGETS);
+		registerPreset(GEMS);
+		registerPreset(FOOD);
+		registerPreset(DYES);
+		registerPreset(UNSTACKABLE);
+		registerPreset(FUEL_ITEMS);
 
 		presetList.addAll(presetMap.values());
+	}
+
+	private static void registerPreset(Preset preset) {
+		presetMap.put(preset.getId(), preset);
+		presetList.add(preset);
 	}
 
 	private final boolean[] presetStates = new boolean[presetList.size()];

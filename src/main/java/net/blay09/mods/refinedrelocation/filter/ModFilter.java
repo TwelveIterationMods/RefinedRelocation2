@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,8 +59,19 @@ public class ModFilter implements IChecklistFilter {
 		for(ResourceLocation registryName : Block.REGISTRY.getKeys()) {
 			modSet.add(registryName.getResourceDomain());
 		}
-		// TODO sort alphabetically
-		setModList(modSet.toArray(new String[modSet.size()]));
+		String[] unsorted = modSet.toArray(new String[modSet.size()]);
+		Arrays.sort(unsorted, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				if(o1.equals("minecraft")) {
+					return -1;
+				} else if(o2.equals("minecraft")) {
+					return 1;
+				}
+				return o2.compareTo(o1);
+			}
+		});
+		setModList(unsorted);
 	}
 
 	public static void setModList(String[] modIDs) {

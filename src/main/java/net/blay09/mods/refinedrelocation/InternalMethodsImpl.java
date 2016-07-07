@@ -34,6 +34,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -157,11 +159,13 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
 		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new TileWrapper(tileEntity));
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
 		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new PartWrapper(part));
 	}

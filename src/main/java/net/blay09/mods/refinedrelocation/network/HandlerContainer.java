@@ -20,7 +20,7 @@ public class HandlerContainer implements IMessageHandler<MessageContainer, IMess
 			@Override
 			public void run() {
 				if(ctx.side == Side.CLIENT) {
-					Container container = FMLClientHandler.instance().getClientPlayerEntity().openContainer;
+					Container container = NetworkHandler.getClientPlayerEntity().openContainer;
 					if (container instanceof IContainerNetworked) {
 						((IContainerNetworked) container).receivedMessageClient(message);
 					} else {

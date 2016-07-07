@@ -75,7 +75,7 @@ public class ContainerRootFilter extends ContainerMod {
 				compound.setInteger(KEY_BLACKLIST_INDEX, i);
 				compound.setBoolean(KEY_BLACKLIST, nowBlacklist);
 				RefinedRelocationAPI.syncContainerValue(KEY_BLACKLIST, compound, listeners);
-				lastBlacklist[i] = true;
+				lastBlacklist[i] = nowBlacklist;
 			}
 		}
 
@@ -202,6 +202,9 @@ public class ContainerRootFilter extends ContainerMod {
 			rootFilter.deserializeNBT(message.getNBTValue().getTag(KEY_FILTER_LIST));
 		} else if(message.getKey().equals(KEY_PRIORITY)) {
 			getSortingInventory().setPriority(message.getIntValue());
+		} else if(message.getKey().equals(KEY_BLACKLIST)) {
+			NBTTagCompound compound = message.getNBTValue();
+			rootFilter.setIsBlacklist(compound.getInteger(KEY_BLACKLIST_INDEX), compound.getBoolean(KEY_BLACKLIST));
 		}
 	}
 

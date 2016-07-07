@@ -13,6 +13,8 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface InternalMethods {
 
@@ -23,7 +25,9 @@ public interface InternalMethods {
 
 	void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack);
 
+	@SideOnly(Side.CLIENT)
 	GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId);
+	@SideOnly(Side.CLIENT)
 	GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId);
 
 	void sendContainerMessageToServer(String key, String value);

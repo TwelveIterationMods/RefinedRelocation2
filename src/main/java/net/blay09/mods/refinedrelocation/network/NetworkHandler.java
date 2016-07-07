@@ -1,9 +1,12 @@
 package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NetworkHandler {
 
@@ -19,4 +22,8 @@ public class NetworkHandler {
 		wrapper.registerMessage(HandlerLoginSyncList.class, MessageLoginSyncList.class, 7, Side.CLIENT);
 	}
 
+	@SideOnly(Side.CLIENT)
+	public static EntityPlayer getClientPlayerEntity() {
+		return FMLClientHandler.instance().getClientPlayerEntity();
+	}
 }

@@ -4,14 +4,13 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class SameItemFilter implements IFilter {
@@ -28,14 +27,13 @@ public class SameItemFilter implements IFilter {
 
 	@Override
 	public boolean isFilterUsable(TileOrMultipart tileEntity) {
-		return tileEntity.hasCapability(CapabilitySortingInventory.CAPABILITY, null); // TODO this should be IItemhandler, not ISortingInventory
+		return tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 	}
 
 	@Override
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
-		ISortingInventory sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY, null);
-		if(sortingInventory != null) {
-			IItemHandler itemHandler = sortingInventory.getItemHandler();
+		IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		if(itemHandler != null) {
 			for(int i = 0; i < itemHandler.getSlots(); i++) {
 				ItemStack otherStack = itemHandler.getStackInSlot(i);
 				if(otherStack != null) {

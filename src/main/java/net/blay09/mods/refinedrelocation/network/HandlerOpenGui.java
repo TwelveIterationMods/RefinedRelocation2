@@ -18,7 +18,7 @@ public class HandlerOpenGui implements IMessageHandler<MessageOpenGui, IMessage>
 			@Override
 			public void run() {
 				if(ctx.side == Side.CLIENT) {
-					RefinedRelocation.proxy.openGui(FMLClientHandler.instance().getClientPlayerEntity(), message);
+					RefinedRelocation.proxy.openGui(NetworkHandler.getClientPlayerEntity(), message);
 				} else {
 					RefinedRelocation.proxy.openGui(ctx.getServerHandler().playerEntity, message);
 				}
