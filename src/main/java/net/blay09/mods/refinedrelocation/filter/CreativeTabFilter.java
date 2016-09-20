@@ -45,19 +45,21 @@ public class CreativeTabFilter implements IChecklistFilter {
 
 	@Override
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
-		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
-		for (CreativeTabs itemTab : itemTabs) {
-			int shiftedTabIndex = itemTab.tabIndex;
-			if(itemTab.tabIndex >= CreativeTabs.SEARCH.tabIndex) {
-				shiftedTabIndex--;
-			}
-			if(itemTab.tabIndex >= CreativeTabs.INVENTORY.tabIndex) {
-				shiftedTabIndex--;
-			}
-			if (itemTab != null && tabStates[shiftedTabIndex]) {
-				return true;
-			}
+		// NOTE We can't use getCreativeTabs because it calls a client-only getCreativeTab() function - thanks Notch!
+//		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
+//		for (CreativeTabs itemTab : itemTabs) {
+		CreativeTabs itemTab = itemStack.getItem().tabToDisplayOn;
+		int shiftedTabIndex = itemTab.tabIndex;
+		if(itemTab.tabIndex >= CreativeTabs.SEARCH.tabIndex) {
+			shiftedTabIndex--;
 		}
+		if(itemTab.tabIndex >= CreativeTabs.INVENTORY.tabIndex) {
+			shiftedTabIndex--;
+		}
+		if (tabStates[shiftedTabIndex]) {
+			return true;
+		}
+//		}
 		return false;
 	}
 
