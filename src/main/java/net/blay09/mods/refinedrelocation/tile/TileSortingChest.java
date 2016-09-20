@@ -8,13 +8,16 @@ import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.util.DoorAnimator;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -123,6 +126,11 @@ public class TileSortingChest extends TileMod implements ITickable {
 	@Override
 	public ITextComponent getDisplayName() {
 		return !Strings.isNullOrEmpty(customName) ? new TextComponentString(customName) : new TextComponentTranslation("container.refinedrelocation:sortingChest");
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+		return oldState.getBlock() != newSate.getBlock();
 	}
 
 	public ItemStackHandler getItemHandler() {
