@@ -8,6 +8,7 @@ import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.util.DoorAnimator;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -34,6 +35,11 @@ public class TileSortingChest extends TileMod implements ITickable {
 	private final IRootFilter rootFilter = CapabilityRootFilter.CAPABILITY.getDefaultInstance();
 
 	private String customName = "";
+
+	public TileSortingChest() {
+		doorAnimator.setSoundEventOpen(SoundEvents.BLOCK_CHEST_OPEN);
+		doorAnimator.setSoundEventClose(SoundEvents.BLOCK_CHEST_CLOSE);
+	}
 
 	@Override
 	public void update() {
