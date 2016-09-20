@@ -2,7 +2,6 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.10.2:3.7.4.226"
     deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
     deobfCompile "cpw.mods:ironchest:1.10.2-7.0.9.796"
-    compile name: 'ironchest', version: '1.7.10-6.0.62.742', classifier: "deobf", ext: 'jar'
     //deobfCompile "MCMultiPart:MCMultiPart-experimental:1.2.0_74:universal"
     //deobfCompile "Charset:Charset:0.3.0"
 }
