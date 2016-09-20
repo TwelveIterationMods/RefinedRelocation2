@@ -9,7 +9,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class ModRecipes {
 
 	public static void init() {
-		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.sortingChest), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', Blocks.CHEST, 'H', Blocks.HOPPER);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.sortingChest), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', "chest", 'H', Blocks.HOPPER));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.sortingUpgrade), " B ", "RPR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'P', "plankWood", 'H', Blocks.HOPPER));
 	}
 

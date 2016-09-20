@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+// TODO rotateBlock impl
 public class TileSortingChest extends TileMod implements ITickable {
 
 	private final ItemStackHandler itemHandler = new ItemStackHandler(27) {

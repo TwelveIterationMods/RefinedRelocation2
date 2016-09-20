@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
@@ -7,6 +8,9 @@ import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
+import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
+import net.blay09.mods.refinedrelocation.compat.Compat;
+import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.filter.CreativeTabFilter;
 import net.blay09.mods.refinedrelocation.filter.ModFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
@@ -22,14 +26,18 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class CommonProxy {
 
 	public final GuiHandler guiHandler = new GuiHandler();
+	protected final List<RefinedAddon> inbuiltAddons = Lists.newArrayList();
 
 	public void preInit(FMLPreInitializationEvent event) {
 		ModBlocks.init();
@@ -42,6 +50,7 @@ public class CommonProxy {
 		CapabilityRootFilter.register();
 		CapabilitySortingGridMember.register();
 		CapabilitySortingInventory.register();
+		CapabilitySortingUpgradable.register();
 
 		RefinedRelocationAPI.registerFilter(SameItemFilter.class);
 		RefinedRelocationAPI.registerFilter(NameFilter.class);
@@ -56,15 +65,28 @@ public class CommonProxy {
 			}
 		});
 
+		if(Loader.isModLoaded(Compat.IRONCHEST)) {
+			try {
+				inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
+			} catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+
+		for(RefinedAddon addon : inbuiltAddons) {
+			addon.preInit();
+		}
 	}
 
 	public void init(FMLInitializationEvent event) {
+		ModRecipes.init();
 
+		for(RefinedAddon addon : inbuiltAddons) {
+			addon.init();
+		}
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
-		ModRecipes.init();
-
 		CreativeTabFilter.gatherCreativeTabs();
 		ModFilter.gatherMods();
 	}

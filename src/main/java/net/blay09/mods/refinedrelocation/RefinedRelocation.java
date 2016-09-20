@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation"/*, dependencies = "required-after:mcmultipart"*/) // @McMultipart
+@Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation", dependencies = "after:ironchest"/*, dependencies = "required-after:mcmultipart"*/) // @McMultipart
 @SuppressWarnings("unused")
 public class RefinedRelocation {
 

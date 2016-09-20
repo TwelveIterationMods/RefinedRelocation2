@@ -56,3 +56,25 @@ filter.refinedrelocation:PresetFilter.optionFood=All Food
 filter.refinedrelocation:PresetFilter.optionFuel=All Fuel
 filter.refinedrelocation:PresetFilter.optionBlocks=All Blocks
 filter.refinedrelocation:PresetFilter.optionUnstackable=All Unstackable
+
+
+
+# Iron Chest Support
+
+tile.refinedrelocation:ironchest.sorting_chest_iron.name=Sorting Iron Chest
+tile.refinedrelocation:ironchest.sorting_chest_gold.name=Sorting Gold Chest
+tile.refinedrelocation:ironchest.sorting_chest_diamond.name=Sorting Diamond Chest
+tile.refinedrelocation:ironchest.sorting_chest_copper.name=Sorting Copper Chest
+tile.refinedrelocation:ironchest.sorting_chest_silver.name=Sorting Silver Chest
+tile.refinedrelocation:ironchest.sorting_chest_crystal.name=Sorting Crystal Chest
+tile.refinedrelocation:ironchest.sorting_chest_obsidian.name=Sorting Obsidian Chest
+tile.refinedrelocation:ironchest.sorting_chest_dirtchest9000.name=Dirt Chest 9001!!
+
+container.refinedrelocation:ironchest.sorting_chest_iron=Sorting Iron Chest
+container.refinedrelocation:ironchest.sorting_chest_gold=Sorting Gold Chest
+container.refinedrelocation:ironchest.sorting_chest_diamond=Sort. Diamond Chest
+container.refinedrelocation:ironchest.sorting_chest_copper=Sort. Copper Chest
+container.refinedrelocation:ironchest.sorting_chest_silver=Sorting Silver Chest
+container.refinedrelocation:ironchest.sorting_chest_crystal=Sort. Crystal Chest
+container.refinedrelocation:ironchest.sorting_chest_obsidian=Sort. Obsidian Chest
+container.refinedrelocation:ironchest.sorting_chest_dirtchest9000=Dirt Chest 9001

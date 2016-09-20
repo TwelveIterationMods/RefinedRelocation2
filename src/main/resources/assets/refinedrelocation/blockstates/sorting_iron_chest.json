@@ -1,0 +1,74 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "refinedrelocation:sorting_iron_chest",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "variant": {
+      "iron": {
+        "textures": {
+          "particle": "ironchest:blocks/ironbreak",
+          "overlay": "refinedrelocation:blocks/iron_chest_overlay",
+          "texture": "ironchest:model/ironchest"
+        }
+      },
+      "gold": {
+        "textures": {
+          "particle": "ironchest:blocks/goldbreak",
+          "overlay": "refinedrelocation:blocks/gold_chest_overlay",
+          "texture": "ironchest:model/goldchest"
+        }
+      },
+      "diamond": {
+        "textures": {
+          "particle": "ironchest:blocks/diamondbreak",
+          "overlay": "refinedrelocation:blocks/diamond_chest_overlay",
+          "texture": "ironchest:model/diamondchest"
+        }
+      },
+      "copper": {
+        "textures": {
+          "particle": "ironchest:blocks/copperbreak",
+          "overlay": "refinedrelocation:blocks/copper_chest_overlay",
+          "texture": "ironchest:model/copperchest"
+        }
+      },
+      "silver": {
+        "textures": {
+          "particle": "ironchest:blocks/silverbreak",
+          "overlay": "refinedrelocation:blocks/silver_chest_overlay",
+          "texture": "ironchest:model/silverchest"
+        }
+      },
+      "crystal": {
+        "textures": {
+          "particle": "ironchest:blocks/crystalbreak",
+          "overlay": "refinedrelocation:blocks/crystal_chest_overlay",
+          "texture": "ironchest:model/crystalchest"
+        }
+      },
+      "obsidian": {
+        "textures": {
+          "particle": "minecraft:blocks/obsidian",
+          "overlay": "refinedrelocation:blocks/obsidian_chest_overlay",
+          "texture": "ironchest:model/obsidianchest"
+        }
+      },
+      "dirtchest9000": {
+        "textures": {
+          "particle": "minecraft:blocks/dirt",
+          "overlay": "refinedrelocation:blocks/dirt_chest_overlay",
+          "texture": "ironchest:model/dirtchest"
+        }
+      },
+      "wood": {
+        "textures": {
+          "particle": "minecraft:blocks/planks_oak",
+          "overlay": "minecraft:blocks/planks_oak",
+          "texture": "minecraft:blocks/planks_oak"
+        }
+      }
+    }
+  }
+}

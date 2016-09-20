@@ -2,7 +2,9 @@ package net.blay09.mods.refinedrelocation.item;
 
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
 import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
+import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
@@ -38,8 +40,14 @@ public class ItemSortingUpgrade extends ItemMod {
 				 }
 			 }
 			 TileEntity tileEntity = world.getTileEntity(pos);
-			 if (tileEntity != null) {
-				 // TODO capability upgrading
+			 if (tileEntity != null && tileEntity.hasCapability(CapabilitySortingUpgradable.CAPABILITY, side)) {
+				 ISortingUpgradable sortingUpgradable = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, side);
+				 if(sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, side, hitX, hitY, hitZ, hand)) {
+					 if(!player.capabilities.isCreativeMode) {
+						 itemStack.stackSize--;
+					 }
+					 return EnumActionResult.SUCCESS;
+				 }
 			 }
 		 }
 		return EnumActionResult.PASS;

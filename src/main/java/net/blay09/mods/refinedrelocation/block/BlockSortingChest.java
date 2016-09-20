@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.VanillaPacketHandler;
 import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
@@ -121,7 +122,15 @@ public class BlockSortingChest extends BlockModTile {
 				}
 				return true;
 			}
-			RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, pos));
+
+			if(player.isSneaking()) {
+				TileEntity tileEntity = world.getTileEntity(pos);
+				if (tileEntity instanceof TileSortingChest) {
+					RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+				}
+			} else {
+				RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, pos));
+			}
 			return true;
 		}
 		return true;
@@ -139,7 +148,7 @@ public class BlockSortingChest extends BlockModTile {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSortingChest();
 	}
 

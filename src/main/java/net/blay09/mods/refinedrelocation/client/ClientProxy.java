@@ -6,6 +6,7 @@ import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlas;
+import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
@@ -41,6 +42,10 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
 		MinecraftForge.EVENT_BUS.register(new FilterPreviewHandler());
 		MinecraftForge.EVENT_BUS.register(new OpenFilterButtonHandler());
+
+		for(RefinedAddon addon : inbuiltAddons) {
+			addon.preInitClient();
+		}
 	}
 
 	@Override
