@@ -75,7 +75,7 @@ public class IronChestAddon extends RefinedAddon {
 			@Override
 			public void openGui(EntityPlayer player, TileOrMultipart tileEntity) {
 				TileSortingIronChest tileIronChest = (TileSortingIronChest) tileEntity.getTileEntity();
-				if(tileIronChest != null) {
+				if (tileIronChest != null) {
 					player.openGui(modInstance, tileIronChest.getType().ordinal(), tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
 				}
 			}
@@ -97,7 +97,7 @@ public class IronChestAddon extends RefinedAddon {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
 
 		Item sortingIronChestItem = Item.getItemFromBlock(sortingIronChest);
-		if(sortingIronChestItem != null) {
+		if (sortingIronChestItem != null) {
 			ModelLoader.setCustomMeshDefinition(sortingIronChestItem, new ItemMeshDefinition() {
 				@Override
 				public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -135,7 +135,7 @@ public class IronChestAddon extends RefinedAddon {
 		@Override
 		public boolean applySortingUpgrade(TileEntity tileEntity, ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 			TileEntityIronChest tileIronChest = (TileEntityIronChest) tileEntity;
-			if(tileIronChest.lidAngle > 0) {
+			if (tileIronChest.lidAngle > 0) {
 				return false;
 			}
 			NBTTagCompound storedData = tileIronChest.writeToNBT(new NBTTagCompound());
@@ -144,7 +144,7 @@ public class IronChestAddon extends RefinedAddon {
 			world.setBlockState(pos, sortingIronChest.getDefaultState()
 					.withProperty(BlockIronChest.VARIANT_PROP, oldState.getValue(BlockIronChest.VARIANT_PROP)));
 			TileSortingIronChest sortingIronChest = (TileSortingIronChest) world.getTileEntity(pos);
-			if(sortingIronChest == null) {
+			if (sortingIronChest == null) {
 				return false;
 			}
 			sortingIronChest.readFromNBT(storedData);
@@ -154,7 +154,7 @@ public class IronChestAddon extends RefinedAddon {
 
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent.TileEntity event) {
-		if(event.getTileEntity() instanceof TileEntityIronChest) {
+		if (event.getTileEntity() instanceof TileEntityIronChest) {
 			event.addCapability(new ResourceLocation(RefinedRelocation.MOD_ID, "SortingUpgradable"), new IronChestCapabilityProvider());
 		}
 	}
@@ -162,13 +162,15 @@ public class IronChestAddon extends RefinedAddon {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onInitGui(GuiScreenEvent.InitGuiEvent event) {
-		if(event.getGui() instanceof GUIChest) {
+		if (event.getGui() instanceof GUIChest) {
 			GuiContainer guiContainer = (GuiContainer) event.getGui();
-			TileEntityIronChest containerIronChest = (TileEntityIronChest) guiContainer.inventorySlots.inventorySlots.get(0).inventory;
-			GuiButton button = RefinedRelocationAPI.createOpenFilterButton(guiContainer, containerIronChest, -1);
-			button.xPosition += 7;
-			button.yPosition += 3;
-			event.getButtonList().add(button);
+			TileEntityIronChest tileIronChest = (TileEntityIronChest) guiContainer.inventorySlots.inventorySlots.get(0).inventory;
+			if (tileIronChest instanceof TileSortingIronChest) {
+				GuiButton button = RefinedRelocationAPI.createOpenFilterButton(guiContainer, tileIronChest, -1);
+				button.xPosition += 7;
+				button.yPosition += 3;
+				event.getButtonList().add(button);
+			}
 		}
 	}
 }
