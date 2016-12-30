@@ -49,6 +49,9 @@ public class CreativeTabFilter implements IChecklistFilter {
 //		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
 //		for (CreativeTabs itemTab : itemTabs) {
 		CreativeTabs itemTab = itemStack.getItem().tabToDisplayOn;
+		if (itemTab == null) {
+			return false;
+		}
 		int shiftedTabIndex = itemTab.tabIndex;
 		if(itemTab.tabIndex >= CreativeTabs.SEARCH.tabIndex) {
 			shiftedTabIndex--;
