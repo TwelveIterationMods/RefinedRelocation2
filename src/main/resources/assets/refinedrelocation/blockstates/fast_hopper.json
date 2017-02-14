@@ -7,12 +7,12 @@
       "side": "blocks/hopper_outside",
       "inside": "blocks/hopper_inside"
     },
-    "model": "refinedrelocation:better_hopper"
+    "model": "refinedrelocation:fast_hopper"
   },
   "variants": {
     "normal": [{}],
     "multipart": [{}],
-    "inventory": [{"model": "refinedrelocation:better_hopper"}],
+    "inventory": [{"model": "refinedrelocation:fast_hopper"}],
     "enabled": {
       "true": {},
       "false": {}

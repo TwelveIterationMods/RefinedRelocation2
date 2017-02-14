@@ -1,4 +1,7 @@
 tile.refinedrelocation:sorting_chest.name=Sorting Chest
+tile.refinedrelocation:block_extender.name=Block Extender
+tile.refinedrelocation:fast_hopper.name=Fast Hopper
+tile.refinedrelocation:filtered_hopper.name=Filtered Hopper
 
 item.refinedrelocation:sorting_upgrade.name=Sorting Upgrade
 

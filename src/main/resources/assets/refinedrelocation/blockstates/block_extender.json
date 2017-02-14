@@ -14,10 +14,10 @@
     "normal": [{}],
     "inventory": [{}],
     "cutout": [{
-      "model": "refinedrelocation:blockextender_static"
+      "model": "refinedrelocation:block_extender_static"
     }],
     "translucent": [{
-      "model": "refinedrelocation:blockextender_glass"
+      "model": "refinedrelocation:block_extender_glass"
     }],
     "facing": {
       "west": {
@@ -42,7 +42,7 @@
       "true": {
         "submodel": {
           "down": {
-            "model": "refinedrelocation:blockextender_cable",
+            "model": "refinedrelocation:block_extender_cable",
             "custom": { "flip-v": true }
           }
         }
@@ -53,7 +53,7 @@
       "true": {
         "submodel": {
           "up": {
-            "model": "refinedrelocation:blockextender_cable",
+            "model": "refinedrelocation:block_extender_cable",
             "x": 180,
             "y": 0,
             "custom": { "flip-v": true }
@@ -66,7 +66,7 @@
       "true": {
         "submodel": {
           "north": {
-            "model": "refinedrelocation:blockextender_cable",
+            "model": "refinedrelocation:block_extender_cable",
             "x": 90,
             "y": 180,
             "custom": { "flip-v": true }
@@ -79,7 +79,7 @@
       "true": {
         "submodel": {
           "south": {
-            "model": "refinedrelocation:blockextender_cable",
+            "model": "refinedrelocation:block_extender_cable",
             "x": 90,
             "custom": { "flip-v": true }
           }
@@ -91,7 +91,7 @@
       "true": {
         "submodel": {
           "west": {
-            "model": "refinedrelocation:blockextender_cable",
+            "model": "refinedrelocation:block_extender_cable",
             "x": 90,
             "y": 90,
             "custom": { "flip-v": true }
@@ -104,7 +104,7 @@
       "true": {
         "submodel": {
           "east": {
-            "model": "refinedrelocation:blockextender_cable",
+            "model": "refinedrelocation:block_extender_cable",
             "x": 90,
             "y": 270,
             "custom": { "flip-v": true }

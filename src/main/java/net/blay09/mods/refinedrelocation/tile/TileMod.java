@@ -1,9 +1,13 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
@@ -51,4 +55,14 @@ public class TileMod extends TileEntity {
 		readFromNBTSynced(pkt.getNbtCompound());
 	}
 
+	public void dropItemHandlers() {
+		IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		if(itemHandler != null) {
+			ItemHandlerHelper2.dropItemHandlerItems(world, pos, itemHandler);
+		}
+	}
+
+	public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
+		return world.getTileEntity(pos) == this && entityPlayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+	}
 }

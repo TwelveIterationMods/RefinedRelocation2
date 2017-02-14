@@ -5,6 +5,7 @@
     "transform": "forge:default-block"
   },
   "variants": {
+    "inventory": [{}],
     "variant": {
       "iron": {
         "textures": {
