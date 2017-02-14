@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class ModFilter implements IChecklistFilter {
 
-	public static final String ID = RefinedRelocation.MOD_ID + ":ModFilter";
+	public static final String ID = RefinedRelocation.MOD_ID + ":mod_filter";
 
 	private static class ModWithName {
 		private final int index;
@@ -102,8 +102,12 @@ public class ModFilter implements IChecklistFilter {
 
 	@Override
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
-		ModWithName modWithName = modList.get(itemStack.getItem().getRegistryName().getResourceDomain());
-		return modWithName != null && modStates[modWithName.getIndex()];
+		ResourceLocation resourceLocation = itemStack.getItem().getRegistryName();
+		if(resourceLocation != null) {
+			ModWithName modWithName = modList.get(resourceLocation.getResourceDomain());
+			return modWithName != null && modStates[modWithName.getIndex()];
+		}
+		return false;
 	}
 
 	@Override
@@ -132,18 +136,18 @@ public class ModFilter implements IChecklistFilter {
 
 	@Override
 	public String getLangKey() {
-		return "filter.refinedrelocation:ModFilter";
+		return "filter.refinedrelocation:mod_filter";
 	}
 
 	@Override
 	public String getDescriptionLangKey() {
-		return "filter.refinedrelocation:ModFilter.description";
+		return "filter.refinedrelocation:mod_filter.description";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
-		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_ModFilter");
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_mod_filter");
 	}
 
 	@Override

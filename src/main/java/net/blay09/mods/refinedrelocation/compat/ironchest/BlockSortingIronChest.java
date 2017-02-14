@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import cpw.mods.ironchest.BlockIronChest;
 import cpw.mods.ironchest.IronChestType;
+import cpw.mods.ironchest.TileEntityIronChest;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.block.BlockModTile;
 import net.minecraft.block.Block;
@@ -18,14 +19,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockSortingIronChest extends BlockModTile {
 
@@ -44,34 +43,42 @@ public class BlockSortingIronChest extends BlockModTile {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean isFullyOpaque(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if(player.isSneaking()) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (player.isSneaking()) {
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (tileEntity instanceof TileSortingIronChest) {
 				RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
 			}
 		}
-		return baseBlock.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return baseBlock.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		switch(state.getValue(BlockIronChest.VARIANT_PROP)) {
+		switch (state.getValue(BlockIronChest.VARIANT_PROP)) {
 			case GOLD:
 				return new TileSortingIronChest.Gold();
 			case DIAMOND:
@@ -92,7 +99,7 @@ public class BlockSortingIronChest extends BlockModTile {
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
+	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (IronChestType type : IronChestType.VALUES) {
 			if (type.isValidForCreativeMode()) {
 				list.add(new ItemStack(item, 1, type.ordinal()));
@@ -106,9 +113,6 @@ public class BlockSortingIronChest extends BlockModTile {
 		return getDefaultState().withProperty(BlockIronChest.VARIANT_PROP, IronChestType.VALUES[meta]);
 	}
 
-	/**
-	 * Convert the BlockState into the correct metadata value
-	 */
 	@Override
 	public int getMetaFromState(IBlockState state) {
 		return state.getValue(BlockIronChest.VARIANT_PROP).ordinal();
@@ -145,11 +149,13 @@ public class BlockSortingIronChest extends BlockModTile {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean hasComparatorInputOverride(IBlockState state) {
 		return baseBlock.hasComparatorInputOverride(state);
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 		return baseBlock.getComparatorInputOverride(state, world, pos);
 	}

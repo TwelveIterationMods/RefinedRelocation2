@@ -1,9 +1,7 @@
 package net.blay09.mods.refinedrelocation.network;
 
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.container.IContainerNetworked;
 import net.minecraft.inventory.Container;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -16,7 +14,7 @@ public class HandlerContainer implements IMessageHandler<MessageContainer, IMess
 	@Override
 	@Nullable
 	public IMessage onMessage(final MessageContainer message, final MessageContext ctx) {
-		RefinedRelocation.proxy.addScheduledTask(new Runnable() {
+		NetworkHandler.getThreadListener(ctx).addScheduledTask(new Runnable() {
 			@Override
 			public void run() {
 				if(ctx.side == Side.CLIENT) {
@@ -27,7 +25,7 @@ public class HandlerContainer implements IMessageHandler<MessageContainer, IMess
 						System.err.println("Got container message but open container is not networked: " + container);
 					}
 				} else {
-					Container container = ctx.getServerHandler().playerEntity.openContainer;
+					Container container = ctx.getServerHandler().player.openContainer;
 					if (container instanceof IContainerNetworked) {
 						((IContainerNetworked) container).receivedMessageServer(message);
 					} else {

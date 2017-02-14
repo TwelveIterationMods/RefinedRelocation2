@@ -81,7 +81,7 @@ public class RefinedRelocationAPI {
 		internalMethods.updateFilterPreview(player, tileEntity, filter);
 	}
 
-	public static void registerGuiHandler(Class clazz, ITileGuiHandler handler) {
+	public static void registerGuiHandler(Class<? extends TileEntity> clazz, ITileGuiHandler handler) {
 		internalMethods.registerGuiHandler(clazz, handler);
 	}
 

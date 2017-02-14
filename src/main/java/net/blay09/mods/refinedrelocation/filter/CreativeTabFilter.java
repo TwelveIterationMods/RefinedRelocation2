@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CreativeTabFilter implements IChecklistFilter {
 
-	public static final String ID = RefinedRelocation.MOD_ID + ":CreativeTabFilter";
+	public static final String ID = RefinedRelocation.MOD_ID + ":creative_tab_filter";
 
 	public static String[] creativeTabs = new String[0];
 
@@ -89,18 +89,18 @@ public class CreativeTabFilter implements IChecklistFilter {
 
 	@Override
 	public String getLangKey() {
-		return "filter.refinedrelocation:CreativeTabFilter";
+		return "filter.refinedrelocation:creative_tab_filter";
 	}
 
 	@Override
 	public String getDescriptionLangKey() {
-		return "filter.refinedrelocation:CreativeTabFilter.description";
+		return "filter.refinedrelocation:creative_tab_filter.description";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
-		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_CreativeTabFilter");
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_creative_tab_filter");
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.capability;
 
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -22,7 +21,7 @@ public class CapabilitySimpleFilter {
 
 			@Override
 			public void readNBT(Capability<ISimpleFilter> capability, ISimpleFilter instance, EnumFacing side, NBTBase nbt) {
-				instance.deserializeNBT((NBTTagCompound) nbt);
+				instance.deserializeNBT(nbt);
 			}
 		}, ISimpleFilter.class);
 	}

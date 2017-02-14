@@ -27,40 +27,44 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
-
-import javax.annotation.Nullable;
+import net.minecraftforge.items.IItemHandler;
 
 public class BlockSortingChest extends BlockModTile {
 
 	private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockSortingChest() {
-		super(Material.WOOD, "sortingChest");
+		super(Material.WOOD, "sorting_chest");
 		setSoundType(SoundType.WOOD);
 		setHardness(3f);
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return BOUNDING_BOX;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public IBlockState getStateFromMeta(int meta) {
 		EnumFacing facing = EnumFacing.getFront(meta);
 		if (facing.getAxis() == EnumFacing.Axis.Y) {
@@ -81,23 +85,26 @@ public class BlockSortingChest extends BlockModTile {
 
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public IBlockState withRotation(IBlockState state, Rotation rot) {
 		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
 		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	@SuppressWarnings("deprecation")
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack) {
-		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor_double((double) (placer.rotationYaw * 4f / 360f) + 0.5) & 3).getOpposite();
+		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor((double) (placer.rotationYaw * 4f / 360f) + 0.5) & 3).getOpposite();
 		state = state.withProperty(FACING, facing);
 		if (itemStack.hasDisplayName()) {
 			TileEntity tileEntity = world.getTileEntity(pos);
@@ -109,15 +116,16 @@ public class BlockSortingChest extends BlockModTile {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			if (heldItem != null && heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
+			ItemStack heldItem = player.getHeldItem(hand);
+			if (!heldItem.isEmpty() && heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
 				TileEntity tileEntity = world.getTileEntity(pos);
 				if (tileEntity instanceof TileSortingChest) {
 					((TileSortingChest) tileEntity).setCustomName(heldItem.getDisplayName());
 					VanillaPacketHandler.sendTileEntityUpdate(tileEntity);
 					if (!player.capabilities.isCreativeMode) {
-						heldItem.stackSize--;
+						heldItem.shrink(1);
 					}
 				}
 				return true;
@@ -140,7 +148,10 @@ public class BlockSortingChest extends BlockModTile {
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity != null) {
-			ItemHandlerHelper2.dropItemHandlerItems(world, pos, tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null));
+			IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(itemHandler != null) {
+				ItemHandlerHelper2.dropItemHandlerItems(world, pos, itemHandler);
+			}
 			world.updateComparatorOutputLevel(pos, this);
 		}
 

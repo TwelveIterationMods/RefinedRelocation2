@@ -24,7 +24,7 @@ public abstract class SafeTESR<T extends TileEntity> extends TileEntitySpecialRe
 		if(shouldRenderNameTag(tileEntity)) {
 			super.renderTileEntityAt(tileEntity, x, y, z, partialTicks, destroyStage);
 		}
-		IBlockState state = tileEntity.hasWorldObj() ? tileEntity.getWorld().getBlockState(tileEntity.getPos()) : null;
+		IBlockState state = tileEntity.hasWorld() ? tileEntity.getWorld().getBlockState(tileEntity.getPos()) : null;
 		if(state != null && state.getBlock() != block) {
 			return;
 		}

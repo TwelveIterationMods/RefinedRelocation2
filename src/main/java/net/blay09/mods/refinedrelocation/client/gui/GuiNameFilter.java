@@ -8,7 +8,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonW;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonWrapper;
 import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implements IFilterPreviewGui {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/rootFilter.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter.png");
 
 	private static final int UPDATE_INTERVAL = 20;
 
@@ -49,7 +49,7 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 		rootNode.addChild(scrollPane);
 		scrollPane.addChild(txtFilter);
 
-		rootNode.addChild(new GuiOpenFilterButtonW(this, container.getTileEntity(), 0));
+		rootNode.addChild(new GuiOpenFilterButtonWrapper(this, container.getTileEntity(), 0));
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString(I18n.format("container.refinedrelocation:nameFilter"), 8, 6, 4210752);
-		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format("container.refinedrelocation:name_filter"), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	@Override

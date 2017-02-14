@@ -6,11 +6,11 @@ import net.minecraft.tileentity.TileEntity;
 import javax.annotation.Nullable;
 
 public interface ISortingGridMember {
-	TileOrMultipart getTileEntity();
+	TileOrMultipart getTileContainer();
 
 	boolean isInvalid();
 
-	void setSortingGrid(ISortingGrid grid);
+	void setSortingGrid(@Nullable ISortingGrid grid);
 	@Nullable
 	ISortingGrid getSortingGrid();
 

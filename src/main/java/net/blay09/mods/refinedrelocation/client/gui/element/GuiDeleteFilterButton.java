@@ -35,7 +35,7 @@ public class GuiDeleteFilterButton extends GuiImageButton {
 
 	@Override
 	public void addTooltip(List<String> list) {
-		list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:rootFilter.deleteFilter"));
+		list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:root_filter.delete_filter"));
 	}
 
 }

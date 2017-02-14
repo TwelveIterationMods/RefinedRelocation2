@@ -4,15 +4,15 @@ import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
-public class GuiButtonW extends GuiElement {
+public class GuiButtonWrapper extends GuiElement {
 
 	protected final GuiButton button;
 
-	public GuiButtonW(int buttonId, int x, int y, int width, int height, String text) {
+	public GuiButtonWrapper(int buttonId, int x, int y, int width, int height, String text) {
 		button = new GuiButton(buttonId, x, y, width, height, text);
 	}
 
-	public GuiButtonW(GuiButton button) {
+	public GuiButtonWrapper(GuiButton button) {
 		this.button = button;
 		setPosition(button.xPosition, button.yPosition);
 		setSize(button.width, button.height);

@@ -32,10 +32,7 @@ public class RootFilter implements IRootFilter {
 
 	@Override
 	public boolean isBlacklist(int index) {
-		if(index < 0 || index >= filterList.size()) {
-			return false;
-		}
-		return filterList.get(index).isBlacklist();
+		return !(index < 0 || index >= filterList.size()) && filterList.get(index).isBlacklist();
 	}
 
 	@Override

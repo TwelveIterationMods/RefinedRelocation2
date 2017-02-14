@@ -16,7 +16,7 @@ public class ItemHandlerHelper2 {
 	public static void dropItemHandlerItems(World world, BlockPos pos, IItemHandler itemHandler) {
 		for (int i = 0; i < itemHandler.getSlots(); i++) {
 			ItemStack itemStack = itemHandler.getStackInSlot(i);
-			if (itemStack != null) {
+			if (!itemStack.isEmpty()) {
 				spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack);
 			}
 		}
@@ -27,22 +27,25 @@ public class ItemHandlerHelper2 {
 		float offsetY = rand.nextFloat() * 0.8f + 0.1f;
 		float offsetZ = rand.nextFloat() * 0.8f + 0.1f;
 
-		while (itemStack.stackSize > 0) {
+		while (!itemStack.isEmpty()) {
 			int stackSize = rand.nextInt(21) + 10;
-			if (stackSize > itemStack.stackSize) {
-				stackSize = itemStack.stackSize;
+			if (stackSize > itemStack.getCount()) {
+				stackSize = itemStack.getCount();
 			}
-			itemStack.stackSize -= stackSize;
+			itemStack.shrink(stackSize);
 
 			EntityItem entityItem = new EntityItem(world, x + offsetX, y + offsetY, z + offsetZ, new ItemStack(itemStack.getItem(), stackSize, itemStack.getMetadata()));
 			if (itemStack.hasTagCompound()) {
-				entityItem.getEntityItem().setTagCompound(itemStack.getTagCompound().copy());
+				NBTTagCompound tagCompound = itemStack.getTagCompound();
+				if(tagCompound != null) {
+					entityItem.getEntityItem().setTagCompound(tagCompound.copy());
+				}
 			}
 			float motion = 0.05f;
 			entityItem.motionX = rand.nextGaussian() * motion;
 			entityItem.motionY = rand.nextGaussian() * motion + 0.2;
 			entityItem.motionZ = rand.nextGaussian() * motion;
-			world.spawnEntityInWorld(entityItem);
+			world.spawnEntity(entityItem);
 		}
 	}
 

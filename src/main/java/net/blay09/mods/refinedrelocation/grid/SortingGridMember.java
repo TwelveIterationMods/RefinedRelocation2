@@ -6,6 +6,8 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nullable;
+
 public class SortingGridMember implements ISortingGridMember {
 
 	private TileWrapper tileWrapper;
@@ -14,7 +16,7 @@ public class SortingGridMember implements ISortingGridMember {
 
 	private boolean isFirstTick = true;
 
-	public TileWrapper getTileEntity() {
+	public TileWrapper getTileContainer() {
 		return tileWrapper;
 	}
 
@@ -24,7 +26,7 @@ public class SortingGridMember implements ISortingGridMember {
 	}
 
 	@Override
-	public void setSortingGrid(ISortingGrid grid) {
+	public void setSortingGrid(@Nullable ISortingGrid grid) {
 		this.sortingGrid = grid;
 	}
 

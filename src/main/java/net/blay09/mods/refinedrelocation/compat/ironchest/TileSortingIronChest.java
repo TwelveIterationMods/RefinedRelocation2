@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import cpw.mods.ironchest.IronChestType;
 import cpw.mods.ironchest.TileEntityIronChest;
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
@@ -13,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -35,25 +35,30 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 
 	public void onContentsChanged(int slot) {
 		markDirty();
+		assert sortingInventory != null;
 		sortingInventory.onSlotChanged(slot);
 	}
 
 	@Override
 	public void update() {
 		super.update();
+		assert sortingInventory != null;
 		sortingInventory.onUpdate(this);
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		assert sortingInventory != null;
 		sortingInventory.onInvalidate(this);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
+		assert sortingInventory != null;
 		compound.setTag("SortingInventory", sortingInventory.serializeNBT());
+		assert rootFilter != null;
 		compound.setTag("RootFilter", rootFilter.serializeNBT());
 		return compound;
 	}
@@ -61,7 +66,9 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
+		assert sortingInventory != null;
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
+		assert rootFilter != null;
 		rootFilter.deserializeNBT(compound.getTag("RootFilter"));
 	}
 
@@ -71,8 +78,13 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	}
 
 	@Override
+	public NonNullList<ItemStack> getItems() {
+		return super.getItems();
+	}
+
+	@Override
 	public IronChestType getType() {
-		if (hasWorldObj()) {
+		if (hasWorld()) {
 			return IronChestType.VALUES[getBlockMetadata()];
 		} else {
 			return IronChestType.IRON;
@@ -85,7 +97,6 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 		onContentsChanged(index);
 	}
 
-	@Nullable
 	@Override
 	public ItemStack decrStackSize(int index, int count) {
 		ItemStack itemStack = super.decrStackSize(index, count);
@@ -94,8 +105,16 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	}
 
 	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
+				|| capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY
+				|| capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return (T) invWrapper;
 		} else if (capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY) {
@@ -104,14 +123,6 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 			return (T) rootFilter;
 		}
 		return super.getCapability(capability, facing);
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-				|| capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY
-				|| capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY
-				|| super.hasCapability(capability, facing);
 	}
 
 	public static class Dirt extends TileSortingIronChest {

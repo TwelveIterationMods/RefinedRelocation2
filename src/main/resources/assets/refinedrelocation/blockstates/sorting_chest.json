@@ -2,13 +2,13 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "refinedrelocation:sortingChestStatic"
+    "model": "refinedrelocation:sorting_chest_static"
   },
   "variants": {
     "inventory": [{
       "submodel": {
         "lid": {
-          "model": "refinedrelocation:sortingChestLid"
+          "model": "refinedrelocation:sorting_chest_lid"
         }
       }
     }],

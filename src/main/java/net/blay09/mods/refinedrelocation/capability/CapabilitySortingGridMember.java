@@ -8,6 +8,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
+import javax.annotation.Nullable;
+
 public class CapabilitySortingGridMember {
 
 	@CapabilityInject(ISortingGridMember.class)
@@ -16,6 +18,7 @@ public class CapabilitySortingGridMember {
 	public static void register() {
 		CapabilityManager.INSTANCE.register(ISortingGridMember.class, new Capability.IStorage<ISortingGridMember>() {
 			@Override
+			@Nullable
 			public NBTBase writeNBT(Capability<ISortingGridMember> capability, ISortingGridMember instance, EnumFacing side) {
 				return null;
 			}

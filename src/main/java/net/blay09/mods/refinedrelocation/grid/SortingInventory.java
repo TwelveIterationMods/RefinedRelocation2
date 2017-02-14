@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.grid;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
+import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.minecraft.item.ItemStack;
@@ -42,8 +43,8 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 	@Override
 	protected void onFirstTick() {
 		super.onFirstTick();
-		itemHandler = getTileEntity().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		filter = getTileEntity().getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
+		itemHandler = getTileContainer().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		filter = getTileContainer().getCapability(CapabilityRootFilter.CAPABILITY, null);
 	}
 
 	@Override
@@ -51,20 +52,23 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 		super.onUpdate();
 		if(!sortingStackList.isEmpty()) {
 			SortingStack sortingStack = sortingStackList.removeFirst();
-			getSortingGrid().setSortingActive(true);
-			ItemStack itemStack = sortingStack.getItemHandler().getStackInSlot(sortingStack.getSlotIndex());
-			if(ItemStack.areItemStacksEqual(itemStack, sortingStack.getItemStack()) && ItemStack.areItemStackTagsEqual(itemStack, sortingStack.getItemStack())) {
-				RefinedRelocationAPI.insertIntoSortingGrid(this, sortingStack.getSlotIndex(), itemStack);
+			ISortingGrid sortingGrid = getSortingGrid();
+			if(sortingGrid != null) {
+				sortingGrid.setSortingActive(true);
+				ItemStack itemStack = sortingStack.getItemHandler().getStackInSlot(sortingStack.getSlotIndex());
+				if (ItemStack.areItemStacksEqual(itemStack, sortingStack.getItemStack()) && ItemStack.areItemStackTagsEqual(itemStack, sortingStack.getItemStack())) {
+					RefinedRelocationAPI.insertIntoSortingGrid(this, sortingStack.getSlotIndex(), itemStack);
+				}
+				sortingGrid.setSortingActive(false);
 			}
-			getSortingGrid().setSortingActive(false);
 		}
 	}
 
 	@Override
 	public void onSlotChanged(int slotIndex) {
-		if(getSortingGrid() != null && !getSortingGrid().isSortingActive() && !getTileEntity().getWorld().isRemote) {
+		if(getSortingGrid() != null && !getSortingGrid().isSortingActive() && !getTileContainer().getWorld().isRemote) {
 			ItemStack itemStack = itemHandler.getStackInSlot(slotIndex);
-			if(itemStack != null) {
+			if(!itemStack.isEmpty()) {
 				sortingStackList.add(new SortingStack(itemHandler, slotIndex, itemStack));
 			}
 		}

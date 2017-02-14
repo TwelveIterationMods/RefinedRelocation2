@@ -128,7 +128,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 			int shift = 0;
 			float blockScale = 0.70f;
 			float timeD = (float) (360.0 * (System.currentTimeMillis() & 0x3FFFL) / 0x3FFFL) - partialTicks;
-			if (tileEntity.getTopItemStacks()[1] == null) {
+			if (tileEntity.getTopItemStacks().get(1).isEmpty()) {
 				shift = 8;
 				blockScale = 0.85f;
 			}
@@ -161,7 +161,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 					itemRenderer = new RenderEntityItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()) {
 						@Override
 						public int getModelCount(ItemStack stack) {
-							return SignedBytes.saturatedCast(Math.min(stack.stackSize / 32, 15) + 1);
+							return SignedBytes.saturatedCast(Math.min(stack.getCount() / 32, 15) + 1);
 						}
 
 						@Override

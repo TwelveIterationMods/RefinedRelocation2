@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
-import net.minecraft.client.gui.FontRenderer;
 
 public class GuiLabel extends GuiElement {
 

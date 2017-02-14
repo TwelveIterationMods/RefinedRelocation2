@@ -15,7 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class SameItemFilter implements IFilter {
 
-	public static final String ID = RefinedRelocation.MOD_ID + ":SameItemFilter";
+	public static final String ID = RefinedRelocation.MOD_ID + ":same_item_filter";
 
 	private boolean ignoreMetadata = false;
 	private boolean ignoreNBT = true;
@@ -36,7 +36,7 @@ public class SameItemFilter implements IFilter {
 		if(itemHandler != null) {
 			for(int i = 0; i < itemHandler.getSlots(); i++) {
 				ItemStack otherStack = itemHandler.getStackInSlot(i);
-				if(otherStack != null) {
+				if(!otherStack.isEmpty()) {
 					if(itemStack.getItem() != otherStack.getItem()) {
 						continue;
 					}
@@ -71,18 +71,18 @@ public class SameItemFilter implements IFilter {
 
 	@Override
 	public String getLangKey() {
-		return "filter.refinedrelocation:SameItemFilter";
+		return "filter.refinedrelocation:same_item_filter";
 	}
 
 	@Override
 	public String getDescriptionLangKey() {
-		return "filter.refinedrelocation:SameItemFilter.description";
+		return "filter.refinedrelocation:same_item_filter.description";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
-		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_SameItemFilter");
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_same_item_filter");
 	}
 
 }

@@ -2,8 +2,6 @@ package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import cpw.mods.ironchest.BlockIronChest;
 import cpw.mods.ironchest.ChestChangerType;
-import cpw.mods.ironchest.ContainerIronChest;
-import cpw.mods.ironchest.IronChest;
 import cpw.mods.ironchest.IronChestType;
 import cpw.mods.ironchest.ItemChestChanger;
 import cpw.mods.ironchest.TileEntityIronChest;
@@ -17,10 +15,8 @@ import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.block.BlockMod;
 import net.blay09.mods.refinedrelocation.compat.Compat;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
-import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -36,10 +32,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -67,27 +62,25 @@ public class IronChestAddon extends RefinedAddon {
 
 	@Override
 	public void preInit() {
-		ironChest = Block.REGISTRY.getObject(new ResourceLocation(Compat.IRONCHEST, "BlockIronChest"));
+		ironChest = Block.REGISTRY.getObject(new ResourceLocation(Compat.IRONCHEST, "iron_chest"));
 		sortingIronChest = new BlockSortingIronChest(ironChest);
 		GameRegistry.register(sortingIronChest);
 		GameRegistry.register(new ItemBlockSortingIronChest(sortingIronChest));
-		GameRegistry.registerTileEntity(TileSortingIronChest.class, sortingIronChest.getRegistryName().toString());
-		GameRegistry.registerTileEntity(TileSortingIronChest.Dirt.class, sortingIronChest.getRegistryName().toString() + "_dirt");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Obsidian.class, sortingIronChest.getRegistryName().toString() + "_obsidian");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Crystal.class, sortingIronChest.getRegistryName().toString() + "_crystal");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Diamond.class, sortingIronChest.getRegistryName().toString() + "_diamond");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Copper.class, sortingIronChest.getRegistryName().toString() + "_copper");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Gold.class, sortingIronChest.getRegistryName().toString() + "_gold");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Silver.class, sortingIronChest.getRegistryName().toString() + "_silver");
+		GameRegistry.registerTileEntity(TileSortingIronChest.class, sortingIronChest.getRegistryNameString());
+		GameRegistry.registerTileEntity(TileSortingIronChest.Dirt.class, sortingIronChest.getRegistryNameString() + "_dirt");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Obsidian.class, sortingIronChest.getRegistryNameString() + "_obsidian");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Crystal.class, sortingIronChest.getRegistryNameString() + "_crystal");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Diamond.class, sortingIronChest.getRegistryNameString() + "_diamond");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Copper.class, sortingIronChest.getRegistryNameString() + "_copper");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Gold.class, sortingIronChest.getRegistryNameString() + "_gold");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Silver.class, sortingIronChest.getRegistryNameString() + "_silver");
 
 		final Object modInstance = Loader.instance().getIndexedModList().get(Compat.IRONCHEST).getMod();
 		final ITileGuiHandler tileGuiHandler = new ITileGuiHandler() {
 			@Override
 			public void openGui(EntityPlayer player, TileOrMultipart tileEntity) {
 				TileSortingIronChest tileIronChest = (TileSortingIronChest) tileEntity.getTileEntity();
-				if (tileIronChest != null) {
-					player.openGui(modInstance, tileIronChest.getType().ordinal(), tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
-				}
+				player.openGui(modInstance, tileIronChest.getType().ordinal(), tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
 			}
 		};
 		RefinedRelocationAPI.registerGuiHandler(TileSortingIronChest.class, tileGuiHandler);
@@ -107,14 +100,12 @@ public class IronChestAddon extends RefinedAddon {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
 
 		Item sortingIronChestItem = Item.getItemFromBlock(sortingIronChest);
-		if (sortingIronChestItem != null) {
-			ModelLoader.setCustomMeshDefinition(sortingIronChestItem, new ItemMeshDefinition() {
-				@Override
-				public ModelResourceLocation getModelLocation(ItemStack stack) {
-					return new ModelResourceLocation(sortingIronChest.getRegistryName(), "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH));
-				}
-			});
-		}
+		ModelLoader.setCustomMeshDefinition(sortingIronChestItem, new ItemMeshDefinition() {
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+			return new ModelResourceLocation(sortingIronChest.getRegistryNameString(), "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH));
+			}
+		});
 	}
 
 	@Override
@@ -131,7 +122,7 @@ public class IronChestAddon extends RefinedAddon {
 
 	@SubscribeEvent
 	public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		if (event.getWorld().isRemote || event.getItemStack() == null || !(event.getItemStack().getItem() instanceof ItemChestChanger)) {
+		if (event.getWorld().isRemote || event.getItemStack().isEmpty() || !(event.getItemStack().getItem() instanceof ItemChestChanger)) {
 			return;
 		}
 
@@ -153,12 +144,12 @@ public class IronChestAddon extends RefinedAddon {
 		if(tileEntity == null) {
 			return;
 		}
-		ItemStack[] previousContent;
+		NonNullList<ItemStack> previousContent;
 		EnumFacing previousFacing;
 		IRootFilter rootFilter = tileEntity.getCapability(Capabilities.ROOT_FILTER, null);
 		ISortingInventory sortingInventory = tileEntity.getCapability(Capabilities.SORTING_INVENTORY, null);
 		if (tileEntity instanceof TileSortingIronChest) {
-			previousContent = ((TileSortingIronChest) tileEntity).chestContents;
+			previousContent = ((TileSortingIronChest) tileEntity).getItems();
 			previousFacing = ((TileSortingIronChest) tileEntity).getFacing();
 		} else if (tileEntity instanceof TileSortingChest) {
 			previousFacing = state.getValue(BlockChest.FACING);
@@ -166,9 +157,9 @@ public class IronChestAddon extends RefinedAddon {
 			if (tileSortingChest.getDoorAnimator().getNumPlayersUsing() > 0) {
 				return;
 			}
-			previousContent = new ItemStack[tileSortingChest.getItemHandler().getSlots()];
-			for (int i = 0; i < previousContent.length; i++) {
-				previousContent[i] = tileSortingChest.getItemHandler().getStackInSlot(i);
+			previousContent = NonNullList.create();
+			for (int i = 0; i < tileSortingChest.getItemHandler().getSlots(); i++) {
+				previousContent.set(i, tileSortingChest.getItemHandler().getStackInSlot(i));
 			}
 		} else {
 			return;
@@ -187,12 +178,18 @@ public class IronChestAddon extends RefinedAddon {
 			((TileSortingIronChest) newTileEntity).setContents(previousContent);
 			((TileSortingIronChest) newTileEntity).setFacing(previousFacing);
 			IRootFilter newRootFilter = newTileEntity.getCapability(Capabilities.ROOT_FILTER, null);
-			newRootFilter.deserializeNBT(rootFilter.serializeNBT());
+			if(rootFilter != null && newRootFilter != null) {
+				newRootFilter.deserializeNBT(rootFilter.serializeNBT());
+			}
 			ISortingInventory newSortingInventory = newTileEntity.getCapability(Capabilities.SORTING_INVENTORY, null);
-			newSortingInventory.deserializeNBT(sortingInventory.serializeNBT());
+			if(sortingInventory != null && newSortingInventory != null) {
+				newSortingInventory.deserializeNBT(sortingInventory.serializeNBT());
+			}
 		}
 
-		event.getItemStack().stackSize = event.getEntityPlayer().capabilities.isCreativeMode ? event.getItemStack().stackSize : event.getItemStack().stackSize - 1;
+		if(!event.getEntityPlayer().capabilities.isCreativeMode) {
+			event.getItemStack().shrink(1);
+		}
 		event.setCanceled(true);
 	}
 
@@ -230,8 +227,8 @@ public class IronChestAddon extends RefinedAddon {
 	}
 
 	@SubscribeEvent
-	public void attachCapabilities(AttachCapabilitiesEvent.TileEntity event) {
-		if (event.getTileEntity() instanceof TileEntityIronChest) {
+	public void attachCapabilities(AttachCapabilitiesEvent<TileEntity> event) {
+		if (event.getObject() instanceof TileEntityIronChest) {
 			event.addCapability(new ResourceLocation(RefinedRelocation.MOD_ID, "SortingUpgradable"), new IronChestCapabilityProvider());
 		}
 	}

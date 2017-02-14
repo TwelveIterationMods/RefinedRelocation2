@@ -1,61 +1,61 @@
-tile.refinedrelocation:sortingChest.name=Sorting Chest
+tile.refinedrelocation:sorting_chest.name=Sorting Chest
 
-item.refinedrelocation:sortingUpgrade.name=Sorting Upgrade
+item.refinedrelocation:sorting_upgrade.name=Sorting Upgrade
 
-container.refinedrelocation:rootFilter=Edit Filter
-container.refinedrelocation:rootFilterWithName=%s (Filter)
-container.refinedrelocation:sortingChest=Sorting Chest
-container.refinedrelocation:rootFilter=Edit Filter
-container.refinedrelocation:nameFilter=Name Filter
-container.refinedrelocation:addFilter=Select Filter Type
+container.refinedrelocation:root_filter=Edit Filter
+container.refinedrelocation:root_filter_with_name=%s (Filter)
+container.refinedrelocation:sorting_chest=Sorting Chest
+container.refinedrelocation:root_filter=Edit Filter
+container.refinedrelocation:name_filter=Name Filter
+container.refinedrelocation:add_filter=Select Filter Type
 
-gui.refinedrelocation:rootFilter.helpText=Configure up to three filters by clicking the empty slots above.
-gui.refinedrelocation:rootFilter.priorityLabel=Priority:
-gui.refinedrelocation:rootFilter.priorityLowest=Lowest
-gui.refinedrelocation:rootFilter.priorityLow=Low
-gui.refinedrelocation:rootFilter.priorityNormal=Normal
-gui.refinedrelocation:rootFilter.priorityHigh=High
-gui.refinedrelocation:rootFilter.priorityHighest=Highest
-gui.refinedrelocation:rootFilter.priorityCustom=Custom: %d
-gui.refinedrelocation:rootFilter.priorityIncrease=Left-click to increase
-gui.refinedrelocation:rootFilter.priorityDecrease=Right-click to decrease
-gui.refinedrelocation:rootFilter.priorityIncrease10=Left-click to increase by 10
-gui.refinedrelocation:rootFilter.priorityDecrease10=Right-click to decrease by 10
-gui.refinedrelocation:rootFilter.priorityTooltip=Priority: %d
-gui.refinedrelocation:rootFilter.deleteFilter=Delete Filter
-gui.refinedrelocation:rootFilter.noFilterSet=No filter set
-gui.refinedrelocation:rootFilter.clickToAddFilter=Click to add filter
-gui.refinedrelocation:rootFilter.clickToConfigure=Click to configure
-gui.refinedrelocation:rootFilter.notConfigurable=Not configurable
-gui.refinedrelocation:rootFilter.clickToToggle=Click to toggle
-gui.refinedrelocation:rootFilter.blacklist=Blacklist
-gui.refinedrelocation:rootFilter.whitelist=Whitelist
+gui.refinedrelocation:root_filter.help_text=Configure up to three filters by clicking the empty slots above.
+gui.refinedrelocation:root_filter.priority_label=Priority:
+gui.refinedrelocation:root_filter.priority_lowest=Lowest
+gui.refinedrelocation:root_filter.priority_low=Low
+gui.refinedrelocation:root_filter.priority_normal=Normal
+gui.refinedrelocation:root_filter.priority_high=High
+gui.refinedrelocation:root_filter.priority_highest=Highest
+gui.refinedrelocation:root_filter.priority_custom=Custom: %d
+gui.refinedrelocation:root_filter.priority_increase=Left-click to increase
+gui.refinedrelocation:root_filter.priority_decrease=Right-click to decrease
+gui.refinedrelocation:root_filter.priority_increase10=Left-click to increase by 10
+gui.refinedrelocation:root_filter.priority_decrease10=Right-click to decrease by 10
+gui.refinedrelocation:root_filter.priority_tooltip=Priority: %d
+gui.refinedrelocation:root_filter.delete_filter=Delete Filter
+gui.refinedrelocation:root_filter.no_filter_set=No filter set
+gui.refinedrelocation:root_filter.click_to_add_filter=Click to add filter
+gui.refinedrelocation:root_filter.click_to_configure=Click to configure
+gui.refinedrelocation:root_filter.not_configurable=Not configurable
+gui.refinedrelocation:root_filter.click_to_toggle=Click to toggle
+gui.refinedrelocation:root_filter.blacklist=Blacklist
+gui.refinedrelocation:root_filter.whitelist=Whitelist
 
 itemGroup.refinedrelocation=Refined Relocation 2
 
-filter.refinedrelocation:NameFilter=Name Filter
-filter.refinedrelocation:NameFilter.description=Text-based item name filter
+filter.refinedrelocation:name_filter=Name Filter
+filter.refinedrelocation:name_filter.description=Text-based item name filter
 
-filter.refinedrelocation:SameItemFilter=Item Match Filter
-filter.refinedrelocation:SameItemFilter.description=Lets items that already exist\nin this inventory pass
+filter.refinedrelocation:same_item_filter=Item Match Filter
+filter.refinedrelocation:Same_item_filter.description=Lets items that already exist\nin this inventory pass
 
-filter.refinedrelocation:CreativeTabFilter=Creative Tab Filter
-filter.refinedrelocation:CreativeTabFilter.description=Checklist based on the\ncreative tabs
+filter.refinedrelocation:creative_tab_filter=Creative Tab Filter
+filter.refinedrelocation:creative_tab_filter.description=Checklist based on the\ncreative tabs
 
-filter.refinedrelocation:ModFilter=Mod Filter
-filter.refinedrelocation:ModFilter.description=Checklist based on the\navailable mods
+filter.refinedrelocation:mod_filter=Mod Filter
+filter.refinedrelocation:mod_filter.description=Checklist based on the\navailable mods
 
-filter.refinedrelocation:PresetFilter=Preset Filter
-filter.refinedrelocation:PresetFilter.description=Checklist based on the\nmost common things
-filter.refinedrelocation:PresetFilter.optionOres=All Ores
-filter.refinedrelocation:PresetFilter.optionIngots=All Ingots
-filter.refinedrelocation:PresetFilter.optionNuggets=All Nuggets
-filter.refinedrelocation:PresetFilter.optionGems=All Gems
-filter.refinedrelocation:PresetFilter.optionDyes=All Dyes
-filter.refinedrelocation:PresetFilter.optionFood=All Food
-filter.refinedrelocation:PresetFilter.optionFuel=All Fuel
-filter.refinedrelocation:PresetFilter.optionBlocks=All Blocks
-filter.refinedrelocation:PresetFilter.optionUnstackable=All Unstackable
+filter.refinedrelocation:preset_filter=Preset Filter
+filter.refinedrelocation:preset_filter.description=Checklist based on the\nmost common things
+filter.refinedrelocation:preset_filter.option_ores=All Ores
+filter.refinedrelocation:preset_filter.option_ingots=All Ingots
+filter.refinedrelocation:preset_filter.option_nuggets=All Nuggets
+filter.refinedrelocation:preset_filter.option_gems=All Gems
+filter.refinedrelocation:preset_filter.option_dyes=All Dyes
+filter.refinedrelocation:preset_filter.option_food=All Food
+filter.refinedrelocation:preset_filter.option_fuel=All Fuel
+filter.refinedrelocation:preset_filter.option_blocks=All Blocks
+filter.refinedrelocation:preset_filter.option_unstackable=All Unstackable
 
 
 

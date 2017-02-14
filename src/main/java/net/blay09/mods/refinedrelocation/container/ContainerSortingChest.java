@@ -3,13 +3,10 @@ package net.blay09.mods.refinedrelocation.container;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.blay09.mods.refinedrelocation.util.IContainerWithDoor;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
-
-import javax.annotation.Nullable;
 
 public class ContainerSortingChest extends ContainerMod implements IContainerWithDoor {
 
@@ -29,10 +26,9 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 		tileEntity.getDoorAnimator().openContainer(player);
 	}
 
-	@Nullable
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-		ItemStack itemStack = null;
+		ItemStack itemStack = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack slotStack = slot.getStack();
@@ -40,14 +36,14 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 
 			if (index < 27) {
 				if (!mergeItemStack(slotStack, 27, inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(slotStack, 0, 27, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
-			if (slotStack.stackSize == 0) {
-				slot.putStack(null);
+			if (slotStack.isEmpty()) {
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

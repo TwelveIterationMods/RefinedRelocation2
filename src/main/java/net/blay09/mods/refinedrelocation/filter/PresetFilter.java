@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class PresetFilter implements IChecklistFilter {
 
-	public static final String ID = RefinedRelocation.MOD_ID + ":PresetFilter";
+	public static final String ID = RefinedRelocation.MOD_ID + ":preset_filter";
 
 	public abstract static class Preset {
 		private final String id;
@@ -42,7 +42,7 @@ public class PresetFilter implements IChecklistFilter {
 	private static final Map<String, Preset> presetMap = Maps.newHashMap();
 	private static final List<Preset> presetList = Lists.newArrayList();
 
-	public static final Preset ORES = new Preset("Ores") {
+	public static final Preset ORES = new Preset("ores") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -54,7 +54,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset INGOTS = new Preset("Ingots") {
+	public static final Preset INGOTS = new Preset("ingots") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -66,7 +66,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset NUGGETS = new Preset("Nuggets") {
+	public static final Preset NUGGETS = new Preset("nuggets") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -78,7 +78,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset GEMS = new Preset("Gems") {
+	public static final Preset GEMS = new Preset("gems") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -90,7 +90,7 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset DYES = new Preset("Dyes") {
+	public static final Preset DYES = new Preset("dyes") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			for(String oreName : oreNames) {
@@ -102,28 +102,28 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
-	public static final Preset FOOD = new Preset("Food") {
+	public static final Preset FOOD = new Preset("food") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			return itemStack.getItem() instanceof ItemFood;
 		}
 	};
 
-	public static final Preset FUEL_ITEMS = new Preset("Fuel") {
+	public static final Preset FUEL_ITEMS = new Preset("fuel") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			return TileEntityFurnace.getItemBurnTime(itemStack) > 0;
 		}
 	};
 
-	public static final Preset BLOCKS = new Preset("Blocks") {
+	public static final Preset BLOCKS = new Preset("blocks") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			return itemStack.getItem() instanceof ItemBlock;
 		}
 	};
 
-	public static final Preset UNSTACKABLE = new Preset("Unstackable") {
+	public static final Preset UNSTACKABLE = new Preset("unstackable") {
 		@Override
 		public boolean passes(ItemStack itemStack, String[] oreNames) {
 			return itemStack.getMaxStackSize() <= 1;
@@ -204,23 +204,23 @@ public class PresetFilter implements IChecklistFilter {
 
 	@Override
 	public String getLangKey() {
-		return "filter.refinedrelocation:PresetFilter";
+		return "filter.refinedrelocation:preset_filter";
 	}
 
 	@Override
 	public String getDescriptionLangKey() {
-		return "filter.refinedrelocation:PresetFilter.description";
+		return "filter.refinedrelocation:preset_filter.description";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
-		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_PresetFilter");
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_preset_filter");
 	}
 
 	@Override
 	public String getOptionLangKey(int option) {
-		return "filter.refinedrelocation:PresetFilter.option" + presetList.get(option).getId();
+		return "filter.refinedrelocation:preset_filter.option_" + presetList.get(option).getId();
 	}
 
 	@Override

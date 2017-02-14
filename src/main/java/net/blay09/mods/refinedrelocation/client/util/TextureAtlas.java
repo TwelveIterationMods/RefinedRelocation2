@@ -37,7 +37,7 @@ public class TextureAtlas extends AbstractTexture implements ITickableTextureObj
 	private final Map<String, TextureAtlasRegion> registeredSprites = Maps.newHashMap();
 	private final Map<String, TextureAtlasRegion> uploadedSprites = Maps.newHashMap();
 	private final List<TextureAtlasRegion> animatedSprites = Lists.newArrayList();
-	private TextureAtlasRegion missingImage;
+	private final TextureAtlasRegion missingImage;
 
 	public TextureAtlas(ResourceLocation atlasFile, String basePath) {
 		this.atlasFile = atlasFile;

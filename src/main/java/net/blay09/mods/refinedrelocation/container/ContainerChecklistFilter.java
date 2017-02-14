@@ -8,8 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
-
 public class ContainerChecklistFilter extends ContainerMod {
 
 	public static final String KEY_CHECK = "Check";
@@ -56,7 +54,6 @@ public class ContainerChecklistFilter extends ContainerMod {
 		}
 	}
 
-	@Nullable
 	@Override
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
 		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);

@@ -70,14 +70,14 @@ public class GuiFilterSlot extends GuiElement {
 	public void addTooltip(List<String> list) {
 		IFilter filter = rootFilter.getFilter(index);
 		if(filter == null) {
-			list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:rootFilter.noFilterSet"));
-			list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:rootFilter.clickToAddFilter"));
+			list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:root_filter.no_filter_set"));
+			list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:root_filter.click_to_add_filter"));
 		} else {
 			list.add(I18n.format(filter.getLangKey()));
 			if(filter instanceof IConfigurableFilter || filter instanceof IChecklistFilter) {
-				list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:rootFilter.clickToConfigure"));
+				list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:root_filter.click_to_configure"));
 			} else {
-				list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:rootFilter.notConfigurable"));
+				list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:root_filter.not_configurable"));
 			}
 		}
 	}

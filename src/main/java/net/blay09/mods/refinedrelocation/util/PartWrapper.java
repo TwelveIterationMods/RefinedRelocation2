@@ -24,11 +24,11 @@
 //	}
 //
 //	@Override
-//	public TileEntity getTileEntity() {
+//	public TileEntity getTileContainer() {
 //		if(part.getContainer() instanceof TileEntity) {
 //			return (TileEntity) part.getContainer();
 //		}
-//		return part.getWorld().getTileEntity(part.getPos());
+//		return part.getWorld().getTileContainer(part.getPos());
 //	}
 //
 //	@Nullable

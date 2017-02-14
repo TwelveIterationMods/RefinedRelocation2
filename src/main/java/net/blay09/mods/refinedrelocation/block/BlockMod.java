@@ -5,9 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,15 +18,18 @@ public abstract class BlockMod extends Block {
 	public BlockMod(Material material, String blockName) {
 		super(material);
 		setRegistryName(blockName);
-		setUnlocalizedName(getRegistryName().toString());
+		setUnlocalizedName(getRegistryNameString());
 		setCreativeTab(RefinedRelocation.creativeTab);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerModel(ItemModelMesher mesher) {
-		Item item = Item.getItemFromBlock(this);
-		if(item != null) {
-			mesher.register(item, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-		}
+	public void registerModel() {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryNameString(), "inventory"));
 	}
+
+	public String getRegistryNameString() {
+		//noinspection ConstantConditions
+		return getRegistryName().toString();
+	}
+
 }

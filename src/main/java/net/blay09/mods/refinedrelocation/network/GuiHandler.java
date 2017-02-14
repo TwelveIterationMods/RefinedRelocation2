@@ -31,7 +31,7 @@ public class GuiHandler {
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity actualTile = message.hasPosition() ? player.worldObj.getTileEntity(message.getPos()) : null;
+		TileEntity actualTile = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		TileOrMultipart tileEntity = actualTile != null ? new TileWrapper(actualTile) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:
@@ -58,7 +58,7 @@ public class GuiHandler {
 	@Nullable
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGuiScreen(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity actualTile = message.hasPosition() ? player.worldObj.getTileEntity(message.getPos()) : null;
+		TileEntity actualTile = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		TileOrMultipart tileEntity = actualTile != null ? new TileWrapper(actualTile) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:

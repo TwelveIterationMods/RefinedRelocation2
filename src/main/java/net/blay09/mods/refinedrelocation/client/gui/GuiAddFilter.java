@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implements IScrollTarget {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/addFilter.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/add_filter.png");
 
 	private final GuiRootFilter parentGui;
 	private final GuiAddFilterButton[] filterButtons = new GuiAddFilterButton[3];
@@ -68,8 +68,8 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString(I18n.format("container.refinedrelocation:addFilter"), 8, 6, 4210752);
-		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format("container.refinedrelocation:add_filter"), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	@Override

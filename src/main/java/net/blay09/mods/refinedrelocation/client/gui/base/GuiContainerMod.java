@@ -89,7 +89,7 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 		if (!rootNode.keyTyped(typedChar, keyCode)) {
 			if (keyCode == Keyboard.KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
 				if(onGuiAboutToClose()) {
-					mc.thePlayer.closeScreen();
+					mc.player.closeScreen();
 				}
 				return;
 			}
@@ -143,7 +143,7 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 
 	@Override
 	public FontRenderer getFontRenderer() {
-		return fontRendererObj;
+		return fontRenderer;
 	}
 
 	@Override

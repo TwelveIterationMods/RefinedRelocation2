@@ -26,10 +26,10 @@
         "refinedrelocation:scrollbar_bottom",
         "refinedrelocation:checklist",
         "refinedrelocation:checklist_checked",
-        "refinedrelocation:icon_NameFilter",
-        "refinedrelocation:icon_PresetFilter",
-        "refinedrelocation:icon_SameItemFilter",
-        "refinedrelocation:icon_CreativeTabFilter",
-        "refinedrelocation:icon_ModFilter"
+        "refinedrelocation:icon_name_Filter",
+        "refinedrelocation:icon_preset_filter",
+        "refinedrelocation:icon_same_item_filter",
+        "refinedrelocation:icon_creative_tab_filter",
+        "refinedrelocation:icon_mod_filter"
     ]
 }

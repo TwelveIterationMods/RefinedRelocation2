@@ -53,8 +53,8 @@ public class GuiWhitelistButton extends GuiImageButton {
 	@Override
 	public void addTooltip(List<String> list) {
 		boolean nowBlacklist = parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
-		list.add(TextFormatting.WHITE + (nowBlacklist ? I18n.format("gui.refinedrelocation:rootFilter.blacklist") : I18n.format("gui.refinedrelocation:rootFilter.whitelist")));
-		list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:rootFilter.clickToToggle"));
+		list.add(TextFormatting.WHITE + (nowBlacklist ? I18n.format("gui.refinedrelocation:root_filter.blacklist") : I18n.format("gui.refinedrelocation:root_filter.whitelist")));
+		list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:root_filter.click_to_toggle"));
 	}
 
 }

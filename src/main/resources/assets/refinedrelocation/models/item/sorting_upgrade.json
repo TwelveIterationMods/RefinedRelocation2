@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "refinedrelocation:items/sortingUpgrade"
+    "layer0": "refinedrelocation:items/sorting_upgrade"
   },
   "display": {
     "thirdperson": {

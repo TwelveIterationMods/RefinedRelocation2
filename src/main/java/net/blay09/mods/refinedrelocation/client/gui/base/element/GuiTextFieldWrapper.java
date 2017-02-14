@@ -4,11 +4,11 @@ import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
-public class GuiTextFieldW extends GuiElement {
+public class GuiTextFieldWrapper extends GuiElement {
 
 	private final GuiTextField textField;
 
-	public GuiTextFieldW(int componentId, FontRenderer fontRenderer, int x, int y, int width, int height) {
+	public GuiTextFieldWrapper(int componentId, FontRenderer fontRenderer, int x, int y, int width, int height) {
 		textField = new GuiTextField(componentId, fontRenderer, x, y, width, height);
 	}
 

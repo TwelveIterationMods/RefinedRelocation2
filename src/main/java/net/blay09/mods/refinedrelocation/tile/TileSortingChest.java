@@ -22,12 +22,16 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class TileSortingChest extends TileMod implements ITickable {
 
 	private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
 		@Override
 		protected void onContentsChanged(int slot) {
 			markDirty();
+			assert sortingInventory != null;
 			sortingInventory.onSlotChanged(slot);
 		}
 	};
@@ -94,7 +98,7 @@ public class TileSortingChest extends TileMod implements ITickable {
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
 				|| capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY
 				|| capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY
@@ -103,7 +107,7 @@ public class TileSortingChest extends TileMod implements ITickable {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return (T) itemHandler;
 		} else if(capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY) {
@@ -123,8 +127,9 @@ public class TileSortingChest extends TileMod implements ITickable {
 	}
 
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
-		return !Strings.isNullOrEmpty(customName) ? new TextComponentString(customName) : new TextComponentTranslation("container.refinedrelocation:sortingChest");
+		return !Strings.isNullOrEmpty(customName) ? new TextComponentString(customName) : new TextComponentTranslation("container.refinedrelocation:sorting_chest");
 	}
 
 	@Override

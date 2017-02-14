@@ -25,7 +25,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -33,7 +32,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class CommonProxy {
 
 	public final GuiHandler guiHandler = new GuiHandler();
@@ -89,10 +87,6 @@ public class CommonProxy {
 	public void postInit(FMLPostInitializationEvent event) {
 		CreativeTabFilter.gatherCreativeTabs();
 		ModFilter.gatherMods();
-	}
-
-	public void addScheduledTask(Runnable runnable) {
-		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);
 	}
 
 	public void openGui(EntityPlayer player, MessageOpenGui message) {

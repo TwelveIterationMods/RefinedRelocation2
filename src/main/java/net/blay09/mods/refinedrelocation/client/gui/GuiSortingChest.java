@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonW;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonWrapper;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,16 +13,14 @@ public class GuiSortingChest extends GuiContainerMod<ContainerSortingChest> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
-	private final EntityPlayer player;
 	private final TileSortingChest tileEntity;
 
 	public GuiSortingChest(EntityPlayer player, TileSortingChest tileEntity) {
 		super(new ContainerSortingChest(player, tileEntity));
-		this.player = player;
 		this.tileEntity = tileEntity;
 		this.ySize = 168;
 
-		rootNode.addChild(new GuiOpenFilterButtonW(this, tileEntity, 0));
+		rootNode.addChild(new GuiOpenFilterButtonWrapper(this, tileEntity, 0));
 	}
 
 	@Override
@@ -37,8 +35,8 @@ public class GuiSortingChest extends GuiContainerMod<ContainerSortingChest> {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		fontRendererObj.drawString(tileEntity.getDisplayName().getUnformattedText(), 8, 6, 4210752);
-		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(tileEntity.getDisplayName().getUnformattedText(), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 }

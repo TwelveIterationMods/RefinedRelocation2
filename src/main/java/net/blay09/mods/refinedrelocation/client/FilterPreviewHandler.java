@@ -33,7 +33,7 @@ public class FilterPreviewHandler {
 						int guiLeft = gui.getLeft();
 						int guiTop = gui.getTop();
 						if (slotStates[slot.getSlotIndex()] == MessageFilterPreview.STATE_SUCCESS) {
-							Gui.drawRect(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, guiLeft + slot.xDisplayPosition + 16, guiTop + slot.yDisplayPosition + 16, 0x5500FF00);
+							Gui.drawRect(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x5500FF00);
 						}
 					}
 				}

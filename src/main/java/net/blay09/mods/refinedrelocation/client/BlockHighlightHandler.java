@@ -20,7 +20,7 @@ public class BlockHighlightHandler {
 			return;
 		}
 		if(event.getTarget() != null && event.getTarget().typeOfHit == RayTraceResult.Type.BLOCK) {
-			TileEntity tileEntity = event.getPlayer().worldObj.getTileEntity(event.getTarget().getBlockPos());
+			TileEntity tileEntity = event.getPlayer().world.getTileEntity(event.getTarget().getBlockPos());
 			if(tileEntity != null) {
 				ISortingGridMember sortingMember = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, event.getTarget().sideHit);
 				if(sortingMember != null) {
@@ -36,9 +36,9 @@ public class BlockHighlightHandler {
 						double offsetY = event.getPlayer().lastTickPosY + (event.getPlayer().posY - event.getPlayer().lastTickPosY) * (double) event.getPartialTicks();
 						double offsetZ = event.getPlayer().lastTickPosZ + (event.getPlayer().posZ - event.getPlayer().lastTickPosZ) * (double) event.getPartialTicks();
 						for (ISortingGridMember member : sortingGrid.getMembers()) {
-							IBlockState blockState = member.getTileEntity().getWorld().getBlockState(member.getTileEntity().getPos());
-							AxisAlignedBB aabb = blockState.getBlock().getSelectedBoundingBox(blockState, member.getTileEntity().getWorld(), member.getTileEntity().getPos()).expand(expansion, expansion, expansion).offset(-offsetX, -offsetY, -offsetZ);
-							RenderGlobal.func_189697_a(aabb, 1f, 1f, 0f, 0.75f);
+							IBlockState blockState = member.getTileContainer().getWorld().getBlockState(member.getTileContainer().getPos());
+							@SuppressWarnings("deprecation") AxisAlignedBB aabb = blockState.getBlock().getSelectedBoundingBox(blockState, member.getTileContainer().getWorld(), member.getTileContainer().getPos()).expand(expansion, expansion, expansion).offset(-offsetX, -offsetY, -offsetZ);
+							RenderGlobal.drawSelectionBoundingBox(aabb, 1f, 1f, 0f, 0.75f);
 						}
 						GlStateManager.depthMask(true);
 						GlStateManager.enableTexture2D();

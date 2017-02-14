@@ -73,21 +73,21 @@ public class GuiButtonPriority extends GuiTextButton {
 				break;
 			}
 		}
-		text = currentIndex != -1 ? I18n.format(values[currentIndex].getLangKey()) : I18n.format("gui.refinedrelocation:rootFilter.priorityCustom", sortingInventory.getPriority());
+		text = currentIndex != -1 ? I18n.format(values[currentIndex].getLangKey()) : I18n.format("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority());
 	}
 
 	@Override
 	public void addTooltip(List<String> list) {
 		if(!GuiScreen.isShiftKeyDown()) {
-			list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:rootFilter.priorityIncrease"));
-			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:rootFilter.priorityDecrease"));
+			list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:root_filter.priority_increase"));
+			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:root_filter.priority_decrease"));
 		} else {
-			list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:rootFilter.priorityIncrease10"));
-			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:rootFilter.priorityDecrease10"));
+			list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:root_filter.priority_increase10"));
+			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:root_filter.priority_decrease10"));
 		}
 		if(currentIndex != -1) {
 			list.add("");
-			list.add(I18n.format("gui.refinedrelocation:rootFilter.priorityTooltip", values[currentIndex].getPriority()));
+			list.add(I18n.format("gui.refinedrelocation:root_filter.priority_tooltip", values[currentIndex].getPriority()));
 		}
 	}
 

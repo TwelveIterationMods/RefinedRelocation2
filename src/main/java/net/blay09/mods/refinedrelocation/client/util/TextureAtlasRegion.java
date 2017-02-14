@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 public class TextureAtlasRegion extends TextureAtlasSprite implements IFilterIcon {
 
-	private TextureAtlas atlas;
+	private final TextureAtlas atlas;
 
 	public TextureAtlasRegion(TextureAtlas atlas, String name) {
 		super(name);

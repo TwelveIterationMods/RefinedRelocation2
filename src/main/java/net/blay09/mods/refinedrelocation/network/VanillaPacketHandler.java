@@ -21,6 +21,9 @@ public class VanillaPacketHandler {
 			if (worldServer.getPlayerChunkMap().isPlayerWatchingChunk(entityPlayerMP, chunkX, chunkZ)) {
 				if (updatePacket == null) {
 					updatePacket = tileEntity.getUpdatePacket();
+					if(updatePacket == null) {
+						return;
+					}
 				}
 				entityPlayerMP.connection.sendPacket(updatePacket);
 			}

@@ -56,8 +56,8 @@ public class InternalMethodsImpl implements InternalMethods {
 		if (sortingGrid != null) {
 			return;
 		}
-		World world = member.getTileEntity().getWorld();
-		BlockPos pos = member.getTileEntity().getPos();
+		World world = member.getTileContainer().getWorld();
+		BlockPos pos = member.getTileContainer().getPos();
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
 			if (tileEntity != null) {
@@ -98,16 +98,18 @@ public class InternalMethodsImpl implements InternalMethods {
 	public void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {
 		List<ISortingInventory> passingList = Lists.newArrayList();
 		ItemStack restStack = sortingInventory.getItemHandler().extractItem(fromSlotIndex, 64, false);
-		if(restStack == null) {
+		if(restStack.isEmpty()) {
 			return;
 		}
 		ISortingGrid sortingGrid = sortingInventory.getSortingGrid();
-		for(ISortingGridMember member : sortingGrid.getMembers()) {
-			if(member instanceof ISortingInventory) {
-				ISortingInventory memberInventory = (ISortingInventory) member;
-				boolean passes = memberInventory.getFilter().passes(memberInventory.getTileEntity(), itemStack);
-				if(passes) {
-					passingList.add(memberInventory);
+		if(sortingGrid != null) {
+			for (ISortingGridMember member : sortingGrid.getMembers()) {
+				if (member instanceof ISortingInventory) {
+					ISortingInventory memberInventory = (ISortingInventory) member;
+					boolean passes = memberInventory.getFilter().passes(memberInventory.getTileContainer(), itemStack);
+					if (passes) {
+						passingList.add(memberInventory);
+					}
 				}
 			}
 		}
@@ -122,16 +124,16 @@ public class InternalMethodsImpl implements InternalMethods {
 			sortingInventory.getItemHandler().insertItem(fromSlotIndex, restStack, false);
 			return;
 		}
-		while(restStack != null && !passingList.isEmpty() && targetInventory != null) {
+		while(!restStack.isEmpty() && !passingList.isEmpty() && targetInventory != null) {
 			// Insert stack into passing inventories
 			restStack = ItemHandlerHelper.insertItemStacked(targetInventory.getItemHandler(), restStack, false);
-			if(restStack != null) {
+			if(!restStack.isEmpty()) {
 				targetInventory = getBestTargetInventory(passingList, targetInventory);
 			}
 		}
-		if(restStack != null) {
+		if(!restStack.isEmpty()) {
 			restStack = sortingInventory.getItemHandler().insertItem(fromSlotIndex, restStack, false);
-			if(restStack != null) {
+			if(!restStack.isEmpty()) {
 				// This should be impossible, the item came from here to begin with so there should be at least enough space to re-insert it.
 				// If because of some mess-up somewhere it does happen after all though, crash the player to notify them about deleted items and make it more likely to be reported.
 				throw new RuntimeException("Refined Relocation just ate one of your items and that's really weird because this should never happen. Now go and report this so I can have a further look into this.");
@@ -234,11 +236,11 @@ public class InternalMethodsImpl implements InternalMethods {
 
 	@Override
 	public void updateFilterPreview(EntityPlayer entityPlayer, TileOrMultipart tileEntity, ISimpleFilter filter) {
-		if(!entityPlayer.worldObj.isRemote) {
+		if(!entityPlayer.world.isRemote) {
 			byte[] slotStates = new byte[MessageFilterPreview.INVENTORY_SLOT_COUNT];
 			for (int i = 0; i < slotStates.length; i++) {
 				ItemStack itemStack = entityPlayer.inventory.getStackInSlot(i);
-				if (itemStack != null) {
+				if (!itemStack.isEmpty()) {
 					slotStates[i] = (byte) (filter.passes(tileEntity, itemStack) ? MessageFilterPreview.STATE_SUCCESS : MessageFilterPreview.STATE_FAILURE);
 				}
 			}

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class NameFilter implements IFilter, IConfigurableFilter {
 
-	public static final String ID = RefinedRelocation.MOD_ID + ":NameFilter";
+	public static final String ID = RefinedRelocation.MOD_ID + ":name_filter";
 
 	private static final Pattern WILDCARD_PATTERN = Pattern.compile("[^*]+|(\\*)");
 	private static final Matcher WILDCARD_MATCHER = WILDCARD_PATTERN.matcher("");
@@ -97,18 +97,18 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 
 	@Override
 	public String getLangKey() {
-		return "filter.refinedrelocation:NameFilter";
+		return "filter.refinedrelocation:name_filter";
 	}
 
 	@Override
 	public String getDescriptionLangKey() {
-		return "filter.refinedrelocation:NameFilter.description";
+		return "filter.refinedrelocation:name_filter.description";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IFilterIcon getFilterIcon() {
-		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_NameFilter");
+		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_name_filter");
 	}
 
 	@Override

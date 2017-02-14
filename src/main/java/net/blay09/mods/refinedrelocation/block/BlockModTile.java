@@ -24,6 +24,7 @@ public abstract class BlockModTile extends BlockMod {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean eventReceived(IBlockState state, World world, BlockPos pos, int id, int param) {
 		super.eventReceived(state, world, pos, id, param);
 		TileEntity tileEntity = world.getTileEntity(pos);

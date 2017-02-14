@@ -10,13 +10,13 @@ import javax.annotation.Nullable;
 
 public interface TileOrMultipart {
 	boolean isMultipart();
-	@Nullable
 	TileEntity getTileEntity();
 //	@Nullable
 //	Multipart getMultipart();
 	World getWorld();
 	BlockPos getPos();
 	boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing);
+	@Nullable
 	<T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing);
 	void markDirty();
 	String getDisplayName();

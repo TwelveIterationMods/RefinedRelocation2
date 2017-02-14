@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation", dependencies = "after:ironchest"/*, dependencies = "required-after:mcmultipart"*/) // @McMultipart
-@SuppressWarnings("unused")
 public class RefinedRelocation {
 
 	public static final String MOD_ID = "refinedrelocation";
@@ -24,10 +23,10 @@ public class RefinedRelocation {
 	@SidedProxy(clientSide = "net.blay09.mods.refinedrelocation.client.ClientProxy", serverSide = "net.blay09.mods.refinedrelocation.CommonProxy")
 	public static CommonProxy proxy;
 
-	public static CreativeTabs creativeTab = new CreativeTabs(MOD_ID) {
+	public static final CreativeTabs creativeTab = new CreativeTabs(MOD_ID) {
 		@Override
-		public Item getTabIconItem() {
-			return Item.getItemFromBlock(ModBlocks.sortingChest);
+		public ItemStack getTabIconItem() {
+			return new ItemStack(ModBlocks.sortingChest);
 		}
 	};
 

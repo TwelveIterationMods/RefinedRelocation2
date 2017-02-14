@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
-import org.apache.logging.log4j.core.net.MimeMessageBuilder;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -35,7 +34,7 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 	private int lastRowCount;
 
 	public GuiTextFieldMultiLine(int x, int y, int width, int height) {
-		fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+		fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		setPosition(x, y);
 		setSize(width, height);
 	}

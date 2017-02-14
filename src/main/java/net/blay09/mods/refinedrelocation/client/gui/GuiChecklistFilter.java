@@ -9,7 +9,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiChecklistEntry;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonW;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonWrapper;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter> implements IScrollTarget, IFilterPreviewGui {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/checklistFilter.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/checklist_filter.png");
 
 	private final IChecklistFilter filter;
 	private final GuiChecklistEntry[] entries = new GuiChecklistEntry[7];
@@ -45,7 +45,7 @@ public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter
 			y += entries[i].getHeight();
 		}
 
-		rootNode.addChild(new GuiOpenFilterButtonW(this, container.getTileEntity(), 0));
+		rootNode.addChild(new GuiOpenFilterButtonWrapper(this, container.getTileEntity(), 0));
 
 		setCurrentOffset(0);
 	}
@@ -63,8 +63,8 @@ public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString(I18n.format(filter.getLangKey()), 8, 6, 4210752);
-		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format(filter.getLangKey()), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	@Override

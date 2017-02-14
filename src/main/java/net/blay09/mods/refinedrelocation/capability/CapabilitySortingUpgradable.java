@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.capability;
 
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
 import net.blay09.mods.refinedrelocation.api.SortingUpgradable;
-import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

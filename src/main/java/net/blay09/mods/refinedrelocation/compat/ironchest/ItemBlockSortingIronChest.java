@@ -11,6 +11,7 @@ import java.util.Locale;
 public class ItemBlockSortingIronChest extends ItemBlock {
 	public ItemBlockSortingIronChest(Block block) {
 		super(block);
+		//noinspection ConstantConditions
 		setRegistryName(block.getRegistryName());
 		setHasSubtypes(true);
 	}

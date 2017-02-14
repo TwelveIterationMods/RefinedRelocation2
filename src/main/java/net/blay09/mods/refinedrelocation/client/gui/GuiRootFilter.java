@@ -26,7 +26,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/rootFilter.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter.png");
 	private static final int UPDATE_INTERVAL = 20;
 
 	private final TextureAtlasRegion textureSeparator;
@@ -70,7 +70,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 			rootNode.addChild(btnReturn);
 		}
 
-		rootNode.addChild(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:rootFilter.priorityLabel"), 0x404040));
+		rootNode.addChild(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
 		rootNode.addChild(new GuiButtonPriority(10, 80, 100, 20, container.getSortingInventory()));
 
 		textureSeparator = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_separator");
@@ -112,9 +112,9 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		String tileDisplayName = container.getTileEntity().getDisplayName();
-		fontRendererObj.drawString(tileDisplayName.isEmpty() ? I18n.format("container.refinedrelocation:rootFilter") : I18n.format("container.refinedrelocation:rootFilterWithName", tileDisplayName), 8, 6, 4210752);
-		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		String tileDisplayName = container.getTileOrMultipart().getDisplayName();
+		fontRenderer.drawString(tileDisplayName.isEmpty() ? I18n.format("container.refinedrelocation:root_filter") : I18n.format("container.refinedrelocation:root_filter_with_name", tileDisplayName), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	@Override
