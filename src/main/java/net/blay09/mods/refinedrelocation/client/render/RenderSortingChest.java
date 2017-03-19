@@ -29,7 +29,6 @@ public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 		GlStateManager.depthFunc(GL11.GL_LEQUAL);
 		GlStateManager.depthMask(true);
 
-
 		if (destroyStage >= 0) {
 			bindTexture(DESTROY_STAGES[destroyStage]);
 			GlStateManager.matrixMode(GL11.GL_TEXTURE);
@@ -58,6 +57,7 @@ public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 		model.chestLid.rotateAngleX = -(lidAngle * ((float) Math.PI / 2f));
 		model.renderAll();
 		if(destroyStage == -1) {
+			GlStateManager.enableAlpha();
 			bindTexture(TEXTURE_OVERLAY);
 			GlStateManager.translate(0f, -0.001f, 0f);
 			model.renderAll();
