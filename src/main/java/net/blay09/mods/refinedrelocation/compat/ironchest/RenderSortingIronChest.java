@@ -100,6 +100,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 
 		// Render the lid overlay only on the normal pass
 		if(destroyStage == -1) {
+			GlStateManager.enableAlpha();
 			bindTexture(OVERLAY[type.ordinal()]);
 			modelLidOverlay.chestLid.rotateAngleX = -lidAngle * halfPI;
 			modelLidOverlay.renderAll();
