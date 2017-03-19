@@ -23,6 +23,7 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 
@@ -199,7 +200,7 @@ public class ContainerRootFilter extends ContainerMod {
 	@Override
 	public void receivedMessageClient(IContainerMessage message) {
 		if(message.getKey().equals(KEY_FILTER_LIST)) {
-			rootFilter.deserializeNBT(message.getNBTValue().getTag(KEY_FILTER_LIST));
+			rootFilter.deserializeNBT(message.getNBTValue().getTagList(KEY_FILTER_LIST, Constants.NBT.TAG_COMPOUND));
 		} else if(message.getKey().equals(KEY_PRIORITY)) {
 			getSortingInventory().setPriority(message.getIntValue());
 		} else if(message.getKey().equals(KEY_BLACKLIST)) {

@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants;
 
 public class SubFilterWrapper {
 
@@ -34,7 +35,7 @@ public class SubFilterWrapper {
 	public static SubFilterWrapper loadFromNBT(NBTTagCompound tagCompound) {
 		IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
 		if(filter != null) {
-			filter.deserializeNBT(tagCompound.getTag("Data"));
+			filter.deserializeNBT(tagCompound.getTagList("Data", Constants.NBT.TAG_COMPOUND));
 			SubFilterWrapper wrapper = new SubFilterWrapper(filter);
 			wrapper.isBlacklist = tagCompound.getBoolean("IsBlacklist");
 			return wrapper;

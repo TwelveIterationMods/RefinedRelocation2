@@ -231,7 +231,7 @@ public class IronChestAddon extends RefinedAddon {
 
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent.TileEntity event) {
-		if (event.getTileEntity() instanceof TileEntityIronChest) {
+		if (event.getTileEntity() instanceof TileEntityIronChest && !(event.getTileEntity() instanceof TileSortingIronChest)) {
 			event.addCapability(new ResourceLocation(RefinedRelocation.MOD_ID, "SortingUpgradable"), new IronChestCapabilityProvider());
 		}
 	}

@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
@@ -62,7 +63,7 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-		rootFilter.deserializeNBT(compound.getTag("RootFilter"));
+		rootFilter.deserializeNBT(compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND));
 	}
 
 	@Override

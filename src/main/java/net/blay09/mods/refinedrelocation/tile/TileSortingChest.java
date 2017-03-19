@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -65,7 +66,7 @@ public class TileSortingChest extends TileMod implements ITickable {
 		super.readFromNBT(compound);
 		itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-		rootFilter.deserializeNBT(compound.getTag("RootFilter"));
+		rootFilter.deserializeNBT(compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND));
 	}
 
 	@Override
