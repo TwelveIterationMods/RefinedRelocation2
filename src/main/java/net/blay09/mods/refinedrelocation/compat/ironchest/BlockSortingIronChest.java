@@ -49,6 +49,11 @@ public class BlockSortingIronChest extends BlockModTile {
 	}
 
 	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
 	public boolean isFullyOpaque(IBlockState state) {
 		return false;
 	}

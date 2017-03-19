@@ -1,5 +1,5 @@
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10.2:3.7.4.226"
+    provided "mezz.jei:jei_1.10.2:3.7.4.226"
     deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
     deobfCompile "cpw.mods:ironchest:1.10.2-7.0.9.796"
     //deobfCompile "MCMultiPart:MCMultiPart-experimental:1.2.0_74:universal"
