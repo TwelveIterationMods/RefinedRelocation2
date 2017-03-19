@@ -39,6 +39,7 @@ public class TileSortingChest extends TileMod implements ITickable {
 	private String customName = "";
 
 	public TileSortingChest() {
+		doorAnimator.setOpenRadius((float) Math.PI);
 		doorAnimator.setSoundEventOpen(SoundEvents.BLOCK_CHEST_OPEN);
 		doorAnimator.setSoundEventClose(SoundEvents.BLOCK_CHEST_CLOSE);
 	}
