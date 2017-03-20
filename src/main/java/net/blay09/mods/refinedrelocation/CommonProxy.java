@@ -1,9 +1,7 @@
 package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
@@ -56,12 +54,7 @@ public class CommonProxy {
 		RefinedRelocationAPI.registerFilter(CreativeTabFilter.class);
 		RefinedRelocationAPI.registerFilter(ModFilter.class);
 
-		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, new ITileGuiHandler() {
-			@Override
-			public void openGui(EntityPlayer player, TileOrMultipart tileEntity) {
-				RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos()));
-			}
-		});
+		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos())));
 
 		if(Loader.isModLoaded(Compat.IRONCHEST)) {
 			try {

@@ -40,11 +40,6 @@ public class RefinedRelocationAPI {
 		return internalMethods.createOpenFilterButton(guiContainer, tileEntity, buttonId);
 	}
 
-//	@SideOnly(Side.CLIENT)
-//	public static GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
-//		return internalMethods.createOpenFilterButton(guiContainer, part, buttonId); // @McMultipart
-//	}
-
 	public static void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {
 		internalMethods.insertIntoSortingGrid(sortingInventory, fromSlotIndex, itemStack);
 	}
@@ -77,7 +72,7 @@ public class RefinedRelocationAPI {
 		internalMethods.syncContainerValue(key, value, listeners);
 	}
 
-	public static void updateFilterPreview(EntityPlayer player, TileOrMultipart tileEntity, ISimpleFilter filter) {
+	public static void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter) {
 		internalMethods.updateFilterPreview(player, tileEntity, filter);
 	}
 
@@ -85,20 +80,8 @@ public class RefinedRelocationAPI {
 		internalMethods.registerGuiHandler(clazz, handler);
 	}
 
-	public static void openRootFilterGui(EntityPlayer player, TileOrMultipart tileEntity) {
-		if(tileEntity.isMultipart()) {
-//			openRootFilterGui(player, tileEntity.getMultipart()); // @McMultipart
-		}  else {
-			openRootFilterGui(player, tileEntity.getTileEntity());
-		}
-	}
-
 	public static void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
 		internalMethods.openRootFilterGui(player, tileEntity);
 	}
-
-//	public static void openRootFilterGui(EntityPlayer player, Multipart part) {
-//		internalMethods.openRootFilterGui(player, part); // @McMultipart
-//	}
 
 }

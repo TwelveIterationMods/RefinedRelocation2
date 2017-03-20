@@ -34,11 +34,6 @@ public class MessageOpenGui implements IMessage {
 		this.pos = tileEntity.getPos();
 	}
 
-//	public MessageOpenGui(int id, Multipart part) {  // @McMultipart
-//		 TODO Support Multiparts in MOG
-//		throw new NotImplementedException("MOG doesn't support parts yet");
-//	}
-
 	public MessageOpenGui(int id, int intValue) {
 		this.id = id;
 		this.type = TYPE_INT;

@@ -4,7 +4,6 @@ import net.blay09.mods.refinedrelocation.InternalMethodsImpl;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
@@ -22,6 +21,7 @@ import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
@@ -34,7 +34,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 	private int ticksSinceUpdate;
 	private int lastSentPriority;
 
-	public GuiRootFilter(EntityPlayer player, TileOrMultipart tileEntity) {
+	public GuiRootFilter(EntityPlayer player, TileEntity tileEntity) {
 		super(new ContainerRootFilter(player, tileEntity));
 
 		ySize = 210;
@@ -57,7 +57,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 			x += 40;
 		}
 
-		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(/*tileEntity.isMultipart() ? tileEntity.getMultipart().getClass() : */tileEntity.getTileEntity().getClass()); // @McMultipart
+		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(tileEntity.getClass());
 		if(tileGuiHandler != null) {
 			GuiImageButton btnReturn = new GuiImageButton(guiLeft + xSize - 20, guiTop + 4, "chest_button") {
 				@Override
@@ -112,7 +112,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		String tileDisplayName = container.getTileOrMultipart().getDisplayName();
+		String tileDisplayName = container.getTileEntity().getDisplayName().getUnformattedText();
 		fontRenderer.drawString(tileDisplayName.isEmpty() ? I18n.format("container.refinedrelocation:root_filter") : I18n.format("container.refinedrelocation:root_filter_with_name", tileDisplayName), 8, 6, 4210752);
 		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}

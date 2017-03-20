@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
@@ -13,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -157,12 +157,12 @@ public class PresetFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileOrMultipart tileEntity) {
+	public boolean isFilterUsable(TileEntity tileEntity) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
 		int[] oreIDs = OreDictionary.getOreIDs(itemStack);
 		String[] oreNames = new String[oreIDs.length];
 		for(int i = 0; i < oreIDs.length; i++) {

@@ -1,12 +1,12 @@
 package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 
 public class ContainerChecklistFilter extends ContainerMod {
 
@@ -17,13 +17,13 @@ public class ContainerChecklistFilter extends ContainerMod {
 	private static final int UPDATE_INTERVAL = 20;
 
 	private final EntityPlayer player;
-	private final TileOrMultipart tileEntity;
+	private final TileEntity tileEntity;
 	private final IChecklistFilter filter;
 
 	private final byte[] lastStates;
 	private int ticksSinceUpdate = UPDATE_INTERVAL;
 
-	public ContainerChecklistFilter(EntityPlayer player, TileOrMultipart tileEntity, IChecklistFilter filter) {
+	public ContainerChecklistFilter(EntityPlayer player, TileEntity tileEntity, IChecklistFilter filter) {
 		this.player = player;
 		this.tileEntity = tileEntity;
 		this.filter = filter;
@@ -61,7 +61,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 		return itemStack;
 	}
 
-	public TileOrMultipart getTileEntity() {
+	public TileEntity getTileEntity() {
 		return tileEntity;
 	}
 

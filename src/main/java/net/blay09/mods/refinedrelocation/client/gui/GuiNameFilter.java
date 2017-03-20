@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
@@ -14,6 +13,7 @@ import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implements IFilterPreviewGui {
@@ -23,13 +23,13 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	private static final int UPDATE_INTERVAL = 20;
 
 	private final EntityPlayer player;
-	private final TileOrMultipart tileEntity;
+	private final TileEntity tileEntity;
 	private final GuiTextFieldMultiLine txtFilter;
 
 	private int ticksSinceUpdate;
 	private String lastSentText = "";
 
-	public GuiNameFilter(EntityPlayer player, TileOrMultipart tileEntity, NameFilter filter) {
+	public GuiNameFilter(EntityPlayer player, TileEntity tileEntity, NameFilter filter) {
 		super(new ContainerNameFilter(player, tileEntity, filter));
 		this.player = player;
 		this.tileEntity = tileEntity;

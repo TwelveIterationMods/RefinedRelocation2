@@ -3,6 +3,4 @@ dependencies {
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.9-B22_1.11"
     deobfCompile "mcjty.theoneprobe:TheOneProbe:1.1x-1.4.1-51"
     deobfCompile "cpw.mods:ironchest:1.11-7.0.17.799"
-    //deobfCompile "MCMultiPart:MCMultiPart-experimental:1.2.0_74:universal"
-    //deobfCompile "Charset:Charset:0.3.0"
 }

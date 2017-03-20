@@ -6,7 +6,6 @@ import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +22,7 @@ public class TileFilteredHopper extends TileFastHopper {
 		return new ItemStackHandler(5) {
 			@Override
 			public ItemStack insertItem(int slot, ItemStack itemStack, boolean simulate) {
-				if(itemStack.isEmpty() || !rootFilter.passes(new TileWrapper(TileFilteredHopper.this), itemStack)) {
+				if(itemStack.isEmpty() || !rootFilter.passes(TileFilteredHopper.this, itemStack)) {
 					return itemStack;
 				}
 				return super.insertItem(slot, itemStack, simulate);

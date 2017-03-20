@@ -11,7 +11,6 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -23,7 +22,6 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -76,12 +74,9 @@ public class IronChestAddon extends RefinedAddon {
 		GameRegistry.registerTileEntity(TileSortingIronChest.Silver.class, sortingIronChest.getRegistryNameString() + "_silver");
 
 		final Object modInstance = Loader.instance().getIndexedModList().get(Compat.IRONCHEST).getMod();
-		final ITileGuiHandler tileGuiHandler = new ITileGuiHandler() {
-			@Override
-			public void openGui(EntityPlayer player, TileOrMultipart tileEntity) {
-				TileSortingIronChest tileIronChest = (TileSortingIronChest) tileEntity.getTileEntity();
-				player.openGui(modInstance, tileIronChest.getType().ordinal(), tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
-			}
+		final ITileGuiHandler tileGuiHandler = (player, tileEntity) -> {
+			TileSortingIronChest tileIronChest = (TileSortingIronChest) tileEntity;
+			player.openGui(modInstance, tileIronChest.getType().ordinal(), tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
 		};
 		RefinedRelocationAPI.registerGuiHandler(TileSortingIronChest.class, tileGuiHandler);
 		RefinedRelocationAPI.registerGuiHandler(TileSortingIronChest.Dirt.class, tileGuiHandler);
@@ -100,12 +95,7 @@ public class IronChestAddon extends RefinedAddon {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
 
 		Item sortingIronChestItem = Item.getItemFromBlock(sortingIronChest);
-		ModelLoader.setCustomMeshDefinition(sortingIronChestItem, new ItemMeshDefinition() {
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack) {
-			return new ModelResourceLocation(sortingIronChest.getRegistryNameString(), "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH));
-			}
-		});
+		ModelLoader.setCustomMeshDefinition(sortingIronChestItem, stack -> new ModelResourceLocation(sortingIronChest.getRegistryNameString(), "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
 	}
 
 	@Override

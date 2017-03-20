@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
@@ -10,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,12 +39,12 @@ public class CreativeTabFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileOrMultipart tileEntity) {
+	public boolean isFilterUsable(TileEntity tileEntity) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
 		// NOTE We can't use getCreativeTabs because it calls a client-only getCreativeTab() function - thanks Notch!
 //		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
 //		for (CreativeTabs itemTab : itemTabs) {

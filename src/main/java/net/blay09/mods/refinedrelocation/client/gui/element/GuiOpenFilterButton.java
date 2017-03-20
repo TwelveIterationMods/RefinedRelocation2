@@ -1,11 +1,11 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.tileentity.TileEntity;
 
 public class GuiOpenFilterButton extends GuiButton {
 
@@ -13,9 +13,9 @@ public class GuiOpenFilterButton extends GuiButton {
 	private final TextureAtlasRegion backgroundHover;
 	private final TextureAtlasRegion backgroundDisabled;
 
-	private final TileOrMultipart tileEntity;
+	private final TileEntity tileEntity;
 
-	public GuiOpenFilterButton(int id, int x, int y, TileOrMultipart tileEntity) {
+	public GuiOpenFilterButton(int id, int x, int y, TileEntity tileEntity) {
 		super(id, x, y, "");
 		this.tileEntity = tileEntity;
 //		if(smallVersion) {
@@ -45,7 +45,7 @@ public class GuiOpenFilterButton extends GuiButton {
 		}
 	}
 
-	public TileOrMultipart getTileEntity() {
+	public TileEntity getTileEntity() {
 		return tileEntity;
 	}
 

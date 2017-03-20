@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
@@ -14,6 +13,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,12 +36,12 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileOrMultipart tileEntity) {
+	public boolean isFilterUsable(TileEntity tileEntity) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
 		String itemName = itemStack.getDisplayName();
 		Pattern[] patterns = getPatterns();
 		for(Pattern pattern : patterns) {
@@ -112,13 +112,13 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	}
 
 	@Override
-	public Container createContainer(EntityPlayer player, TileOrMultipart tileEntity) {
+	public Container createContainer(EntityPlayer player, TileEntity tileEntity) {
 		return new ContainerNameFilter(player, tileEntity, this);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiScreen createGuiScreen(EntityPlayer player, TileOrMultipart tileEntity) {
+	public GuiScreen createGuiScreen(EntityPlayer player, TileEntity tileEntity) {
 		return new GuiNameFilter(player, tileEntity, this);
 	}
 }

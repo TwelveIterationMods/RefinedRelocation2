@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.api.filter;
 
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -11,7 +11,7 @@ public interface IFilter extends ISimpleFilter {
 	String getIdentifier();
 	String getLangKey();
 	String getDescriptionLangKey();
-	boolean isFilterUsable(TileOrMultipart tileEntity);
+	boolean isFilterUsable(TileEntity tileEntity);
 	@SideOnly(Side.CLIENT)
 	@Nullable
 	IFilterIcon getFilterIcon();

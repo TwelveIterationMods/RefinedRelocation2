@@ -1,13 +1,13 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import com.google.common.collect.Lists;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class RootFilter implements IRootFilter {
 	}
 
 	@Override
-	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
 		if(itemStack.isEmpty()) {
 			return false;
 		}

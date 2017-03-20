@@ -1,13 +1,13 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -26,12 +26,12 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileOrMultipart tileEntity) {
+	public boolean isFilterUsable(TileEntity tileEntity) {
 		return tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 	}
 
 	@Override
-	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
 		IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		if(itemHandler != null) {
 			for(int i = 0; i < itemHandler.getSlots(); i++) {

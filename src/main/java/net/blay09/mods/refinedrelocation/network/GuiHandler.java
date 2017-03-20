@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.network;
 
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
@@ -16,7 +15,6 @@ import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -35,11 +33,10 @@ public class GuiHandler {
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity actualTile = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
-		TileOrMultipart tileEntity = actualTile != null ? new TileWrapper(actualTile) : null;
+		TileEntity tileEntity = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:
-				return actualTile instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) actualTile) : null;
+				return tileEntity instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) tileEntity) : null;
 			case GUI_ROOT_FILTER:
 				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerRootFilter(player, tileEntity) : null) : null;
 			case GUI_ANY_FILTER:
@@ -56,7 +53,7 @@ public class GuiHandler {
 				}
 				break;
 			case GUI_FAST_HOPPER:
-				return actualTile instanceof TileFastHopper ? new ContainerFastHopper(player, (TileFastHopper) actualTile) : null;
+				return tileEntity instanceof TileFastHopper ? new ContainerFastHopper(player, (TileFastHopper) tileEntity) : null;
 		}
 		return null;
 	}
@@ -64,11 +61,10 @@ public class GuiHandler {
 	@Nullable
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGuiScreen(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity actualTile = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
-		TileOrMultipart tileEntity = actualTile != null ? new TileWrapper(actualTile) : null;
+		TileEntity tileEntity = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:
-				return actualTile instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) actualTile) : null;
+				return tileEntity instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) tileEntity) : null;
 			case GUI_ROOT_FILTER:
 				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiRootFilter(player, tileEntity) : null) : null;
 			case GUI_ANY_FILTER:
@@ -85,7 +81,7 @@ public class GuiHandler {
 				}
 				break;
 			case GUI_FAST_HOPPER:
-				return actualTile instanceof TileFastHopper ? new GuiFastHopper(player, (TileFastHopper) actualTile) : null;
+				return tileEntity instanceof TileFastHopper ? new GuiFastHopper(player, (TileFastHopper) tileEntity) : null;
 		}
 		return null;
 	}

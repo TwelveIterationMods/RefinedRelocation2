@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.container;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Priority;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
@@ -20,6 +19,7 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 public class ContainerRootFilter extends ContainerMod {
 
@@ -32,7 +32,7 @@ public class ContainerRootFilter extends ContainerMod {
 	public static final String KEY_BLACKLIST_INDEX = "FilterIndex";
 
 	private final EntityPlayer entityPlayer;
-	private final TileOrMultipart tileOrMultipart;
+	private final TileEntity tileEntity;
 	private final IRootFilter rootFilter;
 
 	private ISortingInventory sortingInventory;
@@ -41,15 +41,15 @@ public class ContainerRootFilter extends ContainerMod {
 	private int lastPriority;
 	private final boolean[] lastBlacklist = new boolean[3];
 
-	public ContainerRootFilter(EntityPlayer player, TileOrMultipart tileOrMultipart) {
+	public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity) {
 		this.entityPlayer = player;
-		this.tileOrMultipart = tileOrMultipart;
-		IRootFilter rootFilter = tileOrMultipart.getCapability(CapabilityRootFilter.CAPABILITY, null);
+		this.tileEntity = tileEntity;
+		IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
 		if(rootFilter == null) {
 			rootFilter = new RootFilter();
 		}
 		this.rootFilter = rootFilter;
-		sortingInventory = tileOrMultipart.getCapability(CapabilitySortingInventory.CAPABILITY, null);
+		sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY, null);
 
 		addPlayerInventory(player, 128);
 	}
@@ -60,7 +60,7 @@ public class ContainerRootFilter extends ContainerMod {
 
 		if(rootFilter.getFilterCount() != lastFilterCount) {
 			syncFilterList();
-			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileOrMultipart, rootFilter);
+			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
 		}
 
 		for(int i = 0; i < lastBlacklist.length; i++) {
@@ -83,7 +83,7 @@ public class ContainerRootFilter extends ContainerMod {
 	@Override
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
 		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
-		RefinedRelocationAPI.updateFilterPreview(player, tileOrMultipart, rootFilter);
+		RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
 		return itemStack;
 	}
 
@@ -97,8 +97,8 @@ public class ContainerRootFilter extends ContainerMod {
 		}
 	}
 
-	public TileOrMultipart getTileOrMultipart() {
-		return tileOrMultipart;
+	public TileEntity getTileEntity() {
+		return tileEntity;
 	}
 
 	@Override
@@ -141,11 +141,11 @@ public class ContainerRootFilter extends ContainerMod {
 				return;
 			}
 			rootFilter.addFilter(filter);
-			tileOrMultipart.markDirty();
+			tileEntity.markDirty();
 			lastFilterCount = rootFilter.getFilterCount();
 			syncFilterList();
-			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileOrMultipart, rootFilter);
-			RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileOrMultipart.getPos(), rootFilter.getFilterCount() - 1));
+			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
+			RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), rootFilter.getFilterCount() - 1));
 		} else if(message.getKey().equals(KEY_EDIT_FILTER)) {
 			int index = message.getIntValue();
 			if(index < 0 || index >= rootFilter.getFilterCount()) {
@@ -154,7 +154,7 @@ public class ContainerRootFilter extends ContainerMod {
 			}
 			IFilter filter = rootFilter.getFilter(index);
 			if(filter != null) {
-				RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileOrMultipart.getPos(), index));
+				RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), index));
 			}
 		} else if(message.getKey().equals(KEY_DELETE_FILTER)) {
 			int index = message.getIntValue();
@@ -163,7 +163,7 @@ public class ContainerRootFilter extends ContainerMod {
 				return;
 			}
 			rootFilter.removeFilter(index);
-			tileOrMultipart.markDirty();
+			tileEntity.markDirty();
 		} else if(message.getKey().equals(KEY_PRIORITY)) {
 			int value = message.getIntValue();
 			if(value < Priority.LOWEST || value > Priority.HIGHEST) {
@@ -175,7 +175,7 @@ public class ContainerRootFilter extends ContainerMod {
 				return;
 			}
 			sortingInventory.setPriority(value);
-			tileOrMultipart.markDirty();
+			tileEntity.markDirty();
 		} else if(message.getKey().equals(KEY_BLACKLIST)) {
 			NBTTagCompound tagCompound = message.getNBTValue();
 			int index = tagCompound.getInteger(KEY_BLACKLIST_INDEX);
@@ -184,8 +184,8 @@ public class ContainerRootFilter extends ContainerMod {
 				return;
 			}
 			rootFilter.setIsBlacklist(index, tagCompound.getBoolean(KEY_BLACKLIST));
-			tileOrMultipart.markDirty();
-			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileOrMultipart, rootFilter);
+			tileEntity.markDirty();
+			RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
 		}
 	}
 

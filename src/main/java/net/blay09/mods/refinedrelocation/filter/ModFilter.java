@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -19,7 +19,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,16 +59,13 @@ public class ModFilter implements IChecklistFilter {
 			modSet.add(registryName.getResourceDomain());
 		}
 		String[] unsorted = modSet.toArray(new String[modSet.size()]);
-		Arrays.sort(unsorted, new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				if(o1.equals("minecraft")) {
-					return -1;
-				} else if(o2.equals("minecraft")) {
-					return 1;
-				}
-				return o2.compareTo(o1);
+		Arrays.sort(unsorted, (o1, o2) -> {
+			if(o1.equals("minecraft")) {
+				return -1;
+			} else if(o2.equals("minecraft")) {
+				return 1;
 			}
+			return o2.compareTo(o1);
 		});
 		setModList(unsorted);
 	}
@@ -96,12 +92,12 @@ public class ModFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public boolean isFilterUsable(TileOrMultipart tileEntity) {
+	public boolean isFilterUsable(TileEntity tileEntity) {
 		return true;
 	}
 
 	@Override
-	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
 		ResourceLocation resourceLocation = itemStack.getItem().getRegistryName();
 		if(resourceLocation != null) {
 			ModWithName modWithName = modList.get(resourceLocation.getResourceDomain());

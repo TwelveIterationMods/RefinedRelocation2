@@ -6,7 +6,6 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
@@ -20,7 +19,6 @@ import net.blay09.mods.refinedrelocation.network.MessageContainer;
 import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
-import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,8 +54,8 @@ public class InternalMethodsImpl implements InternalMethods {
 		if (sortingGrid != null) {
 			return;
 		}
-		World world = member.getTileContainer().getWorld();
-		BlockPos pos = member.getTileContainer().getPos();
+		World world = member.getTileEntity().getWorld();
+		BlockPos pos = member.getTileEntity().getPos();
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
 			if (tileEntity != null) {
@@ -106,7 +104,7 @@ public class InternalMethodsImpl implements InternalMethods {
 			for (ISortingGridMember member : sortingGrid.getMembers()) {
 				if (member instanceof ISortingInventory) {
 					ISortingInventory memberInventory = (ISortingInventory) member;
-					boolean passes = memberInventory.getFilter().passes(memberInventory.getTileContainer(), restStack);
+					boolean passes = memberInventory.getFilter().passes(memberInventory.getTileEntity(), restStack);
 					if (passes) {
 						passingList.add(memberInventory);
 					}
@@ -161,14 +159,8 @@ public class InternalMethodsImpl implements InternalMethods {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
-		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new TileWrapper(tileEntity));
+		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, tileEntity);
 	}
-
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public GuiButton createOpenFilterButton(GuiContainer guiContainer, Multipart part, int buttonId) {
-//		return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, new PartWrapper(part));  // @McMultipart
-//	}
 
 	@Override
 	public void sendContainerMessageToServer(String key, String value) {
@@ -229,13 +221,8 @@ public class InternalMethodsImpl implements InternalMethods {
 		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
 	}
 
-//	@Override
-//	public void openRootFilterGui(EntityPlayer player, Multipart part) {
-//		NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, part));  // @McMultipart
-//	}
-
 	@Override
-	public void updateFilterPreview(EntityPlayer entityPlayer, TileOrMultipart tileEntity, ISimpleFilter filter) {
+	public void updateFilterPreview(EntityPlayer entityPlayer, TileEntity tileEntity, ISimpleFilter filter) {
 		if(!entityPlayer.world.isRemote) {
 			byte[] slotStates = new byte[MessageFilterPreview.INVENTORY_SLOT_COUNT];
 			for (int i = 0; i < slotStates.length; i++) {

@@ -1,26 +1,26 @@
 package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 
 public class ContainerNameFilter extends ContainerMod {
 
 	public static final String KEY_VALUE = "Value";
 
 	private final EntityPlayer player;
-	private final TileOrMultipart tileEntity;
+	private final TileEntity tileEntity;
 	private final NameFilter filter;
 
 	private String lastValue = "";
 
 	private boolean guiNeedsUpdate;
 
-	public ContainerNameFilter(EntityPlayer player, TileOrMultipart tileEntity, NameFilter filter) {
+	public ContainerNameFilter(EntityPlayer player, TileEntity tileEntity, NameFilter filter) {
 		this.player = player;
 		this.tileEntity = tileEntity;
 		this.filter = filter;
@@ -80,7 +80,7 @@ public class ContainerNameFilter extends ContainerMod {
 		return guiNeedsUpdate;
 	}
 
-	public TileOrMultipart getTileEntity() {
+	public TileEntity getTileEntity() {
 		return tileEntity;
 	}
 }
