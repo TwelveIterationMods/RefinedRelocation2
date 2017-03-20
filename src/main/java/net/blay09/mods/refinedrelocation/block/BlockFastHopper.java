@@ -1,5 +1,9 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileMod;
 import net.minecraft.block.Block;
@@ -20,9 +24,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
@@ -100,15 +101,7 @@ public class BlockFastHopper extends BlockModTile {
 		return getDefaultState().withProperty(DIRECTION, opposite).withProperty(ENABLED, true);
 	}
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack) {
-		if (itemStack.hasDisplayName()) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			if(tileEntity instanceof TileFastHopper) {
-				((TileFastHopper) tileEntity).setCustomName(itemStack.getDisplayName());
-			}
-		}
-	}
+
 
 	@Nullable
 	@Override
@@ -173,7 +166,22 @@ public class BlockFastHopper extends BlockModTile {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		// TODO open gui
+		if (!world.isRemote) {
+			ItemStack heldItem = player.getHeldItem(hand);
+			if(tryNameBlock(player, heldItem, world, pos)) {
+				return true;
+			}
+
+			if(player.isSneaking()) {
+				TileEntity tileEntity = world.getTileEntity(pos);
+				if (tileEntity != null) {
+					RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+				}
+			} else {
+				RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_FAST_HOPPER, pos));
+			}
+			return true;
+		}
 		return true;
 	}
 
@@ -188,7 +196,6 @@ public class BlockFastHopper extends BlockModTile {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if(tileEntity instanceof TileMod) {
 			((TileMod) tileEntity).dropItemHandlers();
-
 			world.updateComparatorOutputLevel(pos, this);
 		}
 		super.breakBlock(world, pos, state);
@@ -200,22 +207,7 @@ public class BlockFastHopper extends BlockModTile {
 		return true;
 	}
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity != null) {
-			IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			if(itemHandler != null) {
-				// TODO do the same for SortingChest
-				return ItemHandlerHelper.calcRedstoneFromInventory(itemHandler);
-			}
-		}
-		return 0;
-	}
-
 	private void updateState(IBlockState state, World world, BlockPos pos) {
-
 		boolean isEnabled = !world.isBlockPowered(pos);
 		if (isEnabled != state.getValue(ENABLED)) {
 			world.setBlockState(pos, state.withProperty(ENABLED, isEnabled), 4);

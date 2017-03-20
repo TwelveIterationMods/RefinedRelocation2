@@ -23,7 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ContainerRootFilter extends ContainerMod {
 
-	public static final String KEY_FILTER_LIST = "FilterList";
+	public static final String KEY_ROOT_FILTER = "RootFilter";
 	public static final String KEY_ADD_FILTER = "AddFilter";
 	public static final String KEY_EDIT_FILTER = "EditFilter";
 	public static final String KEY_DELETE_FILTER = "DeleteFilter";
@@ -89,8 +89,8 @@ public class ContainerRootFilter extends ContainerMod {
 
 	private void syncFilterList() {
 		NBTTagCompound tagCompound = new NBTTagCompound();
-		tagCompound.setTag(KEY_FILTER_LIST, rootFilter.serializeNBT());
-		RefinedRelocationAPI.syncContainerValue(KEY_FILTER_LIST, tagCompound, listeners);
+		tagCompound.setTag(KEY_ROOT_FILTER, rootFilter.serializeNBT());
+		RefinedRelocationAPI.syncContainerValue(KEY_ROOT_FILTER, tagCompound, listeners);
 		lastFilterCount = rootFilter.getFilterCount();
 		for(int i = 0; i < lastBlacklist.length; i++) {
 			lastBlacklist[i] = rootFilter.isBlacklist(i);
@@ -191,8 +191,8 @@ public class ContainerRootFilter extends ContainerMod {
 
 	@Override
 	public void receivedMessageClient(IContainerMessage message) {
-		if(message.getKey().equals(KEY_FILTER_LIST)) {
-			rootFilter.deserializeNBT(message.getNBTValue().getTag(KEY_FILTER_LIST));
+		if(message.getKey().equals(KEY_ROOT_FILTER)) {
+			rootFilter.deserializeNBT(message.getNBTValue().getCompoundTag(KEY_ROOT_FILTER));
 		} else if(message.getKey().equals(KEY_PRIORITY)) {
 			getSortingInventory().setPriority(message.getIntValue());
 		} else if(message.getKey().equals(KEY_BLACKLIST)) {

@@ -7,11 +7,14 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiChecklistFilter;
+import net.blay09.mods.refinedrelocation.client.gui.GuiFastHopper;
 import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiSortingChest;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
+import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.blay09.mods.refinedrelocation.util.TileWrapper;
 import net.minecraft.client.gui.GuiScreen;
@@ -28,6 +31,7 @@ public class GuiHandler {
 	public static final int GUI_SORTING_CHEST = 1;
 	public static final int GUI_ROOT_FILTER = 2;
 	public static final int GUI_ANY_FILTER = 3;
+	public static final int GUI_FAST_HOPPER = 4;
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
@@ -51,6 +55,8 @@ public class GuiHandler {
 					}
 				}
 				break;
+			case GUI_FAST_HOPPER:
+				return actualTile instanceof TileFastHopper ? new ContainerFastHopper(player, (TileFastHopper) actualTile) : null;
 		}
 		return null;
 	}
@@ -78,6 +84,8 @@ public class GuiHandler {
 					}
 				}
 				break;
+			case GUI_FAST_HOPPER:
+				return actualTile instanceof TileFastHopper ? new GuiFastHopper(player, (TileFastHopper) actualTile) : null;
 		}
 		return null;
 	}

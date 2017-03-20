@@ -21,7 +21,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public class TileFastHopper extends TileMod implements ITickable {
+public class TileFastHopper extends TileMod implements ITickable, INameable {
 
 	protected String customName;
 	private int cooldown;
@@ -120,7 +120,7 @@ public class TileFastHopper extends TileMod implements ITickable {
 	}
 
 	public String getName() {
-		return hasCustomName() ? customName : "container.refinedrelocation:better_hopper";
+		return hasCustomName() ? customName : "container.refinedrelocation:fast_hopper";
 	}
 
 	@Override
@@ -132,6 +132,7 @@ public class TileFastHopper extends TileMod implements ITickable {
 		return customName != null && !customName.isEmpty();
 	}
 
+	@Override
 	public void setCustomName(String customName) {
 		this.customName = customName;
 	}
@@ -151,4 +152,7 @@ public class TileFastHopper extends TileMod implements ITickable {
 		return super.getCapability(capability, facing);
 	}
 
+	public ItemStackHandler getItemHandler() {
+		return itemHandler;
+	}
 }

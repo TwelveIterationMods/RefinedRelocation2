@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 import com.google.common.base.Strings;
+import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
@@ -11,6 +12,7 @@ import net.blay09.mods.refinedrelocation.util.DoorAnimator;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +21,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -31,14 +34,13 @@ public class TileSortingChest extends TileMod implements ITickable {
 		@Override
 		protected void onContentsChanged(int slot) {
 			markDirty();
-			assert sortingInventory != null;
 			sortingInventory.onSlotChanged(slot);
 		}
 	};
 	private final DoorAnimator doorAnimator = new DoorAnimator(this, 0, 1);
 
-	private final ISortingInventory sortingInventory = CapabilitySortingInventory.CAPABILITY.getDefaultInstance();
-	private final IRootFilter rootFilter = CapabilityRootFilter.CAPABILITY.getDefaultInstance();
+	private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
+	private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
 
 	private String customName = "";
 
@@ -68,7 +70,16 @@ public class TileSortingChest extends TileMod implements ITickable {
 		super.readFromNBT(compound);
 		itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-		rootFilter.deserializeNBT(compound.getTag("RootFilter"));
+		// vvv Backwards Compatibility
+		if(compound.getTagId("RootFilter") == Constants.NBT.TAG_LIST) {
+			NBTTagList tagList = compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND);
+			compound.removeTag("RootFilter");
+			NBTTagCompound rootFilter = new NBTTagCompound();
+			rootFilter.setTag("FilterList", tagList);
+			compound.setTag("RootFilter", rootFilter);
+		}
+		// ^^^ Backwards Compatibility
+		rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
 	}
 
 	@Override

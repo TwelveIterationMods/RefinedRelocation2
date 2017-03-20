@@ -106,7 +106,7 @@ public class InternalMethodsImpl implements InternalMethods {
 			for (ISortingGridMember member : sortingGrid.getMembers()) {
 				if (member instanceof ISortingInventory) {
 					ISortingInventory memberInventory = (ISortingInventory) member;
-					boolean passes = memberInventory.getFilter().passes(memberInventory.getTileContainer(), itemStack);
+					boolean passes = memberInventory.getFilter().passes(memberInventory.getTileContainer(), restStack);
 					if (passes) {
 						passingList.add(memberInventory);
 					}

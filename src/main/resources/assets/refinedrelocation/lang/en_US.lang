@@ -11,6 +11,8 @@ container.refinedrelocation:sorting_chest=Sorting Chest
 container.refinedrelocation:root_filter=Edit Filter
 container.refinedrelocation:name_filter=Name Filter
 container.refinedrelocation:add_filter=Select Filter Type
+container.refinedrelocation:fast_hopper=Fast Hopper
+container.refinedrelocation:filtered_hopper=Filtered Hopper
 
 gui.refinedrelocation:root_filter.help_text=Configure up to three filters by clicking the empty slots above.
 gui.refinedrelocation:root_filter.priority_label=Priority:

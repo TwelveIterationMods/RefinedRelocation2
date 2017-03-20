@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.block;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
-import net.blay09.mods.refinedrelocation.network.VanillaPacketHandler;
 import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
@@ -13,7 +12,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -23,7 +21,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -103,37 +100,16 @@ public class BlockSortingChest extends BlockModTile {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack) {
-		EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor((double) (placer.rotationYaw * 4f / 360f) + 0.5) & 3).getOpposite();
-		state = state.withProperty(FACING, facing);
-		if (itemStack.hasDisplayName()) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			if (tileEntity instanceof TileSortingChest) {
-				((TileSortingChest) tileEntity).setCustomName(itemStack.getDisplayName());
-			}
-		}
-		world.setBlockState(pos, state, 1|2);
-	}
-
-	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			ItemStack heldItem = player.getHeldItem(hand);
-			if (!heldItem.isEmpty() && heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
-				TileEntity tileEntity = world.getTileEntity(pos);
-				if (tileEntity instanceof TileSortingChest) {
-					((TileSortingChest) tileEntity).setCustomName(heldItem.getDisplayName());
-					VanillaPacketHandler.sendTileEntityUpdate(tileEntity);
-					if (!player.capabilities.isCreativeMode) {
-						heldItem.shrink(1);
-					}
-				}
+			if(tryNameBlock(player, heldItem, world, pos)) {
 				return true;
 			}
 
 			if(player.isSneaking()) {
 				TileEntity tileEntity = world.getTileEntity(pos);
-				if (tileEntity instanceof TileSortingChest) {
+				if (tileEntity != null) {
 					RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
 				}
 			} else {
@@ -161,6 +137,12 @@ public class BlockSortingChest extends BlockModTile {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSortingChest();
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean hasComparatorInputOverride(IBlockState state) {
+		return true;
 	}
 
 }

@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import cpw.mods.ironchest.IronChestType;
 import cpw.mods.ironchest.TileEntityIronChest;
+import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
@@ -10,10 +11,12 @@ import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
@@ -23,8 +26,8 @@ import java.util.Locale;
 public class TileSortingIronChest extends TileEntityIronChest implements ITickable {
 
 	private final InvWrapper invWrapper = new InvWrapper(this);
-	private final ISortingInventory sortingInventory = CapabilitySortingInventory.CAPABILITY.getDefaultInstance();
-	private final IRootFilter rootFilter = CapabilityRootFilter.CAPABILITY.getDefaultInstance();
+	private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
+	private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
 
 	public TileSortingIronChest() {
 	}
@@ -35,30 +38,25 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 
 	public void onContentsChanged(int slot) {
 		markDirty();
-		assert sortingInventory != null;
 		sortingInventory.onSlotChanged(slot);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		assert sortingInventory != null;
 		sortingInventory.onUpdate(this);
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		assert sortingInventory != null;
 		sortingInventory.onInvalidate(this);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		assert sortingInventory != null;
 		compound.setTag("SortingInventory", sortingInventory.serializeNBT());
-		assert rootFilter != null;
 		compound.setTag("RootFilter", rootFilter.serializeNBT());
 		return compound;
 	}
@@ -66,10 +64,17 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		assert sortingInventory != null;
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-		assert rootFilter != null;
-		rootFilter.deserializeNBT(compound.getTag("RootFilter"));
+		// vvv Backwards Compatibility
+		if(compound.getTagId("RootFilter") == Constants.NBT.TAG_LIST) {
+			NBTTagList tagList = compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND);
+			compound.removeTag("RootFilter");
+			NBTTagCompound rootFilter = new NBTTagCompound();
+			rootFilter.setTag("FilterList", tagList);
+			compound.setTag("RootFilter", rootFilter);
+		}
+		// ^^^ Backwards Compatibility
+		rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
 	}
 
 	@Override

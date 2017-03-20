@@ -7,7 +7,8 @@
       "side": "refinedrelocation:blocks/filtered_hopper_outside",
       "inside": "blocks/hopper_inside"
     },
-    "model": "refinedrelocation:filtered_hopper"
+    "model": "refinedrelocation:filtered_hopper",
+    "transform": "forge:default-block"
   },
   "variants": {
     "normal": [{}],

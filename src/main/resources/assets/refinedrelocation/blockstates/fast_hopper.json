@@ -4,15 +4,16 @@
     "textures": {
       "particle": "blocks/hopper_outside",
       "top": "blocks/hopper_top",
-      "side": "blocks/hopper_outside",
+      "side": "refinedrelocation:blocks/fast_hopper_outside",
       "inside": "blocks/hopper_inside"
     },
-    "model": "refinedrelocation:fast_hopper"
+    "model": "refinedrelocation:fast_hopper",
+    "transform": "forge:default-block"
   },
   "variants": {
     "normal": [{}],
     "multipart": [{}],
-    "inventory": [{"model": "refinedrelocation:fast_hopper"}],
+    "inventory": [{}],
     "enabled": {
       "true": {},
       "false": {}

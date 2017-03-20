@@ -24,4 +24,11 @@ public class Capabilities {
 	@CapabilityInject(ISortingUpgradable.class)
 	public static Capability<ISortingUpgradable> SORTING_UPGRADABLE;
 
+	/**
+	 *	Ignore nullable warning here because I know what I'm doing and IntelliJ should just stop annoying me already.
+	 */
+	public static <T> T getDefaultInstance(Capability<T> capability) {
+		//noinspection ConstantConditions
+		return capability.getDefaultInstance();
+	}
 }

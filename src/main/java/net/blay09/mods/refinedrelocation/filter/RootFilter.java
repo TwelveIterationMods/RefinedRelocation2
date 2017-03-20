@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,6 +56,9 @@ public class RootFilter implements IRootFilter {
 
 	@Override
 	public boolean passes(TileOrMultipart tileEntity, ItemStack itemStack) {
+		if(itemStack.isEmpty()) {
+			return false;
+		}
 		boolean passes = false;
 		for(SubFilterWrapper filter : filterList) {
 			boolean filterPasses = filter.getFilter().passes(tileEntity, itemStack);
@@ -68,26 +72,28 @@ public class RootFilter implements IRootFilter {
 
 	@Override
 	public NBTBase serializeNBT() {
-		NBTTagList list = new NBTTagList();
-		for(SubFilterWrapper filter : filterList) {
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList filterList = new NBTTagList();
+		for(SubFilterWrapper filter : this.filterList) {
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			filter.writeNBT(tagCompound);
-			list.appendTag(tagCompound);
+			filterList.appendTag(tagCompound);
 		}
-		return list;
+		compound.setTag("FilterList", filterList);
+		return compound;
 	}
 
 	@Override
 	public void deserializeNBT(NBTBase nbt) {
 		filterList.clear();
-		NBTTagList list = (NBTTagList) nbt;
-		for(int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tagCompound = list.getCompoundTagAt(i);
+		NBTTagCompound compound = (NBTTagCompound) nbt;
+		NBTTagList filterList = compound.getTagList("FilterList", Constants.NBT.TAG_COMPOUND);
+		for(int i = 0; i < filterList.tagCount(); i++) {
+			NBTTagCompound tagCompound = filterList.getCompoundTagAt(i);
 			SubFilterWrapper filter = SubFilterWrapper.loadFromNBT(tagCompound);
 			if(filter != null) {
-				filterList.add(filter);
+				this.filterList.add(filter);
 			}
-
 		}
 	}
 
