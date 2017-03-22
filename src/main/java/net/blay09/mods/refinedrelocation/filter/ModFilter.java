@@ -166,4 +166,8 @@ public class ModFilter implements IChecklistFilter {
 		return modIds.length;
 	}
 
+	@Override
+	public int getVisualOrder() {
+		return 800;
+	}
 }

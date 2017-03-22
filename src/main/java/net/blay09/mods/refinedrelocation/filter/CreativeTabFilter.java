@@ -123,4 +123,8 @@ public class CreativeTabFilter implements IChecklistFilter {
 		return creativeTabs.length;
 	}
 
+	@Override
+	public int getVisualOrder() {
+		return 700;
+	}
 }

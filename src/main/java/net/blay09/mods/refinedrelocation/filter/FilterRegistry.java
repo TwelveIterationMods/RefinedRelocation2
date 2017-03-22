@@ -9,6 +9,8 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FilterRegistry {
 
@@ -53,13 +55,8 @@ public class FilterRegistry {
 		return defaultInstances.get(filterClass);
 	}
 
-	@Nullable
-	public static IFilter getFilterInstance(int index) {
-		if(index < 0 || index >= filterList.size()) {
-			return null;
-		}
-		Class<? extends IFilter> filterClass = filterList.get(index);
-		return defaultInstances.get(filterClass);
+	public static List<IFilter> getApplicableFilters(Predicate<IFilter> predicate) {
+		return defaultInstances.values().stream().filter(predicate).sorted().collect(Collectors.toList());
 	}
 
 	public static int getFilterCount() {

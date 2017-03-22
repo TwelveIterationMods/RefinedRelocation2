@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
@@ -14,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
+import java.util.List;
 
 public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implements IScrollTarget {
 
@@ -21,12 +23,14 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 
 	private final GuiRootFilter parentGui;
 	private final GuiAddFilterButton[] filterButtons = new GuiAddFilterButton[3];
+	private final List<IFilter> filterList;
 
 	private int currentOffset;
 
 	public GuiAddFilter(GuiRootFilter parentGui) {
 		super(parentGui.getContainer());
 		this.parentGui = parentGui;
+		filterList = FilterRegistry.getApplicableFilters(t -> t.isFilterUsable(parentGui.getContainer().getTileEntity()));
 
 		ySize = 210;
 
@@ -79,7 +83,7 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 
 	@Override
 	public int getRowCount() {
-		return FilterRegistry.getFilterCount();
+		return filterList.size();
 	}
 
 	@Override
@@ -92,7 +96,12 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 		this.currentOffset = offset;
 
 		for(int i = 0; i < filterButtons.length; i++) {
-			filterButtons[i].setCurrentFilter(FilterRegistry.getFilterInstance(currentOffset + i));
+			int filterIndex = currentOffset + i;
+			IFilter filter = null;
+			if(filterIndex >= 0 && filterIndex < filterList.size()) {
+				filter = filterList.get(filterIndex);
+			}
+			filterButtons[i].setCurrentFilter(filter);
 		}
 	}
 

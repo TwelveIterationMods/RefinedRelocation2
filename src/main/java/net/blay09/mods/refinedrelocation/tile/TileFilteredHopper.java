@@ -37,7 +37,7 @@ public class TileFilteredHopper extends TileFastHopper {
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		return capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY
+		return capability == CapabilitySortingGridMember.CAPABILITY
 				|| capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY
 				|| super.hasCapability(capability, facing);
 	}

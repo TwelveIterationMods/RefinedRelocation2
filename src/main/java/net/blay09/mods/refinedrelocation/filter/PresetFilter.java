@@ -201,7 +201,6 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	}
 
-
 	@Override
 	public String getLangKey() {
 		return "filter.refinedrelocation:preset_filter";
@@ -238,4 +237,8 @@ public class PresetFilter implements IChecklistFilter {
 		return presetMap.size();
 	}
 
+	@Override
+	public int getVisualOrder() {
+		return 1000;
+	}
 }

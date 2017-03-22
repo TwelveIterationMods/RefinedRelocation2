@@ -1,9 +1,11 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
+import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,7 +29,7 @@ public class SameItemFilter implements IFilter {
 
 	@Override
 	public boolean isFilterUsable(TileEntity tileEntity) {
-		return tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		return tileEntity.hasCapability(Capabilities.SORTING_INVENTORY, null);
 	}
 
 	@Override

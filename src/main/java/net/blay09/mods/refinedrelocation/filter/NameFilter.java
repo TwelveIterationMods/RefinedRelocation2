@@ -121,4 +121,9 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	public GuiScreen createGuiScreen(EntityPlayer player, TileEntity tileEntity) {
 		return new GuiNameFilter(player, tileEntity, this);
 	}
+
+	@Override
+	public int getVisualOrder() {
+		return 900;
+	}
 }
