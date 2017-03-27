@@ -1,10 +1,12 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.block.BlockBlockExtender;
+import net.blay09.mods.refinedrelocation.block.BlockBuffer;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.block.BlockFilteredHopper;
 import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
+import net.blay09.mods.refinedrelocation.tile.TileBuffer;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
@@ -20,6 +22,7 @@ public class ModBlocks {
 	public static BlockBlockExtender blockExtender;
 	public static BlockFastHopper fastHopper;
 	public static BlockFilteredHopper filteredHopper;
+	public static BlockBuffer buffer;
 
 	public static void init() {
 		sortingChest = new BlockSortingChest();
@@ -37,6 +40,10 @@ public class ModBlocks {
 		filteredHopper = new BlockFilteredHopper();
 		registerBlock(filteredHopper);
 		GameRegistry.registerTileEntity(TileFilteredHopper.class, filteredHopper.getRegistryNameString());
+
+//		buffer = new BlockBuffer();
+//		registerBlock(buffer);
+//		GameRegistry.registerTileEntity(TileBuffer.class, buffer.getRegistryNameString());
 	}
 
 	private static void registerBlock(Block block) {
@@ -51,6 +58,7 @@ public class ModBlocks {
 		blockExtender.registerModel();
 		fastHopper.registerModel();
 		filteredHopper.registerModel();
+//		buffer.registerModel();
 	}
 
 }

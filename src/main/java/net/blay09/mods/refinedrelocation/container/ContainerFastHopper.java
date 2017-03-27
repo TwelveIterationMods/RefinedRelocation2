@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFastHopper extends ContainerMod {
-// TODO shift-click
+
 	private final TileFastHopper tileEntity;
 
 	public ContainerFastHopper(EntityPlayer player, TileFastHopper tileEntity) {
@@ -28,11 +28,11 @@ public class ContainerFastHopper extends ContainerMod {
 			ItemStack slotStack = slot.getStack();
 			itemStack = slotStack.copy();
 
-			if (index < 27) {
-				if (!mergeItemStack(slotStack, 27, inventorySlots.size(), true)) {
+			if (index < 5) {
+				if (!mergeItemStack(slotStack, 5, inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!mergeItemStack(slotStack, 0, 27, false)) {
+			} else if (!mergeItemStack(slotStack, 0, 5, false)) {
 				return ItemStack.EMPTY;
 			}
 

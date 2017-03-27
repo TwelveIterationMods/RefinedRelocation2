@@ -34,6 +34,7 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		super.initGui();
+		// TODO buttons render over items
 		rootNode.setPosition(guiLeft, guiTop);
 		rootNode.setSize(xSize, ySize);
 		rootNode.initGui(this);

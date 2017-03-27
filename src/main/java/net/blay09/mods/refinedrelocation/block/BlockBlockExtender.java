@@ -38,9 +38,11 @@ public class BlockBlockExtender extends BlockModTile {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if(tileEntity instanceof TileBlockExtender) {
 			TileBlockExtender blockExtender = (TileBlockExtender) tileEntity;
-			EnumFacing facing = state.getValue(FACING);
+			EnumFacing facing = state.getValue(DIRECTION);
 			for(RelativeSide side : RelativeSide.values()) {
-				blockExtender.setSideMapping(side, facing);
+				if(side != RelativeSide.FRONT) {
+					blockExtender.setSideMapping(side, facing);
+				}
 			}
 		}
 	}

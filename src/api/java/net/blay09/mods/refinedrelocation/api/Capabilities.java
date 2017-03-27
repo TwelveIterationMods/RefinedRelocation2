@@ -15,6 +15,9 @@ public class Capabilities {
 	@CapabilityInject(ISimpleFilter.class)
 	public static Capability<ISimpleFilter> SIMPLE_FILTER;
 
+	/**
+	 * Note that instances of this capability are being cached without validity checks.
+	 */
 	@CapabilityInject(ISortingGridMember.class)
 	public static Capability<ISortingGridMember> SORTING_GRID_MEMBER;
 

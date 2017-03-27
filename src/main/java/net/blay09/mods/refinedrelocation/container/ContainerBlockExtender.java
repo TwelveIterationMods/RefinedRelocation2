@@ -9,6 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerBlockExtender extends ContainerMod {
 
@@ -22,6 +23,10 @@ public class ContainerBlockExtender extends ContainerMod {
 
 	public ContainerBlockExtender(EntityPlayer player, TileBlockExtender tileEntity) {
 		this.tileEntity = tileEntity;
+
+		for(int i = 0; i < 3; i++) {
+			addSlotToContainer(new SlotItemHandler(tileEntity.getItemHandlerUpgrades(), i, 152, 22 + i * 18));
+		}
 
 		addPlayerInventory(player, 94);
 	}

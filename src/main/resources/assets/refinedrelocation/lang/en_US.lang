@@ -2,8 +2,10 @@ tile.refinedrelocation:sorting_chest.name=Sorting Chest
 tile.refinedrelocation:block_extender.name=Block Extender
 tile.refinedrelocation:fast_hopper.name=Fast Hopper
 tile.refinedrelocation:filtered_hopper.name=Filtered Hopper
+tile.refinedrelocation:buffer.name=Buffer
 
 item.refinedrelocation:sorting_upgrade.name=Sorting Upgrade
+item.refinedrelocation:stack_limiter.name=Stack Limiter
 
 container.refinedrelocation:root_filter=Edit Filter
 container.refinedrelocation:root_filter_with_name=%s (Filter)
@@ -73,7 +75,7 @@ filter.refinedrelocation:preset_filter.option_fuel=All Fuel
 filter.refinedrelocation:preset_filter.option_blocks=All Blocks
 filter.refinedrelocation:preset_filter.option_unstackable=All Unstackable
 
-
+tooltip.refinedrelocation:stack_limiter=Limit: %d
 
 # Iron Chest Support
 

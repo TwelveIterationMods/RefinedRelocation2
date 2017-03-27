@@ -45,7 +45,7 @@ public class CreativeTabFilter implements IChecklistFilter {
 
 	@Override
 	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
-		// NOTE We can't use getCreativeTabs because it calls a client-only getCreativeTab() function - thanks Notch!
+		// We can't use getCreativeTabs because it calls a client-only getCreativeTab() function
 //		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
 //		for (CreativeTabs itemTab : itemTabs) {
 		CreativeTabs itemTab = itemStack.getItem().tabToDisplayOn;
