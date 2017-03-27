@@ -71,7 +71,7 @@ public class TileMod extends TileEntity {
 		return world.getTileEntity(pos) == this && entityPlayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
 
-	public void update() {
+	protected void baseUpdate() {
 		if(isFirstTick) {
 			onFirstTick();
 			isFirstTick = false;
