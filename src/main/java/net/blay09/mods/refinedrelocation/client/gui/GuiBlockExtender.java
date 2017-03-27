@@ -120,7 +120,6 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		mc.getTextureManager().bindTexture(TEXTURE);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -141,6 +140,8 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 				Gui.drawRect(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
 			}
 		}
+
+		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
 
 	@Override
