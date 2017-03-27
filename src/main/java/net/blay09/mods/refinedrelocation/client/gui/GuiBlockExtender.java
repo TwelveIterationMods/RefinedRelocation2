@@ -41,7 +41,7 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 	public GuiBlockExtender(EntityPlayer player, TileBlockExtender tileEntity, EnumFacing clickedFace) {
 		super(new ContainerBlockExtender(player, tileEntity));
 		this.tileEntity = tileEntity;
-		ySize = 175;
+		ySize = 176;
 
 		RelativeSide centerFace = RelativeSide.fromFacing(tileEntity.getFacing(), clickedFace);
 		RelativeSide topFace = RelativeSide.TOP;
