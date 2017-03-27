@@ -29,8 +29,8 @@ public class GuiTextButton extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawForeground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawBackground(parentScreen, mouseX, mouseY);
 		if (isVisible()) {
 			int buttonState = !enabled ? 0 : (parentScreen.getMouseElement() == this ? 2 : 1);
 			GuiUtils.drawContinuousTexturedBox(TEXTURE, getAbsoluteX(), getAbsoluteY(), 0, 46 + buttonState * 20, getWidth(), getHeight(), 200, 20, 2, 3, 2, 2, this.zLevel);

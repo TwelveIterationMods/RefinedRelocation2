@@ -10,6 +10,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiElement;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 import javax.annotation.Nullable;
@@ -39,8 +40,8 @@ public class GuiAddFilterButton extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawForeground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawBackground(parentScreen, mouseX, mouseY);
 
 		if(isInside(mouseX, mouseY)) {
 			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0xAAFFFFFF);
@@ -49,6 +50,7 @@ public class GuiAddFilterButton extends GuiElement {
 		if(currentFilter != null) {
 			IFilterIcon filterIcon = currentFilter.getFilterIcon();
 			if(filterIcon != null) {
+				GlStateManager.color(1f, 1f, 1f, 1f);
 				filterIcon.draw(getAbsoluteX() + 2, getAbsoluteY() + getHeight() / 2 - 12, 24, 24, zLevel);
 			}
 			drawString(parentScreen.getFontRenderer(), I18n.format(currentFilter.getLangKey()), getAbsoluteX() + 32, getAbsoluteY() + getHeight() / 2 - parentScreen.getFontRenderer().FONT_HEIGHT / 2, 0xFFFFFF);

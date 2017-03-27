@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonBlockExtenderFilter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonStackLimiter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiSideButton;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
@@ -27,8 +28,12 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 
 	private final TileBlockExtender tileEntity;
 	private final GuiButtonStackLimiter btnStackLimiter;
+	private final GuiButtonBlockExtenderFilter btnInputFilter;
+	private final GuiButtonBlockExtenderFilter btnOutputFilter;
 
 	private int stackLimiterIdx;
+	private int inputFilterIdx;
+	private int outputFilterIdx;
 
 	private int ticksSinceUpdate;
 	private int lastSentStackLimit;
@@ -66,6 +71,14 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		btnStackLimiter = new GuiButtonStackLimiter(0, 0, 24, 16, tileEntity);
 		btnStackLimiter.setVisible(false);
 		rootNode.addChild(btnStackLimiter);
+
+		btnInputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity, false);
+		btnInputFilter.setVisible(false);
+		rootNode.addChild(btnInputFilter);
+
+		btnOutputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity, true);
+		btnOutputFilter.setVisible(false);
+		rootNode.addChild(btnOutputFilter);
 	}
 
 	@Override
@@ -73,14 +86,27 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		super.updateScreen();
 
 		stackLimiterIdx = -1;
+		inputFilterIdx = -1;
+		outputFilterIdx = -1;
 		for(int i = 0; i < 3; i++) {
 			ItemStack itemStack = container.getUpgradeSlot(i).getStack();
-			if(!itemStack.isEmpty() && itemStack.getItem() == ModItems.stackLimiter) {
-				stackLimiterIdx = i;
+			if(!itemStack.isEmpty()) {
+				if(itemStack.getItem() == ModItems.stackLimiter) {
+					stackLimiterIdx = i;
+				} else if(itemStack.getItem() == ModItems.inputFilter) {
+					inputFilterIdx = i;
+				} else if(itemStack.getItem() == ModItems.outputFilter) {
+					outputFilterIdx = i;
+				}
 			}
+
 		}
 		btnStackLimiter.setVisible(stackLimiterIdx != -1);
 		btnStackLimiter.setPosition(152 - btnStackLimiter.getWidth() - 3, 22 + stackLimiterIdx * 18);
+		btnInputFilter.setVisible(inputFilterIdx != -1);
+		btnInputFilter.setPosition(152 - btnInputFilter.getWidth() - 3, 22 + inputFilterIdx * 18);
+		btnOutputFilter.setVisible(outputFilterIdx != -1);
+		btnOutputFilter.setPosition(152 - btnOutputFilter.getWidth() - 3, 22 + outputFilterIdx * 18);
 
 		ticksSinceUpdate++;
 		if(ticksSinceUpdate >= UPDATE_INTERVAL) {
@@ -102,8 +128,16 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		// Render upgrade conflicts
 		ItemStack mouseStack = mc.player.inventory.getItemStack();
 		if(!mouseStack.isEmpty()) {
+			int conflictSlot = -1;
 			if(mouseStack.getItem() == ModItems.stackLimiter && stackLimiterIdx != -1) {
-				Slot slot = container.getUpgradeSlot(stackLimiterIdx);
+				conflictSlot = stackLimiterIdx;
+			} else if(mouseStack.getItem() == ModItems.inputFilter && inputFilterIdx != -1) {
+				conflictSlot = inputFilterIdx;
+			} else if(mouseStack.getItem() == ModItems.outputFilter && outputFilterIdx != -1) {
+				conflictSlot = outputFilterIdx;
+			}
+			if(conflictSlot != -1) {
+				Slot slot = container.getUpgradeSlot(conflictSlot);
 				Gui.drawRect(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
 			}
 		}

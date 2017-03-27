@@ -18,6 +18,7 @@ import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.LoginSyncHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,6 +56,7 @@ public class CommonProxy {
 		RefinedRelocationAPI.registerFilter(ModFilter.class);
 
 		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos())));
+		RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, tileEntity.getPos())));
 
 		if(Loader.isModLoaded(Compat.IRONCHEST)) {
 			try {

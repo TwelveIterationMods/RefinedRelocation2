@@ -6,6 +6,8 @@ tile.refinedrelocation:buffer.name=Buffer
 
 item.refinedrelocation:sorting_upgrade.name=Sorting Upgrade
 item.refinedrelocation:stack_limiter.name=Stack Limiter
+item.refinedrelocation:input_filter.name=Input Filter
+item.refinedrelocation:output_filter.name=Output Filter
 
 container.refinedrelocation:root_filter=Edit Filter
 container.refinedrelocation:root_filter_with_name=%s (Filter)
@@ -51,6 +53,7 @@ gui.refinedrelocation:block_extender.side_none=Disabled
 gui.refinedrelocation:block_extender.stack_limiter=Stack Limit
 gui.refinedrelocation:block_extender.stack_limiter_increase=Click to increase
 gui.refinedrelocation:block_extender.stack_limiter_decrease=Right-click to decrease
+gui.refinedrelocation:block_extender.configure=Configure
 
 itemGroup.refinedrelocation=Refined Relocation 2
 

@@ -1,5 +1,8 @@
 package net.blay09.mods.refinedrelocation.network;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
+import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
@@ -35,6 +38,7 @@ public class GuiHandler {
 	public static final int GUI_ANY_FILTER = 3;
 	public static final int GUI_FAST_HOPPER = 4;
 	public static final int GUI_BLOCK_EXTENDER = 5;
+	public static final int GUI_BLOCK_EXTENDER_ROOT_FILTER = 6;
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
@@ -43,17 +47,18 @@ public class GuiHandler {
 			case GUI_SORTING_CHEST:
 				return tileEntity instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) tileEntity) : null;
 			case GUI_ROOT_FILTER:
-				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new ContainerRootFilter(player, tileEntity) : null) : null;
+				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ?
+						new ContainerRootFilter(player, tileEntity).setReturnCallback(() -> RefinedRelocation.proxy.openGui(player, message)) : null) : null;
 			case GUI_ANY_FILTER:
 				if(tileEntity != null) {
-					IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
-					if (rootFilter != null) {
-						IFilter filter = rootFilter.getFilter(message.getIntValue());
-						if(filter instanceof IConfigurableFilter) {
-							return ((IConfigurableFilter) filter).createContainer(player, tileEntity);
-						} else if(filter instanceof IChecklistFilter) {
-							return new ContainerChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
+					Container container = player.openContainer;
+					if (container instanceof ContainerRootFilter) {
+						IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(message.getIntValue());
+						Container filterContainer = createFilterContainer(player, tileEntity, filter);
+						if(filterContainer instanceof IContainerReturnable) {
+							((IContainerReturnable) filterContainer).setReturnCallback(((ContainerRootFilter) container).getReturnCallback());
 						}
+						return filterContainer;
 					}
 				}
 				break;
@@ -61,6 +66,21 @@ public class GuiHandler {
 				return tileEntity instanceof TileFastHopper ? new ContainerFastHopper(player, (TileFastHopper) tileEntity) : null;
 			case GUI_BLOCK_EXTENDER:
 				return tileEntity instanceof TileBlockExtender ? new ContainerBlockExtender(player, (TileBlockExtender) tileEntity) : null;
+			case GUI_BLOCK_EXTENDER_ROOT_FILTER:
+				return tileEntity instanceof TileBlockExtender ?
+						new ContainerRootFilter(player, tileEntity,
+								message.getIntValue() == 1 ? ((TileBlockExtender) tileEntity).getOutputFilter() : ((TileBlockExtender) tileEntity).getInputFilter())
+						.setReturnCallback(() -> RefinedRelocation.proxy.openGui(player, message)) : null;
+		}
+		return null;
+	}
+
+	@Nullable
+	private Container createFilterContainer(EntityPlayer player, TileEntity tileEntity, @Nullable IFilter filter) {
+		if(filter instanceof IConfigurableFilter) {
+			return ((IConfigurableFilter) filter).createContainer(player, tileEntity);
+		} else if(filter instanceof IChecklistFilter) {
+			return new ContainerChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
 		}
 		return null;
 	}
@@ -92,6 +112,10 @@ public class GuiHandler {
 			case GUI_BLOCK_EXTENDER:
 				EnumFacing clickedFace = EnumFacing.getFront(message.getIntValue());
 				return tileEntity instanceof TileBlockExtender ? new GuiBlockExtender(player, (TileBlockExtender) tileEntity, clickedFace) : null;
+			case GUI_BLOCK_EXTENDER_ROOT_FILTER:
+				return tileEntity instanceof TileBlockExtender ?
+						new GuiRootFilter(new ContainerRootFilter(player, tileEntity,
+								message.getIntValue() == 1 ? ((TileBlockExtender) tileEntity).getOutputFilter() : ((TileBlockExtender) tileEntity).getInputFilter())) : null;
 		}
 		return null;
 	}

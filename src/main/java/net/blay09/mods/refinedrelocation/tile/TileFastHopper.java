@@ -53,6 +53,13 @@ public class TileFastHopper extends TileMod implements ITickable, INameable {
 							hasSpace = true;
 						}
 					}
+				} else {
+					for(int i = 0; i < itemHandler.getSlots(); i++) {
+						if(itemHandler.getStackInSlot(i).isEmpty()) {
+							hasSpace = true;
+							break;
+						}
+					}
 				}
 
 				if (hasSpace) {
@@ -84,6 +91,7 @@ public class TileFastHopper extends TileMod implements ITickable, INameable {
 			if(!sourceStack.isEmpty()) {
 				ItemStack restStack = ItemHandlerHelper.insertItem(itemHandler, sourceStack, false);
 				sourceItemHandler.extractItem(i, restStack.isEmpty() ? 64 : sourceStack.getCount() - restStack.getCount(), false);
+				break;
 			}
 		}
 	}

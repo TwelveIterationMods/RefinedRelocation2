@@ -5,7 +5,9 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
+import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
@@ -24,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+
 public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter.png");
@@ -35,7 +39,11 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 	private int lastSentPriority;
 
 	public GuiRootFilter(EntityPlayer player, TileEntity tileEntity) {
-		super(new ContainerRootFilter(player, tileEntity));
+		this(new ContainerRootFilter(player, tileEntity));
+	}
+
+	public GuiRootFilter(ContainerRootFilter container) {
+		super(container);
 
 		ySize = 210;
 
@@ -57,7 +65,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 			x += 40;
 		}
 
-		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(tileEntity.getClass());
+		ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(container.getTileEntity().getClass());
 		if(tileGuiHandler != null) {
 			GuiImageButton btnReturn = new GuiImageButton(guiLeft + xSize - 20, guiTop + 4, "chest_button") {
 				@Override

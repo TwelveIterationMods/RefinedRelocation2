@@ -1,7 +1,9 @@
 package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.InternalMethodsImpl;
+import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
+import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +24,11 @@ public class HandlerReturnGUI implements IMessageHandler<MessageReturnGUI, IMess
 				ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(tileEntity.getClass());
 				if (tileGuiHandler != null) {
 					tileGuiHandler.openGui(ctx.getServerHandler().player, tileEntity);
+				}
+			} else if(container instanceof IContainerReturnable) {
+				ReturnCallback callback = ((IContainerReturnable) container).getReturnCallback();
+				if(callback != null) {
+					callback.returnToParentGui();
 				}
 			}
 		});

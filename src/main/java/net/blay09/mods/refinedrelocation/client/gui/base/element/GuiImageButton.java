@@ -50,8 +50,8 @@ public class GuiImageButton extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawForeground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawBackground(parentScreen, mouseX, mouseY);
 		if (isVisible()) {
 			GlStateManager.color(1f, 1f, 1f, 1f);
 			if(!enabled) {

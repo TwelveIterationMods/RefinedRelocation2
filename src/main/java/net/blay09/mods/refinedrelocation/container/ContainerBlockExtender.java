@@ -1,7 +1,10 @@
 package net.blay09.mods.refinedrelocation.container;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +12,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerBlockExtender extends ContainerMod {
@@ -17,13 +21,16 @@ public class ContainerBlockExtender extends ContainerMod {
 	public static final String KEY_SIDE_INDEX = "SideIndex";
 	public static final String KEY_SIDE_MAPPING = "SideMapping";
 	public static final String KEY_STACK_LIMITER = "StackLimiter";
+	public static final String KEY_CONFIGURE_FILTER = "ConfigureFilter";
 
+	private final EntityPlayer player;
 	private final TileBlockExtender tileEntity;
 
 	private final EnumFacing[] lastSideMapping = new EnumFacing[5];
 	private int lastStackLimiterLimit;
 
 	public ContainerBlockExtender(EntityPlayer player, TileBlockExtender tileEntity) {
+		this.player = player;
 		this.tileEntity = tileEntity;
 
 		for(int i = 0; i < 3; i++) {
@@ -59,13 +66,23 @@ public class ContainerBlockExtender extends ContainerMod {
 	public void receivedMessageServer(IContainerMessage message) {
 		if(message.getKey().equals(KEY_TOGGLE_SIDE)) {
 			RelativeSide side = RelativeSide.fromIndex(message.getIntValue());
-			int facingIdx = message.getSecondaryIntValue();
-			EnumFacing facing = facingIdx == -1 ? null : EnumFacing.getFront(facingIdx);
-			tileEntity.setSideMapping(side, facing);
-			lastSideMapping[side.ordinal()] = facing;
+			if(side != RelativeSide.FRONT) {
+				int facingIdx = message.getSecondaryIntValue();
+				EnumFacing facing = facingIdx == -1 ? null : EnumFacing.getFront(facingIdx);
+				tileEntity.setSideMapping(side, facing);
+				lastSideMapping[side.ordinal()] = facing;
+			}
 		} else if(message.getKey().equals(KEY_STACK_LIMITER)) {
-			tileEntity.setStackLimiterLimit(message.getIntValue());
-			lastStackLimiterLimit = message.getIntValue();
+			int stackSizeLimit = MathHelper.clamp(message.getIntValue(), 1, 64);
+			tileEntity.setStackLimiterLimit(stackSizeLimit);
+			lastStackLimiterLimit = stackSizeLimit;
+		} else if(message.getKey().equals(KEY_CONFIGURE_FILTER)) {
+			if(message.getIntValue() == 0 && !tileEntity.hasInputFilter()) {
+				return;
+			} else if(message.getIntValue() == 1 && !tileEntity.hasOutputFilter()) {
+				return;
+			}
+			RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER_ROOT_FILTER, tileEntity.getPos(), message.getIntValue()));
 		}
 	}
 

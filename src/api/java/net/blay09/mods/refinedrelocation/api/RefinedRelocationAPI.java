@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.api;
 
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -14,6 +15,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class RefinedRelocationAPI {
 
@@ -88,4 +91,7 @@ public class RefinedRelocationAPI {
 		internalMethods.openRootFilterGui(player, tileEntity);
 	}
 
+	public static void returnToParentContainer() {
+		internalMethods.returnToParentContainer();
+	}
 }

@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiElement;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 public class GuiChecklistEntry extends GuiElement {
@@ -39,12 +40,14 @@ public class GuiChecklistEntry extends GuiElement {
 	}
 
 	@Override
-	public void drawForeground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawForeground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+		super.drawBackground(parentScreen, mouseX, mouseY);
 
 		if(isInside(mouseX, mouseY)) {
 			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0x66FFFFFF);
 		}
+
+		GlStateManager.color(1f, 1f, 1f, 1f);
 
 		if(currentOption != -1) {
 			if(filter.isOptionChecked(currentOption)) {

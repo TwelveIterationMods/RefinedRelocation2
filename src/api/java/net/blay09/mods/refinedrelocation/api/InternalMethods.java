@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.api;
 
 import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -42,4 +43,6 @@ public interface InternalMethods {
 	void openRootFilterGui(EntityPlayer player, TileEntity tileEntity);
 
 	void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter);
+
+	void returnToParentContainer();
 }

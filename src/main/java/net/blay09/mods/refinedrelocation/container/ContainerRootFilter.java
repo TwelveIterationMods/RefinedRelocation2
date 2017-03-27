@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Priority;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
+import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -21,6 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nullable;
+
 public class ContainerRootFilter extends ContainerMod {
 
 	public static final String KEY_ROOT_FILTER = "RootFilter";
@@ -35,6 +38,7 @@ public class ContainerRootFilter extends ContainerMod {
 	private final TileEntity tileEntity;
 	private final IRootFilter rootFilter;
 
+	private ReturnCallback returnCallback;
 	private ISortingInventory sortingInventory;
 
 	private int lastFilterCount = -1;
@@ -42,9 +46,12 @@ public class ContainerRootFilter extends ContainerMod {
 	private final boolean[] lastBlacklist = new boolean[3];
 
 	public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity) {
+		this(player, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null));
+	}
+
+	public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity, @Nullable IRootFilter rootFilter) {
 		this.entityPlayer = player;
 		this.tileEntity = tileEntity;
-		IRootFilter rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null);
 		if(rootFilter == null) {
 			rootFilter = new RootFilter();
 		}
@@ -211,5 +218,15 @@ public class ContainerRootFilter extends ContainerMod {
 			sortingInventory = new SortingInventory();
 		}
 		return sortingInventory;
+	}
+
+	@Nullable
+	public ReturnCallback getReturnCallback() {
+		return returnCallback;
+	}
+
+	public ContainerRootFilter setReturnCallback(@Nullable ReturnCallback returnCallback) {
+		this.returnCallback = returnCallback;
+		return this;
 	}
 }

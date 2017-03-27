@@ -2,13 +2,17 @@ package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
+import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
+import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-public class ContainerChecklistFilter extends ContainerMod {
+import javax.annotation.Nullable;
+
+public class ContainerChecklistFilter extends ContainerMod implements IContainerReturnable {
 
 	public static final String KEY_CHECK = "Check";
 	public static final String KEY_UNCHECK = "Uncheck";
@@ -22,6 +26,7 @@ public class ContainerChecklistFilter extends ContainerMod {
 
 	private final byte[] lastStates;
 	private int ticksSinceUpdate = UPDATE_INTERVAL;
+	private ReturnCallback returnCallback;
 
 	public ContainerChecklistFilter(EntityPlayer player, TileEntity tileEntity, IChecklistFilter filter) {
 		this.player = player;
@@ -100,4 +105,14 @@ public class ContainerChecklistFilter extends ContainerMod {
 		}
 	}
 
+	@Override
+	public void setReturnCallback(@Nullable ReturnCallback callback) {
+		this.returnCallback = callback;
+	}
+
+	@Nullable
+	@Override
+	public ReturnCallback getReturnCallback() {
+		return returnCallback;
+	}
 }

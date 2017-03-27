@@ -1,6 +1,8 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModItems;
+import net.blay09.mods.refinedrelocation.api.Capabilities;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -54,6 +56,11 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		@Nonnull
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+			if(hasInputFilter) {
+				if(stack.isEmpty() || !inputFilter.passes(tileEntity, stack)) {
+					return stack;
+				}
+			}
 			if (hasStackLimiter) {
 				int space = stackLimiterLimit - getStackInSlot(slot).getCount();
 				if (space <= 0) {
@@ -85,6 +92,11 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		@Nonnull
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if(hasOutputFilter) {
+				if(!outputFilter.passes(tileEntity, getStackInSlot(slot))) {
+					return ItemStack.EMPTY;
+				}
+			}
 			return baseHandler.extractItem(slot, amount, simulate);
 		}
 
@@ -98,7 +110,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		@Nonnull
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-			if(stack.getItem() != ModItems.stackLimiter) {
+			if(stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter) {
 				return stack;
 			}
 			for(int i = 0; i < getSlots(); i++) {
@@ -117,10 +129,14 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	};
 
 	private final EnumFacing[] sideMappings = new EnumFacing[5];
+	private final IRootFilter inputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
+	private final IRootFilter outputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
 	private int stackLimiterLimit = 64;
 
-	private TileEntity cachedConnectedTile;
 	private boolean hasStackLimiter;
+	private boolean hasInputFilter;
+	private boolean hasOutputFilter;
+	private TileEntity cachedConnectedTile;
 	private final ItemHandlerWrapper[] cachedItemHandlers = new ItemHandlerWrapper[6];
 	private final EnumFacing[] cachedFacingToFacingMappings = new EnumFacing[6];
 
@@ -179,6 +195,8 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		compound.setByteArray("SideMappings", mappings);
 		compound.setTag("Upgrades", itemHandlerUpgrades.serializeNBT());
 		compound.setByte("StackLimiter", (byte) stackLimiterLimit);
+		compound.setTag("InputFilter", inputFilter.serializeNBT());
+		compound.setTag("OutputFilter", outputFilter.serializeNBT());
 		return compound;
 	}
 
@@ -199,6 +217,8 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
 		itemHandlerUpgrades.deserializeNBT(compound.getCompoundTag("Upgrades"));
 		stackLimiterLimit = compound.getByte("StackLimiter");
+		inputFilter.deserializeNBT(compound.getCompoundTag("InputFilter"));
+		outputFilter.deserializeNBT(compound.getCompoundTag("OutputFilter"));
 		updateUpgrades();
 	}
 
@@ -257,11 +277,17 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
 	private void updateUpgrades() {
 		hasStackLimiter = false;
+		hasInputFilter = false;
+		hasOutputFilter = false;
 		for (int i = 0; i < itemHandlerUpgrades.getSlots(); i++) {
 			ItemStack itemStack = itemHandlerUpgrades.getStackInSlot(i);
 			if (!itemStack.isEmpty()) {
 				if(itemStack.getItem() == ModItems.stackLimiter) {
 					hasStackLimiter = true;
+				} else if(itemStack.getItem() == ModItems.inputFilter) {
+					hasInputFilter = true;
+				} else if(itemStack.getItem() == ModItems.outputFilter) {
+					hasOutputFilter = true;
 				}
 			}
 		}
@@ -273,5 +299,21 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
 	public void setStackLimiterLimit(int stackLimiterLimit) {
 		this.stackLimiterLimit = stackLimiterLimit;
+	}
+
+	public IRootFilter getInputFilter() {
+		return inputFilter;
+	}
+
+	public IRootFilter getOutputFilter() {
+		return outputFilter;
+	}
+
+	public boolean hasInputFilter() {
+		return hasInputFilter;
+	}
+
+	public boolean hasOutputFilter() {
+		return hasOutputFilter;
 	}
 }

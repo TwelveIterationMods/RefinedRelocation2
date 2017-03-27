@@ -94,7 +94,7 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	public boolean onGuiAboutToClose() {
 		super.onGuiAboutToClose();
 		container.sendValueToServer(txtFilter.getText());
-		RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+		RefinedRelocationAPI.returnToParentContainer();
 		return false;
 	}
 

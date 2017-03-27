@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
@@ -18,6 +19,7 @@ import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageContainer;
 import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
+import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -238,5 +240,10 @@ public class InternalMethodsImpl implements InternalMethods {
 			}
 			NetworkHandler.wrapper.sendTo(new MessageFilterPreview(slotStates), (EntityPlayerMP) entityPlayer);
 		}
+	}
+
+	@Override
+	public void returnToParentContainer() {
+		NetworkHandler.wrapper.sendToServer(new MessageReturnGUI());
 	}
 }
