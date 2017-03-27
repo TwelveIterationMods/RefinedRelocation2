@@ -30,10 +30,10 @@ public class GuiFastHopper extends GuiContainerMod<ContainerFastHopper> {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		mc.getTextureManager().bindTexture(TEXTURE);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
 
 	@Override

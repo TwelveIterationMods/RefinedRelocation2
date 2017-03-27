@@ -14,7 +14,7 @@ public class ContainerFastHopper extends ContainerMod {
 		this.tileEntity = tileEntity;
 
 		for (int i = 0; i < 5; i++) {
-			addSlotToContainer(new SlotItemHandler(tileEntity.getItemHandler(), i, 44 + i * 18, 20));
+			addSlotToContainer(new SlotItemHandlerCareless(tileEntity.getItemHandler(), i, 44 + i * 18, 20));
 		}
 
 		addPlayerInventory(player, 51);

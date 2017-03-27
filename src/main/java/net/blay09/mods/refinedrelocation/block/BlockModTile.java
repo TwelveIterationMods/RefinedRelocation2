@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import net.blay09.mods.refinedrelocation.tile.TileMod;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +20,11 @@ public abstract class BlockModTile extends BlockMod {
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if(tileEntity instanceof TileMod) {
+			((TileMod) tileEntity).dropItemHandlers();
+			world.updateComparatorOutputLevel(pos, this);
+		}
 		super.breakBlock(world, pos, state);
 		world.removeTileEntity(pos);
 	}

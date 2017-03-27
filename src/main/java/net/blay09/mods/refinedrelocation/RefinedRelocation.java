@@ -13,9 +13,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation", dependencies = "after:ironchest")
 public class RefinedRelocation {
 
-	// TODO test drops (hopper, block extender) on break --- FAST HOPPER DELETES ONLY SOME WHUT
-	// TODO test on server
-
 	public static final String MOD_ID = "refinedrelocation";
 
 	@Mod.Instance(MOD_ID)

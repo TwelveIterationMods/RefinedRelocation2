@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
+import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -285,6 +286,13 @@ public class TileBlockExtender extends TileMod implements ITickable {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void dropItemHandlers() {
+		super.dropItemHandlers();
+
+		ItemHandlerHelper2.dropItemHandlerItems(world, pos, itemHandlerUpgrades);
 	}
 
 	public int getStackLimiterLimit() {
