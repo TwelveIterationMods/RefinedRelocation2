@@ -68,11 +68,6 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		// TODO Workaround for JEI disabling my repeat events
-		if(shouldKeyRepeat) {
-			Keyboard.enableRepeatEvents(true);
-		}
-
 		if (!rootNode.getElementAt(mouseX, mouseY).mouseClicked(mouseX, mouseY, mouseButton)) {
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
