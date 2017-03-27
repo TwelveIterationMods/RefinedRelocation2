@@ -16,10 +16,12 @@ public class ContainerBlockExtender extends ContainerMod {
 	public static final String KEY_TOGGLE_SIDE = "ToggleSide";
 	public static final String KEY_SIDE_INDEX = "SideIndex";
 	public static final String KEY_SIDE_MAPPING = "SideMapping";
+	public static final String KEY_STACK_LIMITER = "StackLimiter";
 
 	private final TileBlockExtender tileEntity;
 
 	private final EnumFacing[] lastSideMapping = new EnumFacing[5];
+	private int lastStackLimiterLimit;
 
 	public ContainerBlockExtender(EntityPlayer player, TileBlockExtender tileEntity) {
 		this.tileEntity = tileEntity;
@@ -45,6 +47,12 @@ public class ContainerBlockExtender extends ContainerMod {
 				lastSideMapping[i] = nowSideMapping;
 			}
 		}
+
+		int nowStackLimiterLimit = tileEntity.getStackLimiterLimit();
+		if(lastStackLimiterLimit != nowStackLimiterLimit) {
+			RefinedRelocationAPI.syncContainerValue(KEY_STACK_LIMITER, tileEntity.getStackLimiterLimit(), listeners);
+			lastStackLimiterLimit = nowStackLimiterLimit;
+		}
 	}
 
 	@Override
@@ -55,6 +63,9 @@ public class ContainerBlockExtender extends ContainerMod {
 			EnumFacing facing = facingIdx == -1 ? null : EnumFacing.getFront(facingIdx);
 			tileEntity.setSideMapping(side, facing);
 			lastSideMapping[side.ordinal()] = facing;
+		} else if(message.getKey().equals(KEY_STACK_LIMITER)) {
+			tileEntity.setStackLimiterLimit(message.getIntValue());
+			lastStackLimiterLimit = message.getIntValue();
 		}
 	}
 
@@ -63,6 +74,8 @@ public class ContainerBlockExtender extends ContainerMod {
 		if(message.getKey().equals(KEY_SIDE_MAPPING)) {
 			NBTTagCompound compound = message.getNBTValue();
 			tileEntity.setSideMapping(RelativeSide.fromIndex(compound.getByte(KEY_SIDE_INDEX)), EnumFacing.getFront(compound.getByte(KEY_SIDE_MAPPING)));
+		} else if(message.getKey().equals(KEY_STACK_LIMITER)) {
+			tileEntity.setStackLimiterLimit(message.getIntValue());
 		}
 	}
 
@@ -95,6 +108,10 @@ public class ContainerBlockExtender extends ContainerMod {
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		return !tileEntity.isInvalid() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
+	}
+
+	public Slot getUpgradeSlot(int i) {
+		return inventorySlots.get(i);
 	}
 
 }

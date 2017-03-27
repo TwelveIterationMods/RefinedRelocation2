@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +41,14 @@ public class GuiSideButton extends GuiImageButton {
 	@Override
 	public void actionPerformed(int mouseButton) {
 		if(side == RelativeSide.FRONT) {
+			if(GuiScreen.isShiftKeyDown()) {
+				for(RelativeSide side : RelativeSide.values()) {
+					if(side != RelativeSide.FRONT) {
+						tileEntity.setSideMapping(side, null);
+						RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_TOGGLE_SIDE, side.ordinal(), -1);
+					}
+				}
+			}
 			return;
 		}
 		EnumFacing facing = tileEntity.getSideMapping(side);
@@ -84,7 +93,7 @@ public class GuiSideButton extends GuiImageButton {
 			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:block_extender.front"));
 		} else {
 			EnumFacing mapping = tileEntity.getSideMapping(side);
-			list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:block_extender.side_tooltip", I18n.format("gui.refinedrelocation:block_extender.side_" + (mapping != null ? mapping.getName() : "none"))));
+			list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:block_extender.side_tooltip", TextFormatting.WHITE + I18n.format("gui.refinedrelocation:block_extender.side_" + (mapping != null ? mapping.getName() : "none"))));
 			list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:block_extender.toggle_side"));
 		}
 	}

@@ -54,8 +54,8 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		@Nonnull
 		@Override
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-			if (cachedMaxStackSize != -1) {
-				int space = cachedMaxStackSize - getStackInSlot(slot).getCount();
+			if (hasStackLimiter) {
+				int space = stackLimiterLimit - getStackInSlot(slot).getCount();
 				if (space <= 0) {
 					return stack;
 				}
@@ -95,6 +95,20 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	}
 
 	private final ItemStackHandler itemHandlerUpgrades = new ItemStackHandler(3) {
+		@Nonnull
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+			if(stack.getItem() != ModItems.stackLimiter) {
+				return stack;
+			}
+			for(int i = 0; i < getSlots(); i++) {
+				if(getStackInSlot(i).getItem() == stack.getItem()) {
+					return stack;
+				}
+			}
+			return super.insertItem(slot, stack, simulate);
+		}
+
 		@Override
 		protected void onContentsChanged(int slot) {
 			updateUpgrades();
@@ -103,9 +117,10 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	};
 
 	private final EnumFacing[] sideMappings = new EnumFacing[5];
+	private int stackLimiterLimit = 64;
 
 	private TileEntity cachedConnectedTile;
-	private int cachedMaxStackSize = -1;
+	private boolean hasStackLimiter;
 	private final ItemHandlerWrapper[] cachedItemHandlers = new ItemHandlerWrapper[6];
 	private final EnumFacing[] cachedFacingToFacingMappings = new EnumFacing[6];
 
@@ -163,6 +178,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		}
 		compound.setByteArray("SideMappings", mappings);
 		compound.setTag("Upgrades", itemHandlerUpgrades.serializeNBT());
+		compound.setByte("StackLimiter", (byte) stackLimiterLimit);
 		return compound;
 	}
 
@@ -182,6 +198,8 @@ public class TileBlockExtender extends TileMod implements ITickable {
 		}
 
 		itemHandlerUpgrades.deserializeNBT(compound.getCompoundTag("Upgrades"));
+		stackLimiterLimit = compound.getByte("StackLimiter");
+		updateUpgrades();
 	}
 
 	@Override
@@ -225,7 +243,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	}
 
 	private boolean requiresItemHandlerWrapping() {
-		return cachedMaxStackSize != -1;
+		return hasStackLimiter;
 	}
 
 	@Override
@@ -238,14 +256,22 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	}
 
 	private void updateUpgrades() {
-		cachedMaxStackSize = -1;
+		hasStackLimiter = false;
 		for (int i = 0; i < itemHandlerUpgrades.getSlots(); i++) {
 			ItemStack itemStack = itemHandlerUpgrades.getStackInSlot(i);
 			if (!itemStack.isEmpty()) {
 				if(itemStack.getItem() == ModItems.stackLimiter) {
-					cachedMaxStackSize = itemStack.getMetadata() + 1;
+					hasStackLimiter = true;
 				}
 			}
 		}
+	}
+
+	public int getStackLimiterLimit() {
+		return stackLimiterLimit;
+	}
+
+	public void setStackLimiterLimit(int stackLimiterLimit) {
+		this.stackLimiterLimit = stackLimiterLimit;
 	}
 }

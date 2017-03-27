@@ -45,9 +45,12 @@ gui.refinedrelocation:block_extender.side_north=North
 gui.refinedrelocation:block_extender.side_south=South
 gui.refinedrelocation:block_extender.side_east=East
 gui.refinedrelocation:block_extender.side_west=West
-gui.refinedrelocation:block_extender.side_up=Up
-gui.refinedrelocation:block_extender.side_down=Down
+gui.refinedrelocation:block_extender.side_up=Top
+gui.refinedrelocation:block_extender.side_down=Bottom
 gui.refinedrelocation:block_extender.side_none=Disabled
+gui.refinedrelocation:block_extender.stack_limiter=Stack Limit
+gui.refinedrelocation:block_extender.stack_limiter_increase=Click to increase
+gui.refinedrelocation:block_extender.stack_limiter_decrease=Right-click to decrease
 
 itemGroup.refinedrelocation=Refined Relocation 2
 

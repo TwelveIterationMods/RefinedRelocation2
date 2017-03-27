@@ -6,6 +6,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiTextButton extends GuiElement {
 
@@ -32,13 +33,7 @@ public class GuiTextButton extends GuiElement {
 		super.drawForeground(parentScreen, mouseX, mouseY);
 		if (isVisible()) {
 			int buttonState = !enabled ? 0 : (parentScreen.getMouseElement() == this ? 2 : 1);
-			GlStateManager.color(1f, 1f, 1f, 1f);
-			parentScreen.getMinecraft().getTextureManager().bindTexture(TEXTURE);
-			GlStateManager.enableBlend();
-			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			drawTexturedModalRect(getAbsoluteX(), getAbsoluteY(), 0, 46 + buttonState * 20, getWidth() / 2, getHeight());
-			drawTexturedModalRect(getAbsoluteX() + getWidth() / 2, getAbsoluteY(), 200 - getWidth() / 2, 46 + buttonState * 20, getWidth() / 2, getHeight());
+			GuiUtils.drawContinuousTexturedBox(TEXTURE, getAbsoluteX(), getAbsoluteY(), 0, 46 + buttonState * 20, getWidth(), getHeight(), 200, 20, 2, 3, 2, 2, this.zLevel);
 
 			int textColor = 0xE0E0E0;
 			if (!enabled) {

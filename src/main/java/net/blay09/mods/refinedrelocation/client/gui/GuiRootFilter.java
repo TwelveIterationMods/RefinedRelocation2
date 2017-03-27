@@ -80,7 +80,6 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 	public void updateScreen() {
 		super.updateScreen();
 
-		// Sync to Server
 		ticksSinceUpdate++;
 		if(ticksSinceUpdate >= UPDATE_INTERVAL) {
 			ISortingInventory sortingInventory = container.getSortingInventory();
