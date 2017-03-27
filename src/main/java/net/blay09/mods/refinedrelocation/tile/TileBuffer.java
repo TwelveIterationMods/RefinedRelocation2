@@ -39,4 +39,9 @@ public class TileBuffer extends TileMod implements ITickable {
 	public String getUnlocalizedName() {
 		return "container.refinedrelocation:buffer";
 	}
+
+	@Override
+	public void update() {
+
+	}
 }
