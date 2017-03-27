@@ -179,6 +179,11 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
+	public void sendContainerMessageToServer(String key, int value, int secondaryValue) {
+		NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value, secondaryValue));
+	}
+
+	@Override
 	public void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners) {
 		syncContainerValue(new MessageContainer(key, value), listeners);
 	}

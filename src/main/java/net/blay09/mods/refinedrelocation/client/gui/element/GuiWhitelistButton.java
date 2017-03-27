@@ -39,9 +39,7 @@ public class GuiWhitelistButton extends GuiImageButton {
 	}
 
 	@Override
-	public void actionPerformed() {
-		super.actionPerformed();
-
+	public void actionPerformed(int mouseButton) {
 		boolean isBlacklist = !parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
 		NBTTagCompound tagCompound = new NBTTagCompound();
 		tagCompound.setInteger(ContainerRootFilter.KEY_BLACKLIST_INDEX, parentSlot.getFilterIndex());

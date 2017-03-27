@@ -61,7 +61,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 		if(tileGuiHandler != null) {
 			GuiImageButton btnReturn = new GuiImageButton(guiLeft + xSize - 20, guiTop + 4, "chest_button") {
 				@Override
-				public void actionPerformed() {
+				public void actionPerformed(int mouseButton) {
 					if(onGuiAboutToClose()) {
 						NetworkHandler.wrapper.sendToServer(new MessageReturnGUI());
 					}

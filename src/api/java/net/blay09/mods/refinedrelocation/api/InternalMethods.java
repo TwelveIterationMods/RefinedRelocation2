@@ -30,6 +30,7 @@ public interface InternalMethods {
 	void sendContainerMessageToServer(String key, String value);
 	void sendContainerMessageToServer(String key, NBTTagCompound value);
 	void sendContainerMessageToServer(String key, int value);
+	void sendContainerMessageToServer(String key, int value, int secondaryValue);
 
 	void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners);
 	void syncContainerValue(String key, int value, Iterable<IContainerListener> listeners);

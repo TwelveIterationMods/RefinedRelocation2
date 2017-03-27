@@ -1,15 +1,23 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
+import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
+import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -18,17 +26,31 @@ import javax.annotation.Nullable;
 
 public class BlockBlockExtender extends BlockModTile {
 
-	public static final PropertyBool DOWN = PropertyBool.create("down");
-	public static final PropertyBool UP = PropertyBool.create("up");
-	public static final PropertyBool NORTH = PropertyBool.create("north");
-	public static final PropertyBool SOUTH = PropertyBool.create("south");
-	public static final PropertyBool WEST = PropertyBool.create("west");
-	public static final PropertyBool EAST = PropertyBool.create("east");
-
 	public BlockBlockExtender() {
 		super(Material.IRON, "block_extender");
 		setSoundType(SoundType.METAL);
 		setHardness(3f);
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack) {
+		super.onBlockPlacedBy(world, pos, state, placer, itemStack);
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if(tileEntity instanceof TileBlockExtender) {
+			TileBlockExtender blockExtender = (TileBlockExtender) tileEntity;
+			EnumFacing facing = state.getValue(FACING);
+			for(RelativeSide side : RelativeSide.values()) {
+				blockExtender.setSideMapping(side, facing);
+			}
+		}
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, pos, facing.getIndex()));
+		}
+		return true;
 	}
 
 	@Override
@@ -66,24 +88,8 @@ public class BlockBlockExtender extends BlockModTile {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity instanceof TileBlockExtender) {
-			TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
-			return state.withProperty(DOWN, tileBlockExtender.hasVisibleConnection(EnumFacing.DOWN))
-					.withProperty(UP, tileBlockExtender.hasVisibleConnection(EnumFacing.UP))
-					.withProperty(NORTH, tileBlockExtender.hasVisibleConnection(EnumFacing.NORTH))
-					.withProperty(SOUTH, tileBlockExtender.hasVisibleConnection(EnumFacing.SOUTH))
-					.withProperty(WEST, tileBlockExtender.hasVisibleConnection(EnumFacing.WEST))
-					.withProperty(EAST, tileBlockExtender.hasVisibleConnection(EnumFacing.EAST));
-		}
-		return state;
-	}
-
-	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, DIRECTION, DOWN, UP, NORTH, SOUTH, WEST, EAST);
+		return new BlockStateContainer(this, DIRECTION);
 	}
 
 	@Nullable

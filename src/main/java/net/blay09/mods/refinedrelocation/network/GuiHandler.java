@@ -5,20 +5,24 @@ import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
+import net.blay09.mods.refinedrelocation.client.gui.GuiBlockExtender;
 import net.blay09.mods.refinedrelocation.client.gui.GuiChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiFastHopper;
 import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiSortingChest;
+import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
+import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,6 +34,7 @@ public class GuiHandler {
 	public static final int GUI_ROOT_FILTER = 2;
 	public static final int GUI_ANY_FILTER = 3;
 	public static final int GUI_FAST_HOPPER = 4;
+	public static final int GUI_BLOCK_EXTENDER = 5;
 
 	@Nullable
 	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
@@ -54,6 +59,8 @@ public class GuiHandler {
 				break;
 			case GUI_FAST_HOPPER:
 				return tileEntity instanceof TileFastHopper ? new ContainerFastHopper(player, (TileFastHopper) tileEntity) : null;
+			case GUI_BLOCK_EXTENDER:
+				return tileEntity instanceof TileBlockExtender ? new ContainerBlockExtender(player, (TileBlockExtender) tileEntity) : null;
 		}
 		return null;
 	}
@@ -82,6 +89,9 @@ public class GuiHandler {
 				break;
 			case GUI_FAST_HOPPER:
 				return tileEntity instanceof TileFastHopper ? new GuiFastHopper(player, (TileFastHopper) tileEntity) : null;
+			case GUI_BLOCK_EXTENDER:
+				EnumFacing clickedFace = EnumFacing.getFront(message.getIntValue());
+				return tileEntity instanceof TileBlockExtender ? new GuiBlockExtender(player, (TileBlockExtender) tileEntity, clickedFace) : null;
 		}
 		return null;
 	}

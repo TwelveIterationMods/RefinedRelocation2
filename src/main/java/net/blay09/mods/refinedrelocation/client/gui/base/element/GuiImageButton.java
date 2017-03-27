@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
@@ -10,6 +11,7 @@ import net.minecraft.init.SoundEvents;
 
 public class GuiImageButton extends GuiElement {
 
+	protected String textureName;
 	private TextureAtlasRegion background;
 	private TextureAtlasRegion backgroundHover;
 	private TextureAtlasRegion backgroundDisabled;
@@ -22,15 +24,28 @@ public class GuiImageButton extends GuiElement {
 	}
 
 	public void setButtonTexture(String textureName) {
-		background = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:" + textureName);
-		backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:" + textureName + "_hover");
-		backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:" + textureName + "_disabled");
+		this.textureName = textureName;
+		background = ClientProxy.TEXTURE_ATLAS.getSprite(getNormalTexture());
+		backgroundHover = ClientProxy.TEXTURE_ATLAS.getSprite(getHoverTexture());
+		backgroundDisabled = ClientProxy.TEXTURE_ATLAS.getSprite(getDisabledTexture());
+	}
+
+	protected String getNormalTexture() {
+		return RefinedRelocation.MOD_ID + ":" + textureName;
+	}
+
+	protected String getHoverTexture() {
+		return RefinedRelocation.MOD_ID + ":" + textureName + "_hover";
+	}
+
+	protected String getDisabledTexture() {
+		return RefinedRelocation.MOD_ID + ":" + textureName + "_disabled";
 	}
 
 	@Override
 	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1f));
-		actionPerformed();
+		actionPerformed(mouseButton);
 		return true;
 	}
 
@@ -59,7 +74,7 @@ public class GuiImageButton extends GuiElement {
 		this.enabled = enabled;
 	}
 
-	public void actionPerformed() {
+	public void actionPerformed(int mouseButton) {
 
 	}
 

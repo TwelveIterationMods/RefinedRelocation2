@@ -27,9 +27,7 @@ public class GuiDeleteFilterButton extends GuiImageButton {
 	}
 
 	@Override
-	public void actionPerformed() {
-		super.actionPerformed();
-
+	public void actionPerformed(int mouseButton) {
 		RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_DELETE_FILTER, parentSlot.getFilterIndex());
 	}
 

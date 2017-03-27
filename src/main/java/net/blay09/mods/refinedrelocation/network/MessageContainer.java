@@ -12,10 +12,12 @@ public class MessageContainer implements IMessage, IContainerMessage {
 	public static final int TYPE_STRING = 1;
 	public static final int TYPE_NBT = 2;
 	public static final int TYPE_BYTE_ARRAY = 3;
+	public static final int TYPE_INT_TWO = 4;
 
 	private int type;
 	private String key;
 	private int intValue;
+	private int secondaryIntValue;
 	private String stringValue;
 	private NBTTagCompound nbtValue;
 	private byte[] byteArrayValue;
@@ -27,6 +29,13 @@ public class MessageContainer implements IMessage, IContainerMessage {
 		this.key = key;
 		this.type = TYPE_INT;
 		this.intValue = value;
+	}
+
+	public MessageContainer(String key, int value, int value2) {
+		this.key = key;
+		this.type = TYPE_INT_TWO;
+		this.intValue = value;
+		this.secondaryIntValue = value2;
 	}
 
 	public MessageContainer(String key, String value) {
@@ -60,6 +69,9 @@ public class MessageContainer implements IMessage, IContainerMessage {
 		} else if(type == TYPE_BYTE_ARRAY) {
 			byteArrayValue = new byte[buf.readShort()];
 			buf.readBytes(byteArrayValue);
+		} else if(type == TYPE_INT_TWO) {
+			intValue = buf.readInt();
+			secondaryIntValue = buf.readInt();
 		}
 	}
 
@@ -76,6 +88,9 @@ public class MessageContainer implements IMessage, IContainerMessage {
 		} else if(type == TYPE_BYTE_ARRAY) {
 			buf.writeShort(byteArrayValue.length);
 			buf.writeBytes(byteArrayValue);
+		} else if(type == TYPE_INT_TWO) {
+			buf.writeInt(intValue);
+			buf.writeInt(secondaryIntValue);
 		}
 	}
 
@@ -87,6 +102,11 @@ public class MessageContainer implements IMessage, IContainerMessage {
 	@Override
 	public int getIntValue() {
 		return intValue;
+	}
+
+	@Override
+	public int getSecondaryIntValue() {
+		return secondaryIntValue;
 	}
 
 	@Override

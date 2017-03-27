@@ -28,7 +28,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSortingChest extends TileMod implements ITickable {
+public class TileSortingChest extends TileMod implements ITickable, INameable {
 
 	private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
 		@Override
@@ -129,18 +129,24 @@ public class TileSortingChest extends TileMod implements ITickable {
 		return super.getCapability(capability, facing);
 	}
 
+	@Override
 	public void setCustomName(String customName) {
 		this.customName = customName;
 	}
 
+	@Override
+	public String getCustomName() {
+		return customName;
+	}
+
+	@Override
 	public boolean hasCustomName() {
 		return !Strings.isNullOrEmpty(customName);
 	}
 
 	@Override
-	@Nonnull
-	public ITextComponent getDisplayName() {
-		return !Strings.isNullOrEmpty(customName) ? new TextComponentString(customName) : new TextComponentTranslation("container.refinedrelocation:sorting_chest");
+	public String getUnlocalizedName() {
+		return "container.refinedrelocation:sorting_chest";
 	}
 
 	@Override

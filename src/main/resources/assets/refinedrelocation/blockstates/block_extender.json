@@ -3,7 +3,6 @@
   "defaults": {
     "model": "forge:multi-layer",
     "custom": {
-      "flip-v": true,
       "base": "refinedrelocation:block_extender#cutout",
       "Cutout": "refinedrelocation:block_extender#cutout",
       "Translucent": "refinedrelocation:block_extender#translucent"
@@ -37,81 +36,6 @@
       "down": {
         "x": 90
       }
-    },
-    "down": {
-      "true": {
-        "submodel": {
-          "down": {
-            "model": "refinedrelocation:block_extender_cable",
-            "custom": { "flip-v": true }
-          }
-        }
-      },
-      "false": {}
-    },
-    "up": {
-      "true": {
-        "submodel": {
-          "up": {
-            "model": "refinedrelocation:block_extender_cable",
-            "x": 180,
-            "y": 0,
-            "custom": { "flip-v": true }
-          }
-        }
-      },
-      "false": {}
-    },
-    "north": {
-      "true": {
-        "submodel": {
-          "north": {
-            "model": "refinedrelocation:block_extender_cable",
-            "x": 90,
-            "y": 180,
-            "custom": { "flip-v": true }
-          }
-        }
-      },
-      "false": {}
-    },
-    "south": {
-      "true": {
-        "submodel": {
-          "south": {
-            "model": "refinedrelocation:block_extender_cable",
-            "x": 90,
-            "custom": { "flip-v": true }
-          }
-        }
-      },
-      "false": {}
-    },
-    "west": {
-      "true": {
-        "submodel": {
-          "west": {
-            "model": "refinedrelocation:block_extender_cable",
-            "x": 90,
-            "y": 90,
-            "custom": { "flip-v": true }
-          }
-        }
-      },
-      "false": {}
-    },
-    "east": {
-      "true": {
-        "submodel": {
-          "east": {
-            "model": "refinedrelocation:block_extender_cable",
-            "x": 90,
-            "y": 270,
-            "custom": { "flip-v": true }
-          }
-        }
-      },
-      "false": {}
     }
   }
 }

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFastHopper extends ContainerMod {
-
+// TODO shift-click
 	private final TileFastHopper tileEntity;
 
 	public ContainerFastHopper(EntityPlayer player, TileFastHopper tileEntity) {

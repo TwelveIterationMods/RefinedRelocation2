@@ -13,6 +13,7 @@ container.refinedrelocation:name_filter=Name Filter
 container.refinedrelocation:add_filter=Select Filter Type
 container.refinedrelocation:fast_hopper=Fast Hopper
 container.refinedrelocation:filtered_hopper=Filtered Hopper
+container.refinedrelocation:block_extender=Block Extender
 
 gui.refinedrelocation:root_filter.help_text=Configure up to three filters by clicking the empty slots above.
 gui.refinedrelocation:root_filter.priority_label=Priority:
@@ -35,6 +36,16 @@ gui.refinedrelocation:root_filter.not_configurable=Not configurable
 gui.refinedrelocation:root_filter.click_to_toggle=Click to toggle
 gui.refinedrelocation:root_filter.blacklist=Blacklist
 gui.refinedrelocation:root_filter.whitelist=Whitelist
+gui.refinedrelocation:block_extender.front=Front Side
+gui.refinedrelocation:block_extender.toggle_side=Click to toggle
+gui.refinedrelocation:block_extender.side_tooltip=I/O: %s
+gui.refinedrelocation:block_extender.side_north=North
+gui.refinedrelocation:block_extender.side_south=South
+gui.refinedrelocation:block_extender.side_east=East
+gui.refinedrelocation:block_extender.side_west=West
+gui.refinedrelocation:block_extender.side_up=Up
+gui.refinedrelocation:block_extender.side_down=Down
+gui.refinedrelocation:block_extender.side_none=Disabled
 
 itemGroup.refinedrelocation=Refined Relocation 2
 

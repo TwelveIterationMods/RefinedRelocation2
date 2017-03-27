@@ -10,9 +10,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -119,15 +116,12 @@ public class TileFastHopper extends TileMod implements ITickable, INameable {
 		customName = tagCompound.getString("CustomName");
 	}
 
-	public String getName() {
-		return hasCustomName() ? customName : "container.refinedrelocation:fast_hopper";
+	@Override
+	public String getUnlocalizedName() {
+		return "container.refinedrelocation:fast_hopper";
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getName());
-	}
-
 	public boolean hasCustomName() {
 		return customName != null && !customName.isEmpty();
 	}
@@ -135,6 +129,11 @@ public class TileFastHopper extends TileMod implements ITickable, INameable {
 	@Override
 	public void setCustomName(String customName) {
 		this.customName = customName;
+	}
+
+	@Override
+	public String getCustomName() {
+		return customName;
 	}
 
 	@Override

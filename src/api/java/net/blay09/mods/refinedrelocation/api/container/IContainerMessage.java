@@ -6,6 +6,7 @@ public interface IContainerMessage {
 
 	String getKey();
 	int getIntValue();
+	int getSecondaryIntValue();
 	String getStringValue();
 	NBTTagCompound getNBTValue();
 	byte[] getByteArrayValue();

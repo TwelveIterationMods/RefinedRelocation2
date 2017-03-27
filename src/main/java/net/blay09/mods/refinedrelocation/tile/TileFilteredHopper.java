@@ -5,7 +5,6 @@ import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -31,8 +30,8 @@ public class TileFilteredHopper extends TileFastHopper {
 	}
 
 	@Override
-	public String getName() {
-		return hasCustomName() ? customName : "container.refinedrelocation:filtered_hopper";
+	public String getUnlocalizedName() {
+		return "container.refinedrelocation:filtered_hopper";
 	}
 
 	@Override

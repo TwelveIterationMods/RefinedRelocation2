@@ -6,12 +6,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileMod extends TileEntity {
+
+	private boolean isFirstTick = true;
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
@@ -64,5 +69,26 @@ public class TileMod extends TileEntity {
 
 	public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
 		return world.getTileEntity(pos) == this && entityPlayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+	}
+
+	public void update() {
+		if(isFirstTick) {
+			onFirstTick();
+			isFirstTick = false;
+		}
+	}
+
+	@Nonnull
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(getUnlocalizedName());
+	}
+
+	public String getUnlocalizedName() {
+		return "container.refinedrelocation.unnamed";
+	}
+
+	protected void onFirstTick() {
+
 	}
 }

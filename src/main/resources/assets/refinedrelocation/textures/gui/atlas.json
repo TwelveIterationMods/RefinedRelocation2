@@ -30,6 +30,17 @@
         "refinedrelocation:icon_preset_filter",
         "refinedrelocation:icon_same_item_filter",
         "refinedrelocation:icon_creative_tab_filter",
-        "refinedrelocation:icon_mod_filter"
+        "refinedrelocation:icon_mod_filter",
+        "refinedrelocation:side_front",
+        "refinedrelocation:side_back",
+        "refinedrelocation:side_back_hover",
+        "refinedrelocation:side_left",
+        "refinedrelocation:side_left_hover",
+        "refinedrelocation:side_right",
+        "refinedrelocation:side_right_hover",
+        "refinedrelocation:side_top",
+        "refinedrelocation:side_top_hover",
+        "refinedrelocation:side_bottom",
+        "refinedrelocation:side_bottom_hover"
     ]
 }
