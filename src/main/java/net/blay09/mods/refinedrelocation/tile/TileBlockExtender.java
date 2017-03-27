@@ -158,6 +158,9 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	@Override
 	protected void onFirstTick() {
 		cachedConnectedTile = world.getTileEntity(pos.offset(getFacing()));
+		if(cachedConnectedTile instanceof TileBlockExtender) {
+			cachedConnectedTile = null; // Disallow connecting block extenders to each other
+		}
 		for(int i = 0; i < sideMappings.length; i++) {
 			cachedFacingToFacingMappings[RelativeSide.fromIndex(i).toFacing(getFacing()).ordinal()] = sideMappings[i];
 		}

@@ -42,6 +42,5 @@ public class TileBuffer extends TileMod implements ITickable {
 
 	@Override
 	public void update() {
-
 	}
 }
