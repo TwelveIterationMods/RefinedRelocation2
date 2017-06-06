@@ -2,9 +2,9 @@
 {
   "modid": "refinedrelocation",
   "name": "Refined Relocation",
-  "description": "Sorting Chests. More to come soon.",
-  "version": "@VERSION@",
-  "mcversion": "@MCVERSION@",
+  "description": "Sorting Chests. Block Extenders.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
   "authorList": ["BlayTheNinth", "ZeroTheShinigami"],
