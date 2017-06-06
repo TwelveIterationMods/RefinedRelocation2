@@ -37,17 +37,18 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 		ySize = 210;
 		shouldKeyRepeat = true;
 
-		txtFilter = new GuiTextFieldMultiLine(0, 0, 150, 90);
+		txtFilter = new GuiTextFieldMultiLine(0, 0, 150, 84);
 		txtFilter.setFocused(true);
 		txtFilter.setCanLoseFocus(false);
 		txtFilter.setText(container.getValue());
 
-		GuiScrollBar scrollBar = new GuiScrollBar(161, 20, 89, txtFilter);
-		rootNode.addChild(scrollBar);
+		GuiScrollBar scrollBar = new GuiScrollBar(161, 20, 83, txtFilter);
 
-		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 20, 150, 90);
+		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 20, 150, 84);
 		rootNode.addChild(scrollPane);
 		scrollPane.addChild(txtFilter);
+
+		rootNode.addChild(scrollBar);
 
 		rootNode.addChild(new GuiOpenFilterButtonWrapper(this, container.getTileEntity(), 0));
 	}

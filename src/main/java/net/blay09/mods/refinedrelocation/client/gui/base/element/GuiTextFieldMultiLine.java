@@ -288,6 +288,12 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 	public void update() {
 		super.update();
 		cursorCounter++;
+
+		if (renderCache == null) {
+			renderCache = text.split("\n", -1);
+		}
+
+		scrollOffset = Math.max(Math.min(scrollOffset, getRowCount() - getVisibleRows()), 0);
 	}
 
 	@Override
@@ -297,20 +303,18 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 			drawRect(getAbsoluteX() - 1, getAbsoluteY() - 1, getAbsoluteX() + getWidth() + 1, getAbsoluteY() + getHeight() + 1, 0xFFEEEEEE);
 			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0xFF000000);
 
-			if (renderCache == null) {
-				renderCache = text.split("\n");
-			}
-
-			for (int i = scrollOffset; i < renderCache.length; i++) {
-				int y = (i - scrollOffset) * fontRenderer.FONT_HEIGHT;
-				if (y + fontRenderer.FONT_HEIGHT >= getHeight()) {
-					break;
+			if(renderCache != null) {
+				for (int i = scrollOffset; i < renderCache.length; i++) {
+					int y = (i - scrollOffset) * fontRenderer.FONT_HEIGHT;
+					if (y + fontRenderer.FONT_HEIGHT >= getHeight()) {
+						break;
+					}
+					if (lineScrollOffset >= renderCache[i].length()) {
+						continue;
+					}
+					String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), getWidth() - PADDING);
+					fontRenderer.drawString(renderText, getAbsoluteX() + PADDING, getAbsoluteY() + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR, true);
 				}
-				if (lineScrollOffset >= renderCache[i].length()) {
-					continue;
-				}
-				String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), getWidth() - PADDING);
-				fontRenderer.drawString(renderText, getAbsoluteX() + PADDING, getAbsoluteY() + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR, true);
 			}
 
 			int cursorLine = 0;

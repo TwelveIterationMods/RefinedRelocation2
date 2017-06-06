@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.client.gui.base.element;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class GuiScrollBar extends GuiElement {
 
@@ -95,6 +96,7 @@ public class GuiScrollBar extends GuiElement {
 			}
 		}
 
+		GlStateManager.color(1f, 1f, 1f, 1f);
 		scrollbarTop.draw(getAbsoluteX() - 2, getAbsoluteY() - 1, zLevel);
 		scrollbarBottom.draw(getAbsoluteX() - 2, getAbsoluteY() + getHeight() - 1, zLevel);
 		scrollbarMiddle.draw(getAbsoluteX() - 2, getAbsoluteY() + 2, scrollbarMiddle.getIconWidth(), getHeight() - 3, zLevel);
