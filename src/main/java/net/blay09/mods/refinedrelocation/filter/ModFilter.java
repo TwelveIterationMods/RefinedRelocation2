@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
@@ -55,7 +56,7 @@ public class ModFilter implements IChecklistFilter {
 
 	public static void gatherMods() {
 		Set<String> modSet = Sets.newHashSet();
-		for(ResourceLocation registryName : Block.REGISTRY.getKeys()) {
+		for(ResourceLocation registryName : Item.REGISTRY.getKeys()) {
 			modSet.add(registryName.getResourceDomain());
 		}
 		String[] unsorted = modSet.toArray(new String[modSet.size()]);
