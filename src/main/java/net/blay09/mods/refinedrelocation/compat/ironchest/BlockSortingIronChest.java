@@ -50,7 +50,7 @@ public class BlockSortingIronChest extends BlockModTile {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean isFullyOpaque(IBlockState state) {
+	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
