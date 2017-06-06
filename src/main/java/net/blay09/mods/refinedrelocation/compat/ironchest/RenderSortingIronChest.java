@@ -36,8 +36,9 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/dirt_chest_overlay.png"),
 	};
 
-	private static final float[][] shifts = {{0.3f, 0.45f, 0.3f}, {0.7f, 0.45f, 0.3f}, {0.3f, 0.45f, 0.7f}, {0.7f, 0.45f, 0.7f}, {0.3f, 0.1f, 0.3f},
-			{0.7f, 0.1f, 0.3f}, {0.3f, 0.1f, 0.7f}, {0.7f, 0.1f, 0.7f}, {0.5f, 0.32f, 0.5f},};
+	private static float[][] shifts = { { 0.3F, 0.45F, 0.3F }, { 0.7F, 0.45F, 0.3F }, { 0.3F, 0.45F, 0.7F }, { 0.7F, 0.45F, 0.7F }, { 0.3F, 0.1F, 0.3F },
+			{ 0.7F, 0.1F, 0.3F }, { 0.3F, 0.1F, 0.7F }, { 0.7F, 0.1F, 0.7F }, { 0.5F, 0.32F, 0.5F } };
+
 	private static final float halfPI = (float) (Math.PI / 2.0);
 
 	private static EntityItem entityItem;
@@ -128,7 +129,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 			int shift = 0;
 			float blockScale = 0.70f;
 			float timeD = (float) (360.0 * (System.currentTimeMillis() & 0x3FFFL) / 0x3FFFL) - partialTicks;
-			if (tileEntity.getTopItemStacks().get(1).isEmpty()) {
+			if (tileEntity.getTopItems().get(1).isEmpty()) {
 				shift = 8;
 				blockScale = 0.85f;
 			}
@@ -139,11 +140,11 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 				entityItem = new EntityItem(getWorld());
 			}
 			entityItem.hoverStart = 0f;
-			for (ItemStack item : tileEntity.getTopItemStacks()) {
+			for (ItemStack item : tileEntity.getTopItems()) {
 				if (shift > shifts.length) {
 					break;
 				}
-				if (item == null) {
+				if (item.isEmpty()) {
 					shift++;
 					continue;
 				}
@@ -151,6 +152,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 				shiftY = shifts[shift][1];
 				shiftZ = shifts[shift][2];
 				shift++;
+
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(shiftX, shiftY, shiftZ);
 				GlStateManager.rotate(timeD, 0f, 1f, 0f);
