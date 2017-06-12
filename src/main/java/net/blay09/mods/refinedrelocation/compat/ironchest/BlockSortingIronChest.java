@@ -1,8 +1,7 @@
 package net.blay09.mods.refinedrelocation.compat.ironchest;
 
-import cpw.mods.ironchest.BlockIronChest;
-import cpw.mods.ironchest.IronChestType;
-import cpw.mods.ironchest.TileEntityIronChest;
+import cpw.mods.ironchest.common.blocks.chest.BlockIronChest;
+import cpw.mods.ironchest.common.blocks.chest.IronChestType;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.block.BlockModTile;
 import net.minecraft.block.Block;

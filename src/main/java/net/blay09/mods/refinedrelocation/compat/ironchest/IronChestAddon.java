@@ -1,11 +1,11 @@
 package net.blay09.mods.refinedrelocation.compat.ironchest;
 
-import cpw.mods.ironchest.BlockIronChest;
-import cpw.mods.ironchest.ChestChangerType;
-import cpw.mods.ironchest.IronChestType;
-import cpw.mods.ironchest.ItemChestChanger;
-import cpw.mods.ironchest.TileEntityIronChest;
-import cpw.mods.ironchest.client.GUIChest;
+import cpw.mods.ironchest.client.gui.chest.GUIChest;
+import cpw.mods.ironchest.common.blocks.chest.BlockIronChest;
+import cpw.mods.ironchest.common.blocks.chest.IronChestType;
+import cpw.mods.ironchest.common.items.ChestChangerType;
+import cpw.mods.ironchest.common.items.chest.ItemChestChanger;
+import cpw.mods.ironchest.common.tileentity.chest.TileEntityIronChest;
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;

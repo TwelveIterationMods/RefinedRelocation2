@@ -1,8 +1,7 @@
 package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import com.google.common.primitives.SignedBytes;
-import cpw.mods.ironchest.BlockIronChest;
-import cpw.mods.ironchest.IronChestType;
+import cpw.mods.ironchest.common.blocks.chest.IronChestType;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.client.render.ModelLidOverlay;
@@ -62,7 +61,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 		IronChestType type = tileEntity.getType();
 		if (state != null) {
 			facing = tileEntity.getFacing();
-			type = state.getValue(BlockIronChest.VARIANT_PROP);
+			type = tileEntity.getType();
 		}
 
 		// Set up breaking animation or bind texture
@@ -88,7 +87,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 		GlStateManager.translate(0.5f, 0.5f, 0.5f);
 		GlStateManager.rotate(RenderUtils.getFacingAngle(facing), 0f, 1f, 0f);
 		GlStateManager.translate(-0.5f, -0.5f, -0.5f);
-		if (type.isTransparent()) {
+		if (type == IronChestType.CRYSTAL) {
 			GlStateManager.scale(1f, 0.99F, 1f);
 		}
 
@@ -121,7 +120,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 		GlStateManager.color(1f, 1f, 1f, 1f);
 
 		// If the chest is transparent, render the top items inside
-		if (type.isTransparent() && tileEntity.getDistanceSq(rendererDispatcher.entityX, rendererDispatcher.entityY, rendererDispatcher.entityZ) < 128.0) {
+		if (type == IronChestType.CRYSTAL && tileEntity.getDistanceSq(rendererDispatcher.entityX, rendererDispatcher.entityY, rendererDispatcher.entityZ) < 128.0) {
 			random.setSeed(254);
 			float shiftX;
 			float shiftY;

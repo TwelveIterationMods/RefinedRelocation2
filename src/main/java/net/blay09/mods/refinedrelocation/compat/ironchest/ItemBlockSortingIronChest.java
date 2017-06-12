@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.compat.ironchest;
 
-import cpw.mods.ironchest.IronChestType;
+import cpw.mods.ironchest.common.blocks.chest.IronChestType;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
