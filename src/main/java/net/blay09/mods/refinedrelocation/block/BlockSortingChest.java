@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.block;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
-import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
+import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
@@ -18,6 +18,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -28,10 +29,14 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BlockSortingChest extends BlockModTile {
 
+	public static final String name = "sorting_chest";
+	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
+
 	private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockSortingChest() {
-		super(Material.WOOD, "sorting_chest");
+		super(Material.WOOD);
+		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.WOOD);
 		setHardness(3f);
 	}
@@ -126,7 +131,7 @@ public class BlockSortingChest extends BlockModTile {
 		if (tileEntity != null) {
 			IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			if(itemHandler != null) {
-				ItemHandlerHelper2.dropItemHandlerItems(world, pos, itemHandler);
+				ItemUtils.dropItemHandlerItems(world, pos, itemHandler);
 			}
 			world.updateComparatorOutputLevel(pos, this);
 		}

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.*;
@@ -18,10 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.ProgressManager;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -29,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TextureAtlas extends AbstractTexture implements ITickableTextureObject, IResourceManagerReloadListener {
-
-	private static final Logger logger = LogManager.getLogger();
 
 	private final ResourceLocation atlasFile;
 	private final String basePath;
@@ -96,7 +92,7 @@ public class TextureAtlas extends AbstractTexture implements ITickableTextureObj
 			bar.step(fullLocation.getResourcePath());
 			IResource resource = null;
 			if (sprite.hasCustomLoader(resourceManager, location)) {
-				if (sprite.load(resourceManager, location)) {
+				if (sprite.load(resourceManager, location, l -> registeredSprites.get(l.toString()))) {
 					continue;
 				}
 			} else {
@@ -123,7 +119,7 @@ public class TextureAtlas extends AbstractTexture implements ITickableTextureObj
 		bar.step("Stitching");
 		stitcher.doStitch();
 
-		logger.info("Created: {}x{} {}-atlas", stitcher.getCurrentWidth(), stitcher.getCurrentHeight(), basePath);
+		RefinedRelocation.logger.info("Created: {}x{} {}-atlas", stitcher.getCurrentWidth(), stitcher.getCurrentHeight(), basePath);
 		bar.step("Allocating GL texture");
 		TextureUtil.allocateTextureImpl(getGlTextureId(), 0, stitcher.getCurrentWidth(), stitcher.getCurrentHeight());
 		ProgressManager.pop(bar);
@@ -139,9 +135,9 @@ public class TextureAtlas extends AbstractTexture implements ITickableTextureObj
 				try {
 					sprite.loadSpriteFrames(resourceManager.getResource(fullLocation), 1);
 				} catch (RuntimeException e) {
-					logger.error("Unable to parse metadata from {}", fullLocation, e);
+					RefinedRelocation.logger.error("Unable to parse metadata from {}", fullLocation, e);
 				} catch (IOException e) {
-					logger.error("Using missing texture, unable to load {}", fullLocation, e);
+					RefinedRelocation.logger.error("Using missing texture, unable to load {}", fullLocation, e);
 				}
 			}
 
@@ -171,13 +167,8 @@ public class TextureAtlas extends AbstractTexture implements ITickableTextureObj
 		ProgressManager.pop(bar);
 	}
 
-	public TextureAtlasRegion registerSprite(@Nonnull ResourceLocation location) {
-		TextureAtlasRegion sprite = registeredSprites.get(location.toString());
-		if (sprite == null) {
-			sprite = new TextureAtlasRegion(this, location);
-			registeredSprites.put(location.toString(), sprite);
-		}
-		return sprite;
+	public TextureAtlasRegion registerSprite(ResourceLocation location) {
+		return registeredSprites.computeIfAbsent(location.toString(), k -> new TextureAtlasRegion(this, location));
 	}
 
 	public TextureAtlasRegion getSprite(String name) {

@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "refinedrelocation:block_extender"
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "IGI",
+    "GHG",
+    "IGI"
+  ],
+  "key": {
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "G": {
+      "item": "#GLASS_PANE"
+    },
+    "H": {
+      "item": "refinedrelocation:fast_hopper"
+    }
+  }
+}

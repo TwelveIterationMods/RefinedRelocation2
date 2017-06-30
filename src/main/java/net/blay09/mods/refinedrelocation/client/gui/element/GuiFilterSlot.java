@@ -35,8 +35,8 @@ public class GuiFilterSlot extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawBackground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
 		texture.draw(getAbsoluteX(), getAbsoluteY(), zLevel);
 		IFilter filter = rootFilter.getFilter(index);
 		if(filter != null) {

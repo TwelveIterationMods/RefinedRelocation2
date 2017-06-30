@@ -4,35 +4,42 @@ import net.blay09.mods.refinedrelocation.item.ItemInputFilter;
 import net.blay09.mods.refinedrelocation.item.ItemOutputFilter;
 import net.blay09.mods.refinedrelocation.item.ItemSortingUpgrade;
 import net.blay09.mods.refinedrelocation.item.ItemStackLimiter;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
+@GameRegistry.ObjectHolder(RefinedRelocation.MOD_ID)
 public class ModItems {
 
-	public static ItemSortingUpgrade sortingUpgrade;
-	public static ItemStackLimiter stackLimiter;
-	public static ItemInputFilter inputFilter;
-	public static ItemOutputFilter outputFilter;
+	@GameRegistry.ObjectHolder(ItemSortingUpgrade.name)
+	public static final Item sortingUpgrade = Items.AIR;
 
-	public static void init() {
-		sortingUpgrade = new ItemSortingUpgrade();
-		GameRegistry.register(sortingUpgrade);
+	@GameRegistry.ObjectHolder(ItemStackLimiter.name)
+	public static final Item stackLimiter = Items.AIR;
 
-		stackLimiter = new ItemStackLimiter();
-		GameRegistry.register(stackLimiter);
+	@GameRegistry.ObjectHolder(ItemInputFilter.name)
+	public static final Item inputFilter = Items.AIR;
 
-		inputFilter = new ItemInputFilter();
-		GameRegistry.register(inputFilter);
+	@GameRegistry.ObjectHolder(ItemOutputFilter.name)
+	public static final Item outputFilter = Items.AIR;
 
-		outputFilter = new ItemOutputFilter();
-		GameRegistry.register(outputFilter);
+	public static void register(IForgeRegistry<Item> registry) {
+		registry.registerAll(
+				new ItemSortingUpgrade().setRegistryName(ItemSortingUpgrade.name),
+				new ItemStackLimiter().setRegistryName(ItemStackLimiter.name),
+				new ItemInputFilter().setRegistryName(ItemInputFilter.name),
+				new ItemOutputFilter().setRegistryName(ItemOutputFilter.name)
+		);
 	}
 
 	public static void registerModels() {
-		sortingUpgrade.registerModels();
-		stackLimiter.registerModels();
-		inputFilter.registerModels();
-		outputFilter.registerModels();
+		ModelLoader.setCustomModelResourceLocation(sortingUpgrade, 0, new ModelResourceLocation(ItemSortingUpgrade.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(stackLimiter, 0, new ModelResourceLocation(ItemStackLimiter.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(inputFilter, 0, new ModelResourceLocation(ItemInputFilter.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(outputFilter, 0, new ModelResourceLocation(ItemOutputFilter.registryName, "inventory"));
 	}
 
 }

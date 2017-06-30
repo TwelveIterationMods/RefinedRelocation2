@@ -32,15 +32,15 @@ public class GuiOpenFilterButton extends GuiButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		if(visible) {
 			GlStateManager.color(1f, 1f, 1f, 1f);
-			hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
+			hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			int hoverState = getHoverState(hovered);
 			switch(hoverState) {
-				case 0: backgroundDisabled.draw(xPosition, yPosition, zLevel); break;
-				case 1: background.draw(xPosition, yPosition, zLevel); break;
-				case 2: backgroundHover.draw(xPosition, yPosition, zLevel); break;
+				case 0: backgroundDisabled.draw(x, y, zLevel); break;
+				case 1: background.draw(x, y, zLevel); break;
+				case 2: backgroundHover.draw(x, y, zLevel); break;
 			}
 		}
 	}

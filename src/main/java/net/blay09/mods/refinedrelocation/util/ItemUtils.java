@@ -2,15 +2,13 @@ package net.blay09.mods.refinedrelocation.util;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Random;
 
-public class ItemHandlerHelper2 {
+public class ItemUtils {
 
 	private static final Random rand = new Random();
 

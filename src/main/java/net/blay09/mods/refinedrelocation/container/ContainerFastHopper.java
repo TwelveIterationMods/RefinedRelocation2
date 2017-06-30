@@ -4,7 +4,6 @@ import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFastHopper extends ContainerMod {
 

@@ -1,64 +1,67 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.block.BlockBlockExtender;
-import net.blay09.mods.refinedrelocation.block.BlockBuffer;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.block.BlockFilteredHopper;
 import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
-import net.blay09.mods.refinedrelocation.tile.TileBuffer;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
+@GameRegistry.ObjectHolder(RefinedRelocation.MOD_ID)
 public class ModBlocks {
 
-	public static BlockSortingChest sortingChest;
-	public static BlockBlockExtender blockExtender;
-	public static BlockFastHopper fastHopper;
-	public static BlockFilteredHopper filteredHopper;
-	public static BlockBuffer buffer;
+	@GameRegistry.ObjectHolder(BlockSortingChest.name)
+	public static final Block sortingChest = Blocks.AIR;
 
-	public static void init() {
-		sortingChest = new BlockSortingChest();
-		registerBlock(sortingChest);
-		GameRegistry.registerTileEntity(TileSortingChest.class, sortingChest.getRegistryNameString());
+	@GameRegistry.ObjectHolder(BlockBlockExtender.name)
+	public static final Block blockExtender = Blocks.AIR;
 
-		blockExtender = new BlockBlockExtender();
-		registerBlock(blockExtender);
-		GameRegistry.registerTileEntity(TileBlockExtender.class, blockExtender.getRegistryNameString());
+	@GameRegistry.ObjectHolder(BlockFastHopper.name)
+	public static final Block fastHopper = Blocks.AIR;
 
-		fastHopper = new BlockFastHopper();
-		registerBlock(fastHopper);
-		GameRegistry.registerTileEntity(TileFastHopper.class, fastHopper.getRegistryNameString());
+	@GameRegistry.ObjectHolder(BlockFilteredHopper.name)
+	public static final Block filteredHopper = Blocks.AIR;
 
-		filteredHopper = new BlockFilteredHopper();
-		registerBlock(filteredHopper);
-		GameRegistry.registerTileEntity(TileFilteredHopper.class, filteredHopper.getRegistryNameString());
-
-//		buffer = new BlockBuffer();
-//		registerBlock(buffer);
-//		GameRegistry.registerTileEntity(TileBuffer.class, buffer.getRegistryNameString());
+	public static void register(IForgeRegistry<Block> registry) {
+		registry.registerAll(
+				new BlockSortingChest().setRegistryName(BlockSortingChest.name),
+				new BlockBlockExtender().setRegistryName(BlockBlockExtender.name),
+				new BlockFastHopper().setRegistryName(BlockFastHopper.name),
+				new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name)
+		);
 	}
 
-	private static void registerBlock(Block block) {
-		GameRegistry.register(block);
-		//noinspection ConstantConditions
-		GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+	public static void registerItemBlocks(IForgeRegistry<Item> registry) {
+		registry.registerAll(
+				new ItemBlock(sortingChest).setRegistryName(BlockSortingChest.name),
+				new ItemBlock(blockExtender).setRegistryName(BlockBlockExtender.name),
+				new ItemBlock(fastHopper).setRegistryName(BlockFastHopper.name),
+				new ItemBlock(filteredHopper).setRegistryName(BlockFilteredHopper.name)
+		);
 	}
 
-	@SideOnly(Side.CLIENT)
 	public static void registerModels() {
-		sortingChest.registerModel();
-		blockExtender.registerModel();
-		fastHopper.registerModel();
-		filteredHopper.registerModel();
-//		buffer.registerModel();
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sortingChest), 0, new ModelResourceLocation(BlockSortingChest.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockExtender), 0, new ModelResourceLocation(BlockBlockExtender.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(fastHopper), 0, new ModelResourceLocation(BlockFastHopper.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(filteredHopper), 0, new ModelResourceLocation(BlockFilteredHopper.registryName, "inventory"));
+	}
+
+	public static void registerTileEntities() {
+		GameRegistry.registerTileEntity(TileSortingChest.class, BlockSortingChest.registryName.toString());
+		GameRegistry.registerTileEntity(TileBlockExtender.class, BlockBlockExtender.registryName.toString());
+		GameRegistry.registerTileEntity(TileFastHopper.class, BlockFastHopper.registryName.toString());
+		GameRegistry.registerTileEntity(TileFilteredHopper.class, BlockFilteredHopper.registryName.toString());
 	}
 
 }

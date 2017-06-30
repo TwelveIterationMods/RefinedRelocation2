@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "refinedrelocation:filtered_hopper"
+  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "refinedrelocation:fast_hopper"
+    },
+    {
+      "item": "minecraft:writable_book"
+    }
+  ]
+}

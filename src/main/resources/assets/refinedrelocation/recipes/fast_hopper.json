@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "refinedrelocation:fast_hopper"
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "RHR"
+  ],
+  "key": {
+    "R": {
+      "item": "#REDSTONE"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  }
+}

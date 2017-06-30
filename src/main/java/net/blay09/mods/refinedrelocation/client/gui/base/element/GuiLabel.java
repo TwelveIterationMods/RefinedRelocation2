@@ -14,8 +14,8 @@ public class GuiLabel extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawBackground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
 		parentScreen.getFontRenderer().drawString(text, getAbsoluteX(), getAbsoluteY(), textColor);
 	}
 

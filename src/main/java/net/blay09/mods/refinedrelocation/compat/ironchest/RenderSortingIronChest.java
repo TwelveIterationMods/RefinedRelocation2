@@ -156,7 +156,7 @@ public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
 				GlStateManager.translate(shiftX, shiftY, shiftZ);
 				GlStateManager.rotate(timeD, 0f, 1f, 0f);
 				GlStateManager.scale(blockScale, blockScale, blockScale);
-				entityItem.setEntityItemStack(item);
+				entityItem.setItem(item);
 
 				if (itemRenderer == null) {
 					itemRenderer = new RenderEntityItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()) {

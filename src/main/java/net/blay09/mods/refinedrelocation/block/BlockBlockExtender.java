@@ -1,14 +1,12 @@
 package net.blay09.mods.refinedrelocation.block;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,16 +16,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
 public class BlockBlockExtender extends BlockModTile {
 
+	public static final String name = "block_extender";
+	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
+
 	public BlockBlockExtender() {
-		super(Material.IRON, "block_extender");
+		super(Material.IRON);
+		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.METAL);
 		setHardness(3f);
 	}
@@ -53,12 +55,6 @@ public class BlockBlockExtender extends BlockModTile {
 			RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, pos, facing.getIndex()));
 		}
 		return true;
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean isFullyOpaque(IBlockState state) {
-		return false;
 	}
 
 	@Override

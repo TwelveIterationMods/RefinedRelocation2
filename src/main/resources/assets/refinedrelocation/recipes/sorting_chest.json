@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "refinedrelocation:sorting_chest"
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " B ",
+    "RCR",
+    " H "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:writable_book"
+    },
+    "R": {
+      "item": "#REDSTONE"
+    },
+    "C": {
+      "item": "#CHEST"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  }
+}

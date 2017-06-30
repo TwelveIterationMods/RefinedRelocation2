@@ -11,7 +11,6 @@ import java.util.List;
 
 public class GuiButtonPriority extends GuiTextButton {
 
-
 	private final Priority.Enum[] values;
 	private final ISortingInventory sortingInventory;
 	private int currentIndex;

@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "refinedrelocation:sorting_upgrade"
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " B ",
+    "RPR",
+    " H "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:writable_book"
+    },
+    "R": {
+      "item": "#REDSTONE"
+    },
+    "P": {
+      "item": "#PLANKS"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  }
+}

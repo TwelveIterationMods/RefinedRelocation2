@@ -14,23 +14,20 @@ public class HandlerContainer implements IMessageHandler<MessageContainer, IMess
 	@Override
 	@Nullable
 	public IMessage onMessage(final MessageContainer message, final MessageContext ctx) {
-		NetworkHandler.getThreadListener(ctx).addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				if(ctx.side == Side.CLIENT) {
-					Container container = NetworkHandler.getClientPlayerEntity().openContainer;
-					if (container instanceof IContainerNetworked) {
-						((IContainerNetworked) container).receivedMessageClient(message);
-					} else {
-						System.err.println("Got container message but open container is not networked: " + container);
-					}
+		NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> {
+			if(ctx.side == Side.CLIENT) {
+				Container container = NetworkHandler.getClientPlayerEntity().openContainer;
+				if (container instanceof IContainerNetworked) {
+					((IContainerNetworked) container).receivedMessageClient(message);
 				} else {
-					Container container = ctx.getServerHandler().player.openContainer;
-					if (container instanceof IContainerNetworked) {
-						((IContainerNetworked) container).receivedMessageServer(message);
-					} else {
-						System.err.println("Got container message but open container is not networked: " + container);
-					}
+					System.err.println("Got container message but open container is not networked: " + container);
+				}
+			} else {
+				Container container = ctx.getServerHandler().player.openContainer;
+				if (container instanceof IContainerNetworked) {
+					((IContainerNetworked) container).receivedMessageServer(message);
+				} else {
+					System.err.println("Got container message but open container is not networked: " + container);
 				}
 			}
 		});

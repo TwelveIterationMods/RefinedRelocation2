@@ -5,11 +5,8 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.model.TexturedQuad;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.BufferBuilder;
 
-@SideOnly(Side.CLIENT)
 public class ModelLidOverlay extends ModelBase {
 
 	public static class ModelQuad extends ModelBox {
@@ -38,7 +35,7 @@ public class ModelLidOverlay extends ModelBase {
 		}
 
 		@Override
-		public void render(VertexBuffer renderer, float scale) {
+		public void render(BufferBuilder renderer, float scale) {
 			actualQuad.draw(renderer, scale);
 		}
 	}

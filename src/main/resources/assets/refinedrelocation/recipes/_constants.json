@@ -1,0 +1,51 @@
+[
+  {
+    "name": "REDSTONE",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  {
+    "name": "CHEST",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "chestWood"
+    }
+  },
+  {
+    "name": "PLANKS",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "plankWood"
+    }
+  },
+  {
+    "name": "IRON_INGOT",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  },
+  {
+    "name": "GLASS_PANE",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "paneGlass"
+    }
+  },
+  {
+    "name": "GOLD_NUGGET",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetGold"
+    }
+  },
+  {
+    "name": "PAPER",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "paper"
+    }
+  }
+]

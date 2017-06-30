@@ -102,7 +102,7 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 	@Override
 	@OverridingMethodsMustInvokeSuper
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		rootNode.drawBackground(this, mouseX, mouseY);
+		rootNode.drawBackground(this, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 
 public abstract class BlockModTile extends BlockMod {
 
-	public BlockModTile(Material material, String blockName) {
-		super(material, blockName);
+	public BlockModTile(Material material) {
+		super(material);
 	}
 
 	@Override

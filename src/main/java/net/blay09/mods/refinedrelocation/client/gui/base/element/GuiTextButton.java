@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.client.gui.base.element;
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -29,8 +28,8 @@ public class GuiTextButton extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawBackground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
 		if (isVisible()) {
 			int buttonState = !enabled ? 0 : (parentScreen.getMouseElement() == this ? 2 : 1);
 			GuiUtils.drawContinuousTexturedBox(TEXTURE, getAbsoluteX(), getAbsoluteY(), 0, 46 + buttonState * 20, getWidth(), getHeight(), 200, 20, 2, 3, 2, 2, this.zLevel);

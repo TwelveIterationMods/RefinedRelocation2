@@ -297,8 +297,8 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawBackground(parentScreen, mouseX, mouseY);
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
 		if (visible) {
 			drawRect(getAbsoluteX() - 1, getAbsoluteY() - 1, getAbsoluteX() + getWidth() + 1, getAbsoluteY() + getHeight() + 1, 0xFFEEEEEE);
 			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0xFF000000);

@@ -13,14 +13,11 @@ public class HandlerLoginSyncList implements IMessageHandler<MessageLoginSyncLis
 	@Override
 	@Nullable
 	public IMessage onMessage(final MessageLoginSyncList message, MessageContext ctx) {
-		NetworkHandler.getThreadListener(ctx).addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				if(message.isCreativeTabs()) {
-					CreativeTabFilter.creativeTabs = message.getValues();
-				} else if(message.isMods()) {
-					ModFilter.setModList(message.getValues());
-				}
+		NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> {
+			if(message.isCreativeTabs()) {
+				CreativeTabFilter.creativeTabs = message.getValues();
+			} else if(message.isMods()) {
+				ModFilter.setModList(message.getValues());
 			}
 		});
 		return null;

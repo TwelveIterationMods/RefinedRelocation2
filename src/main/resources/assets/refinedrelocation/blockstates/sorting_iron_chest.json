@@ -11,56 +11,56 @@
         "textures": {
           "particle": "ironchest:blocks/iron_break",
           "overlay": "refinedrelocation:blocks/iron_chest_overlay",
-          "texture": "ironchest:model/iron_chest"
+          "texture": "ironchest:model/chest/iron_chest"
         }
       },
       "gold": {
         "textures": {
           "particle": "ironchest:blocks/gold_break",
           "overlay": "refinedrelocation:blocks/gold_chest_overlay",
-          "texture": "ironchest:model/gold_chest"
+          "texture": "ironchest:model/chest/gold_chest"
         }
       },
       "diamond": {
         "textures": {
           "particle": "ironchest:blocks/diamond_break",
           "overlay": "refinedrelocation:blocks/diamond_chest_overlay",
-          "texture": "ironchest:model/diamond_chest"
+          "texture": "ironchest:model/chest/diamond_chest"
         }
       },
       "copper": {
         "textures": {
           "particle": "ironchest:blocks/copper_break",
           "overlay": "refinedrelocation:blocks/copper_chest_overlay",
-          "texture": "ironchest:model/copper_chest"
+          "texture": "ironchest:model/chest/copper_chest"
         }
       },
       "silver": {
         "textures": {
           "particle": "ironchest:blocks/silver_break",
           "overlay": "refinedrelocation:blocks/silver_chest_overlay",
-          "texture": "ironchest:model/silver_chest"
+          "texture": "ironchest:model/chest/silver_chest"
         }
       },
       "crystal": {
         "textures": {
           "particle": "ironchest:blocks/crystal_break",
           "overlay": "refinedrelocation:blocks/crystal_chest_overlay",
-          "texture": "ironchest:model/crystal_chest"
+          "texture": "ironchest:model/chest/crystal_chest"
         }
       },
       "obsidian": {
         "textures": {
           "particle": "minecraft:blocks/obsidian",
           "overlay": "refinedrelocation:blocks/obsidian_chest_overlay",
-          "texture": "ironchest:model/obsidian_chest"
+          "texture": "ironchest:model/chest/obsidian_chest"
         }
       },
       "dirtchest9000": {
         "textures": {
           "particle": "minecraft:blocks/dirt",
           "overlay": "refinedrelocation:blocks/dirt_chest_overlay",
-          "texture": "ironchest:model/dirt_chest"
+          "texture": "ironchest:model/chest/dirt_chest"
         }
       },
       "wood": {

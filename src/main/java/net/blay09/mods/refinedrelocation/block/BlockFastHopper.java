@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -28,6 +29,9 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class BlockFastHopper extends BlockModTile {
+
+	public static final String name = "fast_hopper";
+	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
 	private static final PropertyBool ENABLED = PropertyBool.create("enabled");
 
@@ -49,20 +53,11 @@ public class BlockFastHopper extends BlockModTile {
 	private int rayTracePass;
 
 	public BlockFastHopper() {
-		this("fast_hopper");
-	}
-
-	public BlockFastHopper(String registryName) {
-		super(Material.IRON, registryName);
+		super(Material.IRON);
+		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.METAL);
 		setHardness(3f);
 		setResistance(8f);
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean isFullyOpaque(IBlockState state) {
-		return false;
 	}
 
 	@Override

@@ -1,12 +1,11 @@
 package net.blay09.mods.refinedrelocation.client;
 
 import net.blay09.mods.refinedrelocation.CommonProxy;
-import net.blay09.mods.refinedrelocation.ModBlocks;
-import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.client.util.TextureAtlas;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
+import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.client.Minecraft;
@@ -31,18 +30,13 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
-
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
 		MinecraftForge.EVENT_BUS.register(new FilterPreviewHandler());
 		MinecraftForge.EVENT_BUS.register(new OpenFilterButtonHandler());
 
-		for(RefinedAddon addon : inbuiltAddons) {
+		for(RefinedAddon addon : RefinedRelocation.getInbuiltAddons()) {
 			addon.preInitClient();
 		}
-
-		ModBlocks.registerModels();
-		ModItems.registerModels();
 	}
 
 	@Override
@@ -59,15 +53,13 @@ public class ClientProxy extends CommonProxy {
 				throw new RuntimeException(e);
 			}
 		}
-
-
 	}
 
 	@Override
 	public void openGui(EntityPlayer player, MessageOpenGui message) {
 		super.openGui(player, message);
 		if (player instanceof EntityPlayerSP) {
-			GuiScreen guiScreen = guiHandler.getGuiScreen(message.getId(), player, message);
+			GuiScreen guiScreen = GuiHandler.getGuiScreen(message.getId(), player, message);
 			if (guiScreen != null) {
 				Minecraft.getMinecraft().displayGuiScreen(guiScreen);
 				player.openContainer.windowId = message.getWindowId();

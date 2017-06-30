@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "refinedrelocation:output_filter"
+  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "#PLANKS"
+    },
+    {
+      "item": "#REDSTONE"
+    },
+    {
+      "item": "minecraft:writable_book"
+    }
+  ]
+}

@@ -25,7 +25,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,29 +48,29 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class IronChestAddon extends RefinedAddon {
+public class IronChestAddon implements RefinedAddon {
 
-	private static Block ironChest;
-	private static BlockSortingIronChest sortingIronChest;
+	@GameRegistry.ObjectHolder("ironchest:iron_chest")
+	private static final Block ironChest = Blocks.AIR;
+
+	@GameRegistry.ObjectHolder("refinedrelocation:sorting_iron_chest")
+	private static final Block sortingIronChest = Blocks.AIR;
 
 	@Override
 	public void preInit() {
-		ironChest = Block.REGISTRY.getObject(new ResourceLocation(Compat.IRONCHEST, "iron_chest"));
-		sortingIronChest = new BlockSortingIronChest(ironChest);
-		GameRegistry.register(sortingIronChest);
-		GameRegistry.register(new ItemBlockSortingIronChest(sortingIronChest));
-		GameRegistry.registerTileEntity(TileSortingIronChest.class, sortingIronChest.getRegistryNameString());
-		GameRegistry.registerTileEntity(TileSortingIronChest.Dirt.class, sortingIronChest.getRegistryNameString() + "_dirt");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Obsidian.class, sortingIronChest.getRegistryNameString() + "_obsidian");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Crystal.class, sortingIronChest.getRegistryNameString() + "_crystal");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Diamond.class, sortingIronChest.getRegistryNameString() + "_diamond");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Copper.class, sortingIronChest.getRegistryNameString() + "_copper");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Gold.class, sortingIronChest.getRegistryNameString() + "_gold");
-		GameRegistry.registerTileEntity(TileSortingIronChest.Silver.class, sortingIronChest.getRegistryNameString() + "_silver");
+		GameRegistry.registerTileEntity(TileSortingIronChest.class, BlockSortingIronChest.registryName.toString());
+		GameRegistry.registerTileEntity(TileSortingIronChest.Dirt.class, BlockSortingIronChest.registryName.toString() + "_dirt");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Obsidian.class, BlockSortingIronChest.registryName.toString() + "_obsidian");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Crystal.class, BlockSortingIronChest.registryName.toString() + "_crystal");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Diamond.class, BlockSortingIronChest.registryName.toString() + "_diamond");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Copper.class, BlockSortingIronChest.registryName.toString() + "_copper");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Gold.class, BlockSortingIronChest.registryName.toString() + "_gold");
+		GameRegistry.registerTileEntity(TileSortingIronChest.Silver.class, BlockSortingIronChest.registryName.toString() + "_silver");
 
 		final Object modInstance = Loader.instance().getIndexedModList().get(Compat.IRONCHEST).getMod();
 		final ITileGuiHandler tileGuiHandler = (player, tileEntity) -> {
@@ -90,24 +89,39 @@ public class IronChestAddon extends RefinedAddon {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void preInitClient() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
+	@Override
+	public void registerBlocks(IForgeRegistry<Block> registry) {
+		registry.registerAll(
+				new BlockSortingIronChest().setRegistryName(BlockSortingIronChest.registryName)
+		);
+	}
 
-		Item sortingIronChestItem = Item.getItemFromBlock(sortingIronChest);
-		ModelLoader.setCustomMeshDefinition(sortingIronChestItem, stack -> new ModelResourceLocation(sortingIronChest.getRegistryNameString(), "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
+	@Override
+	public void registerItems(IForgeRegistry<Item> registry) {
+		registry.registerAll(
+				new ItemBlockSortingIronChest(sortingIronChest)
+		);
+	}
+
+	@Override
+	public void registerModels() {
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(sortingIronChest), stack -> new ModelResourceLocation(BlockSortingIronChest.registryName, "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
 	}
 
 	@Override
 	public void init() {
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.IRON.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.IRON.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.GOLD.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.GOLD.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.DIAMOND.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.DIAMOND.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.COPPER.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.COPPER.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.SILVER.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.SILVER.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.CRYSTAL.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.CRYSTAL.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.OBSIDIAN.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.OBSIDIAN.ordinal()), 'H', Blocks.HOPPER);
-		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.DIRTCHEST9000.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.DIRTCHEST9000.ordinal()), 'H', Blocks.HOPPER);
+		((BlockSortingIronChest) sortingIronChest).setDelegateBlock(ironChest);
+
+		// TODO recipes
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.IRON.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.IRON.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.GOLD.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.GOLD.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.DIAMOND.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.DIAMOND.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.COPPER.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.COPPER.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.SILVER.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.SILVER.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.CRYSTAL.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.CRYSTAL.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.OBSIDIAN.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.OBSIDIAN.ordinal()), 'H', Blocks.HOPPER);
+//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.DIRTCHEST9000.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.DIRTCHEST9000.ordinal()), 'H', Blocks.HOPPER);
 	}
 
 	@SubscribeEvent
@@ -231,8 +245,8 @@ public class IronChestAddon extends RefinedAddon {
 			TileEntityIronChest tileIronChest = (TileEntityIronChest) guiContainer.inventorySlots.inventorySlots.get(0).inventory;
 			if (tileIronChest instanceof TileSortingIronChest) {
 				GuiButton button = RefinedRelocationAPI.createOpenFilterButton(guiContainer, tileIronChest, -1);
-				button.xPosition += 7;
-				button.yPosition += 3;
+				button.x += 7;
+				button.y += 3;
 				event.getButtonList().add(button);
 			}
 		}

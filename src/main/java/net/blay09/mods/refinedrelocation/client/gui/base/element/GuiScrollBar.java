@@ -84,7 +84,7 @@ public class GuiScrollBar extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
 		if (mouseClickY != -1) {
 			float pixelsPerFilter = (getHeight() - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
 			if (pixelsPerFilter != 0) {
@@ -103,7 +103,7 @@ public class GuiScrollBar extends GuiElement {
 
 		drawRect(getAbsoluteX(), barY, getAbsoluteX() + getWidth(), barY + barHeight, 0xFFAAAAAA);
 
-		super.drawBackground(parentScreen, mouseX, mouseY);
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
 	}
 
 	public void setCurrentOffset(int offset) {

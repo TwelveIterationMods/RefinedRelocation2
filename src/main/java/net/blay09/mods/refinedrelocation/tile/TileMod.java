@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
+import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -63,7 +63,7 @@ public class TileMod extends TileEntity {
 	public void dropItemHandlers() {
 		IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		if(itemHandler != null) {
-			ItemHandlerHelper2.dropItemHandlerItems(world, pos, itemHandler);
+			ItemUtils.dropItemHandlerItems(world, pos, itemHandler);
 		}
 	}
 
@@ -78,8 +78,8 @@ public class TileMod extends TileEntity {
 		}
 	}
 
-	@Nonnull
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TextComponentTranslation(getUnlocalizedName());
 	}

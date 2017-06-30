@@ -12,7 +12,6 @@ public interface IFilter extends ISimpleFilter, Comparable<IFilter> {
 	String getLangKey();
 	String getDescriptionLangKey();
 	boolean isFilterUsable(TileEntity tileEntity);
-	@SideOnly(Side.CLIENT)
 	@Nullable
 	IFilterIcon getFilterIcon();
 

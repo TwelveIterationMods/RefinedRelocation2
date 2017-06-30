@@ -19,10 +19,10 @@ public class GuiTextFieldWrapper extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawBackground(parentScreen, mouseX, mouseY);
-		textField.xPosition = getAbsoluteX();
-		textField.yPosition = getAbsoluteY();
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
+		textField.x = getAbsoluteX();
+		textField.y = getAbsoluteY();
 		textField.width = getWidth();
 		textField.height = getHeight();
 		textField.drawTextBox();

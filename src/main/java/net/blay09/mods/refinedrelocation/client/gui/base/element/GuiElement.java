@@ -126,9 +126,9 @@ public class GuiElement extends Gui {
 	}
 
 	@OverridingMethodsMustInvokeSuper
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
 		for(GuiElement child : children) {
-			child.drawBackground(parentScreen, mouseX, mouseY);
+			child.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
 		}
 	}
 

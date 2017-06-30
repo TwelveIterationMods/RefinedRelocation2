@@ -10,21 +10,25 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
-public class ItemSortingUpgrade extends ItemMod {
+public class ItemSortingUpgrade extends Item {
+
+	public static final String name = "sorting_upgrade";
+	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
 	public ItemSortingUpgrade() {
-		setRegistryName("sorting_upgrade");
-		setUnlocalizedName(getRegistryNameString());
+		setUnlocalizedName(registryName.toString());
 		setCreativeTab(RefinedRelocation.creativeTab);
 	}
 
@@ -55,7 +59,7 @@ public class ItemSortingUpgrade extends ItemMod {
 		return EnumActionResult.PASS;
 	}
 
-	public static boolean upgradeVanillaChest(EntityPlayer player, World world, BlockPos pos, IBlockState state) {
+	private static boolean upgradeVanillaChest(EntityPlayer player, World world, BlockPos pos, IBlockState state) {
 		TileEntityChest tileEntity = (TileEntityChest) world.getTileEntity(pos);
 		if(tileEntity == null) {
 			return false;

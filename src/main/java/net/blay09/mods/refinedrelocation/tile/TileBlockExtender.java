@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.util.ItemHandlerHelper2;
+import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileBlockExtender extends TileMod implements ITickable {
@@ -47,15 +46,13 @@ public class TileBlockExtender extends TileMod implements ITickable {
 			return baseHandler.getSlots();
 		}
 
-		@Nonnull
 		@Override
 		public ItemStack getStackInSlot(int slot) {
 			return baseHandler.getStackInSlot(slot);
 		}
 
-		@Nonnull
 		@Override
-		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if(hasInputFilter) {
 				if(stack.isEmpty() || !inputFilter.passes(tileEntity, stack)) {
 					return stack;
@@ -89,7 +86,6 @@ public class TileBlockExtender extends TileMod implements ITickable {
 			return baseHandler.insertItem(slot, stack, simulate);
 		}
 
-		@Nonnull
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			if(hasOutputFilter) {
@@ -107,9 +103,8 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	}
 
 	private final ItemStackHandler itemHandlerUpgrades = new ItemStackHandler(3) {
-		@Nonnull
 		@Override
-		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if(stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter) {
 				return stack;
 			}
@@ -292,7 +287,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	public void dropItemHandlers() {
 		super.dropItemHandlers();
 
-		ItemHandlerHelper2.dropItemHandlerItems(world, pos, itemHandlerUpgrades);
+		ItemUtils.dropItemHandlerItems(world, pos, itemHandlerUpgrades);
 	}
 
 	public int getStackLimiterLimit() {

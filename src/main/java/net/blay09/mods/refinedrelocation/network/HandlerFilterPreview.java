@@ -11,12 +11,7 @@ public class HandlerFilterPreview implements IMessageHandler<MessageFilterPrevie
 	@Override
 	@Nullable
 	public IMessage onMessage(final MessageFilterPreview message, MessageContext ctx) {
-		NetworkHandler.getThreadListener(ctx).addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				FilterPreviewHandler.setSlotStates(message.getSlotStates());
-			}
-		});
+		NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> FilterPreviewHandler.setSlotStates(message.getSlotStates()));
 		return null;
 	}
 }

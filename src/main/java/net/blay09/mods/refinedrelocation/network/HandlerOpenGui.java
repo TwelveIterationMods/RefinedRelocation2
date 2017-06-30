@@ -13,14 +13,11 @@ public class HandlerOpenGui implements IMessageHandler<MessageOpenGui, IMessage>
 	@Override
 	@Nullable
 	public IMessage onMessage(final MessageOpenGui message, final MessageContext ctx) {
-		NetworkHandler.getThreadListener(ctx).addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				if(ctx.side == Side.CLIENT) {
-					RefinedRelocation.proxy.openGui(NetworkHandler.getClientPlayerEntity(), message);
-				} else {
-					RefinedRelocation.proxy.openGui(ctx.getServerHandler().player, message);
-				}
+		NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> {
+			if(ctx.side == Side.CLIENT) {
+				RefinedRelocation.proxy.openGui(NetworkHandler.getClientPlayerEntity(), message);
+			} else {
+				RefinedRelocation.proxy.openGui(ctx.getServerHandler().player, message);
 			}
 		});
 		return null;

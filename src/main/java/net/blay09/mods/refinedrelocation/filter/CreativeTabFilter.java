@@ -17,13 +17,18 @@ public class CreativeTabFilter implements IChecklistFilter {
 
 	public static final String ID = RefinedRelocation.MOD_ID + ":creative_tab_filter";
 
+	// These are the Inventory, Search and Hotbar tabs that we don't care about
+	private static final int IGNORED_TABS = 3;
+
 	public static String[] creativeTabs = new String[0];
 
 	public static void gatherCreativeTabs() {
-		creativeTabs = new String[CreativeTabs.CREATIVE_TAB_ARRAY.length - 2];
+		creativeTabs = new String[CreativeTabs.CREATIVE_TAB_ARRAY.length - IGNORED_TABS];
 		int i = 0;
-		for(int j = 0; j < CreativeTabs.CREATIVE_TAB_ARRAY.length; j++) {
-			if(CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.INVENTORY || CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.SEARCH) {
+		for (int j = 0; j < CreativeTabs.CREATIVE_TAB_ARRAY.length; j++) {
+			if (CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.INVENTORY
+					|| CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.SEARCH
+					|| CreativeTabs.CREATIVE_TAB_ARRAY[j] == CreativeTabs.HOTBAR) {
 				continue;
 			}
 			creativeTabs[i] = CreativeTabs.CREATIVE_TAB_ARRAY[j].tabLabel;
@@ -45,32 +50,33 @@ public class CreativeTabFilter implements IChecklistFilter {
 
 	@Override
 	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
-		// We can't use getCreativeTabs because it calls a client-only getCreativeTab() function
-//		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
-//		for (CreativeTabs itemTab : itemTabs) {
-		CreativeTabs itemTab = itemStack.getItem().tabToDisplayOn;
-		if(itemTab == null) {
-			return false;
+		CreativeTabs[] itemTabs = itemStack.getItem().getCreativeTabs();
+		for (CreativeTabs itemTab : itemTabs) {
+			if (itemTab == null) {
+				continue;
+			}
+			int shiftedTabIndex = itemTab.tabIndex;
+			if (itemTab.tabIndex >= CreativeTabs.SEARCH.tabIndex) {
+				shiftedTabIndex--;
+			}
+			if (itemTab.tabIndex >= CreativeTabs.INVENTORY.tabIndex) {
+				shiftedTabIndex--;
+			}
+			if (itemTab.tabIndex >= CreativeTabs.HOTBAR.tabIndex) {
+				shiftedTabIndex--;
+			}
+			if (tabStates[shiftedTabIndex]) {
+				return true;
+			}
 		}
-		int shiftedTabIndex = itemTab.tabIndex;
-		if(itemTab.tabIndex >= CreativeTabs.SEARCH.tabIndex) {
-			shiftedTabIndex--;
-		}
-		if(itemTab.tabIndex >= CreativeTabs.INVENTORY.tabIndex) {
-			shiftedTabIndex--;
-		}
-		if (tabStates[shiftedTabIndex]) {
-			return true;
-		}
-//		}
 		return false;
 	}
 
 	@Override
 	public NBTBase serializeNBT() {
 		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < tabStates.length; i++) {
-			if(tabStates[i]) {
+		for (int i = 0; i < tabStates.length; i++) {
+			if (tabStates[i]) {
 				list.appendTag(new NBTTagString(creativeTabs[i]));
 			}
 		}
@@ -80,10 +86,10 @@ public class CreativeTabFilter implements IChecklistFilter {
 	@Override
 	public void deserializeNBT(NBTBase nbt) {
 		NBTTagList list = (NBTTagList) nbt;
-		for(int i = 0; i < list.tagCount(); i++) {
+		for (int i = 0; i < list.tagCount(); i++) {
 			String tabLabel = list.getStringTagAt(i);
-			for(int j = 0; j < creativeTabs.length; j++) {
-				if(creativeTabs[j].equals(tabLabel)) {
+			for (int j = 0; j < creativeTabs.length; j++) {
+				if (creativeTabs[j].equals(tabLabel)) {
 					tabStates[j] = true;
 				}
 			}

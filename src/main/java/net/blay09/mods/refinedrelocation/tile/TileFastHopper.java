@@ -97,10 +97,10 @@ public class TileFastHopper extends TileMod implements ITickable, INameable {
 	}
 
 	public boolean pullItem(EntityItem entityItem) {
-		ItemStack sourceStack = entityItem.getEntityItem();
+		ItemStack sourceStack = entityItem.getItem();
 		ItemStack restStack = ItemHandlerHelper.insertItem(itemHandler, sourceStack, false);
 		if(!restStack.isEmpty()) {
-			entityItem.setEntityItemStack(restStack);
+			entityItem.setItem(restStack);
 		} else {
 			entityItem.setDead();
 		}

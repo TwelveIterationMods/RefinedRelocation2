@@ -2,11 +2,9 @@ package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
-import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiBlockExtender;
 import net.blay09.mods.refinedrelocation.client.gui.GuiChecklistFilter;
@@ -41,7 +39,7 @@ public class GuiHandler {
 	public static final int GUI_BLOCK_EXTENDER_ROOT_FILTER = 6;
 
 	@Nullable
-	public Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
+	public static Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
 		TileEntity tileEntity = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:
@@ -76,7 +74,7 @@ public class GuiHandler {
 	}
 
 	@Nullable
-	private Container createFilterContainer(EntityPlayer player, TileEntity tileEntity, @Nullable IFilter filter) {
+	private static Container createFilterContainer(EntityPlayer player, TileEntity tileEntity, @Nullable IFilter filter) {
 		if(filter instanceof IConfigurableFilter) {
 			return ((IConfigurableFilter) filter).createContainer(player, tileEntity);
 		} else if(filter instanceof IChecklistFilter) {
@@ -87,7 +85,7 @@ public class GuiHandler {
 
 	@Nullable
 	@SideOnly(Side.CLIENT)
-	public GuiScreen getGuiScreen(int id, EntityPlayer player, MessageOpenGui message) {
+	public static GuiScreen getGuiScreen(int id, EntityPlayer player, MessageOpenGui message) {
 		TileEntity tileEntity = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		switch(id) {
 			case GUI_SORTING_CHEST:

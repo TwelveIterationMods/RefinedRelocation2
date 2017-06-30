@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageLoginSyncList implements IMessage {
 
-	public static final int TYPE_CREATIVETABS = 0;
+	public static final int TYPE_CREATIVE_TABS = 0;
 	public static final int TYPE_MODS = 1;
 
 	private int type;
@@ -39,7 +39,7 @@ public class MessageLoginSyncList implements IMessage {
 	}
 
 	public boolean isCreativeTabs() {
-		return type == TYPE_CREATIVETABS;
+		return type == TYPE_CREATIVE_TABS;
 	}
 
 	public boolean isMods() {

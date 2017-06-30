@@ -14,7 +14,7 @@ public class GuiButtonWrapper extends GuiElement {
 
 	public GuiButtonWrapper(GuiButton button) {
 		this.button = button;
-		setPosition(button.xPosition, button.yPosition);
+		setPosition(button.x, button.y);
 		setSize(button.width, button.height);
 	}
 
@@ -31,13 +31,13 @@ public class GuiButtonWrapper extends GuiElement {
 	}
 
 	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY) {
-		super.drawBackground(parentScreen, mouseX, mouseY);
-		button.xPosition = getAbsoluteX();
-		button.yPosition = getAbsoluteY();
+	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
+		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
+		button.x = getAbsoluteX();
+		button.y = getAbsoluteY();
 		button.width = getWidth();
 		button.height = getHeight();
-		button.drawButton(parentScreen.getMinecraft(), mouseX, mouseY);
+		button.drawButton(parentScreen.getMinecraft(), mouseX, mouseY, partialTicks);
 	}
 
 	public void actionPerformed() {

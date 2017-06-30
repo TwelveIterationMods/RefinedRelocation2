@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import cpw.mods.ironchest.common.blocks.chest.BlockIronChest;
 import cpw.mods.ironchest.common.blocks.chest.IronChestType;
+import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.block.BlockModTile;
 import net.minecraft.block.Block;
@@ -12,33 +13,42 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockSortingIronChest extends BlockModTile {
 
-	private final Block baseBlock;
+	public static final String name = "sorting_iron_chest";
+	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-	public BlockSortingIronChest(Block baseBlock) {
-		super(Material.IRON, "sorting_iron_chest");
-		this.baseBlock = baseBlock;
+	private Block delegateBlock;
+
+	public BlockSortingIronChest() {
+		super(Material.IRON);
+		setUnlocalizedName(registryName.toString());
 		setHardness(3f);
+	}
+
+	public void setDelegateBlock(Block delegateBlock) {
+		this.delegateBlock = delegateBlock;
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return baseBlock.getBoundingBox(state, source, pos);
+		return delegateBlock.getBoundingBox(state, source, pos);
 	}
 
 	@Override
@@ -67,7 +77,7 @@ public class BlockSortingIronChest extends BlockModTile {
 				RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
 			}
 		}
-		return baseBlock.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+		return delegateBlock.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
 	}
 
 	@Override
@@ -98,10 +108,10 @@ public class BlockSortingIronChest extends BlockModTile {
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
 		for (IronChestType type : IronChestType.VALUES) {
 			if (type.isValidForCreativeMode()) {
-				list.add(new ItemStack(item, 1, type.ordinal()));
+				items.add(new ItemStack(this, 1, type.ordinal()));
 			}
 		}
 	}
@@ -124,49 +134,49 @@ public class BlockSortingIronChest extends BlockModTile {
 
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState blockState) {
-		baseBlock.onBlockAdded(world, pos, blockState);
+		delegateBlock.onBlockAdded(world, pos, blockState);
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entityLiving, ItemStack itemStack) {
-		baseBlock.onBlockPlacedBy(world, pos, state, entityLiving, itemStack);
+		delegateBlock.onBlockPlacedBy(world, pos, state, entityLiving, itemStack);
 	}
 
 	@Override
 	public int damageDropped(IBlockState state) {
-		return baseBlock.damageDropped(state);
+		return delegateBlock.damageDropped(state);
 	}
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		baseBlock.breakBlock(world, pos, state);
+		delegateBlock.breakBlock(world, pos, state);
 	}
 
 	@Override
-	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
-		return baseBlock.getExplosionResistance(world, pos, exploder, explosion);
+	public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
+		return delegateBlock.getExplosionResistance(world, pos, exploder, explosion);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public boolean hasComparatorInputOverride(IBlockState state) {
-		return baseBlock.hasComparatorInputOverride(state);
+		return delegateBlock.hasComparatorInputOverride(state);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
-		return baseBlock.getComparatorInputOverride(state, world, pos);
+		return delegateBlock.getComparatorInputOverride(state, world, pos);
 	}
 
 	@Override
 	public EnumFacing[] getValidRotations(World worldObj, BlockPos pos) {
-		return baseBlock.getValidRotations(worldObj, pos);
+		return delegateBlock.getValidRotations(worldObj, pos);
 	}
 
 	@Override
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-		return baseBlock.rotateBlock(world, pos, axis);
+		return delegateBlock.rotateBlock(world, pos, axis);
 	}
 
 }

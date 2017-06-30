@@ -10,7 +10,7 @@ public class LoginSyncHandler {
 
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-		NetworkHandler.wrapper.sendTo(new MessageLoginSyncList(MessageLoginSyncList.TYPE_CREATIVETABS, CreativeTabFilter.creativeTabs), (EntityPlayerMP) event.player);
+		NetworkHandler.wrapper.sendTo(new MessageLoginSyncList(MessageLoginSyncList.TYPE_CREATIVE_TABS, CreativeTabFilter.creativeTabs), (EntityPlayerMP) event.player);
 		NetworkHandler.wrapper.sendTo(new MessageLoginSyncList(MessageLoginSyncList.TYPE_MODS, ModFilter.modIds), (EntityPlayerMP) event.player);
 	}
 
