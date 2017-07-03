@@ -104,6 +104,7 @@ public class IronChestAddon implements RefinedAddon {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
 		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(sortingIronChest), stack -> new ModelResourceLocation(BlockSortingIronChest.registryName, "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
