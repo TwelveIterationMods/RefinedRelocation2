@@ -66,7 +66,7 @@ public class TileSortingChest extends TileMod implements ITickable {
 		super.readFromNBT(compound);
 		itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-		rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
+		rootFilter.deserializeNBT(compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND));
 	}
 
 	@Override

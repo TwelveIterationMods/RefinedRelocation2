@@ -23,7 +23,7 @@ public class CapabilityRootFilter {
 
 			@Override
 			public void readNBT(Capability<IRootFilter> capability, IRootFilter instance, EnumFacing side, NBTBase nbt) {
-				instance.deserializeNBT((NBTTagCompound) nbt);
+				instance.deserializeNBT(nbt);
 			}
 		}, RootFilter.class);
 	}

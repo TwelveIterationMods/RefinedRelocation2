@@ -5,9 +5,9 @@ import net.blay09.mods.refinedrelocation.api.TileOrMultipart;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -70,25 +70,23 @@ public class RootFilter implements IRootFilter {
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT() {
-		NBTTagCompound tagCompound = new NBTTagCompound();
+	public NBTBase serializeNBT() {
 		NBTTagList list = new NBTTagList();
 		for(SubFilterWrapper filter : filterList) {
-			NBTTagCompound filterCompound = new NBTTagCompound();
-			filter.writeNBT(filterCompound);
-			list.appendTag(filterCompound);
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			filter.writeNBT(tagCompound);
+			list.appendTag(tagCompound);
 		}
-		tagCompound.setTag("FilterList", list);
-		return tagCompound;
+		return list;
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagCompound tagCompound) {
+	public void deserializeNBT(NBTBase nbt) {
 		filterList.clear();
-		NBTTagList list = tagCompound.getTagList("FilterList", Constants.NBT.TAG_COMPOUND);
+		NBTTagList list = (NBTTagList) nbt;
 		for(int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound filterCompound = list.getCompoundTagAt(i);
-			SubFilterWrapper filter = SubFilterWrapper.loadFromNBT(filterCompound);
+			NBTTagCompound tagCompound = list.getCompoundTagAt(i);
+			SubFilterWrapper filter = SubFilterWrapper.loadFromNBT(tagCompound);
 			if(filter != null) {
 				filterList.add(filter);
 			}

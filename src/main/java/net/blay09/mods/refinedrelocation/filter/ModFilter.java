@@ -10,11 +10,9 @@ import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -109,21 +107,19 @@ public class ModFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT() {
-		NBTTagCompound tagCompound = new NBTTagCompound();
+	public NBTBase serializeNBT() {
 		NBTTagList list = new NBTTagList();
 		for(int i = 0; i < modStates.length; i++) {
 			if(modStates[i]) {
 				list.appendTag(new NBTTagString(modIds[i]));
 			}
 		}
-		tagCompound.setTag("Mods", list);
-		return tagCompound;
+		return list;
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagCompound tagCompound) {
-		NBTTagList list = tagCompound.getTagList("Mods", Constants.NBT.TAG_STRING);
+	public void deserializeNBT(NBTBase nbt) {
+		NBTTagList list = (NBTTagList) nbt;
 		for(int i = 0; i < list.tagCount(); i++) {
 			String modId = list.getStringTagAt(i);
 			for(int j = 0; j < modIds.length; j++) {

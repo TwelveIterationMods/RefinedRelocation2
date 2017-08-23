@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,15 +83,16 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT() {
-		NBTTagCompound tagCompound = new NBTTagCompound();
-		tagCompound.setString("Patterns", value);
-		return tagCompound;
+	public NBTBase serializeNBT() {
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setString("Patterns", value);
+		return compound;
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagCompound tagCompound) {
-		value = tagCompound.getString("Patterns");
+	public void deserializeNBT(NBTBase nbt) {
+		NBTTagCompound compound = (NBTTagCompound) nbt;
+		value = compound.getString("Patterns");
 	}
 
 	@Override
