@@ -17,6 +17,7 @@ public interface TileOrMultipart {
 	World getWorld();
 	BlockPos getPos();
 	boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing);
+	@Nullable
 	<T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing);
 	void markDirty();
 	String getDisplayName();

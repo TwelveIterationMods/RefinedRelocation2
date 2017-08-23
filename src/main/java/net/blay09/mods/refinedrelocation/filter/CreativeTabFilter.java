@@ -7,9 +7,10 @@ import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -67,19 +68,21 @@ public class CreativeTabFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public NBTBase serializeNBT() {
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound tagCompound = new NBTTagCompound();
 		NBTTagList list = new NBTTagList();
 		for(int i = 0; i < tabStates.length; i++) {
 			if(tabStates[i]) {
 				list.appendTag(new NBTTagString(creativeTabs[i]));
 			}
 		}
-		return list;
+		tagCompound.setTag("Tabs", list);
+		return tagCompound;
 	}
 
 	@Override
-	public void deserializeNBT(NBTBase nbt) {
-		NBTTagList list = (NBTTagList) nbt;
+	public void deserializeNBT(NBTTagCompound tagCompound) {
+		NBTTagList list = tagCompound.getTagList("Tabs", Constants.NBT.TAG_STRING);
 		for(int i = 0; i < list.tagCount(); i++) {
 			String tabLabel = list.getStringTagAt(i);
 			for(int j = 0; j < creativeTabs.length; j++) {

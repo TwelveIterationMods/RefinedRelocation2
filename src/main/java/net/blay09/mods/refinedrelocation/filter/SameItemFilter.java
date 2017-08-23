@@ -6,7 +6,6 @@ import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,18 +53,17 @@ public class SameItemFilter implements IFilter {
 	}
 
 	@Override
-	public NBTBase serializeNBT() {
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setBoolean("IgnoreMetadata", ignoreMetadata);
-		compound.setBoolean("IgnoreNBT", ignoreNBT);
-		return compound;
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		tagCompound.setBoolean("IgnoreMetadata", ignoreMetadata);
+		tagCompound.setBoolean("IgnoreNBT", ignoreNBT);
+		return tagCompound;
 	}
 
 	@Override
-	public void deserializeNBT(NBTBase nbt) {
-		NBTTagCompound compound = (NBTTagCompound) nbt;
-		ignoreMetadata = compound.getBoolean("IgnoreMetadata");
-		ignoreNBT = compound.getBoolean("IgnoreNBT");
+	public void deserializeNBT(NBTTagCompound tagCompound) {
+		ignoreMetadata = tagCompound.getBoolean("IgnoreMetadata");
+		ignoreNBT = tagCompound.getBoolean("IgnoreNBT");
 	}
 
 

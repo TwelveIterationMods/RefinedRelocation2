@@ -10,10 +10,11 @@ import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -177,19 +178,21 @@ public class PresetFilter implements IChecklistFilter {
 	}
 
 	@Override
-	public NBTBase serializeNBT() {
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound tagCompound = new NBTTagCompound();
 		NBTTagList list = new NBTTagList();
 		for(int i = 0; i < presetStates.length; i++) {
 			if(presetStates[i]) {
 				list.appendTag(new NBTTagString(presetList.get(i).getId()));
 			}
 		}
-		return list;
+		tagCompound.setTag("Presets", list);
+		return tagCompound;
 	}
 
 	@Override
-	public void deserializeNBT(NBTBase nbt) {
-		NBTTagList list = (NBTTagList) nbt;
+	public void deserializeNBT(NBTTagCompound tagCompound) {
+		NBTTagList list = tagCompound.getTagList("Presets", Constants.NBT.TAG_STRING);
 		for(int i = 0; i < list.tagCount(); i++) {
 			Preset preset = presetMap.get(list.getStringTagAt(i));
 			if(preset != null) {

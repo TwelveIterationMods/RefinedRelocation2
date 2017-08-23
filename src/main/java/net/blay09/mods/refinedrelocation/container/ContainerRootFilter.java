@@ -95,9 +95,7 @@ public class ContainerRootFilter extends ContainerMod {
 	}
 
 	private void syncFilterList() {
-		NBTTagCompound tagCompound = new NBTTagCompound();
-		tagCompound.setTag(KEY_FILTER_LIST, rootFilter.serializeNBT());
-		RefinedRelocationAPI.syncContainerValue(KEY_FILTER_LIST, tagCompound, listeners);
+		RefinedRelocationAPI.syncContainerValue(KEY_FILTER_LIST, rootFilter.serializeNBT(), listeners);
 		lastFilterCount = rootFilter.getFilterCount();
 		for(int i = 0; i < lastBlacklist.length; i++) {
 			lastBlacklist[i] = rootFilter.isBlacklist(i);
@@ -200,7 +198,7 @@ public class ContainerRootFilter extends ContainerMod {
 	@Override
 	public void receivedMessageClient(IContainerMessage message) {
 		if(message.getKey().equals(KEY_FILTER_LIST)) {
-			rootFilter.deserializeNBT(message.getNBTValue().getTagList(KEY_FILTER_LIST, Constants.NBT.TAG_COMPOUND));
+			rootFilter.deserializeNBT(message.getNBTValue());
 		} else if(message.getKey().equals(KEY_PRIORITY)) {
 			getSortingInventory().setPriority(message.getIntValue());
 		} else if(message.getKey().equals(KEY_BLACKLIST)) {

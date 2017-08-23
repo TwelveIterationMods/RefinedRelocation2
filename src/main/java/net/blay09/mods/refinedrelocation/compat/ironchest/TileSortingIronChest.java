@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.compat.ironchest;
 
 import cpw.mods.ironchest.IronChestType;
 import cpw.mods.ironchest.TileEntityIronChest;
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
@@ -63,7 +62,7 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-		rootFilter.deserializeNBT(compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND));
+		rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
 	}
 
 	@Override
