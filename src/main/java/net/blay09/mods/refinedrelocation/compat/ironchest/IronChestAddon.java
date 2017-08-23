@@ -24,7 +24,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,12 +53,6 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class IronChestAddon implements RefinedAddon {
-
-	@GameRegistry.ObjectHolder("ironchest:iron_chest")
-	private static final Block ironChest = Blocks.AIR;
-
-	@GameRegistry.ObjectHolder("refinedrelocation:sorting_iron_chest")
-	private static final Block sortingIronChest = Blocks.AIR;
 
 	@Override
 	public void preInit() {
@@ -99,20 +92,20 @@ public class IronChestAddon implements RefinedAddon {
 	@Override
 	public void registerItems(IForgeRegistry<Item> registry) {
 		registry.registerAll(
-				new ItemBlockSortingIronChest(sortingIronChest)
+				new ItemBlockSortingIronChest(Compat.sortingIronChest)
 		);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(sortingIronChest));
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(sortingIronChest), stack -> new ModelResourceLocation(BlockSortingIronChest.registryName, "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(Compat.sortingIronChest));
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(Compat.sortingIronChest), stack -> new ModelResourceLocation(BlockSortingIronChest.registryName, "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
 	}
 
 	@Override
 	public void init() {
-		((BlockSortingIronChest) sortingIronChest).setDelegateBlock(ironChest);
+		((BlockSortingIronChest) Compat.sortingIronChest).setDelegateBlock(Compat.ironChest);
 
 		// TODO recipes
 //		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.IRON.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.IRON.ordinal()), 'H', Blocks.HOPPER);
@@ -140,7 +133,7 @@ public class IronChestAddon implements RefinedAddon {
 				return;
 			}
 		} else {
-			if (state != sortingIronChest.getStateFromMeta(IronChestType.valueOf(type.source.getName().toUpperCase()).ordinal())) {
+			if (state != Compat.sortingIronChest.getStateFromMeta(IronChestType.valueOf(type.source.getName().toUpperCase()).ordinal())) {
 				return;
 			}
 		}
@@ -175,7 +168,7 @@ public class IronChestAddon implements RefinedAddon {
 		world.removeTileEntity(pos);
 		world.setBlockToAir(pos);
 
-		IBlockState newState = sortingIronChest.getDefaultState().withProperty(BlockIronChest.VARIANT_PROP, type.target);
+		IBlockState newState = Compat.sortingIronChest.getDefaultState().withProperty(BlockIronChest.VARIANT_PROP, type.target);
 		world.setBlockState(pos, newState, 3);
 
 		TileEntity newTileEntity = world.getTileEntity(pos);
@@ -220,7 +213,7 @@ public class IronChestAddon implements RefinedAddon {
 			NBTTagCompound storedData = tileIronChest.writeToNBT(new NBTTagCompound());
 			tileIronChest.clear();
 			IBlockState oldState = world.getBlockState(pos);
-			world.setBlockState(pos, sortingIronChest.getDefaultState()
+			world.setBlockState(pos, Compat.sortingIronChest.getDefaultState()
 					.withProperty(BlockIronChest.VARIANT_PROP, oldState.getValue(BlockIronChest.VARIANT_PROP)));
 			TileSortingIronChest sortingIronChest = (TileSortingIronChest) world.getTileEntity(pos);
 			if (sortingIronChest == null) {
