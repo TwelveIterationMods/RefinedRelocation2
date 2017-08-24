@@ -6,9 +6,15 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -130,6 +136,34 @@ public class PresetFilter implements IChecklistFilter {
 		}
 	};
 
+	public static final Preset REPAIRABLE = new Preset("repairable") {
+		@Override
+		public boolean passes(ItemStack itemStack, String[] oreNames) {
+			return itemStack.getItem().isRepairable();
+		}
+	};
+
+	public static final Preset WEAPONS = new Preset("weapons") {
+		@Override
+		public boolean passes(ItemStack itemStack, String[] oreNames) {
+			return itemStack.getItem() instanceof ItemSword || itemStack.getItem() instanceof ItemBow;
+		}
+	};
+
+	public static final Preset TOOLS = new Preset("tools") {
+		@Override
+		public boolean passes(ItemStack itemStack, String[] oreNames) {
+			return itemStack.getItem() == Items.CARROT_ON_A_STICK || itemStack.getItem() == Items.FLINT_AND_STEEL || itemStack.getItem() instanceof ItemTool || itemStack.getItem() instanceof ItemFishingRod || itemStack.getItem() instanceof ItemShears;
+		}
+	};
+
+	public static final Preset ENCHANTED = new Preset("enchanted") {
+		@Override
+		public boolean passes(ItemStack itemStack, String[] oreNames) {
+			return itemStack.isItemEnchanted();
+		}
+	};
+
 	static {
 		registerPreset(BLOCKS);
 		registerPreset(ORES);
@@ -140,6 +174,10 @@ public class PresetFilter implements IChecklistFilter {
 		registerPreset(DYES);
 		registerPreset(UNSTACKABLE);
 		registerPreset(FUEL_ITEMS);
+		registerPreset(REPAIRABLE);
+		registerPreset(WEAPONS);
+		registerPreset(TOOLS);
+		registerPreset(ENCHANTED);
 
 		presetList.addAll(presetMap.values());
 	}

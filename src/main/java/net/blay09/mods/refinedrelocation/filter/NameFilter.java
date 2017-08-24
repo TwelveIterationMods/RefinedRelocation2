@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,7 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 
 	private String value = "";
 	private Pattern[] cachedPatterns;
+	private boolean[] isOreDict;
 
 	@Override
 	public String getIdentifier() {
@@ -43,11 +45,35 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 
 	@Override
 	public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
-		String itemName = itemStack.getDisplayName();
+		String itemName = null;
+		String[] oreNames = null;
 		Pattern[] patterns = getPatterns();
-		for(Pattern pattern : patterns) {
-			if(pattern != null && pattern.matcher(itemName).matches()) {
-				return true;
+		for (int i = 0; i < patterns.length; i++) {
+			Pattern pattern = patterns[i];
+			if (pattern != null) {
+				if(isOreDict[i]) {
+					if(oreNames == null) {
+						int[] oreIDs = OreDictionary.getOreIDs(itemStack);
+						oreNames = new String[oreIDs.length];
+						for(int j = 0; j < oreIDs.length; j++) {
+							oreNames[j] = OreDictionary.getOreName(oreIDs[j]);
+						}
+					}
+					Matcher matcher = pattern.matcher("");
+					for(String oreName : oreNames) {
+						matcher.reset(oreName);
+						if (matcher.matches()) {
+							return true;
+						}
+					}
+				} else {
+					if(itemName == null) {
+						itemName = itemStack.getDisplayName();
+					}
+					if (pattern.matcher(itemName).matches()) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -66,7 +92,12 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 		if(cachedPatterns == null) {
 			String[] patternsSplit = value.split("[\n,]");
 			cachedPatterns = new Pattern[patternsSplit.length];
+			isOreDict = new boolean[patternsSplit.length];
 			for(int i = 0; i < patternsSplit.length; i++) {
+				if(patternsSplit[i].startsWith("ore:") && patternsSplit[i].length() > 4) {
+					patternsSplit[i] = patternsSplit[i].substring(4);
+					isOreDict[i] = true;
+				}
 				WILDCARD_MATCHER.reset(patternsSplit[i]);
 				StringBuffer sb = new StringBuffer();
 				while(WILDCARD_MATCHER.find()) {

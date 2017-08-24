@@ -81,6 +81,10 @@ filter.refinedrelocation:preset_filter.option_food=All Food
 filter.refinedrelocation:preset_filter.option_fuel=All Fuel
 filter.refinedrelocation:preset_filter.option_blocks=All Blocks
 filter.refinedrelocation:preset_filter.option_unstackable=All Unstackable
+filter.refinedrelocation:preset_filter.option_repairable=All Repairable
+filter.refinedrelocation:preset_filter.option_weapons=All Weapons
+filter.refinedrelocation:preset_filter.option_tools=All Tools
+filter.refinedrelocation:preset_filter.option_enchanted=All Enchanted
 
 tooltip.refinedrelocation:stack_limiter=Limit: %d
 
