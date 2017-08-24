@@ -8,10 +8,6 @@ public interface RefinedAddon {
 	default void preInit() {
 	}
 
-	@Deprecated
-	default void preInitClient() {
-	}
-
 	default void init() {
 	}
 

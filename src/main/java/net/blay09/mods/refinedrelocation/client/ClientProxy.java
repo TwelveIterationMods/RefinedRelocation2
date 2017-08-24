@@ -33,10 +33,6 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new BlockHighlightHandler());
 		MinecraftForge.EVENT_BUS.register(new FilterPreviewHandler());
 		MinecraftForge.EVENT_BUS.register(new OpenFilterButtonHandler());
-
-		for(RefinedAddon addon : RefinedRelocation.getInbuiltAddons()) {
-			addon.preInitClient();
-		}
 	}
 
 	@Override

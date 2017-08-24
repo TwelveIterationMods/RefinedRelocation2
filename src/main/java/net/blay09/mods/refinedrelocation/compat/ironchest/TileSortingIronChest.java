@@ -54,6 +54,12 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	}
 
 	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		sortingInventory.onInvalidate(this);
+	}
+
+	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setTag("SortingInventory", sortingInventory.serializeNBT());

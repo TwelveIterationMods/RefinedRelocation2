@@ -38,6 +38,8 @@ public class SortingGridMember implements ISortingGridMember {
 	@Override
 	public final void onInvalidate(TileEntity tileEntity) {
 		onInvalidate();
+		isInvalid = true;
+		RefinedRelocationAPI.removeFromSortingGrid(this);
 	}
 
 	@Override
@@ -54,12 +56,6 @@ public class SortingGridMember implements ISortingGridMember {
 		RefinedRelocationAPI.addToSortingGrid(this);
 	}
 
-	protected void onInvalidate() {
-		isInvalid = true;
-		RefinedRelocationAPI.removeFromSortingGrid(this);
-	}
-
-	protected void onUpdate() {
-
-	}
+	protected void onInvalidate() {}
+	protected void onUpdate() {}
 }

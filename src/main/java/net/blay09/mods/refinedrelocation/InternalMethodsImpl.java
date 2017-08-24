@@ -112,22 +112,18 @@ public class InternalMethodsImpl implements InternalMethods {
 				}
 			}
 		}
-		if(passingList.isEmpty()) {
-			// No passing inventories found, just leave it there.
-			sortingInventory.getItemHandler().insertItem(fromSlotIndex, restStack, false);
-			return;
-		}
-		ISortingInventory targetInventory = getBestTargetInventory(passingList, null);
-		if(targetInventory == sortingInventory) {
-			// Already in the correct inventory, nothing to do here
-			sortingInventory.getItemHandler().insertItem(fromSlotIndex, restStack, false);
-			return;
-		}
-		while(!restStack.isEmpty() && !passingList.isEmpty() && targetInventory != null) {
-			// Insert stack into passing inventories
-			restStack = ItemHandlerHelper.insertItemStacked(targetInventory.getItemHandler(), restStack, false);
-			if(!restStack.isEmpty()) {
-				targetInventory = getBestTargetInventory(passingList, targetInventory);
+		// No point trying if there's no matching inventories.
+		if(!passingList.isEmpty()) {
+			ISortingInventory targetInventory = getBestTargetInventory(passingList, null);
+			if (targetInventory != sortingInventory) {
+				// Only move the item if it's not already in the correct inventory
+				while (!restStack.isEmpty() && !passingList.isEmpty() && targetInventory != null) {
+					// Insert stack into passing inventories
+					restStack = ItemHandlerHelper.insertItemStacked(targetInventory.getItemHandler(), restStack, false);
+					if (!restStack.isEmpty()) {
+						targetInventory = getBestTargetInventory(passingList, targetInventory);
+					}
+				}
 			}
 		}
 		if(!restStack.isEmpty()) {
