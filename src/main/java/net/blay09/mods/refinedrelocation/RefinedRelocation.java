@@ -44,7 +44,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation", dependencies = "after:ironchest")
+@Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation", dependencies = "after:ironchest", acceptedMinecraftVersions = "[1.12]")
 public class RefinedRelocation {
 
 	public static final String MOD_ID = "refinedrelocation";
