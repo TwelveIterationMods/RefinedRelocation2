@@ -29,6 +29,7 @@ public class SortingGrid implements ISortingGrid {
 
 	@Override
 	public void removeMember(ISortingGridMember member) {
+		member.setSortingGrid(null);
 		memberList.remove(member);
 	}
 
