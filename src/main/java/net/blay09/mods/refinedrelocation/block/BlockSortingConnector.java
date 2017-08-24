@@ -122,15 +122,6 @@ public class BlockSortingConnector extends BlockContainer {
 		return 0;
 	}
 
-//	@Override
-//	public void onBlockAdded(World world, BlockPos pos, IBlockState state) { // TODO remove
-//		super.onBlockAdded(world, pos, state);
-//		IBlockState newState = getConnectionState(world, pos, state);
-//		if(newState != state) {
-//			world.setBlockState(pos, newState, 3);
-//		}
-//	}
-
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		super.breakBlock(world, pos, state);

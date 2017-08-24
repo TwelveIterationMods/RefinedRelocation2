@@ -106,16 +106,6 @@ public class IronChestAddon implements RefinedAddon {
 	@Override
 	public void init() {
 		((BlockSortingIronChest) Compat.sortingIronChest).setDelegateBlock(Compat.ironChest);
-
-		// TODO recipes
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.IRON.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.IRON.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.GOLD.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.GOLD.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.DIAMOND.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.DIAMOND.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.COPPER.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.COPPER.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.SILVER.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.SILVER.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.CRYSTAL.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.CRYSTAL.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.OBSIDIAN.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.OBSIDIAN.ordinal()), 'H', Blocks.HOPPER);
-//		GameRegistry.addShapedRecipe(new ItemStack(sortingIronChest, 1, IronChestType.DIRTCHEST9000.ordinal()), " B ", "RCR", " H ", 'B', Items.WRITABLE_BOOK, 'R', Items.REDSTONE, 'C', new ItemStack(ironChest, 1, IronChestType.DIRTCHEST9000.ordinal()), 'H', Blocks.HOPPER);
 	}
 
 	@SubscribeEvent

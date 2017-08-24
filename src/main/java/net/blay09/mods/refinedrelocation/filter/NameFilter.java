@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class NameFilter implements IFilter, IConfigurableFilter {
 
@@ -45,7 +46,7 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 		String itemName = itemStack.getDisplayName();
 		Pattern[] patterns = getPatterns();
 		for(Pattern pattern : patterns) {
-			if(pattern.matcher(itemName).matches()) {
+			if(pattern != null && pattern.matcher(itemName).matches()) {
 				return true;
 			}
 		}
@@ -72,11 +73,15 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 					if(WILDCARD_MATCHER.group(1) != null) {
 						WILDCARD_MATCHER.appendReplacement(sb, ".*");
 					} else {
-						WILDCARD_MATCHER.appendReplacement(sb, Matcher.quoteReplacement(WILDCARD_MATCHER.group(0)));
+						WILDCARD_MATCHER.appendReplacement(sb, "\\\\Q" + WILDCARD_MATCHER.group(0) + "\\\\E");
 					}
 				}
 				WILDCARD_MATCHER.appendTail(sb);
-				cachedPatterns[i] = Pattern.compile(sb.toString());
+				try {
+					cachedPatterns[i] = Pattern.compile(sb.toString());
+				} catch (PatternSyntaxException e) {
+					RefinedRelocation.logger.error("Caught an exception in the pattern compilation for the Name Filter. This should never happen, please report: {} => {}", patternsSplit[i], sb.toString());
+				}
 			}
 		}
 		return cachedPatterns;

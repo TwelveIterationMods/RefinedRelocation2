@@ -61,6 +61,13 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 	}
 
 	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		mc.getTextureManager().bindTexture(TEXTURE);

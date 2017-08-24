@@ -34,9 +34,7 @@ public class BlockSortingChest extends BlockModTile {
 
 	private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375);
 
-	public BlockSortingChest() { // TODO opposite facing on place
-		// TODO guifilter tooltip is below JEI
-		// TODO and we don't have fooking tooltips at all
+	public BlockSortingChest() {
 		super(Material.WOOD);
 		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.WOOD);
@@ -103,7 +101,7 @@ public class BlockSortingChest extends BlockModTile {
 	@Override
 	@SuppressWarnings("deprecation")
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
+		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override

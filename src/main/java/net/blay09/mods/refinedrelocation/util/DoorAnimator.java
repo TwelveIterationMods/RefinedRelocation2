@@ -17,7 +17,7 @@ public class DoorAnimator {
 	private int ticksSinceSync;
 	private SoundEvent soundEventOpen;
 	private SoundEvent soundEventClose;
-	private float openRadius = 2.5f;
+	private float openRadius = (float) Math.PI;
 	private boolean isForcedOpen;
 
 	public DoorAnimator(TileEntity tileEntity, int eventNumPlayers, int eventForcedOpen) {
