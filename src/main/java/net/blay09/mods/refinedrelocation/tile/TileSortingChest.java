@@ -46,6 +46,12 @@ public class TileSortingChest extends TileMod implements ITickable, INameable {
 	}
 
 	@Override
+	public void onLoad() {
+		super.onLoad();
+		sortingInventory.onLoad(this);
+	}
+
+	@Override
 	public void update() {
 		sortingInventory.onUpdate(this);
 		doorAnimator.update();

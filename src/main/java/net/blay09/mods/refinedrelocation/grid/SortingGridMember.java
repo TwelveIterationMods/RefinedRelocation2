@@ -13,8 +13,6 @@ public class SortingGridMember implements ISortingGridMember {
 	private boolean isInvalid;
 	private ISortingGrid sortingGrid;
 
-	private boolean isFirstTick = true;
-
 	@Override
 	public TileEntity getTileEntity() {
 		return tileEntity;
@@ -44,18 +42,17 @@ public class SortingGridMember implements ISortingGridMember {
 
 	@Override
 	public final void onUpdate(TileEntity tileEntity) {
-		if(isFirstTick) {
-			this.tileEntity = tileEntity;
-			onFirstTick();
-			isFirstTick = false;
-		}
 		onUpdate();
 	}
 
-	protected void onFirstTick() {
+	@Override
+	public final void onLoad(TileEntity tileEntity) {
+		this.tileEntity = tileEntity;
 		RefinedRelocationAPI.addToSortingGrid(this);
+		onLoad();
 	}
 
+	protected void onLoad() {}
 	protected void onInvalidate() {}
 	protected void onUpdate() {}
 }

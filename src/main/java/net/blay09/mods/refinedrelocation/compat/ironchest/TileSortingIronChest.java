@@ -42,6 +42,12 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
 	}
 
 	@Override
+	public void onLoad() {
+		super.onLoad();
+		sortingInventory.onLoad(this);
+	}
+
+	@Override
 	public void update() {
 		super.update();
 		sortingInventory.onUpdate(this);

@@ -3,6 +3,7 @@ tile.refinedrelocation:block_extender.name=Block Extender
 tile.refinedrelocation:fast_hopper.name=Fast Hopper
 tile.refinedrelocation:filtered_hopper.name=Filtered Hopper
 tile.refinedrelocation:buffer.name=Buffer
+tile.refinedrelocation:sorting_connector.name=Sorting Connector
 
 item.refinedrelocation:sorting_upgrade.name=Sorting Upgrade
 item.refinedrelocation:stack_limiter.name=Stack Limiter

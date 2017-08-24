@@ -31,6 +31,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -58,14 +59,17 @@ public class InternalMethodsImpl implements InternalMethods {
 		World world = member.getTileEntity().getWorld();
 		BlockPos pos = member.getTileEntity().getPos();
 		for (EnumFacing facing : EnumFacing.VALUES) {
-			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
-			if (tileEntity != null) {
-				ISortingGridMember otherMember = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite());
-				if (otherMember != null && otherMember.getSortingGrid() != null) {
-					if (sortingGrid != null) {
-						((SortingGrid) sortingGrid).mergeWith(otherMember.getSortingGrid());
-					} else {
-						sortingGrid = otherMember.getSortingGrid();
+			BlockPos facingPos = pos.offset(facing);
+			if(world.isBlockLoaded(facingPos)) {
+				TileEntity tileEntity = world.getChunkFromBlockCoords(facingPos).getTileEntity(facingPos, Chunk.EnumCreateEntityType.CHECK);
+				if (tileEntity != null) {
+					ISortingGridMember otherMember = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite());
+					if (otherMember != null && otherMember.getSortingGrid() != null) {
+						if (sortingGrid != null) {
+							((SortingGrid) sortingGrid).mergeWith(otherMember.getSortingGrid());
+						} else {
+							sortingGrid = otherMember.getSortingGrid();
+						}
 					}
 				}
 			}

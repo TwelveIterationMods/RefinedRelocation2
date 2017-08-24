@@ -4,8 +4,7 @@
     "textures": {
       "all": "refinedrelocation:blocks/sorting_connector",
       "particle": "refinedrelocation:blocks/sorting_connector"
-    },
-    "uvlock": false
+    }
   },
   "variants": {
     "normal": [
@@ -16,23 +15,7 @@
     ],
     "inventory": [
       {
-        "model": "refinedrelocation:sorting_connector_item",
-        "transform": {
-          "firstperson": {
-            "scale": 1.75
-          },
-          "thirdperson": {
-            "translation": [
-              0,
-              0.05,
-              -0.05
-            ],
-            "scale": 1.01
-          },
-          "gui": {
-            "scale": 2
-          }
-        }
+        "model": "refinedrelocation:sorting_connector_item"
       }
     ],
     "down": {
@@ -144,6 +127,16 @@
             "x": 90,
             "y": 90
           }
+        }
+      }
+    },
+    "corner": {
+      "true": {
+
+      },
+      "false": {
+        "textures": {
+          "all": "refinedrelocation:blocks/sorting_connector_line"
         }
       }
     }

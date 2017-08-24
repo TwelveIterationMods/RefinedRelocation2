@@ -41,8 +41,8 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 	}
 
 	@Override
-	protected void onFirstTick() {
-		super.onFirstTick();
+	protected void onLoad() {
+		super.onLoad();
 		itemHandler = getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		filter = getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
 	}

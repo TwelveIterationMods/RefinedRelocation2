@@ -34,7 +34,9 @@ public class BlockSortingChest extends BlockModTile {
 
 	private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375);
 
-	public BlockSortingChest() {
+	public BlockSortingChest() { // TODO opposite facing on place
+		// TODO guifilter tooltip is below JEI
+		// TODO and we don't have fooking tooltips at all
 		super(Material.WOOD);
 		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.WOOD);
