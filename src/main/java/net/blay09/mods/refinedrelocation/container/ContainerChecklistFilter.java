@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -63,6 +64,32 @@ public class ContainerChecklistFilter extends ContainerMod implements IContainer
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
 		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 		RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
+		return itemStack;
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+		ItemStack itemStack = ItemStack.EMPTY;
+		Slot slot = inventorySlots.get(index);
+		if (slot != null && slot.getHasStack()) {
+			ItemStack slotStack = slot.getStack();
+			itemStack = slotStack.copy();
+
+			if (index < 27) {
+				if (!mergeItemStack(slotStack, 27, inventorySlots.size(), true)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!mergeItemStack(slotStack, 0, 27, false)) {
+				return ItemStack.EMPTY;
+			}
+
+			if (slotStack.isEmpty()) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
+				slot.onSlotChanged();
+			}
+		}
+
 		return itemStack;
 	}
 
