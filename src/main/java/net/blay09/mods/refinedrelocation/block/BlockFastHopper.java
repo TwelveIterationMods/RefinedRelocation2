@@ -1,15 +1,16 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import com.google.common.base.Predicate;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
-import net.blay09.mods.refinedrelocation.tile.TileMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,6 +29,14 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class BlockFastHopper extends BlockModTile {
+
+	public static final PropertyDirection FACING = PropertyDirection.create("facing", new Predicate<EnumFacing>()
+	{
+		public boolean apply(@Nullable EnumFacing facing)
+		{
+			return facing != EnumFacing.UP;
+		}
+	});
 
 	private static final PropertyBool ENABLED = PropertyBool.create("enabled");
 
@@ -87,7 +96,7 @@ public class BlockFastHopper extends BlockModTile {
 	@SuppressWarnings("deprecation")
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		if(rayTracePass == 3) {
-			return BOUNDING_BOX_FACING[state.getValue(DIRECTION).ordinal()];
+			return BOUNDING_BOX_FACING[state.getValue(FACING).ordinal()];
 		}
 		return BOUNDING_BOX[rayTracePass];
 	}
@@ -98,7 +107,7 @@ public class BlockFastHopper extends BlockModTile {
 		if (opposite == EnumFacing.UP) {
 			opposite = EnumFacing.DOWN;
 		}
-		return getDefaultState().withProperty(DIRECTION, opposite).withProperty(ENABLED, true);
+		return getDefaultState().withProperty(FACING, opposite).withProperty(ENABLED, true);
 	}
 
 
@@ -111,18 +120,18 @@ public class BlockFastHopper extends BlockModTile {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, DIRECTION, ENABLED);
+		return new BlockStateContainer(this, FACING, ENABLED);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(DIRECTION, EnumFacing.getFront(meta & 7)).withProperty(ENABLED, (meta & 8) != 8);
+		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7)).withProperty(ENABLED, (meta & 8) != 8);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		int meta = (state.getValue(DIRECTION)).getIndex();
+		int meta = (state.getValue(FACING)).getIndex();
 		if (!state.getValue(ENABLED)) {
 			meta |= 8;
 		}
@@ -133,6 +142,20 @@ public class BlockFastHopper extends BlockModTile {
 	@SuppressWarnings("deprecation")
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return true;
+	}
+
+	@Nullable
+	@Override
+	public EnumFacing[] getValidRotations(World world, BlockPos pos)
+	{
+		EnumFacing[] result = {
+			EnumFacing.NORTH,
+			EnumFacing.EAST,
+			EnumFacing.SOUTH,
+			EnumFacing.WEST,
+			EnumFacing.DOWN,
+		};
+		return result;
 	}
 
 	@Nullable
