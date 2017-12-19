@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.block.BlockMod;
+import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,7 +38,7 @@ public class TileFastHopper extends TileMod implements ITickable, INameable {
 		if (world != null && !world.isRemote) {
 			cooldown--;
 			if (cooldown <= 0) {
-				EnumFacing facing = world.getBlockState(getPos()).getValue(BlockMod.DIRECTION);
+				EnumFacing facing = world.getBlockState(getPos()).getValue( BlockFastHopper.FACING );
 				EnumFacing opposite = facing.getOpposite();
 				TileEntity facingTile = world.getTileEntity(pos.offset(facing));
 				IItemHandler targetItemHandler = facingTile != null ? facingTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, opposite) : null;
