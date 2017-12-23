@@ -12,9 +12,9 @@ item.refinedrelocation:output_filter.name=Outputfilter
 
 container.refinedrelocation:root_filter=Filter bearbeiten
 container.refinedrelocation:root_filter_with_name=%s (Filter)
-container.refinedrelocation:sorting_chest=Sortiertruhe
+container.refinedrelocation:sorting_chest=Sortierende Truhe
 container.refinedrelocation:root_filter=Filter bearbeiten
-container.refinedrelocation:name_filter=Filter benennen
+container.refinedrelocation:name_filter=Namensfilter
 container.refinedrelocation:add_filter=Filterart auswählen
 container.refinedrelocation:fast_hopper=Schneller Trichter
 container.refinedrelocation:filtered_hopper=Gefilterter Trichter
