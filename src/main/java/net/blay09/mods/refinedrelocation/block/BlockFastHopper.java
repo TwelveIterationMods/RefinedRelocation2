@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,8 +28,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class BlockFastHopper extends BlockModTile {
+
+	public static final PropertyDirection FACING = PropertyDirection.create("facing", facing -> facing != EnumFacing.UP);
 
 	public static final String name = "fast_hopper";
 	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
@@ -81,8 +85,8 @@ public class BlockFastHopper extends BlockModTile {
 	@Override
 	@SuppressWarnings("deprecation")
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if(rayTracePass == 3) {
-			return BOUNDING_BOX_FACING[state.getValue(DIRECTION).ordinal()];
+		if (rayTracePass == 3) {
+			return BOUNDING_BOX_FACING[state.getValue(FACING).ordinal()];
 		}
 		return BOUNDING_BOX[rayTracePass];
 	}
@@ -93,9 +97,8 @@ public class BlockFastHopper extends BlockModTile {
 		if (opposite == EnumFacing.UP) {
 			opposite = EnumFacing.DOWN;
 		}
-		return getDefaultState().withProperty(DIRECTION, opposite).withProperty(ENABLED, true);
+		return getDefaultState().withProperty(FACING, opposite).withProperty(ENABLED, true);
 	}
-
 
 
 	@Nullable
@@ -106,22 +109,34 @@ public class BlockFastHopper extends BlockModTile {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, DIRECTION, ENABLED);
+		return new BlockStateContainer(this, FACING, ENABLED);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(DIRECTION, EnumFacing.getFront(meta & 7)).withProperty(ENABLED, (meta & 8) != 8);
+		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7)).withProperty(ENABLED, (meta & 8) != 8);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		int meta = (state.getValue(DIRECTION)).getIndex();
+		int meta = (state.getValue(FACING)).getIndex();
 		if (!state.getValue(ENABLED)) {
 			meta |= 8;
 		}
 		return meta;
+	}
+
+	@Nullable
+	@Override
+	public EnumFacing[] getValidRotations(World world, BlockPos pos) {
+		return new EnumFacing[]{
+				EnumFacing.NORTH,
+				EnumFacing.EAST,
+				EnumFacing.SOUTH,
+				EnumFacing.WEST,
+				EnumFacing.DOWN,
+		};
 	}
 
 	@Override
@@ -163,11 +178,11 @@ public class BlockFastHopper extends BlockModTile {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			ItemStack heldItem = player.getHeldItem(hand);
-			if(tryNameBlock(player, heldItem, world, pos)) {
+			if (tryNameBlock(player, heldItem, world, pos)) {
 				return true;
 			}
 
-			if(player.isSneaking()) {
+			if (player.isSneaking()) {
 				TileEntity tileEntity = world.getTileEntity(pos);
 				if (tileEntity != null) {
 					RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
