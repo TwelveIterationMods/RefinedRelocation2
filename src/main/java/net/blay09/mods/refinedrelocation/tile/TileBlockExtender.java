@@ -37,6 +37,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 			if (itemHandler == null) {
 				return false;
 			}
+
 			baseHandler = itemHandler;
 			return true;
 		}
@@ -53,11 +54,18 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if(hasInputFilter) {
-				if(stack.isEmpty() || !inputFilter.passes(tileEntity, stack)) {
+			if (hasSlotLock) {
+				if (stack.isEmpty() || getStackInSlot(slot).isEmpty()) {
 					return stack;
 				}
 			}
+
+			if (hasInputFilter) {
+				if (stack.isEmpty() || !inputFilter.passes(tileEntity, stack)) {
+					return stack;
+				}
+			}
+
 			if (hasStackLimiter) {
 				int space = stackLimiterLimit - getStackInSlot(slot).getCount();
 				if (space <= 0) {
@@ -70,7 +78,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 					int initialRest = stack.getCount() - amount;
 					if (initialRest > 0) {
 						ItemStack otherRestStack = ItemHandlerHelper.copyStackWithSize(stack, initialRest);
-						if(restStack.isEmpty()) {
+						if (restStack.isEmpty()) {
 							return otherRestStack;
 						}
 						if (ItemHandlerHelper.canItemStacksStack(stack, restStack)) {
@@ -83,16 +91,18 @@ public class TileBlockExtender extends TileMod implements ITickable {
 					return restStack;
 				}
 			}
+
 			return baseHandler.insertItem(slot, stack, simulate);
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if(hasOutputFilter) {
-				if(!outputFilter.passes(tileEntity, getStackInSlot(slot))) {
+			if (hasOutputFilter) {
+				if (!outputFilter.passes(tileEntity, getStackInSlot(slot))) {
 					return ItemStack.EMPTY;
 				}
 			}
+
 			return baseHandler.extractItem(slot, amount, simulate);
 		}
 
@@ -105,14 +115,16 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	private final ItemStackHandler itemHandlerUpgrades = new ItemStackHandler(3) {
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if(stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter) {
+			if (stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter && stack.getItem() != ModItems.slotLock) { // TODO this is getting messy
 				return stack;
 			}
-			for(int i = 0; i < getSlots(); i++) {
-				if(getStackInSlot(i).getItem() == stack.getItem()) {
+
+			for (int i = 0; i < getSlots(); i++) {
+				if (getStackInSlot(i).getItem() == stack.getItem()) {
 					return stack;
 				}
 			}
+
 			return super.insertItem(slot, stack, simulate);
 		}
 
@@ -129,6 +141,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	private int stackLimiterLimit = 64;
 
 	private boolean hasStackLimiter;
+	private boolean hasSlotLock;
 	private boolean hasInputFilter;
 	private boolean hasOutputFilter;
 	private TileEntity cachedConnectedTile;
@@ -154,10 +167,10 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	@Override
 	protected void onFirstTick() {
 		cachedConnectedTile = world.getTileEntity(pos.offset(getFacing()));
-		if(cachedConnectedTile instanceof TileBlockExtender) {
+		if (cachedConnectedTile instanceof TileBlockExtender) {
 			cachedConnectedTile = null; // Disallow connecting block extenders to each other
 		}
-		for(int i = 0; i < sideMappings.length; i++) {
+		for (int i = 0; i < sideMappings.length; i++) {
 			cachedFacingToFacingMappings[RelativeSide.fromIndex(i).toFacing(getFacing()).ordinal()] = sideMappings[i];
 		}
 		updateUpgrades();
@@ -253,7 +266,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
 	}
 
 	private boolean requiresItemHandlerWrapping() {
-		return hasStackLimiter;
+		return hasStackLimiter || hasSlotLock || hasInputFilter || hasOutputFilter;
 	}
 
 	@Override
@@ -267,16 +280,19 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
 	private void updateUpgrades() {
 		hasStackLimiter = false;
+		hasSlotLock = false;
 		hasInputFilter = false;
 		hasOutputFilter = false;
 		for (int i = 0; i < itemHandlerUpgrades.getSlots(); i++) {
 			ItemStack itemStack = itemHandlerUpgrades.getStackInSlot(i);
 			if (!itemStack.isEmpty()) {
-				if(itemStack.getItem() == ModItems.stackLimiter) {
+				if (itemStack.getItem() == ModItems.stackLimiter) {
 					hasStackLimiter = true;
-				} else if(itemStack.getItem() == ModItems.inputFilter) {
+				} else if(itemStack.getItem() == ModItems.slotLock) {
+					hasSlotLock = true;
+				} else if (itemStack.getItem() == ModItems.inputFilter) {
 					hasInputFilter = true;
-				} else if(itemStack.getItem() == ModItems.outputFilter) {
+				} else if (itemStack.getItem() == ModItems.outputFilter) {
 					hasOutputFilter = true;
 				}
 			}

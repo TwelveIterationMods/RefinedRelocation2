@@ -4,6 +4,8 @@ import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiButtonWrapper;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonBlockExtenderFilter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonStackLimiter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiSideButton;
@@ -11,6 +13,7 @@ import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,8 +31,10 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 	private final GuiButtonStackLimiter btnStackLimiter;
 	private final GuiButtonBlockExtenderFilter btnInputFilter;
 	private final GuiButtonBlockExtenderFilter btnOutputFilter;
+	private final GuiTextButton btnSlotLock;
 
 	private int stackLimiterIdx;
+	private int slotLockIdx;
 	private int inputFilterIdx;
 	private int outputFilterIdx;
 
@@ -77,6 +82,11 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		btnOutputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity, true);
 		btnOutputFilter.setVisible(false);
 		rootNode.addChild(btnOutputFilter);
+
+		btnSlotLock = new GuiTextButton(0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock"));
+		btnSlotLock.setVisible(false);
+		btnSlotLock.setEnabled(false);
+		rootNode.addChild(btnSlotLock);
 	}
 
 	@Override
@@ -84,6 +94,7 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		super.updateScreen();
 
 		stackLimiterIdx = -1;
+		slotLockIdx = -1;
 		inputFilterIdx = -1;
 		outputFilterIdx = -1;
 		for(int i = 0; i < 3; i++) {
@@ -91,6 +102,8 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 			if(!itemStack.isEmpty()) {
 				if(itemStack.getItem() == ModItems.stackLimiter) {
 					stackLimiterIdx = i;
+				} else if(itemStack.getItem() == ModItems.slotLock) {
+					slotLockIdx = i;
 				} else if(itemStack.getItem() == ModItems.inputFilter) {
 					inputFilterIdx = i;
 				} else if(itemStack.getItem() == ModItems.outputFilter) {
@@ -101,6 +114,8 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		}
 		btnStackLimiter.setVisible(stackLimiterIdx != -1);
 		btnStackLimiter.setPosition(152 - btnStackLimiter.getWidth() - 3, 22 + stackLimiterIdx * 18);
+		btnSlotLock.setVisible(slotLockIdx != -1);
+		btnSlotLock.setPosition(152 - btnSlotLock.getWidth() - 3, 22 + slotLockIdx * 18);
 		btnInputFilter.setVisible(inputFilterIdx != -1);
 		btnInputFilter.setPosition(152 - btnInputFilter.getWidth() - 3, 22 + inputFilterIdx * 18);
 		btnOutputFilter.setVisible(outputFilterIdx != -1);
@@ -136,6 +151,8 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 			int conflictSlot = -1;
 			if(mouseStack.getItem() == ModItems.stackLimiter && stackLimiterIdx != -1) {
 				conflictSlot = stackLimiterIdx;
+			} else if(mouseStack.getItem() == ModItems.slotLock && slotLockIdx != -1) {
+				conflictSlot = slotLockIdx;
 			} else if(mouseStack.getItem() == ModItems.inputFilter && inputFilterIdx != -1) {
 				conflictSlot = inputFilterIdx;
 			} else if(mouseStack.getItem() == ModItems.outputFilter && outputFilterIdx != -1) {

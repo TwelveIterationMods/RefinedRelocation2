@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.item.ItemInputFilter;
 import net.blay09.mods.refinedrelocation.item.ItemOutputFilter;
+import net.blay09.mods.refinedrelocation.item.ItemSlotLock;
 import net.blay09.mods.refinedrelocation.item.ItemSortingUpgrade;
 import net.blay09.mods.refinedrelocation.item.ItemStackLimiter;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -26,12 +27,16 @@ public class ModItems {
 	@GameRegistry.ObjectHolder(ItemOutputFilter.name)
 	public static final Item outputFilter = Items.AIR;
 
+	@GameRegistry.ObjectHolder(ItemSlotLock.name)
+	public static final Item slotLock = Items.AIR;
+
 	public static void register(IForgeRegistry<Item> registry) {
 		registry.registerAll(
 				new ItemSortingUpgrade().setRegistryName(ItemSortingUpgrade.name),
 				new ItemStackLimiter().setRegistryName(ItemStackLimiter.name),
 				new ItemInputFilter().setRegistryName(ItemInputFilter.name),
-				new ItemOutputFilter().setRegistryName(ItemOutputFilter.name)
+				new ItemOutputFilter().setRegistryName(ItemOutputFilter.name),
+				new ItemSlotLock().setRegistryName(ItemSlotLock.name)
 		);
 	}
 
@@ -40,6 +45,7 @@ public class ModItems {
 		ModelLoader.setCustomModelResourceLocation(stackLimiter, 0, new ModelResourceLocation(ItemStackLimiter.registryName, "inventory"));
 		ModelLoader.setCustomModelResourceLocation(inputFilter, 0, new ModelResourceLocation(ItemInputFilter.registryName, "inventory"));
 		ModelLoader.setCustomModelResourceLocation(outputFilter, 0, new ModelResourceLocation(ItemOutputFilter.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(slotLock, 0, new ModelResourceLocation(ItemSlotLock.registryName, "inventory"));
 	}
 
 }

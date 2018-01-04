@@ -42,6 +42,13 @@
     }
   },
   {
+    "name": "IRON_NUGGET",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  },
+  {
     "name": "PAPER",
     "ingredient": {
       "type": "forge:ore_dict",

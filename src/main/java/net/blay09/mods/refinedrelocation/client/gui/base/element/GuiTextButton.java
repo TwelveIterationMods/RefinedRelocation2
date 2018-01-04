@@ -22,8 +22,10 @@ public class GuiTextButton extends GuiElement {
 
 	@Override
 	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1f));
-		actionPerformed(mouseButton);
+		if (isEnabled()) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1f));
+			actionPerformed(mouseButton);
+		}
 		return true;
 	}
 
