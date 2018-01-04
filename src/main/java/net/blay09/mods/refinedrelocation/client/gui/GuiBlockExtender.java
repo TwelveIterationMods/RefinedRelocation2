@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -22,9 +23,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.List;
+
 public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID,"textures/gui/block_extender.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/block_extender.png");
 	private static final int UPDATE_INTERVAL = 20;
 
 	private final TileBlockExtender tileEntity;
@@ -49,13 +52,13 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		RelativeSide centerFace = RelativeSide.fromFacing(tileEntity.getFacing(), clickedFace);
 		RelativeSide topFace = RelativeSide.TOP;
 		RelativeSide leftFace;
-		if(clickedFace.getAxis() == EnumFacing.Axis.Y) {
+		if (clickedFace.getAxis() == EnumFacing.Axis.Y) {
 			centerFace = RelativeSide.FRONT;
 			topFace = RelativeSide.TOP;
 			leftFace = RelativeSide.LEFT;
-		} else if(tileEntity.getFacing().getAxis() == EnumFacing.Axis.Y) {
+		} else if (tileEntity.getFacing().getAxis() == EnumFacing.Axis.Y) {
 			leftFace = clickedFace.getAxis() == EnumFacing.Axis.Z ? centerFace.rotateX() : centerFace.rotateX().getOpposite();
-			if(tileEntity.getFacing().getAxisDirection() == EnumFacing.AxisDirection.POSITIVE) {
+			if (tileEntity.getFacing().getAxisDirection() == EnumFacing.AxisDirection.POSITIVE) {
 				leftFace = leftFace.getOpposite();
 				topFace = RelativeSide.FRONT;
 			} else {
@@ -83,7 +86,13 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		btnOutputFilter.setVisible(false);
 		rootNode.addChild(btnOutputFilter);
 
-		btnSlotLock = new GuiTextButton(0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock"));
+		btnSlotLock = new GuiTextButton(0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock")) {
+			@Override
+			public void addTooltip(List<String> list) {
+				super.addTooltip(list);
+				list.add(I18n.format("tooltip.refinedrelocation:slot_lock"));
+			}
+		};
 		btnSlotLock.setVisible(false);
 		btnSlotLock.setEnabled(false);
 		rootNode.addChild(btnSlotLock);
@@ -97,16 +106,16 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		slotLockIdx = -1;
 		inputFilterIdx = -1;
 		outputFilterIdx = -1;
-		for(int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			ItemStack itemStack = container.getUpgradeSlot(i).getStack();
-			if(!itemStack.isEmpty()) {
-				if(itemStack.getItem() == ModItems.stackLimiter) {
+			if (!itemStack.isEmpty()) {
+				if (itemStack.getItem() == ModItems.stackLimiter) {
 					stackLimiterIdx = i;
-				} else if(itemStack.getItem() == ModItems.slotLock) {
+				} else if (itemStack.getItem() == ModItems.slotLock) {
 					slotLockIdx = i;
-				} else if(itemStack.getItem() == ModItems.inputFilter) {
+				} else if (itemStack.getItem() == ModItems.inputFilter) {
 					inputFilterIdx = i;
-				} else if(itemStack.getItem() == ModItems.outputFilter) {
+				} else if (itemStack.getItem() == ModItems.outputFilter) {
 					outputFilterIdx = i;
 				}
 			}
@@ -122,8 +131,8 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 		btnOutputFilter.setPosition(152 - btnOutputFilter.getWidth() - 3, 22 + outputFilterIdx * 18);
 
 		ticksSinceUpdate++;
-		if(ticksSinceUpdate >= UPDATE_INTERVAL) {
-			if(lastSentStackLimit != tileEntity.getStackLimiterLimit()) {
+		if (ticksSinceUpdate >= UPDATE_INTERVAL) {
+			if (lastSentStackLimit != tileEntity.getStackLimiterLimit()) {
 				RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_STACK_LIMITER, tileEntity.getStackLimiterLimit());
 				lastSentStackLimit = tileEntity.getStackLimiterLimit();
 			}
@@ -147,18 +156,18 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 
 		// Render upgrade conflicts
 		ItemStack mouseStack = mc.player.inventory.getItemStack();
-		if(!mouseStack.isEmpty()) {
+		if (!mouseStack.isEmpty()) {
 			int conflictSlot = -1;
-			if(mouseStack.getItem() == ModItems.stackLimiter && stackLimiterIdx != -1) {
+			if (mouseStack.getItem() == ModItems.stackLimiter && stackLimiterIdx != -1) {
 				conflictSlot = stackLimiterIdx;
-			} else if(mouseStack.getItem() == ModItems.slotLock && slotLockIdx != -1) {
+			} else if (mouseStack.getItem() == ModItems.slotLock && slotLockIdx != -1) {
 				conflictSlot = slotLockIdx;
-			} else if(mouseStack.getItem() == ModItems.inputFilter && inputFilterIdx != -1) {
+			} else if (mouseStack.getItem() == ModItems.inputFilter && inputFilterIdx != -1) {
 				conflictSlot = inputFilterIdx;
-			} else if(mouseStack.getItem() == ModItems.outputFilter && outputFilterIdx != -1) {
+			} else if (mouseStack.getItem() == ModItems.outputFilter && outputFilterIdx != -1) {
 				conflictSlot = outputFilterIdx;
 			}
-			if(conflictSlot != -1) {
+			if (conflictSlot != -1) {
 				Slot slot = container.getUpgradeSlot(conflictSlot);
 				Gui.drawRect(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
 			}

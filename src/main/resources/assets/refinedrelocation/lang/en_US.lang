@@ -90,6 +90,7 @@ filter.refinedrelocation:preset_filter.option_enchanted=All Enchanted
 
 tooltip.refinedrelocation:stack_limiter=Limit: %d
 tooltip.refinedrelocation:slot_lock=Items will not take up new slots.
+tooltip.refinedrelocation:block_extender_module=Block Extender Module
 
 # Iron Chest Support
 
