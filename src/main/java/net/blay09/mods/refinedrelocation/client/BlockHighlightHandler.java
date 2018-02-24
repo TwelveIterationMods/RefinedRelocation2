@@ -21,7 +21,7 @@ public class BlockHighlightHandler {
 		}
 		if(event.getTarget() != null && event.getTarget().typeOfHit == RayTraceResult.Type.BLOCK) {
 			TileEntity tileEntity = event.getPlayer().world.getTileEntity(event.getTarget().getBlockPos());
-			if(tileEntity != null) {
+			if(tileEntity != null && tileEntity.hasCapability(Capabilities.SORTING_GRID_MEMBER, event.getTarget().sideHit)) {
 				ISortingGridMember sortingMember = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, event.getTarget().sideHit);
 				if(sortingMember != null) {
 					ISortingGrid sortingGrid = sortingMember.getSortingGrid();
