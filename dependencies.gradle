@@ -1,6 +1,6 @@
 dependencies {
-    deobfCompile "mezz.jei:jei_1.11.2:4.2.4.226"
-    deobfCompile "mcp.mobius.waila:Hwyla:1.8.9-B22_1.11"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe:1.1x-1.4.1-51"
-    deobfCompile "cpw.mods:ironchest:1.11.2-7.0.21.806"
+    deobfCompile "jei:jei_1.11.2:4.2.4.226"
+    deobfCompile "hwyla:Hwyla:1.8.22:B37_1.11"
+    deobfCompile "the-one-probe:theoneprobe:1.1x:1.4.19"
+    deobfCompile "iron-chests:ironchest:1.11.2:7.0.25.815"
 }
