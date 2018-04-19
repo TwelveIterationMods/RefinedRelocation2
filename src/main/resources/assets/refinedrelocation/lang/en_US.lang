@@ -66,6 +66,9 @@ filter.refinedrelocation:name_filter.description=Text-based item name filter
 filter.refinedrelocation:same_item_filter=Item Match Filter
 filter.refinedrelocation:same_item_filter.description=Lets items that already exist\nin this inventory pass
 
+filter.refinedrelocation:same_mod_filter=Mod Match Filter
+filter.refinedrelocation:same_mod_filter.description=Lets items whose mod items already\nexist in this inventory pass
+
 filter.refinedrelocation:creative_tab_filter=Creative Tab Filter
 filter.refinedrelocation:creative_tab_filter.description=Checklist based on the\ncreative tabs
 

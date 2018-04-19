@@ -10,11 +10,7 @@ import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.compat.Compat;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
-import net.blay09.mods.refinedrelocation.filter.CreativeTabFilter;
-import net.blay09.mods.refinedrelocation.filter.ModFilter;
-import net.blay09.mods.refinedrelocation.filter.NameFilter;
-import net.blay09.mods.refinedrelocation.filter.PresetFilter;
-import net.blay09.mods.refinedrelocation.filter.SameItemFilter;
+import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.LoginSyncHandler;
 import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
@@ -87,6 +83,7 @@ public class RefinedRelocation {
 		RefinedRelocationAPI.registerFilter(PresetFilter.class);
 		RefinedRelocationAPI.registerFilter(CreativeTabFilter.class);
 		RefinedRelocationAPI.registerFilter(ModFilter.class);
+		RefinedRelocationAPI.registerFilter(SameModFilter.class);
 
 		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos())));
 		RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, tileEntity.getPos())));
