@@ -4,6 +4,7 @@ tile.refinedrelocation:fast_hopper.name=Fast Hopper
 tile.refinedrelocation:filtered_hopper.name=Filtered Hopper
 tile.refinedrelocation:buffer.name=Buffer
 tile.refinedrelocation:sorting_connector.name=Sorting Connector
+tile.refinedrelocation:sorting_interface.name=Sorting Interface
 
 item.refinedrelocation:sorting_upgrade.name=Sorting Upgrade
 item.refinedrelocation:stack_limiter.name=Stack Limiter
@@ -20,6 +21,7 @@ container.refinedrelocation:add_filter=Select Filter Type
 container.refinedrelocation:fast_hopper=Fast Hopper
 container.refinedrelocation:filtered_hopper=Filtered Hopper
 container.refinedrelocation:block_extender=Block Extender
+container.refinedrelocation:sorting_interface=Sorting Interface
 
 gui.refinedrelocation:root_filter.help_text=Configure up to three filters by clicking the empty slots above.
 gui.refinedrelocation:root_filter.priority_label=Priority:

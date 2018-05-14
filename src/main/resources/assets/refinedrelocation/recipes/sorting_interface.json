@@ -1,0 +1,28 @@
+{
+  "result": {
+    "item": "refinedrelocation:sorting_interface"
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "IGI",
+    "FCO",
+    "IGI"
+  ],
+  "key": {
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "G": {
+      "item": "#GLASS_PANE"
+    },
+    "C": {
+      "item": "refinedrelocation:sorting_connector"
+    },
+    "F": {
+      "item": "refinedrelocation:input_filter"
+    },
+    "O": {
+      "item": "refinedrelocation:output_filter"
+    }
+  }
+}

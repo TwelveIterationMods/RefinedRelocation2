@@ -1,15 +1,7 @@
 package net.blay09.mods.refinedrelocation;
 
-import net.blay09.mods.refinedrelocation.block.BlockBlockExtender;
-import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
-import net.blay09.mods.refinedrelocation.block.BlockFilteredHopper;
-import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
-import net.blay09.mods.refinedrelocation.block.BlockSortingConnector;
-import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
-import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
-import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
-import net.blay09.mods.refinedrelocation.tile.TileSortingConnector;
+import net.blay09.mods.refinedrelocation.block.*;
+import net.blay09.mods.refinedrelocation.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -36,13 +28,17 @@ public class ModBlocks {
 	@GameRegistry.ObjectHolder(BlockSortingConnector.name)
 	public static BlockSortingConnector sortingConnector;
 
+	@GameRegistry.ObjectHolder(BlockSortingInterface.name)
+	public static BlockSortingInterface sortingInterface;
+
 	public static void register(IForgeRegistry<Block> registry) {
 		registry.registerAll(
 				new BlockSortingChest().setRegistryName(BlockSortingChest.name),
 				new BlockBlockExtender().setRegistryName(BlockBlockExtender.name),
 				new BlockFastHopper().setRegistryName(BlockFastHopper.name),
 				new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name),
-				new BlockSortingConnector().setRegistryName(BlockSortingConnector.name)
+				new BlockSortingConnector().setRegistryName(BlockSortingConnector.name),
+				new BlockSortingInterface().setRegistryName(BlockSortingInterface.name)
 		);
 	}
 
@@ -52,7 +48,8 @@ public class ModBlocks {
 				new ItemBlock(blockExtender).setRegistryName(BlockBlockExtender.name),
 				new ItemBlock(fastHopper).setRegistryName(BlockFastHopper.name),
 				new ItemBlock(filteredHopper).setRegistryName(BlockFilteredHopper.name),
-				new ItemBlock(sortingConnector).setRegistryName(BlockSortingConnector.name)
+				new ItemBlock(sortingConnector).setRegistryName(BlockSortingConnector.name),
+				new ItemBlock(sortingInterface).setRegistryName(BlockSortingInterface.name)
 		);
 	}
 
@@ -62,6 +59,7 @@ public class ModBlocks {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(fastHopper), 0, new ModelResourceLocation(BlockFastHopper.registryName, "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(filteredHopper), 0, new ModelResourceLocation(BlockFilteredHopper.registryName, "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sortingConnector), 0, new ModelResourceLocation(BlockSortingConnector.registryName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sortingInterface), 0, new ModelResourceLocation(BlockSortingInterface.registryName, "inventory"));
 	}
 
 	public static void registerTileEntities() {
@@ -70,6 +68,7 @@ public class ModBlocks {
 		GameRegistry.registerTileEntity(TileFastHopper.class, BlockFastHopper.registryName.toString());
 		GameRegistry.registerTileEntity(TileFilteredHopper.class, BlockFilteredHopper.registryName.toString());
 		GameRegistry.registerTileEntity(TileSortingConnector.class, BlockSortingConnector.registryName.toString());
+		GameRegistry.registerTileEntity(TileSortingInterface.class, BlockSortingInterface.registryName.toString());
 	}
 
 }
