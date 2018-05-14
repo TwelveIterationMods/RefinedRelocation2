@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -73,7 +74,7 @@ public class TileSortingInterface extends TileMod implements ITickable {
                 }
 
                 // Detect changes in the target inventory, nine slots at a time
-                for (int j = 0; j < Math.min(9, inventorySize); j++) {
+                for (int j = 0; j < Math.min(RefinedRelocationConfig.sortingInterfaceSlotsPerTick, inventorySize); j++) {
                     int i = currentDetectionSlot;
                     ItemStack prevStack = lastInventory[i];
                     ItemStack currentStack = itemHandler.getStackInSlot(i);
