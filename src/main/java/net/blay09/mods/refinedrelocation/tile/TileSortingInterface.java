@@ -175,4 +175,9 @@ public class TileSortingInterface extends TileMod implements ITickable {
         return oldState.getBlock() != newSate.getBlock();
     }
 
+    @Override
+    public void dropItemHandlers() {
+        // Do not drop the connected inventory's items.
+    }
+    
 }

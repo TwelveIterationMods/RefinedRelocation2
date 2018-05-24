@@ -9,32 +9,33 @@ import net.minecraft.world.World;
 
 public abstract class BlockModTile extends BlockMod {
 
-	public BlockModTile(Material material) {
-		super(material);
-	}
+    public BlockModTile(Material material) {
+        super(material);
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity instanceof TileMod) {
-			((TileMod) tileEntity).dropItemHandlers();
-			world.updateComparatorOutputLevel(pos, this);
-		}
-		super.breakBlock(world, pos, state);
-		world.removeTileEntity(pos);
-	}
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity instanceof TileMod) {
+            ((TileMod) tileEntity).dropItemHandlers();
+            world.updateComparatorOutputLevel(pos, this);
+        }
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean eventReceived(IBlockState state, World world, BlockPos pos, int id, int param) {
-		super.eventReceived(state, world, pos, id, param);
-		TileEntity tileEntity = world.getTileEntity(pos);
-		return tileEntity != null && tileEntity.receiveClientEvent(id, param);
-	}
+        super.breakBlock(world, pos, state);
+        world.removeTileEntity(pos);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean eventReceived(IBlockState state, World world, BlockPos pos, int id, int param) {
+        super.eventReceived(state, world, pos, id, param);
+        TileEntity tileEntity = world.getTileEntity(pos);
+        return tileEntity != null && tileEntity.receiveClientEvent(id, param);
+    }
 
 }
