@@ -106,7 +106,7 @@ public class InternalMethodsImpl implements InternalMethods {
             return;
         }
 
-        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, 64, false);
+        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, 64, true);
         if (restStack.isEmpty()) {
             return;
         }
@@ -124,6 +124,7 @@ public class InternalMethodsImpl implements InternalMethods {
                 }
             }
         }
+
         // No point trying if there's no matching inventories.
         if (!passingList.isEmpty()) {
             ISortingInventory targetInventory = getBestTargetInventory(passingList, null);
@@ -131,19 +132,21 @@ public class InternalMethodsImpl implements InternalMethods {
                 // Only move the item if it's not already in the correct inventory
                 while (!restStack.isEmpty() && !passingList.isEmpty() && targetInventory != null) {
                     // Insert stack into passing inventories
+                    int insertCount = restStack.getCount();
                     restStack = ItemHandlerHelper.insertItemStacked(targetInventory.getItemHandler(), restStack, false);
+                    int actuallyInserted = insertCount - restStack.getCount();
+                    if (actuallyInserted > 0) {
+                        ItemStack movedStack = itemHandler.extractItem(fromSlotIndex, actuallyInserted, false);
+                        if (movedStack.getCount() != actuallyInserted) {
+                            // This would mean we just duped an item. This should only be possible if someone implements IItemHandler incorrectly, so crash and make it more likely to be reported.
+                            throw new RuntimeException("Refined Relocation ran into a major problem with the connected inventory " + sortingInventory + ". Please report this at https://github.com/blay09/RefinedRelocation2/issues.");
+                        }
+                    }
+
                     if (!restStack.isEmpty()) {
                         targetInventory = getBestTargetInventory(passingList, targetInventory);
                     }
                 }
-            }
-        }
-        if (!restStack.isEmpty()) {
-            restStack = sortingInventory.getItemHandler().insertItem(fromSlotIndex, restStack, false);
-            if (!restStack.isEmpty()) {
-                // This should be impossible, the item came from here to begin with so there should be at least enough space to re-insert it.
-                // If because of some mess-up somewhere it does happen after all though, crash the player to notify them about deleted items and make it more likely to be reported.
-                throw new RuntimeException("Refined Relocation just ate one of your items and that's really weird because this should never happen. Now go and report this so I can have a further look into this.");
             }
         }
     }

@@ -179,5 +179,5 @@ public class TileSortingInterface extends TileMod implements ITickable {
     public void dropItemHandlers() {
         // Do not drop the connected inventory's items.
     }
-    
+
 }
