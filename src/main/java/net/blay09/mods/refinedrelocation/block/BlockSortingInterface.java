@@ -33,7 +33,7 @@ public class BlockSortingInterface extends BlockModTile {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
+        if (world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity != null) {
                 RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
