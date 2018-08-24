@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.capability.CapabilityNameTaggable;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -85,17 +86,17 @@ public class TileFastHopper extends TileMod implements ITickable {
     }
 
     public void pushItem(int sourceSlot, IItemHandler targetItemHandler) {
-        ItemStack sourceStack = itemHandler.extractItem(sourceSlot, 64, true);
+        ItemStack sourceStack = itemHandler.extractItem(sourceSlot, Items.AIR.getItemStackLimit(), true);
         ItemStack restStack = ItemHandlerHelper.insertItem(targetItemHandler, sourceStack, false);
         itemHandler.extractItem(sourceSlot, restStack.isEmpty() ? sourceStack.getCount() : sourceStack.getCount() - restStack.getCount(), false);
     }
 
     private void pullItem(IItemHandler sourceItemHandler) {
         for (int i = 0; i < sourceItemHandler.getSlots(); i++) {
-            ItemStack sourceStack = sourceItemHandler.extractItem(i, 64, true);
+            ItemStack sourceStack = sourceItemHandler.extractItem(i, Items.AIR.getItemStackLimit(), true);
             if (!sourceStack.isEmpty()) {
                 ItemStack restStack = ItemHandlerHelper.insertItem(itemHandler, sourceStack, false);
-                sourceItemHandler.extractItem(i, restStack.isEmpty() ? 64 : sourceStack.getCount() - restStack.getCount(), false);
+                sourceItemHandler.extractItem(i, restStack.isEmpty() ? Items.AIR.getItemStackLimit() : sourceStack.getCount() - restStack.getCount(), false);
                 break;
             }
         }

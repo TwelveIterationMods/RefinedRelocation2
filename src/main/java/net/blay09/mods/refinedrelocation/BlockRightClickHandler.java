@@ -34,9 +34,9 @@ public class BlockRightClickHandler {
                 if (world.isRemote) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 }
+                event.setCancellationResult(EnumActionResult.SUCCESS);
+                event.setCanceled(true);
             }
-            event.setCancellationResult(EnumActionResult.SUCCESS);
-            event.setCanceled(true);
         }
     }
 

@@ -20,6 +20,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -102,7 +103,7 @@ public class InternalMethodsImpl implements InternalMethods {
             return;
         }
 
-        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, 64, true);
+        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, Items.AIR.getItemStackLimit(), true);
         if (restStack.isEmpty()) {
             return;
         }

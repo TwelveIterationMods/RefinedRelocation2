@@ -8,6 +8,7 @@ import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,7 +74,7 @@ public class ContainerBlockExtender extends ContainerMod {
 				lastSideMapping[side.ordinal()] = facing;
 			}
 		} else if(message.getKey().equals(KEY_STACK_LIMITER)) {
-			int stackSizeLimit = MathHelper.clamp(message.getIntValue(), 1, 64);
+			int stackSizeLimit = MathHelper.clamp(message.getIntValue(), 1, Items.AIR.getItemStackLimit());
 			tileEntity.setStackLimiterLimit(stackSizeLimit);
 			lastStackLimiterLimit = stackSizeLimit;
 		} else if(message.getKey().equals(KEY_CONFIGURE_FILTER)) {
