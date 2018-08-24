@@ -44,7 +44,8 @@ public class GuiFastHopper extends GuiContainerMod<ContainerFastHopper> {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		fontRenderer.drawString(tileEntity.getDisplayName().getUnformattedText(), 8, 6, 4210752);
+
+		fontRenderer.drawString(tileEntity.getDisplayNameForGui().getFormattedText(), 8, 6, 4210752);
 		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 

@@ -23,6 +23,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
 
@@ -132,8 +133,8 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        String tileDisplayName = container.getTileEntity().getDisplayName().getUnformattedText();
-        fontRenderer.drawString(tileDisplayName.isEmpty() ? I18n.format("container.refinedrelocation:root_filter") : I18n.format("container.refinedrelocation:root_filter_with_name", tileDisplayName), 8, 6, 4210752);
+        ITextComponent displayName = container.getTileEntity().getDisplayName();
+        fontRenderer.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

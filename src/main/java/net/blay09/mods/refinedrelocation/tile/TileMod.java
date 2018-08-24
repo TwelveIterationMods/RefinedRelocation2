@@ -77,10 +77,9 @@ public class TileMod extends TileEntity {
         }
     }
 
-    @Override
-    @Nullable
-    public ITextComponent getDisplayName() {
-        return new TextComponentTranslation(getUnlocalizedName());
+    public ITextComponent getDisplayNameForGui() {
+        ITextComponent displayName = getDisplayName();
+        return displayName != null ? displayName : new TextComponentTranslation(getUnlocalizedName());
     }
 
     public String getUnlocalizedName() {

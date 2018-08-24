@@ -231,7 +231,11 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     public void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
-        NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
+        if (player.world.isRemote) {
+            NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
+        } else {
+            NetworkHandler.wrapper.sendTo(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity), (EntityPlayerMP) player);
+        }
     }
 
     @Override

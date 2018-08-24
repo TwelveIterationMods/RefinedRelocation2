@@ -44,12 +44,8 @@ public class GuiSortingChest extends GuiContainerMod<ContainerSortingChest> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        ITextComponent displayName = tileEntity.getDisplayName();
-        if (displayName == null) {
-            displayName = new TextComponentTranslation(tileEntity.getUnlocalizedName());
-        }
 
-        fontRenderer.drawString(displayName.getFormattedText(), 8, 6, 4210752);
+        fontRenderer.drawString(tileEntity.getDisplayNameForGui().getFormattedText(), 8, 6, 4210752);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
