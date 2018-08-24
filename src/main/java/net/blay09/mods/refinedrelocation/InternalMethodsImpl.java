@@ -3,9 +3,10 @@ package net.blay09.mods.refinedrelocation;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
+import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
@@ -14,12 +15,7 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.grid.SortingGrid;
-import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageContainer;
-import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
-import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
-import net.blay09.mods.refinedrelocation.network.NetworkHandler;
+import net.blay09.mods.refinedrelocation.network.*;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -256,4 +252,22 @@ public class InternalMethodsImpl implements InternalMethods {
     public void returnToParentContainer() {
         NetworkHandler.wrapper.sendToServer(new MessageReturnGUI());
     }
+
+    @Override
+    public void transferName(TileEntity source, TileEntity target) {
+        INameTaggable sourceName = source.getCapability(Capabilities.NAME_TAGGABLE, null);
+        if (sourceName == null && source instanceof INameTaggable) {
+            sourceName = (INameTaggable) source;
+        }
+
+        INameTaggable targetName = target.getCapability(Capabilities.NAME_TAGGABLE, null);
+        if (targetName == null && target instanceof INameTaggable) {
+            targetName = (INameTaggable) target;
+        }
+
+        if (sourceName != null && targetName != null) {
+            targetName.setCustomName(sourceName.getCustomName());
+        }
+    }
+
 }

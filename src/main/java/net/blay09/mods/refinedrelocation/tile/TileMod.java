@@ -11,84 +11,83 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileMod extends TileEntity {
 
-	private boolean isFirstTick = true;
+    private boolean isFirstTick = true;
 
-	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
-		readFromNBTSynced(compound);
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        readFromNBTSynced(compound);
+    }
 
-	public void readFromNBTSynced(NBTTagCompound compound) {
-	}
+    public void readFromNBTSynced(NBTTagCompound compound) {
+    }
 
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
-		writeToNBTSynced(compound);
-		return compound;
-	}
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        writeToNBTSynced(compound);
+        return compound;
+    }
 
-	public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
-		return compound;
-	}
+    public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
+        return compound;
+    }
 
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBTSynced(super.writeToNBT(new NBTTagCompound()));
-	}
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBTSynced(super.writeToNBT(new NBTTagCompound()));
+    }
 
-	@Override
-	public void handleUpdateTag(NBTTagCompound compound) {
-		readFromNBTSynced(compound);
-	}
+    @Override
+    public void handleUpdateTag(NBTTagCompound compound) {
+        readFromNBTSynced(compound);
+    }
 
-	@Nullable
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), writeToNBTSynced(new NBTTagCompound()));
-	}
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), writeToNBTSynced(new NBTTagCompound()));
+    }
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		super.onDataPacket(net, pkt);
-		readFromNBTSynced(pkt.getNbtCompound());
-	}
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        readFromNBTSynced(pkt.getNbtCompound());
+    }
 
-	public void dropItemHandlers() {
-		IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		if(itemHandler != null) {
-			ItemUtils.dropItemHandlerItems(world, pos, itemHandler);
-		}
-	}
+    public void dropItemHandlers() {
+        IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        if (itemHandler != null) {
+            ItemUtils.dropItemHandlerItems(world, pos, itemHandler);
+        }
+    }
 
-	public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
-		return world.getTileEntity(pos) == this && entityPlayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
-	}
+    public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
+        return world.getTileEntity(pos) == this && entityPlayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+    }
 
-	protected void baseUpdate() {
-		if(isFirstTick) {
-			onFirstTick();
-			isFirstTick = false;
-		}
-	}
+    protected void baseUpdate() {
+        if (isFirstTick) {
+            onFirstTick();
+            isFirstTick = false;
+        }
+    }
 
-	@Override
-	@Nonnull
-	public ITextComponent getDisplayName() {
-		return new TextComponentTranslation(getUnlocalizedName());
-	}
+    @Override
+    @Nullable
+    public ITextComponent getDisplayName() {
+        return new TextComponentTranslation(getUnlocalizedName());
+    }
 
-	public String getUnlocalizedName() {
-		return "container.refinedrelocation.unnamed";
-	}
+    public String getUnlocalizedName() {
+        return "container.refinedrelocation.unnamed";
+    }
 
-	protected void onFirstTick() {
+    protected void onFirstTick() {
 
-	}
+    }
 }

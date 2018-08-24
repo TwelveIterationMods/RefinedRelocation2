@@ -75,7 +75,7 @@ public class RenderSortingChest extends SafeTESR<TileSortingChest> {
 
 	@Override
 	protected boolean shouldRenderNameTag(TileSortingChest tileEntity) {
-		return tileEntity.hasCustomName() && RefinedRelocationConfig.renderChestNameTags;
+		return RefinedRelocationConfig.renderChestNameTags;
 	}
 
 }

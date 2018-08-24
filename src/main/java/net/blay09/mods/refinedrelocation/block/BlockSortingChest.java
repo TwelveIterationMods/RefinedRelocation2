@@ -101,23 +101,11 @@ public class BlockSortingChest extends BlockModTile {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (world.isRemote) {
-            if (player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity != null) {
-                    RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
-                }
-            }
-            return true;
-        } else {
-            ItemStack heldItem = player.getHeldItem(hand);
-            if (tryNameBlock(player, heldItem, world, pos)) {
-                return true;
-            }
-
+        if (!world.isRemote) {
             RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, pos));
-            return true;
         }
+
+        return true;
     }
 
     @Override

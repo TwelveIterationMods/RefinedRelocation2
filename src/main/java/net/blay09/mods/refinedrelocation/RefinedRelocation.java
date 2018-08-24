@@ -2,11 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
+import net.blay09.mods.refinedrelocation.capability.*;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.compat.Compat;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
@@ -71,12 +67,14 @@ public class RefinedRelocation {
 		ModBlocks.registerTileEntities();
 
 		MinecraftForge.EVENT_BUS.register(new LoginSyncHandler());
+		MinecraftForge.EVENT_BUS.register(new BlockRightClickHandler());
 
 		CapabilitySimpleFilter.register();
 		CapabilityRootFilter.register();
 		CapabilitySortingGridMember.register();
 		CapabilitySortingInventory.register();
 		CapabilitySortingUpgradable.register();
+		CapabilityNameTaggable.register();
 
 		RefinedRelocationAPI.registerFilter(SameItemFilter.class);
 		RefinedRelocationAPI.registerFilter(NameFilter.class);

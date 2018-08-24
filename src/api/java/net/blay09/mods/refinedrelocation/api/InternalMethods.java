@@ -45,4 +45,6 @@ public interface InternalMethods {
 	void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter);
 
 	void returnToParentContainer();
+
+    void transferName(TileEntity source, TileEntity target);
 }
