@@ -235,7 +235,7 @@ public class InternalMethodsImpl implements InternalMethods {
         if (player.world.isRemote) {
             NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
         } else {
-            NetworkHandler.wrapper.sendTo(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity), (EntityPlayerMP) player);
+            RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
         }
     }
 

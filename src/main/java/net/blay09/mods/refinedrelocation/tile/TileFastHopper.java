@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
-import net.blay09.mods.refinedrelocation.capability.CapabilityNameTaggable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ import javax.annotation.Nullable;
 
 public class TileFastHopper extends TileMod implements ITickable {
 
-    private ItemStackHandler itemHandler = createItemHandler();
+    private final ItemStackHandler itemHandler = createItemHandler();
     private final INameTaggable nameTaggable = Capabilities.getDefaultInstance(Capabilities.NAME_TAGGABLE);
 
     private int cooldown;
@@ -117,6 +116,7 @@ public class TileFastHopper extends TileMod implements ITickable {
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setTag("ItemHandler", itemHandler.serializeNBT());
+        tagCompound.setTag("NameTaggable", nameTaggable.serializeNBT());
         return tagCompound;
     }
 
@@ -124,6 +124,7 @@ public class TileFastHopper extends TileMod implements ITickable {
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         itemHandler.deserializeNBT(tagCompound.getCompoundTag("ItemHandler"));
+        nameTaggable.deserializeNBT(tagCompound.getCompoundTag("NameTaggable"));
     }
 
     @Override

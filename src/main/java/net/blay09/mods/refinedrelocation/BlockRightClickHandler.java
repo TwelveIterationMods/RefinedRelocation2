@@ -28,11 +28,11 @@ public class BlockRightClickHandler {
         }
 
 
-        if (player.isSneaking()) {
+        if (!world.isRemote && player.isSneaking()) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity != null && tileEntity.hasCapability(Capabilities.ROOT_FILTER, null)) {
+                RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 if (world.isRemote) {
-                    RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 }
                 event.setCancellationResult(EnumActionResult.SUCCESS);
                 event.setCanceled(true);

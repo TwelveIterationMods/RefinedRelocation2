@@ -70,13 +70,10 @@ public class TileSortingChest extends TileMod implements ITickable {
         return doorAnimator;
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
-        sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
-
-        // vvv Backwards Compatibility
+    /**
+     * TODO remove in 1.13
+     */
+    public static void fixRootFilterTag(NBTTagCompound compound) {
         if (compound.getTagId("RootFilter") == Constants.NBT.TAG_LIST) {
             NBTTagList tagList = compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND);
             compound.removeTag("RootFilter");
@@ -84,7 +81,15 @@ public class TileSortingChest extends TileMod implements ITickable {
             rootFilter.setTag("FilterList", tagList);
             compound.setTag("RootFilter", rootFilter);
         }
-        // ^^^ Backwards Compatibility
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
+        sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
+
+        fixRootFilterTag(compound);
 
         rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
         nameTaggable.deserializeNBT(compound.getCompoundTag("NameTaggable"));

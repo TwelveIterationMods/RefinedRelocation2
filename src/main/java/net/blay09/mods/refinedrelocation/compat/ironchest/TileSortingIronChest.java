@@ -9,6 +9,7 @@ import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
+import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -78,15 +79,7 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
         super.readFromNBT(compound);
         sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
 
-        // vvv Backwards Compatibility
-        if (compound.getTagId("RootFilter") == Constants.NBT.TAG_LIST) {
-            NBTTagList tagList = compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND);
-            compound.removeTag("RootFilter");
-            NBTTagCompound rootFilter = new NBTTagCompound();
-            rootFilter.setTag("FilterList", tagList);
-            compound.setTag("RootFilter", rootFilter);
-        }
-        // ^^^ Backwards Compatibility
+        TileSortingChest.fixRootFilterTag(compound);
 
         rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
     }
