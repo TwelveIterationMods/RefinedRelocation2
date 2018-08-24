@@ -32,8 +32,6 @@ public class BlockRightClickHandler {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity != null && tileEntity.hasCapability(Capabilities.ROOT_FILTER, null)) {
                 RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
-                if (world.isRemote) {
-                }
                 event.setCancellationResult(EnumActionResult.SUCCESS);
                 event.setCanceled(true);
             }
