@@ -5,19 +5,13 @@ import cpw.mods.ironchest.common.tileentity.chest.TileEntityIronChest;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
@@ -98,9 +92,9 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
     public IronChestType getType() {
         if (hasWorld()) {
             return IronChestType.VALUES[getBlockMetadata()];
-        } else {
-            return IronChestType.IRON;
         }
+
+        return IronChestType.IRON;
     }
 
     @Override
@@ -119,8 +113,8 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-                || capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY
-                || capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY
+                || Capabilities.isSortingGridCapability(capability)
+                || Capabilities.isFilterCapability(capability)
                 || super.hasCapability(capability, facing);
     }
 
@@ -129,11 +123,12 @@ public class TileSortingIronChest extends TileEntityIronChest implements ITickab
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) invWrapper;
-        } else if (capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY) {
+        } else if (Capabilities.isSortingGridCapability(capability)) {
             return (T) sortingInventory;
-        } else if (capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY) {
+        } else if (Capabilities.isFilterCapability(capability)) {
             return (T) rootFilter;
         }
+
         return super.getCapability(capability, facing);
     }
 
