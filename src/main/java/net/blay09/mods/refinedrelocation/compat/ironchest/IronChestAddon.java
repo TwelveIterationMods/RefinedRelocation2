@@ -147,7 +147,7 @@ public class IronChestAddon implements RefinedAddon {
 			}
 			previousContent = NonNullList.create();
 			for (int i = 0; i < tileSortingChest.getItemHandler().getSlots(); i++) {
-				previousContent.set(i, tileSortingChest.getItemHandler().getStackInSlot(i));
+				previousContent.add(tileSortingChest.getItemHandler().getStackInSlot(i));
 			}
 		} else {
 			return;
