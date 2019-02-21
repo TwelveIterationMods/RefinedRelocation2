@@ -4,8 +4,8 @@
     "custom": {"flip-v": true},
     "model": "refinedrelocation:input_pane.obj",
     "textures": {
-      "particle": "refinedrelocation:blocks/input_pane",
-      "connector": "refinedrelocation:blocks/sorting_connector"
+      "particle": "refinedrelocation:block/input_pane",
+      "connector": "refinedrelocation:block/sorting_connector"
     },
     "uvlock": false
   },

@@ -8,22 +8,21 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 
 public class SortingInventory extends SortingGridMember implements ISortingInventory {
 
     private final LinkedList<SortingStack> sortingStackList = Lists.newLinkedList();
-    private ISimpleFilter filter;
+    private LazyOptional<? extends ISimpleFilter> filter;
     private int priority;
 
     @Override
-    @Nullable
-    public IItemHandler getItemHandler() {
-        return getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+    public LazyOptional<IItemHandler> getItemHandler() {
+        return getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
     }
 
     @Override
@@ -37,14 +36,14 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
     }
 
     @Override
-    public ISimpleFilter getFilter() {
+    public LazyOptional<? extends ISimpleFilter> getFilter() {
         return filter;
     }
 
     @Override
     protected void onLoad() {
         super.onLoad();
-        filter = getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY, null);
+        filter = getTileEntity().getCapability(CapabilityRootFilter.CAPABILITY);
     }
 
     @Override
@@ -66,21 +65,17 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 
     @Override
     public void onSlotChanged(int slotIndex) {
-        if (getSortingGrid() == null || getSortingGrid().isSortingActive() || getTileEntity().getWorld().isRemote) {
+        if (getSortingGrid() == null || getSortingGrid().isSortingActive() || isRemote()) {
             return;
         }
 
-        IItemHandler itemHandler = getItemHandler();
-        if (itemHandler == null) {
-            return;
-        }
-
-        ItemStack itemStack = itemHandler.getStackInSlot(slotIndex);
-        if (itemStack.isEmpty()) {
-            return;
-        }
-
-        sortingStackList.add(new SortingStack(itemHandler, slotIndex, itemStack));
+        LazyOptional<IItemHandler> itemHandlerCap = getItemHandler();
+        itemHandlerCap.ifPresent(itemHandler -> {
+            ItemStack itemStack = itemHandler.getStackInSlot(slotIndex);
+            if (!itemStack.isEmpty()) {
+                sortingStackList.add(new SortingStack(itemHandler, slotIndex, itemStack));
+            }
+        });
     }
 
     @Override

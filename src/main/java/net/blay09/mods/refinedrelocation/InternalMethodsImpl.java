@@ -56,7 +56,7 @@ public class InternalMethodsImpl implements InternalMethods {
         }
         World world = member.getTileEntity().getWorld();
         BlockPos pos = member.getTileEntity().getPos();
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (EnumFacing facing : EnumFacing.values()) {
             BlockPos facingPos = pos.offset(facing);
             if (world.isBlockLoaded(facingPos)) {
                 TileEntity tileEntity = world.getChunkFromBlockCoords(facingPos).getTileEntity(facingPos, Chunk.EnumCreateEntityType.CHECK);

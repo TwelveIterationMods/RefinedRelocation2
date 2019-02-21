@@ -12,7 +12,6 @@ public class BlockBuffer extends BlockModTile {
 
 	public BlockBuffer() {
 		super(Material.IRON);
-		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.METAL);
 		setHardness(3f);
 	}

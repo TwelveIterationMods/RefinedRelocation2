@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedrelocation:items/input_filter"
+    "layer0": "refinedrelocation:item/input_filter"
   }
 }

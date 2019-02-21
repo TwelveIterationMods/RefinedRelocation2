@@ -2,8 +2,8 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "refinedrelocation:blocks/sorting_connector",
-      "particle": "refinedrelocation:blocks/sorting_connector"
+      "all": "refinedrelocation:block/sorting_connector",
+      "particle": "refinedrelocation:block/sorting_connector"
     }
   },
   "variants": {
@@ -136,7 +136,7 @@
       },
       "false": {
         "textures": {
-          "all": "refinedrelocation:blocks/sorting_connector_line"
+          "all": "refinedrelocation:block/sorting_connector_line"
         }
       }
     }

@@ -1,51 +1,24 @@
 package net.blay09.mods.refinedrelocation;
 
-import net.blay09.mods.refinedrelocation.item.ItemInputFilter;
-import net.blay09.mods.refinedrelocation.item.ItemOutputFilter;
-import net.blay09.mods.refinedrelocation.item.ItemSlotLock;
-import net.blay09.mods.refinedrelocation.item.ItemSortingUpgrade;
-import net.blay09.mods.refinedrelocation.item.ItemStackLimiter;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Items;
+import net.blay09.mods.refinedrelocation.item.*;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-@GameRegistry.ObjectHolder(RefinedRelocation.MOD_ID)
 public class ModItems {
+    public static Item sortingUpgrade;
+    public static Item stackLimiter;
+    public static Item inputFilter;
+    public static Item outputFilter;
+    public static Item slotLock;
 
-	@GameRegistry.ObjectHolder(ItemSortingUpgrade.name)
-	public static final Item sortingUpgrade = Items.AIR;
-
-	@GameRegistry.ObjectHolder(ItemStackLimiter.name)
-	public static final Item stackLimiter = Items.AIR;
-
-	@GameRegistry.ObjectHolder(ItemInputFilter.name)
-	public static final Item inputFilter = Items.AIR;
-
-	@GameRegistry.ObjectHolder(ItemOutputFilter.name)
-	public static final Item outputFilter = Items.AIR;
-
-	@GameRegistry.ObjectHolder(ItemSlotLock.name)
-	public static final Item slotLock = Items.AIR;
-
-	public static void register(IForgeRegistry<Item> registry) {
-		registry.registerAll(
-				new ItemSortingUpgrade().setRegistryName(ItemSortingUpgrade.name),
-				new ItemStackLimiter().setRegistryName(ItemStackLimiter.name),
-				new ItemInputFilter().setRegistryName(ItemInputFilter.name),
-				new ItemOutputFilter().setRegistryName(ItemOutputFilter.name),
-				new ItemSlotLock().setRegistryName(ItemSlotLock.name)
-		);
-	}
-
-	public static void registerModels() {
-		ModelLoader.setCustomModelResourceLocation(sortingUpgrade, 0, new ModelResourceLocation(ItemSortingUpgrade.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(stackLimiter, 0, new ModelResourceLocation(ItemStackLimiter.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(inputFilter, 0, new ModelResourceLocation(ItemInputFilter.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(outputFilter, 0, new ModelResourceLocation(ItemOutputFilter.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(slotLock, 0, new ModelResourceLocation(ItemSlotLock.registryName, "inventory"));
-	}
+    public static void register(IForgeRegistry<Item> registry) {
+        registry.registerAll(
+                sortingUpgrade = new ItemSortingUpgrade().setRegistryName(ItemSortingUpgrade.name),
+                stackLimiter = new ItemStackLimiter().setRegistryName(ItemStackLimiter.name),
+                inputFilter = new ItemInputFilter().setRegistryName(ItemInputFilter.name),
+                outputFilter = new ItemOutputFilter().setRegistryName(ItemOutputFilter.name),
+                slotLock = new ItemSlotLock().setRegistryName(ItemSlotLock.name)
+        );
+    }
 
 }

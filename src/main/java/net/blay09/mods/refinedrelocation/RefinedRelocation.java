@@ -9,148 +9,105 @@ import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.LoginSyncHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Mod(modid = RefinedRelocation.MOD_ID, name = "Refined Relocation", dependencies = "after:ironchest", acceptedMinecraftVersions = "[1.12]")
+@Mod(RefinedRelocation.MOD_ID)
 public class RefinedRelocation {
 
-	public static final String MOD_ID = "refinedrelocation";
+    public static final String MOD_ID = "refinedrelocation";
 
-	public static final Logger logger = LogManager.getLogger(MOD_ID);
+    public static final Logger logger = LogManager.getLogger(MOD_ID);
 
-	@Mod.Instance(MOD_ID)
-	public static RefinedRelocation instance;
+    public static final ItemGroup itemGroup = new ItemGroup(MOD_ID) {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(ModBlocks.sortingChest);
+        }
+    };
 
-	@SidedProxy(clientSide = "net.blay09.mods.refinedrelocation.client.ClientProxy", serverSide = "net.blay09.mods.refinedrelocation.CommonProxy")
-	public static CommonProxy proxy;
+    private static final List<RefinedAddon> inbuiltAddons = Lists.newArrayList();
 
-	public static final CreativeTabs creativeTab = new CreativeTabs(MOD_ID) {
-		@Override
-		public ItemStack getTabIconItem() {
-			return new ItemStack(ModBlocks.sortingChest);
-		}
-	};
+    public RefinedRelocation() {
+        RefinedRelocationAPI.__internal__setupAPI(new InternalMethodsImpl());
 
-	private static final List<RefinedAddon> inbuiltAddons = Lists.newArrayList();
+        NetworkHandler.init();
 
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		RefinedRelocationAPI.__internal__setupAPI(new InternalMethodsImpl());
+        ModBlocks.registerTileEntities();
 
-		NetworkHandler.init();
+        MinecraftForge.EVENT_BUS.register(new LoginSyncHandler());
+        MinecraftForge.EVENT_BUS.register(new BlockRightClickHandler());
 
-		ModBlocks.registerTileEntities();
+        CapabilitySimpleFilter.register();
+        CapabilityRootFilter.register();
+        CapabilitySortingGridMember.register();
+        CapabilitySortingInventory.register();
+        CapabilitySortingUpgradable.register();
+        CapabilityNameTaggable.register();
 
-		MinecraftForge.EVENT_BUS.register(new LoginSyncHandler());
-		MinecraftForge.EVENT_BUS.register(new BlockRightClickHandler());
+        RefinedRelocationAPI.registerFilter(SameItemFilter.class);
+        RefinedRelocationAPI.registerFilter(NameFilter.class);
+        RefinedRelocationAPI.registerFilter(PresetFilter.class);
+        RefinedRelocationAPI.registerFilter(CreativeTabFilter.class);
+        RefinedRelocationAPI.registerFilter(ModFilter.class);
+        RefinedRelocationAPI.registerFilter(SameModFilter.class);
 
-		CapabilitySimpleFilter.register();
-		CapabilityRootFilter.register();
-		CapabilitySortingGridMember.register();
-		CapabilitySortingInventory.register();
-		CapabilitySortingUpgradable.register();
-		CapabilityNameTaggable.register();
+        RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos())));
+        RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, tileEntity.getPos())));
 
-		RefinedRelocationAPI.registerFilter(SameItemFilter.class);
-		RefinedRelocationAPI.registerFilter(NameFilter.class);
-		RefinedRelocationAPI.registerFilter(PresetFilter.class);
-		RefinedRelocationAPI.registerFilter(CreativeTabFilter.class);
-		RefinedRelocationAPI.registerFilter(ModFilter.class);
-		RefinedRelocationAPI.registerFilter(SameModFilter.class);
+        if (ModList.get().isLoaded(Compat.IRONCHEST)) {
+            try {
+                inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
+            } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-		RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos())));
-		RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, tileEntity.getPos())));
+    private void registerBlocks(RegistryEvent.Register<Block> event) {
+        ModBlocks.register(event.getRegistry());
 
-		if(Loader.isModLoaded(Compat.IRONCHEST)) {
-			try {
-				inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
-			} catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
+        for (RefinedAddon addon : inbuiltAddons) {
+            addon.registerBlocks(event.getRegistry());
+        }
+    }
 
-		for(RefinedAddon addon : inbuiltAddons) {
-			addon.preInit();
-		}
+    private void registerItems(RegistryEvent.Register<Item> event) {
+        ModItems.register(event.getRegistry());
+        ModBlocks.registerItemBlocks(event.getRegistry());
 
-		proxy.preInit(event);
-	}
+        for (RefinedAddon addon : inbuiltAddons) {
+            addon.registerItems(event.getRegistry());
+        }
+    }
 
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-		for(RefinedAddon addon : inbuiltAddons) {
-			addon.init();
-		}
+    private void setupClient(FMLClientSetupEvent event) {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
+    }
 
-		proxy.init(event);
-	}
+    private void finishLoading(FMLLoadCompleteEvent event) {
+        CreativeTabFilter.gatherCreativeTabs();
+        ModFilter.gatherMods();
+    }
 
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		CreativeTabFilter.gatherCreativeTabs();
-		ModFilter.gatherMods();
-
-		proxy.postInit(event);
-	}
-
-	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		ModBlocks.register(event.getRegistry());
-
-		for(RefinedAddon addon : inbuiltAddons) {
-			addon.registerBlocks(event.getRegistry());
-		}
-	}
-
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		ModItems.register(event.getRegistry());
-		ModBlocks.registerItemBlocks(event.getRegistry());
-
-		for(RefinedAddon addon : inbuiltAddons) {
-			addon.registerItems(event.getRegistry());
-		}
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void registerModels(ModelRegistryEvent event) {
-		ModBlocks.registerModels();
-		ModItems.registerModels();
-
-		for(RefinedAddon addon : inbuiltAddons) {
-			addon.registerModels();
-		}
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
-	}
-
-	public static List<RefinedAddon> getInbuiltAddons() {
-		return inbuiltAddons;
-	}
+    public static List<RefinedAddon> getInbuiltAddons() {
+        return inbuiltAddons;
+    }
 }

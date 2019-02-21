@@ -11,11 +11,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.regex.Matcher;
@@ -68,7 +68,7 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 					}
 				} else {
 					if(itemName == null) {
-						itemName = itemStack.getDisplayName();
+						itemName = itemStack.getDisplayName().getUnformattedComponentText();
 					}
 					if (pattern.matcher(itemName).matches()) {
 						return true;
@@ -119,14 +119,14 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	}
 
 	@Override
-	public NBTBase serializeNBT() {
+	public INBTBase serializeNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setString("Patterns", value);
 		return compound;
 	}
 
 	@Override
-	public void deserializeNBT(NBTBase nbt) {
+	public void deserializeNBT(INBTBase nbt) {
 		NBTTagCompound compound = (NBTTagCompound) nbt;
 		value = compound.getString("Patterns");
 	}
@@ -142,7 +142,7 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public IFilterIcon getFilterIcon() {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_name_filter");
 	}
@@ -153,7 +153,7 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public GuiScreen createGuiScreen(EntityPlayer player, TileEntity tileEntity) {
 		return new GuiNameFilter(player, tileEntity, this);
 	}

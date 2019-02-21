@@ -1,0 +1,14 @@
+modLoader="javafml"
+loaderVersion="[24,)"
+issueTrackerURL="https://github.com/blay09/RefinedRelocation2/issues"
+displayURL="https://minecraft.curseforge.com/projects/refined-relocation-2"
+authors="BlayTheNinth, ZeroTheShinigami"
+credits="BlayTheNinth: developer; ZeroTheShinigami: artist; Dynious: original mod"
+
+[[mods]]
+modId="refinedrelocation"
+version="${file.jarVersion}"
+displayName="Refined Relocation"
+description='''
+Adds sorting networks, filter systems, block extenders and more.
+'''

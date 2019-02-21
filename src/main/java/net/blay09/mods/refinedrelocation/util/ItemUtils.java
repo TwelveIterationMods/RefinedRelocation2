@@ -27,7 +27,7 @@ public class ItemUtils {
 		float offsetZ = rand.nextFloat() * 0.8F + 0.1F;
 
 		while (!stack.isEmpty()) {
-			EntityItem entityitem = new EntityItem(world, x + (double) offsetX, y + (double) offsetY, z + (double) offsetZ, stack.splitStack(rand.nextInt(21) + 10));
+			EntityItem entityitem = new EntityItem(world, x + (double) offsetX, y + (double) offsetY, z + (double) offsetZ, stack.split(rand.nextInt(21) + 10));
 			float motion = 0.05F;
 			entityitem.motionX = rand.nextGaussian() * motion;
 			entityitem.motionY = rand.nextGaussian() * motion + 0.2;

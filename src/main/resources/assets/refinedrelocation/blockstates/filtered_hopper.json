@@ -2,10 +2,10 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "particle": "blocks/hopper_outside",
-      "top": "blocks/hopper_top",
-      "side": "refinedrelocation:blocks/filtered_hopper_outside",
-      "inside": "blocks/hopper_inside"
+      "particle": "block/hopper_outside",
+      "top": "block/hopper_top",
+      "side": "refinedrelocation:block/filtered_hopper_outside",
+      "inside": "block/hopper_inside"
     },
     "model": "refinedrelocation:filtered_hopper",
     "transform": "forge:default-block"

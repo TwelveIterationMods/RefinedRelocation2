@@ -32,7 +32,6 @@ public class BlockSortingIronChest extends BlockModTile {
 
     public BlockSortingIronChest() {
         super(Material.IRON);
-        setUnlocalizedName(registryName.toString());
         setHardness(3f);
     }
 

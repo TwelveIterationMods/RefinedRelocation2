@@ -6,11 +6,12 @@ import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -25,13 +26,13 @@ public class SameModFilter implements IFilter {
 
     @Override
     public boolean isFilterUsable(TileEntity tileEntity) {
-        return tileEntity.hasCapability(Capabilities.SORTING_INVENTORY, null);
+        return tileEntity.getCapability(Capabilities.SORTING_INVENTORY).isPresent();
     }
 
     @Override
     public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
-        IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        if (itemHandler != null) {
+        LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        return itemHandlerCap.map(itemHandler -> {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 ItemStack otherStack = itemHandler.getStackInSlot(i);
                 if (!otherStack.isEmpty()) {
@@ -50,17 +51,18 @@ public class SameModFilter implements IFilter {
                     }
                 }
             }
-        }
-        return false;
+
+            return false;
+        }).orElse(false);
     }
 
     @Override
-    public NBTBase serializeNBT() {
+    public INBTBase serializeNBT() {
         return new NBTTagCompound();
     }
 
     @Override
-    public void deserializeNBT(NBTBase nbt) {
+    public void deserializeNBT(INBTBase nbt) {
     }
 
 
@@ -75,7 +77,7 @@ public class SameModFilter implements IFilter {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public IFilterIcon getFilterIcon() {
         return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_same_mod_filter");
     }

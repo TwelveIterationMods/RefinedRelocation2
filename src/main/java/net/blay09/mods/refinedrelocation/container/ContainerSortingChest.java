@@ -19,7 +19,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                addSlotToContainer(new SlotItemHandler(tileEntity.getItemHandler(), j + i * 9, 8 + j * 18, 18 + i * 18));
+                addSlot(new SlotItemHandler(tileEntity.getItemHandler(), j + i * 9, 8 + j * 18, 18 + i * 18));
             }
         }
 
@@ -56,7 +56,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return !tileEntity.isInvalid() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
+        return !tileEntity.isRemoved() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
     }
 
     @Override

@@ -14,10 +14,6 @@ public class BlockFilteredHopper extends BlockFastHopper {
 	public static final String name = "filtered_hopper";
 	public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-	public BlockFilteredHopper() {
-		setUnlocalizedName(registryName.toString());
-	}
-
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {

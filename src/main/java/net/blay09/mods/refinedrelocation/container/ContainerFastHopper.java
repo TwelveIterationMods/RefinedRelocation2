@@ -13,7 +13,7 @@ public class ContainerFastHopper extends ContainerMod {
 		this.tileEntity = tileEntity;
 
 		for (int i = 0; i < 5; i++) {
-			addSlotToContainer(new SlotItemHandlerCareless(tileEntity.getItemHandler(), i, 44 + i * 18, 20));
+			addSlot(new SlotItemHandlerCareless(tileEntity.getItemHandler(), i, 44 + i * 18, 20));
 		}
 
 		addPlayerInventory(player, 51);
@@ -47,7 +47,7 @@ public class ContainerFastHopper extends ContainerMod {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return !tileEntity.isInvalid() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
+		return !tileEntity.isRemoved() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
 	}
 
 }

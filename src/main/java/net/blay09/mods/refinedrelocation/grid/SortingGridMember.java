@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -55,4 +56,9 @@ public class SortingGridMember implements ISortingGridMember {
 	protected void onLoad() {}
 	protected void onInvalidate() {}
 	protected void onUpdate() {}
+
+	public final boolean isRemote() {
+		World world = tileEntity.getWorld();
+		return world != null && world.isRemote;
+	}
 }

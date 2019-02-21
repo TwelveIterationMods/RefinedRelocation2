@@ -10,35 +10,23 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-@GameRegistry.ObjectHolder(RefinedRelocation.MOD_ID)
 public class ModBlocks {
 
-	@GameRegistry.ObjectHolder(BlockSortingChest.name)
 	public static Block sortingChest;
-
-	@GameRegistry.ObjectHolder(BlockBlockExtender.name)
 	public static Block blockExtender;
-
-	@GameRegistry.ObjectHolder(BlockFastHopper.name)
 	public static Block fastHopper;
-
-	@GameRegistry.ObjectHolder(BlockFilteredHopper.name)
 	public static Block filteredHopper;
-
-	@GameRegistry.ObjectHolder(BlockSortingConnector.name)
-	public static BlockSortingConnector sortingConnector;
-
-	@GameRegistry.ObjectHolder(BlockSortingInterface.name)
-	public static BlockSortingInterface sortingInterface;
+	public static Block sortingConnector;
+	public static Block sortingInterface;
 
 	public static void register(IForgeRegistry<Block> registry) {
 		registry.registerAll(
-				new BlockSortingChest().setRegistryName(BlockSortingChest.name),
-				new BlockBlockExtender().setRegistryName(BlockBlockExtender.name),
-				new BlockFastHopper().setRegistryName(BlockFastHopper.name),
-				new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name),
-				new BlockSortingConnector().setRegistryName(BlockSortingConnector.name),
-				new BlockSortingInterface().setRegistryName(BlockSortingInterface.name)
+				sortingChest = new BlockSortingChest().setRegistryName(BlockSortingChest.name),
+				blockExtender = new BlockBlockExtender().setRegistryName(BlockBlockExtender.name),
+				fastHopper = new BlockFastHopper().setRegistryName(BlockFastHopper.name),
+				filteredHopper = new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name),
+				sortingConnector = new BlockSortingConnector().setRegistryName(BlockSortingConnector.name),
+				sortingInterface = new BlockSortingInterface().setRegistryName(BlockSortingInterface.name)
 		);
 	}
 
@@ -51,15 +39,6 @@ public class ModBlocks {
 				new ItemBlock(sortingConnector).setRegistryName(BlockSortingConnector.name),
 				new ItemBlock(sortingInterface).setRegistryName(BlockSortingInterface.name)
 		);
-	}
-
-	public static void registerModels() {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sortingChest), 0, new ModelResourceLocation(BlockSortingChest.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockExtender), 0, new ModelResourceLocation(BlockBlockExtender.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(fastHopper), 0, new ModelResourceLocation(BlockFastHopper.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(filteredHopper), 0, new ModelResourceLocation(BlockFilteredHopper.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sortingConnector), 0, new ModelResourceLocation(BlockSortingConnector.registryName, "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(sortingInterface), 0, new ModelResourceLocation(BlockSortingInterface.registryName, "inventory"));
 	}
 
 	public static void registerTileEntities() {

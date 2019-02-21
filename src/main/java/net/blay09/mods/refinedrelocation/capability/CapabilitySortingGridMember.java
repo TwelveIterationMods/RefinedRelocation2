@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.capability;
 
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.grid.SortingGridMember;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -19,15 +19,15 @@ public class CapabilitySortingGridMember {
 		CapabilityManager.INSTANCE.register(ISortingGridMember.class, new Capability.IStorage<ISortingGridMember>() {
 			@Override
 			@Nullable
-			public NBTBase writeNBT(Capability<ISortingGridMember> capability, ISortingGridMember instance, EnumFacing side) {
+			public INBTBase writeNBT(Capability<ISortingGridMember> capability, ISortingGridMember instance, EnumFacing side) {
 				return null;
 			}
 
 			@Override
-			public void readNBT(Capability<ISortingGridMember> capability, ISortingGridMember instance, EnumFacing side, NBTBase nbt) {
+			public void readNBT(Capability<ISortingGridMember> capability, ISortingGridMember instance, EnumFacing side, INBTBase nbt) {
 
 			}
-		}, SortingGridMember.class);
+		}, SortingGridMember::new);
 	}
 
 }

@@ -11,8 +11,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BlockRightClickHandler {
 
@@ -30,7 +31,7 @@ public class BlockRightClickHandler {
 
         if (!world.isRemote && player.isSneaking()) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity != null && tileEntity.hasCapability(Capabilities.ROOT_FILTER, null)) {
+            if (tileEntity != null && tileEntity.getCapability(Capabilities.ROOT_FILTER).isPresent()) {
                 RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 event.setCancellationResult(EnumActionResult.SUCCESS);
                 event.setCanceled(true);
@@ -48,24 +49,17 @@ public class BlockRightClickHandler {
             return false;
         }
 
-        INameTaggable nameTaggable = tileEntity.getCapability(Capabilities.NAME_TAGGABLE, null);
-        if (nameTaggable == null && tileEntity instanceof INameTaggable) {
-            // For backwards compatibility, check for the interface as well
-            nameTaggable = (INameTaggable) tileEntity;
-        }
-
-        if (nameTaggable != null) {
-            nameTaggable.setCustomName(heldItem.getDisplayName());
+        LazyOptional<INameTaggable> capability = tileEntity.getCapability(Capabilities.NAME_TAGGABLE);
+        capability.ifPresent( it -> {
+            it.setCustomName(heldItem.getDisplayName().getUnformattedComponentText());
             VanillaPacketHandler.sendTileEntityUpdate(tileEntity);
 
-            if (!player.capabilities.isCreativeMode) {
+            if (!player.abilities.isCreativeMode) {
                 heldItem.shrink(1);
             }
+        });
 
-            return true;
-        }
-
-        return false;
+        return capability.isPresent();
     }
 
 }

@@ -11,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -39,14 +40,14 @@ public class BlockSortingConnector extends BlockContainer {
 			new AxisAlignedBB(0.6875, 0.3125, 0.3125, 1, 0.6875, 0.6875)          // East
 	};
 
-	private static final PropertyBool DOWN = PropertyBool.create("down");
-	private static final PropertyBool UP = PropertyBool.create("up");
-	private static final PropertyBool NORTH = PropertyBool.create("north");
-	private static final PropertyBool SOUTH = PropertyBool.create("south");
-	private static final PropertyBool WEST = PropertyBool.create("west");
-	private static final PropertyBool EAST = PropertyBool.create("east");
-	private static final PropertyBool CORNER = PropertyBool.create("corner");
-	public static final PropertyBool[] CONNECTIONS = new PropertyBool[]{
+	private static final BooleanProperty DOWN = BooleanProperty.create("down");
+	private static final BooleanProperty UP = BooleanProperty.create("up");
+	private static final BooleanProperty NORTH = BooleanProperty.create("north");
+	private static final BooleanProperty SOUTH = BooleanProperty.create("south");
+	private static final BooleanProperty WEST = BooleanProperty.create("west");
+	private static final BooleanProperty EAST = BooleanProperty.create("east");
+	private static final BooleanProperty CORNER = BooleanProperty.create("corner");
+	public static final BooleanProperty[] CONNECTIONS = new BooleanProperty[]{
 			DOWN,
 			UP,
 			NORTH,
@@ -57,10 +58,9 @@ public class BlockSortingConnector extends BlockContainer {
 
 	public BlockSortingConnector() {
 		super(Material.IRON);
-		setUnlocalizedName(registryName.toString());
 		setSoundType(SoundType.METAL);
 		setHardness(0.3f);
-		setCreativeTab(RefinedRelocation.creativeTab);
+		setCreativeTab(RefinedRelocation.itemGroup);
 
 		IBlockState state = blockState.getBaseState();
 		for (PropertyBool property : CONNECTIONS) {

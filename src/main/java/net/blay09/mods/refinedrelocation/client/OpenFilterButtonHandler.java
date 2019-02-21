@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.client;
 
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.GuiScreenEvent;

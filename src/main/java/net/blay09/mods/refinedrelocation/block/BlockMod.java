@@ -23,9 +23,9 @@ public abstract class BlockMod extends Block {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyDirection DIRECTION = BlockDirectional.FACING;
 
-    public BlockMod(Material material) {
-        super(material);
-        setCreativeTab(RefinedRelocation.creativeTab);
+    public BlockMod(Properties properties) {
+        super(properties);
+        setCreativeTab(RefinedRelocation.itemGroup);
     }
 
     @Override

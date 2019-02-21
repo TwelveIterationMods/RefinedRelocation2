@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.block;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

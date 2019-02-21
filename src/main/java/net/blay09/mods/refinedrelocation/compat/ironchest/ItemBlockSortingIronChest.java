@@ -13,7 +13,6 @@ public class ItemBlockSortingIronChest extends ItemBlock {
 		super(block);
 		//noinspection ConstantConditions
 		setRegistryName(block.getRegistryName());
-		setHasSubtypes(true);
 	}
 
 	@Override

@@ -14,13 +14,13 @@ import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.grid.SortingInventory;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
@@ -39,25 +39,21 @@ public class ContainerRootFilter extends ContainerMod {
     private final IRootFilter rootFilter;
 
     private ReturnCallback returnCallback;
-    private ISortingInventory sortingInventory;
+    private LazyOptional<ISortingInventory> sortingInventoryCap;
 
     private int lastFilterCount = -1;
     private int lastPriority;
     private final boolean[] lastBlacklist = new boolean[3];
 
     public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity) {
-        this(player, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY, null));
+        this(player, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
     }
 
-    public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity, @Nullable IRootFilter rootFilter) {
+    public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
         this.entityPlayer = player;
         this.tileEntity = tileEntity;
-        if (rootFilter == null) {
-            rootFilter = new RootFilter();
-        }
-
-        this.rootFilter = rootFilter;
-        sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY, null);
+        this.rootFilter = rootFilter.orElseGet(RootFilter::new);
+        sortingInventoryCap = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY);
 
         addPlayerInventory(player, 128);
     }
@@ -75,17 +71,18 @@ public class ContainerRootFilter extends ContainerMod {
             boolean nowBlacklist = rootFilter.isBlacklist(i);
             if (lastBlacklist[i] != nowBlacklist) {
                 NBTTagCompound compound = new NBTTagCompound();
-                compound.setInteger(KEY_BLACKLIST_INDEX, i);
+                compound.setInt(KEY_BLACKLIST_INDEX, i);
                 compound.setBoolean(KEY_BLACKLIST, nowBlacklist);
                 RefinedRelocationAPI.syncContainerValue(KEY_BLACKLIST, compound, listeners);
                 lastBlacklist[i] = nowBlacklist;
             }
         }
 
-        if (sortingInventory != null && sortingInventory.getPriority() != lastPriority) {
+        sortingInventoryCap.filter(it -> it.getPriority() != lastPriority).ifPresent(sortingInventory -> {
             RefinedRelocationAPI.syncContainerValue(KEY_PRIORITY, sortingInventory.getPriority(), listeners);
             lastPriority = sortingInventory.getPriority();
-        }
+        });
+
     }
 
     @Override
@@ -178,15 +175,13 @@ public class ContainerRootFilter extends ContainerMod {
                 // Client tried to set an invalid priority. Bad client!
                 return;
             }
-            if (sortingInventory == null) {
-                // Client tried to set priority on an invalid tile. Bad client!
-                return;
-            }
-            sortingInventory.setPriority(value);
-            tileEntity.markDirty();
+            sortingInventoryCap.ifPresent(sortingInventory -> {
+                sortingInventory.setPriority(value);
+                tileEntity.markDirty();
+            });
         } else if (message.getKey().equals(KEY_BLACKLIST)) {
             NBTTagCompound tagCompound = message.getNBTValue();
-            int index = tagCompound.getInteger(KEY_BLACKLIST_INDEX);
+            int index = tagCompound.getInt(KEY_BLACKLIST_INDEX);
             if (index < 0 || index >= rootFilter.getFilterCount()) {
                 // Client tried to delete a filter that doesn't exist. Bad client!
                 return;
@@ -200,12 +195,12 @@ public class ContainerRootFilter extends ContainerMod {
     @Override
     public void receivedMessageClient(IContainerMessage message) {
         if (message.getKey().equals(KEY_ROOT_FILTER)) {
-            rootFilter.deserializeNBT(message.getNBTValue().getCompoundTag(KEY_ROOT_FILTER));
+            rootFilter.deserializeNBT(message.getNBTValue().getCompound(KEY_ROOT_FILTER));
         } else if (message.getKey().equals(KEY_PRIORITY)) {
             getSortingInventory().setPriority(message.getIntValue());
         } else if (message.getKey().equals(KEY_BLACKLIST)) {
             NBTTagCompound compound = message.getNBTValue();
-            rootFilter.setIsBlacklist(compound.getInteger(KEY_BLACKLIST_INDEX), compound.getBoolean(KEY_BLACKLIST));
+            rootFilter.setIsBlacklist(compound.getInt(KEY_BLACKLIST_INDEX), compound.getBoolean(KEY_BLACKLIST));
         }
     }
 
@@ -214,16 +209,12 @@ public class ContainerRootFilter extends ContainerMod {
     }
 
     public boolean hasSortingInventory() {
-        return tileEntity.hasCapability(CapabilitySortingInventory.CAPABILITY, null);
+        return tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY).isPresent();
     }
 
     public ISortingInventory getSortingInventory() {
-        if (sortingInventory == null) {
-            // Create a dummy sorting inventory for the client to store its settings.
-            sortingInventory = new SortingInventory();
-        }
-
-        return sortingInventory;
+        // TODO create dummy for client
+        return sortingInventoryCap;
     }
 
     @Nullable

@@ -23,7 +23,7 @@ repositories {
     }
     
     dependencies {
-        deobfCompile 'refined-relocation-2:RefinedRelocation_1.12.2:4.2.28' // make sure to look up the latest version from the CurseForge files page here
+        compile 'refined-relocation-2:RefinedRelocation_1.12.2:4.2.28' // make sure to look up the latest version from the CurseForge files page here
     }
 }
 ```

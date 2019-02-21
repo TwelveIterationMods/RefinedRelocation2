@@ -1,7 +1,0 @@
-dependencies {
-    deobfCompile "jei:jei_1.12.2:4.8.5.157"
-	deobfCompile "iron-chests:ironchest:1.12.2:7.0.40.824"
-    provided "inventory-tweaks:InventoryTweaks:1.63"
-    provided "hwyla:Hwyla:1.8.23:B38_1.12"
-    provided "the-one-probe:theoneprobe:1.12:1.4.19"
-}

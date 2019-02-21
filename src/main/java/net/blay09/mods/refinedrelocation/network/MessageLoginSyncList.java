@@ -4,16 +4,13 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class MessageLoginSyncList implements IMessage {
+public class MessageLoginSyncList {
 
 	public static final int TYPE_CREATIVE_TABS = 0;
 	public static final int TYPE_MODS = 1;
 
-	private int type;
-	private String[] values;
-
-	public MessageLoginSyncList() {
-	}
+	private final int type;
+	private final String[] values;
 
 	public MessageLoginSyncList(int type, String[] values) {
 		this.type = type;

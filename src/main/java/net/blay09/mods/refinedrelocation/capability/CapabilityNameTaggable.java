@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.capability;
 
 import com.google.common.base.Strings;
 import net.blay09.mods.refinedrelocation.api.INameTaggable;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,12 +17,12 @@ public class CapabilityNameTaggable {
     public static void register() {
         CapabilityManager.INSTANCE.register(INameTaggable.class, new Capability.IStorage<INameTaggable>() {
             @Override
-            public NBTBase writeNBT(Capability<INameTaggable> capability, INameTaggable instance, EnumFacing side) {
+            public INBTBase writeNBT(Capability<INameTaggable> capability, INameTaggable instance, EnumFacing side) {
                 return instance.serializeNBT();
             }
 
             @Override
-            public void readNBT(Capability<INameTaggable> capability, INameTaggable instance, EnumFacing side, NBTBase nbt) {
+            public void readNBT(Capability<INameTaggable> capability, INameTaggable instance, EnumFacing side, INBTBase nbt) {
                 instance.deserializeNBT((NBTTagCompound) nbt);
             }
         }, () -> new INameTaggable() {

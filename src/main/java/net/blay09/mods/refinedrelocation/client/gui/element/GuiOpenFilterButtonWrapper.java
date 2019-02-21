@@ -4,7 +4,6 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiButtonWrapper;
 import net.blay09.mods.refinedrelocation.network.GuiHandler;
-import net.blay09.mods.refinedrelocation.network.MessageOpenGui;
 import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;

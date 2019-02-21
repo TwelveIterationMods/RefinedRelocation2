@@ -1,141 +1,159 @@
 package net.blay09.mods.refinedrelocation.util;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 public class DoorAnimator {
 
-	private final TileEntity tileEntity;
-	private final int eventNumPlayers;
-	private final int eventForcedOpen;
-	private float angle;
-	private float prevAngle;
-	private int numPlayersUsing;
-	private int ticksSinceSync;
-	private SoundEvent soundEventOpen;
-	private SoundEvent soundEventClose;
-	private float openRadius = (float) Math.PI;
-	private boolean isForcedOpen;
+    private final TileEntity tileEntity;
+    private final int eventNumPlayers;
+    private final int eventForcedOpen;
+    private float angle;
+    private float prevAngle;
+    private int numPlayersUsing;
+    private int ticksSinceSync;
+    private SoundEvent soundEventOpen;
+    private SoundEvent soundEventClose;
+    private float openRadius = (float) Math.PI;
+    private boolean isForcedOpen;
 
-	public DoorAnimator(TileEntity tileEntity, int eventNumPlayers, int eventForcedOpen) {
-		this.tileEntity = tileEntity;
-		this.eventNumPlayers = eventNumPlayers;
-		this.eventForcedOpen = eventForcedOpen;
-	}
+    public DoorAnimator(TileEntity tileEntity, int eventNumPlayers, int eventForcedOpen) {
+        this.tileEntity = tileEntity;
+        this.eventNumPlayers = eventNumPlayers;
+        this.eventForcedOpen = eventForcedOpen;
+    }
 
-	public DoorAnimator setSoundEventOpen(SoundEvent soundEventOpen) {
-		this.soundEventOpen = soundEventOpen;
-		return this;
-	}
+    public DoorAnimator setSoundEventOpen(SoundEvent soundEventOpen) {
+        this.soundEventOpen = soundEventOpen;
+        return this;
+    }
 
-	public DoorAnimator setSoundEventClose(SoundEvent soundEventClose) {
-		this.soundEventClose = soundEventClose;
-		return this;
-	}
+    public DoorAnimator setSoundEventClose(SoundEvent soundEventClose) {
+        this.soundEventClose = soundEventClose;
+        return this;
+    }
 
-	public DoorAnimator setOpenRadius(float openRadius) {
-		this.openRadius = openRadius;
-		return this;
-	}
+    public DoorAnimator setOpenRadius(float openRadius) {
+        this.openRadius = openRadius;
+        return this;
+    }
 
-	public void update() {
-		ticksSinceSync++;
-		int x = tileEntity.getPos().getX();
-		int y = tileEntity.getPos().getY();
-		int z = tileEntity.getPos().getZ();
-		if (!tileEntity.getWorld().isRemote && numPlayersUsing != 0 && (ticksSinceSync + x + y + z) % 200 == 0) {
-			// This is Mojang's bad fix for chests staying open. Because it makes so much more sense to do this than to ensure onContainerClosed is always called properly.
-			numPlayersUsing = 0;
-			float range = 5f;
-			for (EntityPlayer entityplayer : tileEntity.getWorld().getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range))) {
-				if (entityplayer.openContainer instanceof IContainerWithDoor) {
-					if (((IContainerWithDoor) entityplayer.openContainer).isTileEntity(tileEntity)) {
-						numPlayersUsing++;
-					}
-				}
-			}
-		}
+    public void update() {
+        ticksSinceSync++;
+        World world = tileEntity.getWorld();
+        if (world == null) {
+            return;
+        }
 
-		prevAngle = angle;
+        int x = tileEntity.getPos().getX();
+        int y = tileEntity.getPos().getY();
+        int z = tileEntity.getPos().getZ();
+        if (!world.isRemote && numPlayersUsing != 0 && (ticksSinceSync + x + y + z) % 200 == 0) {
+            // This is Mojang's bad fix for chests staying open. Because it makes so much more sense to do this than to ensure onContainerClosed is always called properly.
+            numPlayersUsing = 0;
+            float range = 5f;
+            for (EntityPlayer entityplayer : world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range))) {
+                if (entityplayer.openContainer instanceof IContainerWithDoor) {
+                    if (((IContainerWithDoor) entityplayer.openContainer).isTileEntity(tileEntity)) {
+                        numPlayersUsing++;
+                    }
+                }
+            }
+        }
 
-		if ((isForcedOpen || numPlayersUsing > 0) && angle == 0f && soundEventOpen != null) {
-			tileEntity.getWorld().playSound(null, tileEntity.getPos(), soundEventOpen, SoundCategory.BLOCKS, 0.5f, tileEntity.getWorld().rand.nextFloat() * 0.1f + 0.9f);
-		}
+        prevAngle = angle;
 
-		float angleSpeed = 0.1f;
-		if (((numPlayersUsing == 0 || !isForcedOpen) && angle > 0f) || ((isForcedOpen || numPlayersUsing > 0) && angle < 1f)) {
-			float angleBefore = angle;
-			if (numPlayersUsing > 0 || isForcedOpen) {
-				angle += angleSpeed;
-			} else {
-				angle -= angleSpeed;
-			}
-			angle = Math.min(angle, 1f);
-			float playCloseSound = 0.5f;
-			if (angle < playCloseSound && angleBefore >= playCloseSound && soundEventClose != null) {
-				tileEntity.getWorld().playSound(null, tileEntity.getPos(), soundEventClose, SoundCategory.BLOCKS, 0.5f, tileEntity.getWorld().rand.nextFloat() * 0.1f + 0.9f);
-			}
-			angle = Math.max(angle, 0f);
-		}
-	}
+        if ((isForcedOpen || numPlayersUsing > 0) && angle == 0f && soundEventOpen != null) {
+            tileEntity.getWorld().playSound(null, tileEntity.getPos(), soundEventOpen, SoundCategory.BLOCKS, 0.5f, tileEntity.getWorld().rand.nextFloat() * 0.1f + 0.9f);
+        }
 
-	public void toggleForcedOpen() {
-		setForcedOpen(!isForcedOpen);
-	}
+        float angleSpeed = 0.1f;
+        if (((numPlayersUsing == 0 || !isForcedOpen) && angle > 0f) || ((isForcedOpen || numPlayersUsing > 0) && angle < 1f)) {
+            float angleBefore = angle;
+            if (numPlayersUsing > 0 || isForcedOpen) {
+                angle += angleSpeed;
+            } else {
+                angle -= angleSpeed;
+            }
+            angle = Math.min(angle, 1f);
+            float playCloseSound = 0.5f;
+            if (angle < playCloseSound && angleBefore >= playCloseSound && soundEventClose != null) {
+                tileEntity.getWorld().playSound(null, tileEntity.getPos(), soundEventClose, SoundCategory.BLOCKS, 0.5f, tileEntity.getWorld().rand.nextFloat() * 0.1f + 0.9f);
+            }
+            angle = Math.max(angle, 0f);
+        }
+    }
 
-	public boolean isForcedOpen() {
-		return isForcedOpen;
-	}
+    public void toggleForcedOpen() {
+        setForcedOpen(!isForcedOpen);
+    }
 
-	public void setForcedOpen(boolean isForcedOpen) {
-		this.isForcedOpen = isForcedOpen;
-		tileEntity.getWorld().addBlockEvent(tileEntity.getPos(), tileEntity.getBlockType(), 2, isForcedOpen ? 1 : 0);
-	}
+    public boolean isForcedOpen() {
+        return isForcedOpen;
+    }
 
-	public boolean receiveClientEvent(int id, int type) {
-		if (id == eventNumPlayers) {
-			numPlayersUsing = type;
-			return true;
-		} else if(id == eventForcedOpen) {
-			isForcedOpen = type == 1;
-			return true;
-		}
-		return false;
-	}
+    public void setForcedOpen(boolean isForcedOpen) {
+        this.isForcedOpen = isForcedOpen;
+        World world = tileEntity.getWorld();
+        if (world != null) {
+            world.addBlockEvent(tileEntity.getPos(), tileEntity.getBlockState().getBlock(), 2, isForcedOpen ? 1 : 0);
+        }
+    }
 
-	public void openContainer(EntityPlayer player) {
-		if (!player.isSpectator()) {
-			numPlayersUsing = Math.max(0, numPlayersUsing + 1);
-			tileEntity.getWorld().addBlockEvent(tileEntity.getPos(), tileEntity.getBlockType(), eventNumPlayers, numPlayersUsing);
-			tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos(), tileEntity.getBlockType(), true);
-			tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos().down(), tileEntity.getBlockType(), true);
-		}
-	}
+    public boolean receiveClientEvent(int id, int type) {
+        if (id == eventNumPlayers) {
+            numPlayersUsing = type;
+            return true;
+        } else if (id == eventForcedOpen) {
+            isForcedOpen = type == 1;
+            return true;
+        }
+        return false;
+    }
 
-	public void closeContainer(EntityPlayer player) {
-		if (!player.isSpectator()) {
-			numPlayersUsing--;
-			tileEntity.getWorld().addBlockEvent(tileEntity.getPos(), tileEntity.getBlockType(), eventNumPlayers, numPlayersUsing);
-			tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos(), tileEntity.getBlockType(), true);
-			tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos().down(), tileEntity.getBlockType(), true);
-		}
-	}
+    public void openContainer(EntityPlayer player) {
+        if (!player.isSpectator()) {
+            numPlayersUsing = Math.max(0, numPlayersUsing + 1);
+            Block block = tileEntity.getBlockState().getBlock();
+            World world = tileEntity.getWorld();
+            if (world != null) {
+                world.addBlockEvent(tileEntity.getPos(), block, eventNumPlayers, numPlayersUsing);
+                world.notifyNeighborsOfStateChange(tileEntity.getPos(), block);
+                world.notifyNeighborsOfStateChange(tileEntity.getPos().down(), block);
+            }
+        }
+    }
 
-	public float getRenderAngle(float partialTicks) {
-		float renderAngle = prevAngle + (angle - prevAngle) * partialTicks;
-		renderAngle = 1f - renderAngle;
-		renderAngle = 1f - renderAngle * renderAngle * renderAngle;
-		return (float) ((Math.PI / openRadius) * renderAngle);
-	}
+    public void closeContainer(EntityPlayer player) {
+        if (!player.isSpectator()) {
+            numPlayersUsing--;
+            Block block = tileEntity.getBlockState().getBlock();
+            World world = tileEntity.getWorld();
+            if (world != null) {
+                world.addBlockEvent(tileEntity.getPos(), block, eventNumPlayers, numPlayersUsing);
+                world.notifyNeighborsOfStateChange(tileEntity.getPos(), block);
+                world.notifyNeighborsOfStateChange(tileEntity.getPos().down(), block);
+            }
+        }
+    }
 
-	public int getNumPlayersUsing() {
-		return numPlayersUsing;
-	}
+    public float getRenderAngle(float partialTicks) {
+        float renderAngle = prevAngle + (angle - prevAngle) * partialTicks;
+        renderAngle = 1f - renderAngle;
+        renderAngle = 1f - renderAngle * renderAngle * renderAngle;
+        return (float) ((Math.PI / openRadius) * renderAngle);
+    }
 
-	public void setNumPlayersUsing(int numPlayersUsing) {
-		this.numPlayersUsing = numPlayersUsing;
-	}
+    public int getNumPlayersUsing() {
+        return numPlayersUsing;
+    }
+
+    public void setNumPlayersUsing(int numPlayersUsing) {
+        this.numPlayersUsing = numPlayersUsing;
+    }
 }
