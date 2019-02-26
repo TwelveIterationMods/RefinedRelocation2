@@ -43,13 +43,4 @@ public class ModBlocks {
         return new Item.Properties().group(RefinedRelocation.itemGroup);
     }
 
-    public static void registerTileEntities() {
-        GameRegistry.registerTileEntity(TileSortingChest.class, BlockSortingChest.registryName.toString());
-        GameRegistry.registerTileEntity(TileBlockExtender.class, BlockBlockExtender.registryName.toString());
-        GameRegistry.registerTileEntity(TileFastHopper.class, BlockFastHopper.registryName.toString());
-        GameRegistry.registerTileEntity(TileFilteredHopper.class, BlockFilteredHopper.registryName.toString());
-        GameRegistry.registerTileEntity(TileSortingConnector.class, BlockSortingConnector.registryName.toString());
-        GameRegistry.registerTileEntity(TileSortingInterface.class, BlockSortingInterface.registryName.toString());
-    }
-
 }

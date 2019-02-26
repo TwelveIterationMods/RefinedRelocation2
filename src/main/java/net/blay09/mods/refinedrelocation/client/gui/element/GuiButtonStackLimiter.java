@@ -1,28 +1,41 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextButton;
+import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
+import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class GuiButtonStackLimiter extends GuiTextButton {
+public class GuiButtonStackLimiter extends GuiButton implements ITickableElement, ITooltipElement {
 
     private final TileBlockExtender blockExtender;
 
-    public GuiButtonStackLimiter(int x, int y, int width, int height, TileBlockExtender blockExtender) {
-        super(x, y, width, height, "");
+    public GuiButtonStackLimiter(int buttonId, int x, int y, int width, int height, TileBlockExtender blockExtender) {
+        super(buttonId, x, y, width, height, "");
         this.blockExtender = blockExtender;
     }
 
     @Override
-    public void actionPerformed(int mouseButton) {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (isPressable(mouseX, mouseY)) {
+            playPressSound(Minecraft.getInstance().getSoundHandler());
+            onClick(mouseX, mouseY, mouseButton);
+        }
+
+        return super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    public void onClick(double mouseX, double mouseY, int mouseButton) {
         int limit = blockExtender.getStackLimiterLimit();
         int index = (int) (Math.log(limit) / Math.log(2));
-        int maxIndex = (int) (Math.log(Items.AIR.getItemStackLimit()) / Math.log(2));
+        int maxIndex = (int) (Math.log(Items.AIR.getItemStackLimit(ItemStack.EMPTY) / Math.log(2)));
         if (mouseButton == 0) {
             if (index < maxIndex) {
                 index++;
@@ -37,22 +50,22 @@ public class GuiButtonStackLimiter extends GuiTextButton {
     }
 
     @Override
-    public void mouseWheelMoved(int mouseX, int mouseY, int delta) {
+    public boolean mouseScrolled(double delta) {
         int limit = blockExtender.getStackLimiterLimit();
         if (delta > 0) {
             limit++;
         } else if (delta < 0) {
             limit--;
         }
-        limit = MathHelper.clamp(limit, 1, Items.AIR.getItemStackLimit());
+
+        limit = MathHelper.clamp(limit, 1, Items.AIR.getItemStackLimit(ItemStack.EMPTY));
         blockExtender.setStackLimiterLimit(limit);
+        return true;
     }
 
     @Override
-    public void update() {
-        super.update();
-
-        text = String.valueOf(blockExtender.getStackLimiterLimit());
+    public void tick() {
+        displayString = String.valueOf(blockExtender.getStackLimiterLimit());
     }
 
     @Override

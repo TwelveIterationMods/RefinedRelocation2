@@ -1,8 +1,7 @@
 package net.blay09.mods.refinedrelocation.api.filter;
 
-import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IInteractionObject;
 
 import javax.annotation.Nullable;
 
@@ -12,7 +11,7 @@ public interface IFilter extends ISimpleFilter, Comparable<IFilter> {
 	String getDescriptionLangKey();
 	boolean isFilterUsable(TileEntity tileEntity);
 	@Nullable
-	IFilterIcon getFilterIcon();
+	IDrawable getFilterIcon();
 
 	default int getVisualOrder() {
 		return 0;

@@ -1,23 +1,21 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.util.DoorAnimator;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -25,7 +23,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSortingChest extends TileMod implements ITickable, IInteractionObject {
+public class TileSortingChest extends TileMod implements ITickable, IInteractionObjectWithoutName {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
         @Override
@@ -42,6 +40,7 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
     private final INameTaggable nameTaggable = Capabilities.getDefaultInstance(Capabilities.NAME_TAGGABLE);
 
     public TileSortingChest() {
+        super(ModTiles.sortingChest);
         doorAnimator.setSoundEventOpen(SoundEvents.BLOCK_CHEST_OPEN);
         doorAnimator.setSoundEventClose(SoundEvents.BLOCK_CHEST_CLOSE);
     }
@@ -73,26 +72,11 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
         return doorAnimator;
     }
 
-    /**
-     * TODO remove in 1.13
-     */
-    public static void fixRootFilterTag(NBTTagCompound compound) {
-        if (compound.getTagId("RootFilter") == Constants.NBT.TAG_LIST) {
-            NBTTagList tagList = compound.getList("RootFilter", Constants.NBT.TAG_COMPOUND);
-            compound.remove("RootFilter");
-            NBTTagCompound rootFilter = new NBTTagCompound();
-            rootFilter.put("FilterList", tagList);
-            compound.put("RootFilter", rootFilter);
-        }
-    }
-
     @Override
     public void read(NBTTagCompound compound) {
         super.read(compound);
         itemHandler.deserializeNBT(compound.getCompound("ItemHandler"));
         sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
-
-        fixRootFilterTag(compound);
 
         rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
         nameTaggable.deserializeNBT(compound.getCompound("NameTaggable"));
@@ -150,28 +134,6 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
         }
 
         return result;
-    }
-
-    @Override
-    public ITextComponent getName() {
-        return null;
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    @Nullable
-    @Override
-    public ITextComponent getDisplayName() {
-        return nameTaggable.getDisplayName();
-    }
-
-    @Nullable
-    @Override
-    public ITextComponent getCustomName() {
-        return null;
     }
 
     @Override

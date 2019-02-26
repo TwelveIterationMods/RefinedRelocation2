@@ -8,7 +8,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiChecklistEntry;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonWrapper;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiReturnFromFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -45,7 +45,7 @@ public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter
 			y += entries[i].getHeight();
 		}
 
-		rootNode.addChild(new GuiOpenFilterButtonWrapper(this, container.getTileEntity(), 0));
+		rootNode.addChild(new GuiReturnFromFilterButton(this, container.getTileEntity(), 0));
 
 		setCurrentOffset(0);
 	}

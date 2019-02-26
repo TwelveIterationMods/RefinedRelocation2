@@ -3,12 +3,19 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
+import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,6 +35,7 @@ public class RootFilter implements IRootFilter {
         if (index < 0 || index >= filterList.size()) {
             return null;
         }
+
         return filterList.get(index).getFilter();
     }
 
@@ -59,6 +67,7 @@ public class RootFilter implements IRootFilter {
         if (itemStack.isEmpty()) {
             return false;
         }
+
         boolean passes = false;
         for (SubFilterWrapper filter : filterList) {
             boolean filterPasses = filter.getFilter().passes(tileEntity, itemStack);
@@ -67,6 +76,7 @@ public class RootFilter implements IRootFilter {
             }
             passes = passes || filterPasses;
         }
+
         return passes;
     }
 
@@ -79,7 +89,7 @@ public class RootFilter implements IRootFilter {
             filter.writeNBT(tagCompound);
             filterList.add(tagCompound);
         }
-        compound.setTag("FilterList", filterList);
+        compound.put("FilterList", filterList);
         return compound;
     }
 
@@ -97,4 +107,19 @@ public class RootFilter implements IRootFilter {
         }
     }
 
+    @Nullable
+    @Override
+    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+        return new IInteractionObjectWithoutName() {
+            @Override
+            public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
+                return new ContainerRootFilter(player, tileEntity, LazyOptional.of(() -> RootFilter.this));
+            }
+
+            @Override
+            public String getGuiID() {
+                return "refinedrelocation:root_filter";
+            }
+        };
+    }
 }

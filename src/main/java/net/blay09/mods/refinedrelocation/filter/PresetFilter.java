@@ -3,9 +3,9 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
+import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.nbt.INBTBase;
@@ -15,10 +15,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -243,8 +244,8 @@ public class PresetFilter implements IChecklistFilter {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public IFilterIcon getFilterIcon() {
-        return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_preset_filter");
+    public IDrawable getFilterIcon() {
+        return GuiTextures.PRESET_FILTER_ICON;
     }
 
     @Override
@@ -270,5 +271,11 @@ public class PresetFilter implements IChecklistFilter {
     @Override
     public int getVisualOrder() {
         return 1000;
+    }
+
+    @Nullable
+    @Override
+    public IInteractionObject getConfiguration() {
+        return null;
     }
 }

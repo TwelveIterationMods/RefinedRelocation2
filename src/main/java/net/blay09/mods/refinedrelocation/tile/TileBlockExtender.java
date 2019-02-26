@@ -5,7 +5,6 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,11 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,8 +26,14 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 
-public class TileBlockExtender extends TileMod implements ITickable, IInteractionObjectWithoutName {
+public class TileBlockExtender extends TileMod implements ITickable, IInteractionObjectWithoutName, IDroppableItemHandler {
+
+    public TileBlockExtender(TileEntityType<?> type) {
+        super(type);
+    }
 
     private class ItemHandlerWrapper implements IItemHandler {
         private final TileEntity tileEntity;
@@ -251,16 +254,15 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
                     if (cachedItemHandlers[cacheIdx] != null) {
                         if (!cachedItemHandlers[cacheIdx].revalidate()) {
                             cachedItemHandlers[cacheIdx] = null;
-                            return null;
+                            return LazyOptional.empty();
                         }
                     } else {
-                        LazyOptional<IItemHandler> itemHandler = cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ioSide);
-                        if (itemHandler == null) {
-                            return null;
-                        }
-                        cachedItemHandlers[cacheIdx] = new ItemHandlerWrapper(cachedConnectedTile, ioSide, itemHandler);
+                        LazyOptional<IItemHandler> itemHandlerCap = cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ioSide);
+                        itemHandlerCap.ifPresent(itemHandler -> {
+                            cachedItemHandlers[cacheIdx] = new ItemHandlerWrapper(cachedConnectedTile, ioSide, itemHandler);
+                        });
                     }
-                    return (T) cachedItemHandlers[cacheIdx];
+                    return LazyOptional.of(() -> (T) cachedItemHandlers[cacheIdx]);
                 }
                 return cachedConnectedTile.getCapability(cap, ioSide);
             }
@@ -304,10 +306,8 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
     }
 
     @Override
-    public void dropItemHandlers() {
-        super.dropItemHandlers();
-
-        ItemUtils.dropItemHandlerItems(world, pos, itemHandlerUpgrades);
+    public Collection<IItemHandler> getDroppedItemHandlers() {
+        return Collections.singletonList(itemHandlerUpgrades);
     }
 
     public int getStackLimiterLimit() {

@@ -14,10 +14,11 @@ public class RefinedRelocationUtils {
     public static void dropItemHandler(World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null) {
-            LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-            itemHandlerCap.ifPresent(itemHandler -> ItemUtils.dropItemHandlerItems(world, pos, itemHandler));
             if (tileEntity instanceof IDroppableItemHandler) {
-                ((IDroppableItemHandler) tileEntity).dropItemHandlers();
+                ((IDroppableItemHandler) tileEntity).getDroppedItemHandlers().forEach(itemHandler -> ItemUtils.dropItemHandlerItems(world, pos, itemHandler));
+            } else {
+                LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                itemHandlerCap.ifPresent(itemHandler -> ItemUtils.dropItemHandlerItems(world, pos, itemHandler));
             }
         }
     }

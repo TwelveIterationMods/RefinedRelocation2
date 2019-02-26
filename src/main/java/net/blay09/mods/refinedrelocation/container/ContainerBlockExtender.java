@@ -1,18 +1,18 @@
 package net.blay09.mods.refinedrelocation.container;
 
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
-import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -22,7 +22,8 @@ public class ContainerBlockExtender extends ContainerMod {
     public static final String KEY_SIDE_INDEX = "SideIndex";
     public static final String KEY_SIDE_MAPPING = "SideMapping";
     public static final String KEY_STACK_LIMITER = "StackLimiter";
-    public static final String KEY_CONFIGURE_FILTER = "ConfigureFilter";
+    public static final String KEY_CONFIGURE_INPUT_FILTER = "ConfigureInputFilter";
+    public static final String KEY_CONFIGURE_OUTPUT_FILTER = "ConfigureOutputFilter";
 
     private final EntityPlayer player;
     private final TileBlockExtender tileEntity;
@@ -65,25 +66,37 @@ public class ContainerBlockExtender extends ContainerMod {
 
     @Override
     public void receivedMessageServer(IContainerMessage message) {
-        if (message.getKey().equals(KEY_TOGGLE_SIDE)) {
-            RelativeSide side = RelativeSide.fromIndex(message.getIntValue());
-            if (side != RelativeSide.FRONT) {
-                int facingIdx = message.getSecondaryIntValue();
-                EnumFacing facing = facingIdx == -1 ? null : EnumFacing.byIndex(facingIdx);
-                tileEntity.setSideMapping(side, facing);
-                lastSideMapping[side.ordinal()] = facing;
-            }
-        } else if (message.getKey().equals(KEY_STACK_LIMITER)) {
-            int stackSizeLimit = MathHelper.clamp(message.getIntValue(), 1, Items.AIR.getItemStackLimit(ItemStack.EMPTY));
-            tileEntity.setStackLimiterLimit(stackSizeLimit);
-            lastStackLimiterLimit = stackSizeLimit;
-        } else if (message.getKey().equals(KEY_CONFIGURE_FILTER)) {
-            if (message.getIntValue() == 0 && !tileEntity.hasInputFilter()) {
-                return;
-            } else if (message.getIntValue() == 1 && !tileEntity.hasOutputFilter()) {
-                return;
-            }
-            RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER_ROOT_FILTER, tileEntity.getPos(), message.getIntValue()));
+        switch (message.getKey()) {
+            case KEY_TOGGLE_SIDE:
+                RelativeSide side = RelativeSide.fromIndex(message.getIndex());
+                if (side != RelativeSide.FRONT) {
+                    int facingIdx = message.getIntValue();
+                    EnumFacing facing = facingIdx == -1 ? null : EnumFacing.byIndex(facingIdx);
+                    tileEntity.setSideMapping(side, facing);
+                    lastSideMapping[side.ordinal()] = facing;
+                }
+                break;
+            case KEY_STACK_LIMITER:
+                int stackSizeLimit = MathHelper.clamp(message.getIntValue(), 1, Items.AIR.getItemStackLimit(ItemStack.EMPTY));
+                tileEntity.setStackLimiterLimit(stackSizeLimit);
+                lastStackLimiterLimit = stackSizeLimit;
+                break;
+            case KEY_CONFIGURE_INPUT_FILTER:
+                tileEntity.getInputFilter().ifPresent(it -> {
+                    IInteractionObject config = it.getConfiguration();
+                    if (config != null) {
+                        NetworkHooks.openGui((EntityPlayerMP) player, config, tileEntity.getPos());
+                    }
+                });
+                break;
+            case KEY_CONFIGURE_OUTPUT_FILTER:
+                tileEntity.getOutputFilter().ifPresent(it -> {
+                    IInteractionObject config = it.getConfiguration();
+                    if (config != null) {
+                        NetworkHooks.openGui((EntityPlayerMP) player, config, tileEntity.getPos());
+                    }
+                });
+                break;
         }
     }
 

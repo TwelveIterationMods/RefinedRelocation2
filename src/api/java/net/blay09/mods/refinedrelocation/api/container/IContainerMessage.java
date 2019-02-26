@@ -6,6 +6,10 @@ public interface IContainerMessage {
 
     String getKey();
 
+    default int getIndex() {
+        return 0;
+    }
+
     default int getIntValue() {
         return 0;
     }

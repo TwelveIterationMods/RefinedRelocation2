@@ -4,7 +4,6 @@ import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonBlockExtenderFilter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonStackLimiter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiSideButton;
@@ -12,6 +11,7 @@ import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +31,7 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     private final GuiButtonStackLimiter btnStackLimiter;
     private final GuiButtonBlockExtenderFilter btnInputFilter;
     private final GuiButtonBlockExtenderFilter btnOutputFilter;
-    private final GuiTextButton btnSlotLock;
+    private final GuiButton btnSlotLock;
 
     private int stackLimiterIdx;
     private int slotLockIdx;
@@ -75,11 +75,11 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
         btnStackLimiter.setVisible(false);
         rootNode.addChild(btnStackLimiter);
 
-        btnInputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity, false);
+        btnInputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity);
         btnInputFilter.setVisible(false);
         rootNode.addChild(btnInputFilter);
 
-        btnOutputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity, true);
+        btnOutputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity);
         btnOutputFilter.setVisible(false);
         rootNode.addChild(btnOutputFilter);
 
@@ -176,7 +176,7 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        fontRenderer.drawString(tileEntity.getDisplayNameForGui().getFormattedText(), 8, 6, 4210752);
+        fontRenderer.drawString(tileEntity.getDisplayName().getFormattedText(), 8, 6, 4210752);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

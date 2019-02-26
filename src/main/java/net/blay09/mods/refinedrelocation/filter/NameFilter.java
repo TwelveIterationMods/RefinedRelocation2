@@ -1,10 +1,8 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
-import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.blay09.mods.refinedrelocation.client.gui.GuiNameFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
 import net.minecraft.client.gui.GuiScreen;
@@ -143,7 +141,7 @@ public class NameFilter implements IFilter, IConfigurableFilter {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IFilterIcon getFilterIcon() {
+	public IDrawable getFilterIcon() {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_name_filter");
 	}
 

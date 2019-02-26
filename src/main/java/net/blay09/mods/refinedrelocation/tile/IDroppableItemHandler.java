@@ -1,5 +1,9 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.minecraftforge.items.IItemHandler;
+
+import java.util.Collection;
+
 public interface IDroppableItemHandler {
-    void dropItemHandlers();
+    Collection<IItemHandler> getDroppedItemHandlers();
 }

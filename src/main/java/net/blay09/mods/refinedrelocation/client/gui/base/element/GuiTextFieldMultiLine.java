@@ -1,429 +1,375 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
+public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget {
 
-	private static final int ENABLED_COLOR = 0xE0E0E0;
-	private static final int DISABLED_COLOR = 0x707070;
-	private static final int PADDING = 2;
+    private static final int ENABLED_COLOR = 0xE0E0E0;
+    private static final int DISABLED_COLOR = 0x707070;
+    private static final int PADDING = 2;
 
-	private FontRenderer fontRenderer;
-	private String text = "";
-	private int maxLength = Integer.MAX_VALUE;
-	private boolean isEnabled = true;
-	private boolean visible = true;
+    private final FontRenderer fontRenderer;
 
-	private boolean canLoseFocus = true;
-	private boolean isFocused;
-	private int cursorPosition;
-	private int cursorCounter;
-	private int scrollOffset;
-	private int lineScrollOffset;
+    private int scrollOffset;
+    private int cursorCounter;
 
-	private String[] renderCache;
-	private int lastRowCount;
+    private String[] renderCache;
+    private int lastRowCount;
 
-	public GuiTextFieldMultiLine(int x, int y, int width, int height) {
-		fontRenderer = Minecraft.getInstance().fontRenderer;
-		setPosition(x, y);
-		setSize(width, height);
-	}
+    public GuiTextFieldMultiLine(int id, int x, int y, int width, int height) {
+        super(id, Minecraft.getInstance().fontRenderer, x, y, width, height);
+        fontRenderer = Minecraft.getInstance().fontRenderer;
+    }
 
-	@Override
-	public void initGui(IParentScreen parentScreen) {
-		super.initGui(parentScreen);
-		fontRenderer = parentScreen.getFontRenderer();
-	}
+    private int getStartOfLine(int position, int iterations) {
+        String text = getText();
+        int startOfLine = position;
+        for (int i = 0; i < iterations; i++) {
+            startOfLine = text.lastIndexOf('\n', startOfLine - 1);
+        }
+        return startOfLine != -1 ? startOfLine + 1 : 0;
+    }
 
-	private int getStartOfLine(int position, int iterations) {
-		int startOfLine = position;
-		for (int i = 0; i < iterations; i++) {
-			startOfLine = text.lastIndexOf('\n', startOfLine - 1);
-		}
-		return startOfLine != -1 ? startOfLine + 1 : 0;
-	}
+    private int getEndOfLine(int position, int iteration) {
+        String text = getText();
+        int endOfLine = position - 1;
+        for (int i = 0; i < iteration; i++) {
+            endOfLine = text.indexOf('\n', endOfLine + 1);
+            if (endOfLine == -1) {
+                return text.length();
+            }
+        }
+        return endOfLine != -1 ? endOfLine : text.length();
+    }
 
-	private int getEndOfLine(int position, int iteration) {
-		int endOfLine = position - 1;
-		for (int i = 0; i < iteration; i++) {
-			endOfLine = text.indexOf('\n', endOfLine + 1);
-			if (endOfLine == -1) {
-				return text.length();
-			}
-		}
-		return endOfLine != -1 ? endOfLine : text.length();
-	}
+    private int getLineLength(int position) {
+        return getEndOfLine(position, 1) - getStartOfLine(position, 1);
+    }
 
-	private int getLineLength(int position) {
-		return getEndOfLine(position, 1) - getStartOfLine(position, 1);
-	}
+    private int getStartOfWord(int position) {
+        String text = getText();
+        if (text.isEmpty()) {
+            return 0;
+        }
 
-	private int getStartOfWord(int position) {
-		if(text.isEmpty()) {
-			return 0;
-		}
-		position = Math.max(Math.min(position, text.length() - 1), 0);
-		if (text.charAt(position) == '\n') {
-			return position;
-		}
-		boolean foundAlphabetic = false;
-		for (int i = position; i >= 0; i--) {
-			char c = text.charAt(i);
-			if (c == '\n') {
-				return i + 1;
-			}
-			if (Character.isAlphabetic(c)) {
-				foundAlphabetic = true;
-			} else if (foundAlphabetic) {
-				return i + 1;
-			}
-		}
-		return 0;
-	}
+        position = Math.max(Math.min(position, text.length() - 1), 0);
+        if (text.charAt(position) == '\n') {
+            return position;
+        }
+        boolean foundAlphabetic = false;
+        for (int i = position; i >= 0; i--) {
+            char c = text.charAt(i);
+            if (c == '\n') {
+                return i + 1;
+            }
+            if (Character.isAlphabetic(c)) {
+                foundAlphabetic = true;
+            } else if (foundAlphabetic) {
+                return i + 1;
+            }
+        }
+        return 0;
+    }
 
-	private int getStartOfNextWord(int position) {
-		position = Math.max(Math.min(position, text.length() - 1), 0);
-		if (text.charAt(position) == '\n') {
-			return position;
-		}
-		boolean foundNonAlphabetic = false;
-		for (int i = position; i < text.length(); i++) {
-			char c = text.charAt(i);
-			if (c == '\n') {
-				return i;
-			}
-			if (!Character.isAlphabetic(c)) {
-				foundNonAlphabetic = true;
-			} else if (foundNonAlphabetic) {
-				return i;
-			}
-		}
-		return text.length();
-	}
+    private int getStartOfNextWord(int position) {
+        String text = getText();
+        position = Math.max(Math.min(position, text.length() - 1), 0);
+        if (text.charAt(position) == '\n') {
+            return position;
+        }
+        boolean foundNonAlphabetic = false;
+        for (int i = position; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '\n') {
+                return i;
+            }
+            if (!Character.isAlphabetic(c)) {
+                foundNonAlphabetic = true;
+            } else if (foundNonAlphabetic) {
+                return i;
+            }
+        }
+        return text.length();
+    }
 
-	public void setCursorPosition(int cursorPosition) {
-		this.cursorPosition = Math.min(Math.max(cursorPosition, 0), text.length());
+    public void setCursorPosition(int cursorPosition) {
+        String text = getText();
+        super.setCursorPosition(Math.min(Math.max(cursorPosition, 0), text.length()));
 
-		int cursorLine = 0;
-		for (int i = 0; i < this.cursorPosition; i++) {
-			if (text.charAt(i) == '\n') {
-				cursorLine++;
-			}
-		}
+        int cursorLine = 0;
+        for (int i = 0; i < this.getCursorPosition(); i++) {
+            if (text.charAt(i) == '\n') {
+                cursorLine++;
+            }
+        }
 
-		int innerHeight = getHeight() - PADDING;
-		int cursorRenderY = (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING;
-		if (cursorRenderY < 0) {
-			scroll(0, cursorRenderY / fontRenderer.FONT_HEIGHT - 1);
-		} else if (cursorRenderY > innerHeight - fontRenderer.FONT_HEIGHT) {
-			scroll(0, (cursorRenderY - innerHeight) / fontRenderer.FONT_HEIGHT + 1);
-		}
+        int innerHeight = height - PADDING;
+        int cursorRenderY = (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING;
+        if (cursorRenderY < 0) {
+            scroll(0, cursorRenderY / fontRenderer.FONT_HEIGHT - 1);
+        } else if (cursorRenderY > innerHeight - fontRenderer.FONT_HEIGHT) {
+            scroll(0, (cursorRenderY - innerHeight) / fontRenderer.FONT_HEIGHT + 1);
+        }
 
-		int innerWidth = getWidth() - PADDING;
-		int startOfLine = getStartOfLine(cursorPosition, 1);
-		int endOfLine = getEndOfLine(cursorPosition, 1);
-		int cursorPositionX = Math.min(getLineLength(cursorPosition), cursorPosition - startOfLine);
-		String lineText = text.substring(startOfLine, endOfLine);
-		lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-		String renderText = fontRenderer.trimStringToWidth(lineText, innerWidth);
-		if (cursorPositionX == lineScrollOffset) {
-			lineScrollOffset -= renderText.length();
-		}
-		lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-		int offset = renderText.length() + lineScrollOffset;
-		if (cursorPositionX > offset) {
-			lineScrollOffset += cursorPositionX - offset;
-		} else if (cursorPositionX <= lineScrollOffset) {
-			lineScrollOffset -= lineScrollOffset - cursorPositionX;
-		}
-		lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-	}
+        int innerWidth = width - PADDING;
+        int startOfLine = getStartOfLine(cursorPosition, 1);
+        int endOfLine = getEndOfLine(cursorPosition, 1);
+        int cursorPositionX = Math.min(getLineLength(cursorPosition), cursorPosition - startOfLine);
+        String lineText = text.substring(startOfLine, endOfLine);
+        lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
+        String renderText = fontRenderer.trimStringToWidth(lineText, innerWidth);
+        if (cursorPositionX == lineScrollOffset) {
+            lineScrollOffset -= renderText.length();
+        }
 
-	public void scroll(int x, int y) {
-		lineScrollOffset = Math.max(lineScrollOffset + x, 0);
-		scrollOffset = Math.max(scrollOffset + y, 0);
-	}
+        lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
+        int offset = renderText.length() + lineScrollOffset;
+        if (cursorPositionX > offset) {
+            lineScrollOffset += cursorPositionX - offset;
+        } else if (cursorPositionX <= lineScrollOffset) {
+            lineScrollOffset -= lineScrollOffset - cursorPositionX;
+        }
 
-	private void deleteBack(boolean wholeWord) {
-		int deleteCount = 1;
-		if (wholeWord) {
-			deleteCount = cursorPosition - getStartOfWord(cursorPosition);
-		}
-		if (cursorPosition > 0) {
-			text = text.substring(0, cursorPosition - deleteCount) + text.substring(cursorPosition);
-			setCursorPosition(cursorPosition - deleteCount);
-			renderCache = null;
-		}
-	}
+        lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
+    }
 
-	private void deleteFront(boolean wholeWord) {
-		int deleteCount = 1;
-		if (wholeWord) {
-			deleteCount = getStartOfNextWord(cursorPosition) - cursorPosition;
-		}
-		if (cursorPosition < text.length()) {
-			text = text.substring(0, cursorPosition) + text.substring(cursorPosition + deleteCount);
-			renderCache = null;
-		}
-	}
+    public void scroll(int x, int y) {
+        lineScrollOffset = Math.max(lineScrollOffset + x, 0);
+        scrollOffset = Math.max(scrollOffset + y, 0);
+    }
 
-	private void writeText(String s) {
-		text = (cursorPosition > 0 ? text.substring(0, cursorPosition) : "") + s + (text.length() > cursorPosition ? text.substring(cursorPosition) : "");
-		setCursorPosition(cursorPosition + s.length());
-		renderCache = null;
-	}
+    private void deleteBack(boolean wholeWord) {
+        int cursorPosition = getCursorPosition();
+        int deleteCount = 1;
+        if (wholeWord) {
+            deleteCount = cursorPosition - getStartOfWord(cursorPosition);
+        }
 
-	@Override
-	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		boolean isInside = isInside(mouseX, mouseY);
+        if (cursorPosition > 0) {
+            String text = getText();
+            text = text.substring(0, cursorPosition - deleteCount) + text.substring(cursorPosition);
+            setText(text);
 
-		if (canLoseFocus) {
-			setFocused(isInside);
-		}
+            setCursorPosition(cursorPosition - deleteCount);
+            renderCache = null;
+        }
+    }
 
-		if (isFocused && isInside && mouseButton == 0) {
-			int relX = mouseX - getAbsoluteX();
-			int relY = mouseY - getAbsoluteY() - fontRenderer.FONT_HEIGHT + 5;
-			int lineNumber = Math.round((float) relY / (float) fontRenderer.FONT_HEIGHT) + scrollOffset + 1;
-			int startOfLine = getStartOfLine(getEndOfLine(0, lineNumber), 1);
-			int endOfLine = getEndOfLine(startOfLine, 1);
-			if(startOfLine == endOfLine) {
-				setCursorPosition(startOfLine);
-			} else {
-				String renderText = fontRenderer.trimStringToWidth(this.text.substring(Math.max(startOfLine + lineScrollOffset, 0), Math.max(0, endOfLine)), getWidth() - PADDING);
-			  	setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, relX).length() + lineScrollOffset);
-			}
-			return true;
-		}
-		return false;
-	}
+    private void deleteFront(boolean wholeWord) {
+        int cursorPosition = getCursorPosition();
+        int deleteCount = 1;
+        if (wholeWord) {
+            deleteCount = getStartOfNextWord(cursorPosition) - cursorPosition;
+        }
 
-	@Override
-	public boolean keyTyped(char typedChar, int keyCode) {
-		if (!isFocused) {
-			return false;
-		}
-		switch (keyCode) {
-			case GLFW.GLFW_KEY_END:
-				if (GuiScreen.isCtrlKeyDown()) {
-					setCursorPosition(text.length());
-				} else {
-					setCursorPosition(getEndOfLine(cursorPosition, 1));
-				}
-				return true;
-			case GLFW.GLFW_KEY_HOME:
-				if (GuiScreen.isCtrlKeyDown()) {
-					setCursorPosition(0);
-				} else {
-					setCursorPosition(getStartOfLine(cursorPosition, 1));
-				}
-				return true;
-			case GLFW.GLFW_KEY_LEFT:
-				if (GuiScreen.isCtrlKeyDown()) {
-					setCursorPosition(getStartOfWord(cursorPosition - 1));
-				} else {
-					setCursorPosition(cursorPosition - 1);
-				}
-				return true;
-			case GLFW.GLFW_KEY_RIGHT:
-				if (GuiScreen.isCtrlKeyDown()) {
-					setCursorPosition(getStartOfNextWord(cursorPosition + 1));
-				} else {
-					setCursorPosition(cursorPosition + 1);
-				}
-				return true;
-			case GLFW.GLFW_KEY_UP:
-				if (GuiScreen.isCtrlKeyDown()) {
-					scroll(0, -1);
-				} else {
-					int upLine = getStartOfLine(cursorPosition, 2);
-					setCursorPosition(upLine + Math.min(getLineLength(upLine), (cursorPosition - getStartOfLine(cursorPosition, 1))));
-				}
-				return true;
-			case GLFW.GLFW_KEY_DOWN:
-				if (GuiScreen.isCtrlKeyDown()) {
-					scroll(0, 1);
-				} else {
-					int downLine = getEndOfLine(cursorPosition, 2);
-					setCursorPosition(getStartOfLine(downLine, 1) + Math.min(getLineLength(downLine), (cursorPosition - getStartOfLine(cursorPosition, 1))));
-				}
-				return true;
-			case GLFW.GLFW_KEY_ENTER:
-				if (isEnabled) {
-					writeText("\n");
-				}
-				return true;
-			case GLFW.GLFW_KEY_DELETE:
-				if (isEnabled) {
-					deleteFront(GuiScreen.isCtrlKeyDown());
-				}
-				return true;
-			case GLFW.GLFW_KEY_BACKSPACE:
-				if (isEnabled) {
-					deleteBack(GuiScreen.isCtrlKeyDown());
-				}
-				return true;
-			default:
-				if (isEnabled) {
-					if (ChatAllowedCharacters.isAllowedCharacter(typedChar)) {
-						writeText(Character.toString(typedChar));
-						return true;
-					}
-				}
-		}
-		return false;
-	}
+        String text = getText();
+        if (cursorPosition < text.length()) {
+            text = text.substring(0, cursorPosition) + text.substring(cursorPosition + deleteCount);
+            setText(text);
+            renderCache = null;
+        }
+    }
 
-	@Override
-	public void update() {
-		super.update();
-		cursorCounter++;
+    @Override
+    public void writeText(String textToWrite) {
+        super.writeText(textToWrite);
+        renderCache = null;
+    }
 
-		if (renderCache == null) {
-			renderCache = text.split("\n", -1);
-		}
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean isInside = mouseX >= x && mouseX < (x + width) && mouseY >= y && mouseY < (y + height);
 
-		scrollOffset = Math.max(Math.min(scrollOffset, getRowCount() - getVisibleRows()), 0);
-	}
+        if (isFocused() && isInside && mouseButton == 0) {
+            double relX = mouseX - x;
+            double relY = mouseY - y - fontRenderer.FONT_HEIGHT + 5;
+            int lineNumber = Math.round((float) relY / (float) fontRenderer.FONT_HEIGHT) + scrollOffset + 1;
+            int startOfLine = getStartOfLine(getEndOfLine(0, lineNumber), 1);
+            int endOfLine = getEndOfLine(startOfLine, 1);
+            if (startOfLine == endOfLine) {
+                setCursorPosition(startOfLine);
+            } else {
+                String renderText = fontRenderer.trimStringToWidth(getText().substring(Math.max(startOfLine + lineScrollOffset, 0), Math.max(0, endOfLine)), width - PADDING);
+                setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, (int) relX).length() + lineScrollOffset);
+            }
+            return true;
+        }
 
-	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
-		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
-		if (visible) {
-			drawRect(getAbsoluteX() - 1, getAbsoluteY() - 1, getAbsoluteX() + getWidth() + 1, getAbsoluteY() + getHeight() + 1, 0xFFEEEEEE);
-			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0xFF000000);
+        return false;
+    }
 
-			if(renderCache != null) {
-				for (int i = scrollOffset; i < renderCache.length; i++) {
-					int y = (i - scrollOffset) * fontRenderer.FONT_HEIGHT;
-					if (y + fontRenderer.FONT_HEIGHT >= getHeight()) {
-						break;
-					}
-					if (lineScrollOffset >= renderCache[i].length()) {
-						continue;
-					}
-					String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), getWidth() - PADDING);
-					fontRenderer.drawString(renderText, getAbsoluteX() + PADDING, getAbsoluteY() + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR, true);
-				}
-			}
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!isFocused()) {
+            return false;
+        }
 
-			int cursorLine = 0;
-			int lastLineIdx = 0;
-			for (int i = 0; i < cursorPosition; i++) {
-				if (text.charAt(i) == '\n') {
-					cursorLine++;
-					lastLineIdx = i + 1;
-				}
-			}
-			if (cursorCounter / 6 % 2 == 0 && (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT >= 0 && (cursorLine - scrollOffset + 1) * fontRenderer.FONT_HEIGHT < getHeight() + PADDING) {
-				drawCursor(getAbsoluteX() + fontRenderer.getStringWidth(text.substring(lastLineIdx + lineScrollOffset, cursorPosition)) + PADDING, getAbsoluteY() + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING);
-			}
-		}
-	}
+        int cursorPosition = getCursorPosition();
+        switch (keyCode) {
+            case GLFW.GLFW_KEY_END:
+                if (GuiScreen.isCtrlKeyDown()) {
+                    setCursorPosition(getText().length());
+                } else {
+                    setCursorPosition(getEndOfLine(cursorPosition, 1));
+                }
+                return true;
+            case GLFW.GLFW_KEY_HOME:
+                if (GuiScreen.isCtrlKeyDown()) {
+                    setCursorPosition(0);
+                } else {
+                    setCursorPosition(getStartOfLine(cursorPosition, 1));
+                }
+                return true;
+            case GLFW.GLFW_KEY_LEFT:
+                if (GuiScreen.isCtrlKeyDown()) {
+                    setCursorPosition(getStartOfWord(cursorPosition - 1));
+                } else {
+                    setCursorPosition(cursorPosition - 1);
+                }
+                return true;
+            case GLFW.GLFW_KEY_RIGHT:
+                if (GuiScreen.isCtrlKeyDown()) {
+                    setCursorPosition(getStartOfNextWord(cursorPosition + 1));
+                } else {
+                    setCursorPosition(cursorPosition + 1);
+                }
+                return true;
+            case GLFW.GLFW_KEY_UP:
+                if (GuiScreen.isCtrlKeyDown()) {
+                    scroll(0, -1);
+                } else {
+                    int upLine = getStartOfLine(cursorPosition, 2);
+                    setCursorPosition(upLine + Math.min(getLineLength(upLine), (cursorPosition - getStartOfLine(cursorPosition, 1))));
+                }
+                return true;
+            case GLFW.GLFW_KEY_DOWN:
+                if (GuiScreen.isCtrlKeyDown()) {
+                    scroll(0, 1);
+                } else {
+                    int downLine = getEndOfLine(cursorPosition, 2);
+                    setCursorPosition(getStartOfLine(downLine, 1) + Math.min(getLineLength(downLine), (cursorPosition - getStartOfLine(cursorPosition, 1))));
+                }
+                return true;
+            case GLFW.GLFW_KEY_ENTER:
+                if (isEnabled) {
+                    writeText("\n");
+                }
+                return true;
+            case GLFW.GLFW_KEY_DELETE:
+                if (isEnabled) {
+                    deleteFront(GuiScreen.isCtrlKeyDown());
+                }
+                return true;
+            case GLFW.GLFW_KEY_BACKSPACE:
+                if (isEnabled) {
+                    deleteBack(GuiScreen.isCtrlKeyDown());
+                }
+                return true;
+        }
 
-	private void drawCursor(int x, int y) {
-		Tessellator tessellator = Tessellator.getInstance();
-		GlStateManager.color4f(0f, 0f, 1f, 1f);
-		GlStateManager.disableTexture2D();
-		GlStateManager.enableColorLogic();
-		GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
-		tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
-		tessellator.getBuffer().pos(x + 1, y, 0).endVertex();
-		tessellator.getBuffer().pos(x, y, 0).endVertex();
-		tessellator.draw();
-		GlStateManager.disableColorLogic();
-		GlStateManager.enableTexture2D();
-	}
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
 
-	public boolean isCanLoseFocus() {
-		return canLoseFocus;
-	}
+    @Override
+    public void tick() {
+        super.tick();
 
-	public void setCanLoseFocus(boolean canLoseFocus) {
-		this.canLoseFocus = canLoseFocus;
-	}
+        if (renderCache == null) {
+            renderCache = getText().split("\n", -1);
+        }
 
-	public boolean isVisible() {
-		return visible;
-	}
+        scrollOffset = Math.max(Math.min(scrollOffset, getRowCount() - getVisibleRows()), 0);
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
+        cursorCounter++;
+    }
 
-	public boolean isFocused() {
-		return isFocused;
-	}
+    @Override
+    public void drawTextField(int mouseX, int mouseY, float partialTicks) {
+        if (getVisible()) {
+            drawRect(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
+            drawRect(x, y, x + width, y + height, 0xFF000000);
 
-	public void setFocused(boolean isFocused) {
-		if (isFocused && !this.isFocused) {
-			cursorCounter = 0;
-		}
-		this.isFocused = isFocused;
-	}
+            if (renderCache != null) {
+                for (int i = scrollOffset; i < renderCache.length; i++) {
+                    int y = (i - scrollOffset) * fontRenderer.FONT_HEIGHT;
+                    if (y + fontRenderer.FONT_HEIGHT >= height) {
+                        break;
+                    }
 
-	public boolean isEnabled() {
-		return isEnabled;
-	}
+                    if (lineScrollOffset >= renderCache[i].length()) {
+                        continue;
+                    }
 
-	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
-	}
+                    String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), width - PADDING);
+                    fontRenderer.drawStringWithShadow(renderText, x + PADDING, y + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR);
+                }
+            }
 
-	public String getText() {
-		return text;
-	}
+            int cursorLine = 0;
+            int lastLineIdx = 0;
+            for (int i = 0; i < getCursorPosition(); i++) {
+                if (getText().charAt(i) == '\n') {
+                    cursorLine++;
+                    lastLineIdx = i + 1;
+                }
+            }
 
-	public void setText(String text) {
-		if (text.length() > maxLength) {
-			this.text = text.substring(0, maxLength);
-		} else {
-			this.text = text;
-		}
-		setCursorPosition(cursorPosition);
-		renderCache = null;
-	}
+            if (cursorCounter / 6 % 2 == 0 && (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT >= 0 && (cursorLine - scrollOffset + 1) * fontRenderer.FONT_HEIGHT < height + PADDING) {
+                drawCursor(x + fontRenderer.getStringWidth(getText().substring(lastLineIdx + lineScrollOffset, getCursorPosition())) + PADDING, y + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING);
+            }
+        }
+    }
 
-	public int getMaxLength() {
-		return maxLength;
-	}
+    private void drawCursor(int x, int y) {
+        Tessellator tessellator = Tessellator.getInstance();
+        GlStateManager.color4f(0f, 0f, 1f, 1f);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableColorLogic();
+        GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+        tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
+        tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
+        tessellator.getBuffer().pos(x + 1, y, 0).endVertex();
+        tessellator.getBuffer().pos(x, y, 0).endVertex();
+        tessellator.draw();
+        GlStateManager.disableColorLogic();
+        GlStateManager.enableTexture2D();
+    }
 
-	public void setMaxLength(int maxLength) {
-		this.maxLength = maxLength;
-	}
+    public void setText(String text) {
+        setCursorPosition(getCursorPosition());
+        renderCache = null;
+    }
 
-	@Override
-	public int getVisibleRows() {
-		return getHeight() / fontRenderer.FONT_HEIGHT;
-	}
+    @Override
+    public int getVisibleRows() {
+        return height / fontRenderer.FONT_HEIGHT;
+    }
 
-	@Override
-	public int getRowCount() {
-		if(renderCache != null) {
-			lastRowCount = renderCache.length;
-		}
-		return lastRowCount;
-	}
+    @Override
+    public int getRowCount() {
+        if (renderCache != null) {
+            lastRowCount = renderCache.length;
+        }
+        return lastRowCount;
+    }
 
-	@Override
-	public int getCurrentOffset() {
-		return scrollOffset;
-	}
+    @Override
+    public int getCurrentOffset() {
+        return scrollOffset;
+    }
 
-	@Override
-	public void setCurrentOffset(int offset) {
-		this.scrollOffset = offset;
-	}
+    @Override
+    public void setCurrentOffset(int offset) {
+        this.scrollOffset = offset;
+    }
 
 }

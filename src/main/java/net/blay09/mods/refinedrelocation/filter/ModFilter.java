@@ -3,9 +3,8 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagList;
@@ -141,7 +140,7 @@ public class ModFilter implements IChecklistFilter {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IFilterIcon getFilterIcon() {
+	public IDrawable getFilterIcon() {
 		return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_mod_filter");
 	}
 

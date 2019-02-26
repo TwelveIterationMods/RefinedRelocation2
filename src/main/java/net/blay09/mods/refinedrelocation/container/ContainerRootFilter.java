@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.container;
 
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.Priority;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
@@ -12,15 +12,16 @@ import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
-import net.blay09.mods.refinedrelocation.grid.SortingInventory;
-import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -134,73 +135,99 @@ public class ContainerRootFilter extends ContainerMod {
 
     @Override
     public void receivedMessageServer(IContainerMessage message) {
-        if (message.getKey().equals(KEY_ADD_FILTER)) {
-            String typeId = message.getStringValue();
-            IFilter filter = FilterRegistry.createFilter(typeId);
-            if (filter == null) {
-                // Client tried to create a filter that doesn't exist. Bad client!
-                return;
-            }
-            if (rootFilter.getFilterCount() >= 3) {
-                // Client tried to create more than three filters. Bad client!
-                return;
-            }
-            rootFilter.addFilter(filter);
-            tileEntity.markDirty();
-            lastFilterCount = rootFilter.getFilterCount();
-            syncFilterList();
-            RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
-            RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), rootFilter.getFilterCount() - 1));
-        } else if (message.getKey().equals(KEY_EDIT_FILTER)) {
-            int index = message.getIntValue();
-            if (index < 0 || index >= rootFilter.getFilterCount()) {
-                // Client tried to edit a filter that doesn't exist. Bad client!
-                return;
-            }
-            IFilter filter = rootFilter.getFilter(index);
-            if (filter != null) {
-                RefinedRelocation.proxy.openGui(entityPlayer, new MessageOpenGui(GuiHandler.GUI_ANY_FILTER, tileEntity.getPos(), index));
-            }
-        } else if (message.getKey().equals(KEY_DELETE_FILTER)) {
-            int index = message.getIntValue();
-            if (index < 0 || index >= rootFilter.getFilterCount()) {
-                // Client tried to delete a filter that doesn't exist. Bad client!
-                return;
-            }
-            rootFilter.removeFilter(index);
-            tileEntity.markDirty();
-        } else if (message.getKey().equals(KEY_PRIORITY)) {
-            int value = message.getIntValue();
-            if (value < Priority.LOWEST || value > Priority.HIGHEST) {
-                // Client tried to set an invalid priority. Bad client!
-                return;
-            }
-            sortingInventoryCap.ifPresent(sortingInventory -> {
-                sortingInventory.setPriority(value);
+        switch (message.getKey()) {
+            case KEY_ADD_FILTER: {
+                String typeId = message.getStringValue();
+                IFilter filter = FilterRegistry.createFilter(typeId);
+                if (filter == null) {
+                    // Client tried to create a filter that doesn't exist. Bad client!
+                    return;
+                }
+                if (rootFilter.getFilterCount() >= 3) {
+                    // Client tried to create more than three filters. Bad client!
+                    return;
+                }
+                rootFilter.addFilter(filter);
                 tileEntity.markDirty();
-            });
-        } else if (message.getKey().equals(KEY_BLACKLIST)) {
-            NBTTagCompound tagCompound = message.getNBTValue();
-            int index = tagCompound.getInt(KEY_BLACKLIST_INDEX);
-            if (index < 0 || index >= rootFilter.getFilterCount()) {
-                // Client tried to delete a filter that doesn't exist. Bad client!
-                return;
+                lastFilterCount = rootFilter.getFilterCount();
+                syncFilterList();
+                RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
+                IInteractionObject filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                if (filterConfig != null) {
+                    NetworkHooks.openGui((EntityPlayerMP) entityPlayer, filterConfig, it -> {
+                        it.writeBlockPos(tileEntity.getPos());
+                        it.writeInt(rootFilter.getFilterCount() - 1);
+                    });
+                }
+                break;
             }
-            rootFilter.setIsBlacklist(index, tagCompound.getBoolean(KEY_BLACKLIST));
-            tileEntity.markDirty();
-            RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
+            case KEY_EDIT_FILTER: {
+                int index = message.getIntValue();
+                if (index < 0 || index >= rootFilter.getFilterCount()) {
+                    // Client tried to edit a filter that doesn't exist. Bad client!
+                    return;
+                }
+                IFilter filter = rootFilter.getFilter(index);
+                if (filter != null) {
+                    IInteractionObject filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                    if (filterConfig != null) {
+                        NetworkHooks.openGui((EntityPlayerMP) entityPlayer, filterConfig, it -> {
+                            it.writeBlockPos(tileEntity.getPos());
+                            it.writeInt(index);
+                        });
+                    }
+                }
+                break;
+            }
+            case KEY_DELETE_FILTER: {
+                int index = message.getIntValue();
+                if (index < 0 || index >= rootFilter.getFilterCount()) {
+                    // Client tried to delete a filter that doesn't exist. Bad client!
+                    return;
+                }
+                rootFilter.removeFilter(index);
+                tileEntity.markDirty();
+                break;
+            }
+            case KEY_PRIORITY:
+                int value = message.getIntValue();
+                if (value < Priority.LOWEST || value > Priority.HIGHEST) {
+                    // Client tried to set an invalid priority. Bad client!
+                    return;
+                }
+                sortingInventoryCap.ifPresent(sortingInventory -> {
+                    sortingInventory.setPriority(value);
+                    tileEntity.markDirty();
+                });
+                break;
+            case KEY_BLACKLIST: {
+                NBTTagCompound tagCompound = message.getNBTValue();
+                int index = tagCompound.getInt(KEY_BLACKLIST_INDEX);
+                if (index < 0 || index >= rootFilter.getFilterCount()) {
+                    // Client tried to delete a filter that doesn't exist. Bad client!
+                    return;
+                }
+                rootFilter.setIsBlacklist(index, tagCompound.getBoolean(KEY_BLACKLIST));
+                tileEntity.markDirty();
+                RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
+                break;
+            }
         }
     }
 
     @Override
     public void receivedMessageClient(IContainerMessage message) {
-        if (message.getKey().equals(KEY_ROOT_FILTER)) {
-            rootFilter.deserializeNBT(message.getNBTValue().getCompound(KEY_ROOT_FILTER));
-        } else if (message.getKey().equals(KEY_PRIORITY)) {
-            getSortingInventory().setPriority(message.getIntValue());
-        } else if (message.getKey().equals(KEY_BLACKLIST)) {
-            NBTTagCompound compound = message.getNBTValue();
-            rootFilter.setIsBlacklist(compound.getInt(KEY_BLACKLIST_INDEX), compound.getBoolean(KEY_BLACKLIST));
+        switch (message.getKey()) {
+            case KEY_ROOT_FILTER:
+                rootFilter.deserializeNBT(message.getNBTValue().getCompound(KEY_ROOT_FILTER));
+                break;
+            case KEY_PRIORITY:
+                getSortingInventory().ifPresent(it -> it.setPriority(message.getIntValue()));
+                break;
+            case KEY_BLACKLIST:
+                NBTTagCompound compound = message.getNBTValue();
+                rootFilter.setIsBlacklist(compound.getInt(KEY_BLACKLIST_INDEX), compound.getBoolean(KEY_BLACKLIST));
+                break;
         }
     }
 
@@ -212,8 +239,11 @@ public class ContainerRootFilter extends ContainerMod {
         return tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY).isPresent();
     }
 
-    public ISortingInventory getSortingInventory() {
-        // TODO create dummy for client
+    public LazyOptional<ISortingInventory> getSortingInventory() {
+        if (!sortingInventoryCap.isPresent()) {
+            sortingInventoryCap = LazyOptional.of(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
+        }
+
         return sortingInventoryCap;
     }
 

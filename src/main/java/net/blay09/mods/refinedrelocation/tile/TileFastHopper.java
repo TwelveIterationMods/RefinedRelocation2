@@ -1,9 +1,11 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -31,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ConcurrentModificationException;
 
-public class TileFastHopper extends TileMod implements ITickable, IInteractionObject {
+public class TileFastHopper extends TileMod implements ITickable, IInteractionObjectWithoutName {
 
     private final ItemStackHandler itemHandler = createItemHandler();
     private final INameTaggable nameTaggable = Capabilities.getDefaultInstance(Capabilities.NAME_TAGGABLE);
@@ -39,6 +41,7 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     private int cooldown;
 
     public TileFastHopper() {
+        super(ModTiles.fastHopper);
     }
 
     public TileFastHopper(TileEntityType<?> type) {
@@ -146,28 +149,6 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     @Override
     public String getUnlocalizedName() {
         return "container.refinedrelocation:fast_hopper";
-    }
-
-    @Override
-    public ITextComponent getName() {
-        return null;
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    @Nullable
-    @Override
-    public ITextComponent getDisplayName() {
-        return nameTaggable.getDisplayName();
-    }
-
-    @Nullable
-    @Override
-    public ITextComponent getCustomName() {
-        return null;
     }
 
     @Nonnull

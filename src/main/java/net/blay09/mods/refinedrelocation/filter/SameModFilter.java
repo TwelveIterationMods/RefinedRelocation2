@@ -2,9 +2,8 @@ package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
-import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,7 +77,7 @@ public class SameModFilter implements IFilter {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public IFilterIcon getFilterIcon() {
+    public IDrawable getFilterIcon() {
         return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_same_mod_filter");
     }
 

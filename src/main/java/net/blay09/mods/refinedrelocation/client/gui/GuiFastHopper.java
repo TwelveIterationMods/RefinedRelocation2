@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonWrapper;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiReturnFromFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
@@ -22,7 +22,7 @@ public class GuiFastHopper extends GuiContainerMod<ContainerFastHopper> {
 		this.ySize = 133;
 
 		if(tileEntity instanceof TileFilteredHopper) {
-			rootNode.addChild(new GuiOpenFilterButtonWrapper(this, tileEntity, 0));
+			rootNode.addChild(new GuiReturnFromFilterButton(this, tileEntity, 0));
 		}
 	}
 

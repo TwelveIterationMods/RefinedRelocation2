@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,10 @@ import javax.annotation.Nullable;
 
 public class TileFilteredHopper extends TileFastHopper {
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
+
+    public TileFilteredHopper() {
+        super(ModTiles.filteredHopper);
+    }
 
     @Override
     protected ItemStackHandler createItemHandler() {

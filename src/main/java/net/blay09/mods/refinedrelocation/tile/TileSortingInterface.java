@@ -1,29 +1,27 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySimpleFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingGridMember;
-import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 
-public class TileSortingInterface extends TileMod implements ITickable {
+public class TileSortingInterface extends TileMod implements ITickable, IDroppableItemHandler {
 
     private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
@@ -31,6 +29,10 @@ public class TileSortingInterface extends TileMod implements ITickable {
     private TileEntity cachedConnectedTile;
     private ItemStack[] lastInventory;
     private int currentDetectionSlot;
+
+    public TileSortingInterface() {
+        super(ModTiles.sortingInterface);
+    }
 
     @Override
     public void onLoad() {
@@ -52,8 +54,8 @@ public class TileSortingInterface extends TileMod implements ITickable {
         sortingInventory.onUpdate(this);
 
         if (!world.isRemote) {
-            IItemHandler itemHandler = sortingInventory.getItemHandler();
-            if (itemHandler != null) {
+            LazyOptional<IItemHandler> itemHandlerCap = sortingInventory.getItemHandler();
+            itemHandlerCap.ifPresent(itemHandler -> {
                 int inventorySize = itemHandler.getSlots();
 
                 // Create a copy of the target inventory so we can compare and detect changes
@@ -81,7 +83,7 @@ public class TileSortingInterface extends TileMod implements ITickable {
                         currentDetectionSlot = 0;
                     }
                 }
-            }
+            });
         }
     }
 
@@ -129,21 +131,31 @@ public class TileSortingInterface extends TileMod implements ITickable {
         return getBlockState().get(BlockStateProperties.FACING);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (cachedConnectedTile != null) {
-                return (T) cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getFacing().getOpposite());
-            }
-        } else if (capability == CapabilitySortingInventory.CAPABILITY || capability == CapabilitySortingGridMember.CAPABILITY) {
-            return (T) sortingInventory;
-        } else if (capability == CapabilityRootFilter.CAPABILITY || capability == CapabilitySimpleFilter.CAPABILITY) {
-            return (T) rootFilter;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        LazyOptional<T> result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        if (!result.isPresent()) {
+            result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
         }
 
-        return null;
+        if (!result.isPresent()) {
+            result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        }
+
+        if (!result.isPresent()) {
+            result = Capabilities.SORTING_INVENTORY.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
+        }
+
+        if (!result.isPresent()) {
+            result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
+        }
+
+        if (!result.isPresent() && cachedConnectedTile != null) {
+            return cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getFacing().getOpposite()).cast();
+        }
+
+        return super.getCapability(cap, side);
     }
 
     @Override
@@ -152,8 +164,9 @@ public class TileSortingInterface extends TileMod implements ITickable {
     }
 
     @Override
-    public void dropItemHandlers() {
+    public Collection<IItemHandler> getDroppedItemHandlers() {
         // Do not drop the connected inventory's items.
+        return Collections.emptyList();
     }
 
 }

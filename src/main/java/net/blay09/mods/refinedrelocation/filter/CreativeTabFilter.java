@@ -1,9 +1,8 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
@@ -111,7 +110,7 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public IFilterIcon getFilterIcon() {
+    public IDrawable getFilterIcon() {
         return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_creative_tab_filter");
     }
 

@@ -1,115 +1,104 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
-import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
-import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
+import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class GuiScrollBar extends GuiElement {
+public class GuiScrollBar extends GuiButton implements ITickableElement {
 
-	private final TextureAtlasRegion scrollbarTop;
-	private final TextureAtlasRegion scrollbarMiddle;
-	private final TextureAtlasRegion scrollbarBottom;
-	private final IScrollTarget scrollTarget;
-	private int barY;
-	private int barHeight;
-	private int indexWhenClicked;
-	private int lastNumberOfMoves;
-	private int mouseClickY = -1;
+    private final IDrawable scrollbarTop;
+    private final IDrawable scrollbarMiddle;
+    private final IDrawable scrollbarBottom;
+    private final IScrollTarget scrollTarget;
 
-	private int lastRowCount;
-	private int lastVisibleRows;
-	private int lastOffset;
+    private int barY;
+    private int barHeight;
+    private int indexWhenClicked;
+    private int lastNumberOfMoves;
+    private double mouseClickY = -1;
 
-	public GuiScrollBar(int x, int y, int height, IScrollTarget scrollTarget) {
-		this.scrollTarget = scrollTarget;
-		setPosition(x, y);
-		setSize(7, height);
-		updatePosition();
+    private int lastRowCount;
+    private int lastVisibleRows;
+    private int lastOffset;
 
-		scrollbarTop = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:scrollbar_top");
-		scrollbarMiddle = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:scrollbar_middle");
-		scrollbarBottom = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:scrollbar_bottom");
-	}
+    public GuiScrollBar(int buttonId, int x, int y, int height, IScrollTarget scrollTarget) {
+        super(buttonId, x, y, 7, height, "");
+        this.scrollTarget = scrollTarget;
+        updateBarPosition();
 
-	@Override
-	public void mouseWheelMoved(int mouseX, int mouseY, int delta) {
-		setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
-	}
+        scrollbarTop = GuiTextures.SCROLLBAR_TOP;
+        scrollbarMiddle = GuiTextures.SCROLLBAR_MIDDLE;
+        scrollbarBottom = GuiTextures.SCROLLBAR_BOTTOM;
+    }
 
-	@Override
-	public void mouseReleased(int mouseX, int mouseY, int state) {
-		if (mouseClickY != -1) {
-			mouseClickY = -1;
-			indexWhenClicked = 0;
-			lastNumberOfMoves = 0;
-		}
-	}
+    @Override
+    public boolean mouseScrolled(double delta) {
+        // TODO check if inside
+        setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
+        return true;
+    }
 
-	@Override
-	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (mouseButton == 0 && mouseX >= getAbsoluteX() && mouseX < getAbsoluteX() + getWidth() && mouseY >= barY && mouseY < barY + barHeight) {
-			mouseClickY = mouseY;
-			indexWhenClicked = scrollTarget.getCurrentOffset();
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public void onRelease(double mouseX, double mouseY) {
+        if (mouseClickY != -1) {
+            mouseClickY = -1;
+            indexWhenClicked = 0;
+            lastNumberOfMoves = 0;
+        }
+    }
 
-	@Override
-	public void updatePosition() {
-		super.updatePosition();
+    @Override
+    public void onClick(double mouseX, double mouseY) {
+        if (mouseX >= x && mouseX < x + getWidth() && mouseY >= barY && mouseY < barY + barHeight) {
+            mouseClickY = mouseY;
+            indexWhenClicked = scrollTarget.getCurrentOffset();
+        }
+    }
 
-		barHeight = (int) (getHeight() * Math.min(1f, ((float) scrollTarget.getVisibleRows() / (Math.ceil(scrollTarget.getRowCount())))));
-		barY = getAbsoluteY() + ((getHeight() - barHeight) * scrollTarget.getCurrentOffset() / Math.max(1, (int) Math.ceil((scrollTarget.getRowCount())) - scrollTarget.getVisibleRows()));
-	}
+    private void updateBarPosition() {
+        barHeight = (int) (height * Math.min(1f, ((float) scrollTarget.getVisibleRows() / (Math.ceil(scrollTarget.getRowCount())))));
+        barY = y + ((height - barHeight) * scrollTarget.getCurrentOffset() / Math.max(1, (int) Math.ceil((scrollTarget.getRowCount())) - scrollTarget.getVisibleRows()));
+    }
 
-	@Override
-	public void setSize(int width, int height) {
-		super.setSize(width, height);
+    @Override
+    public void tick() {
+        if (lastRowCount != scrollTarget.getRowCount() || lastVisibleRows != scrollTarget.getVisibleRows() || lastOffset != scrollTarget.getCurrentOffset()) {
+            updateBarPosition();
+            lastRowCount = scrollTarget.getRowCount();
+            lastVisibleRows = scrollTarget.getVisibleRows();
+            lastOffset = scrollTarget.getCurrentOffset();
+        }
+    }
 
-		updatePosition();
-	}
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        if (mouseClickY != -1) {
+            float pixelsPerFilter = (height - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
+            if (pixelsPerFilter != 0) {
+                int numberOfFiltersMoved = (int) ((mouseY - mouseClickY) / pixelsPerFilter);
+                if (numberOfFiltersMoved != lastNumberOfMoves) {
+                    setCurrentOffset(indexWhenClicked + numberOfFiltersMoved);
+                    lastNumberOfMoves = numberOfFiltersMoved;
+                }
+            }
+        }
 
-	@Override
-	public void update() {
-		super.update();
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
+        scrollbarTop.draw(x - 2, y - 1, zLevel);
+        scrollbarBottom.draw(x - 2, y + height - 1, zLevel);
+        scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, zLevel);
 
-		if(lastRowCount != scrollTarget.getRowCount() || lastVisibleRows != scrollTarget.getVisibleRows() || lastOffset != scrollTarget.getCurrentOffset()) {
-			updatePosition();
-			lastRowCount = scrollTarget.getRowCount();
-			lastVisibleRows = scrollTarget.getVisibleRows();
-			lastOffset = scrollTarget.getCurrentOffset();
-		}
-	}
+        drawRect(x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
 
-	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
-		if (mouseClickY != -1) {
-			float pixelsPerFilter = (getHeight() - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
-			if (pixelsPerFilter != 0) {
-				int numberOfFiltersMoved = (int) ((mouseY - mouseClickY) / pixelsPerFilter);
-				if (numberOfFiltersMoved != lastNumberOfMoves) {
-					setCurrentOffset(indexWhenClicked + numberOfFiltersMoved);
-					lastNumberOfMoves = numberOfFiltersMoved;
-				}
-			}
-		}
+        super.render(mouseX, mouseY, partialTicks);
+    }
 
-		GlStateManager.color4f(1f, 1f, 1f, 1f);
-		scrollbarTop.draw(getAbsoluteX() - 2, getAbsoluteY() - 1, zLevel);
-		scrollbarBottom.draw(getAbsoluteX() - 2, getAbsoluteY() + getHeight() - 1, zLevel);
-		scrollbarMiddle.draw(getAbsoluteX() - 2, getAbsoluteY() + 2, scrollbarMiddle.getWidth(), getHeight() - 3, zLevel);
-
-		drawRect(getAbsoluteX(), barY, getAbsoluteX() + getWidth(), barY + barHeight, 0xFFAAAAAA);
-
-		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
-	}
-
-	public void setCurrentOffset(int offset) {
-		int currentOffset = Math.max(0, Math.min(offset, (int) (Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows())));
-		scrollTarget.setCurrentOffset(currentOffset);
-		updatePosition();
-	}
+    public void setCurrentOffset(int offset) {
+        int currentOffset = Math.max(0, Math.min(offset, (int) (Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows())));
+        scrollTarget.setCurrentOffset(currentOffset);
+        updateBarPosition();
+    }
 
 }

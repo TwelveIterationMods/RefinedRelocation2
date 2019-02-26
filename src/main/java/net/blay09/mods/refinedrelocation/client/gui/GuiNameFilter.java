@@ -7,7 +7,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButtonWrapper;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiReturnFromFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.client.renderer.GlStateManager;
@@ -50,7 +50,7 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 
 		rootNode.addChild(scrollBar);
 
-		rootNode.addChild(new GuiOpenFilterButtonWrapper(this, container.getTileEntity(), 0));
+		rootNode.addChild(new GuiReturnFromFilterButton(this, container.getTileEntity(), 0));
 	}
 
 	@Override

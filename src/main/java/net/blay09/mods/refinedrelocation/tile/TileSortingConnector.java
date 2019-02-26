@@ -1,9 +1,9 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -16,10 +16,7 @@ public class TileSortingConnector extends TileEntity {
     private final ISortingGridMember sortingGridMember = Capabilities.getDefaultInstance(Capabilities.SORTING_GRID_MEMBER);
 
     public TileSortingConnector() {
-    }
-
-    public TileSortingConnector(TileEntityType<?> type) {
-        super(type);
+        super(ModTiles.sortingConnector);
     }
 
     @Override

@@ -1,67 +1,66 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.blay09.mods.refinedrelocation.client.ClientProxy;
-import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiElement;
-import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
+import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
-public class GuiChecklistEntry extends GuiElement {
+public class GuiChecklistEntry extends GuiButton {
 
-	private final IChecklistFilter filter;
-	private final TextureAtlasRegion texture;
-	private final TextureAtlasRegion textureChecked;
-	private int currentOption = -1;
+    private final IChecklistFilter filter;
+    private final IDrawable texture;
+    private final IDrawable textureChecked;
 
-	public GuiChecklistEntry(IChecklistFilter filter) {
-		this.filter = filter;
-		setSize(151, 11);
-		texture = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:checklist");
-		textureChecked = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:checklist_checked");
-	}
+    private int currentOption = -1;
 
-	@Override
-	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if(currentOption != -1) {
-			boolean oldState = filter.isOptionChecked(currentOption);
-			filter.setOptionChecked(currentOption, !oldState);
-			if(!oldState) {
-				RefinedRelocationAPI.sendContainerMessageToServer(ContainerChecklistFilter.KEY_CHECK, currentOption);
-			} else {
-				RefinedRelocationAPI.sendContainerMessageToServer(ContainerChecklistFilter.KEY_UNCHECK, currentOption);
-			}
-			return true;
-		}
-		return false;
-	}
+    public GuiChecklistEntry(int buttonId, IChecklistFilter filter) {
+        super(buttonId, 0, 0, 151, 11, "");
+        this.filter = filter;
+        texture = GuiTextures.CHECKLIST;
+        textureChecked = GuiTextures.CHECKLIST_CHECKED;
+    }
 
-	@Override
-	public void drawBackground(IParentScreen parentScreen, int mouseX, int mouseY, float partialTicks) {
-		super.drawBackground(parentScreen, mouseX, mouseY, partialTicks);
+    @Override
+    public void onClick(double mouseX, double mouseY) {
+        if (currentOption != -1) {
+            boolean oldState = filter.isOptionChecked(currentOption);
+            filter.setOptionChecked(currentOption, !oldState);
+            if (!oldState) {
+                RefinedRelocationAPI.sendContainerMessageToServer(ContainerChecklistFilter.KEY_CHECK, currentOption);
+            } else {
+                RefinedRelocationAPI.sendContainerMessageToServer(ContainerChecklistFilter.KEY_UNCHECK, currentOption);
+            }
+        }
+    }
 
-		if(isInside(mouseX, mouseY)) {
-			drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0x66FFFFFF);
-		}
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        if (isPressable(mouseX, mouseY)) {
+            drawRect(x, y, x + width, y + height, 0x66FFFFFF);
+        }
 
-		GlStateManager.color(1f, 1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
 
-		if(currentOption != -1) {
-			if(filter.isOptionChecked(currentOption)) {
-				textureChecked.draw(getAbsoluteX() + 1, getAbsoluteY() + getHeight() / 2 - textureChecked.getIconHeight() / 2, zLevel);
-			} else {
-				texture.draw(getAbsoluteX() + 1, getAbsoluteY() + getHeight() / 2 - texture.getIconHeight() / 2, zLevel);
-			}
+        if (currentOption != -1) {
+            if (filter.isOptionChecked(currentOption)) {
+                textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, zLevel);
+            } else {
+                texture.draw(x + 1, y + height / 2f - 11 / 2f, zLevel);
+            }
 
-			drawString(parentScreen.getFontRenderer(), I18n.format(filter.getOptionLangKey(currentOption)), getAbsoluteX() + 14, getAbsoluteY() + getHeight() / 2 - parentScreen.getFontRenderer().FONT_HEIGHT / 2, 0xFFFFFF);
-		}
-	}
+            FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+            drawString(fontRenderer, I18n.format(filter.getOptionLangKey(currentOption)), x + 14, y + height / 2 - fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
+        }
+    }
 
-	public void setCurrentOption(int currentOption) {
-		this.currentOption = currentOption;
-	}
+    public void setCurrentOption(int currentOption) {
+        this.currentOption = currentOption;
+    }
 
 }
