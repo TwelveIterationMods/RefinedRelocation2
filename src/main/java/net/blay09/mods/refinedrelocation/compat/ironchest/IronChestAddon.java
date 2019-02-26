@@ -1,11 +1,5 @@
 package net.blay09.mods.refinedrelocation.compat.ironchest;
 
-import cpw.mods.ironchest.client.gui.chest.GUIChest;
-import cpw.mods.ironchest.common.blocks.chest.BlockIronChest;
-import cpw.mods.ironchest.common.blocks.chest.IronChestType;
-import cpw.mods.ironchest.common.items.ChestChangerType;
-import cpw.mods.ironchest.common.items.chest.ItemChestChanger;
-import cpw.mods.ironchest.common.tileentity.chest.TileEntityIronChest;
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
@@ -22,7 +16,6 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,23 +27,22 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Locale;
 
 public class IronChestAddon implements RefinedAddon {
 
@@ -97,10 +89,8 @@ public class IronChestAddon implements RefinedAddon {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerModels() {
+	public void setupClient() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSortingIronChest.class, new RenderSortingIronChest(Compat.sortingIronChest));
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(Compat.sortingIronChest), stack -> new ModelResourceLocation(BlockSortingIronChest.registryName, "variant=" + IronChestType.VALUES[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)));
 	}
 
 	@Override
@@ -156,9 +146,9 @@ public class IronChestAddon implements RefinedAddon {
 		tileEntity.updateContainingBlockInfo();
 
 		world.removeTileEntity(pos);
-		world.setBlockToAir(pos);
+		world.removeBlock(pos);
 
-		IBlockState newState = Compat.sortingIronChest.getDefaultState().withProperty(BlockIronChest.VARIANT_PROP, type.target);
+		IBlockState newState = Compat.sortingIronChest.getDefaultState().with(BlockIronChest.VARIANT_PROP, type.target);
 		world.setBlockState(pos, newState, 3);
 
 		TileEntity newTileEntity = world.getTileEntity(pos);
@@ -175,23 +165,17 @@ public class IronChestAddon implements RefinedAddon {
 			}
 		}
 
-		if(!event.getEntityPlayer().capabilities.isCreativeMode) {
+		if(!event.getEntityPlayer().abilities.isCreativeMode) {
 			event.getItemStack().shrink(1);
 		}
 		event.setCanceled(true);
 	}
 
 	private class IronChestCapabilityProvider implements ICapabilityProvider, ISortingUpgradable {
+		@Nonnull
 		@Override
-		public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-			return capability == Capabilities.SORTING_UPGRADABLE;
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		@Nullable
-		public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-			return capability == Capabilities.SORTING_UPGRADABLE ? (T) this : null;
+		public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+			return Capabilities.SORTING_UPGRADABLE.orEmpty(cap, LazyOptional.of(() -> this));
 		}
 
 		@Override
@@ -204,7 +188,7 @@ public class IronChestAddon implements RefinedAddon {
 			tileIronChest.clear();
 			IBlockState oldState = world.getBlockState(pos);
 			world.setBlockState(pos, Compat.sortingIronChest.getDefaultState()
-					.withProperty(BlockIronChest.VARIANT_PROP, oldState.getValue(BlockIronChest.VARIANT_PROP)));
+					.with(BlockIronChest.VARIANT_PROP, oldState.get(BlockIronChest.VARIANT_PROP)));
 			TileSortingIronChest sortingIronChest = (TileSortingIronChest) world.getTileEntity(pos);
 			if (sortingIronChest == null) {
 				return false;
@@ -222,7 +206,7 @@ public class IronChestAddon implements RefinedAddon {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void onInitGui(GuiScreenEvent.InitGuiEvent event) {
 		if (event.getGui() instanceof GUIChest) {
 			GuiContainer guiContainer = (GuiContainer) event.getGui();

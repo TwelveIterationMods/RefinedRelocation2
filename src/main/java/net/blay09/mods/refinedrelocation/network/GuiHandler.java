@@ -31,19 +31,14 @@ import javax.annotation.Nullable;
 
 public class GuiHandler {
 
-	public static final int GUI_SORTING_CHEST = 1;
 	public static final int GUI_ROOT_FILTER = 2;
 	public static final int GUI_ANY_FILTER = 3;
-	public static final int GUI_FAST_HOPPER = 4;
-	public static final int GUI_BLOCK_EXTENDER = 5;
 	public static final int GUI_BLOCK_EXTENDER_ROOT_FILTER = 6;
 
 	@Nullable
 	public static Container getContainer(int id, EntityPlayer player, MessageOpenGui message) {
 		TileEntity tileEntity = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
 		switch(id) {
-			case GUI_SORTING_CHEST:
-				return tileEntity instanceof TileSortingChest ? new ContainerSortingChest(player, (TileSortingChest) tileEntity) : null;
 			case GUI_ROOT_FILTER:
 				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ?
 						new ContainerRootFilter(player, tileEntity).setReturnCallback(() -> RefinedRelocation.proxy.openGui(player, message)) : null) : null;
@@ -60,15 +55,11 @@ public class GuiHandler {
 					}
 				}
 				break;
-			case GUI_FAST_HOPPER:
-				return tileEntity instanceof TileFastHopper ? new ContainerFastHopper(player, (TileFastHopper) tileEntity) : null;
-			case GUI_BLOCK_EXTENDER:
-				return tileEntity instanceof TileBlockExtender ? new ContainerBlockExtender(player, (TileBlockExtender) tileEntity) : null;
 			case GUI_BLOCK_EXTENDER_ROOT_FILTER:
 				return tileEntity instanceof TileBlockExtender ?
 						new ContainerRootFilter(player, tileEntity,
 								message.getIntValue() == 1 ? ((TileBlockExtender) tileEntity).getOutputFilter() : ((TileBlockExtender) tileEntity).getInputFilter())
-						.setReturnCallback(() -> RefinedRelocation.proxy.openGui(player, message)) : null;
+								.setReturnCallback(() -> RefinedRelocation.proxy.openGui(player, message)) : null;
 		}
 		return null;
 	}
@@ -79,41 +70,6 @@ public class GuiHandler {
 			return ((IConfigurableFilter) filter).createContainer(player, tileEntity);
 		} else if(filter instanceof IChecklistFilter) {
 			return new ContainerChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
-		}
-		return null;
-	}
-
-	@Nullable
-	@SideOnly(Side.CLIENT)
-	public static GuiScreen getGuiScreen(int id, EntityPlayer player, MessageOpenGui message) {
-		TileEntity tileEntity = message.hasPosition() ? player.world.getTileEntity(message.getPos()) : null;
-		switch(id) {
-			case GUI_SORTING_CHEST:
-				return tileEntity instanceof TileSortingChest ? new GuiSortingChest(player, (TileSortingChest) tileEntity) : null;
-			case GUI_ROOT_FILTER:
-				return tileEntity != null ? (tileEntity.hasCapability(CapabilityRootFilter.CAPABILITY, null) ? new GuiRootFilter(player, tileEntity) : null) : null;
-			case GUI_ANY_FILTER:
-				if(tileEntity != null) {
-					Container container = player.openContainer;
-					if (container instanceof ContainerRootFilter) {
-						IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(message.getIntValue());
-						if (filter instanceof IConfigurableFilter) {
-							return ((IConfigurableFilter) filter).createGuiScreen(player, tileEntity);
-						} else if(filter instanceof IChecklistFilter) {
-							return new GuiChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
-						}
-					}
-				}
-				break;
-			case GUI_FAST_HOPPER:
-				return tileEntity instanceof TileFastHopper ? new GuiFastHopper(player, (TileFastHopper) tileEntity) : null;
-			case GUI_BLOCK_EXTENDER:
-				EnumFacing clickedFace = EnumFacing.getFront(message.getIntValue());
-				return tileEntity instanceof TileBlockExtender ? new GuiBlockExtender(player, (TileBlockExtender) tileEntity, clickedFace) : null;
-			case GUI_BLOCK_EXTENDER_ROOT_FILTER:
-				return tileEntity instanceof TileBlockExtender ?
-						new GuiRootFilter(new ContainerRootFilter(player, tileEntity,
-								message.getIntValue() == 1 ? ((TileBlockExtender) tileEntity).getOutputFilter() : ((TileBlockExtender) tileEntity).getInputFilter())) : null;
 		}
 		return null;
 	}

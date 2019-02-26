@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerBlockExtender extends ContainerMod {
@@ -48,8 +49,8 @@ public class ContainerBlockExtender extends ContainerMod {
             EnumFacing nowSideMapping = tileEntity.getSideMapping(RelativeSide.fromIndex(i));
             if (lastSideMapping[i] != nowSideMapping) {
                 NBTTagCompound compound = new NBTTagCompound();
-                compound.setByte(KEY_SIDE_INDEX, (byte) i);
-                compound.setByte(KEY_SIDE_MAPPING, nowSideMapping != null ? (byte) nowSideMapping.getIndex() : -1);
+                compound.putByte(KEY_SIDE_INDEX, (byte) i);
+                compound.putByte(KEY_SIDE_MAPPING, nowSideMapping != null ? (byte) nowSideMapping.getIndex() : -1);
                 RefinedRelocationAPI.syncContainerValue(KEY_SIDE_MAPPING, compound, listeners);
                 lastSideMapping[i] = nowSideMapping;
             }

@@ -3,23 +3,34 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
+import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
 import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileBlockExtender extends TileMod implements ITickable {
+public class TileBlockExtender extends TileMod implements ITickable, IInteractionObjectWithoutName {
 
     private class ItemHandlerWrapper implements IItemHandler {
         private final TileEntity tileEntity;
@@ -33,13 +44,9 @@ public class TileBlockExtender extends TileMod implements ITickable {
         }
 
         public boolean revalidate() {
-            IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
-            if (itemHandler == null) {
-                return false;
-            }
-
-            baseHandler = itemHandler;
-            return true;
+            LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+            itemHandlerCap.ifPresent(itemHandler -> baseHandler = itemHandler);
+            return itemHandlerCap.isPresent();
         }
 
         @Override
@@ -160,12 +167,12 @@ public class TileBlockExtender extends TileMod implements ITickable {
     }
 
     @Override
-    public void update() {
-        baseUpdate();
+    public void tick() {
+        baseTick();
 
         if (cachedConnectedTile == null) {
             cachedConnectedTile = world.getTileEntity(pos.offset(getFacing()));
-        } else if (cachedConnectedTile.isInvalid()) {
+        } else if (cachedConnectedTile.isRemoved()) {
             cachedConnectedTile = null;
         }
     }
@@ -191,65 +198,55 @@ public class TileBlockExtender extends TileMod implements ITickable {
     }
 
     public EnumFacing getFacing() {
-        return EnumFacing.getFront(getBlockMetadata());
+        return getBlockState().get(BlockStateProperties.FACING);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        super.write(compound);
+
         byte[] mappings = new byte[5];
         for (int i = 0; i < sideMappings.length; i++) {
             mappings[i] = sideMappings[i] == null ? -1 : (byte) sideMappings[i].getIndex();
         }
-        compound.setByteArray("SideMappings", mappings);
-        compound.setTag("Upgrades", itemHandlerUpgrades.serializeNBT());
-        compound.setByte("StackLimiter", (byte) stackLimiterLimit);
-        compound.setTag("InputFilter", inputFilter.serializeNBT());
-        compound.setTag("OutputFilter", outputFilter.serializeNBT());
+
+        compound.putByteArray("SideMappings", mappings);
+        compound.put("Upgrades", itemHandlerUpgrades.serializeNBT());
+        compound.putByte("StackLimiter", (byte) stackLimiterLimit);
+        compound.put("InputFilter", inputFilter.serializeNBT());
+        compound.put("OutputFilter", outputFilter.serializeNBT());
         return compound;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
 
         byte[] mappings = compound.getByteArray("SideMappings");
         if (mappings.length == 5) {
             for (int i = 0; i < mappings.length; i++) {
                 if (mappings[i] != -1) {
-                    sideMappings[i] = EnumFacing.getFront(mappings[i]);
+                    sideMappings[i] = EnumFacing.byIndex(mappings[i]);
                 } else {
                     sideMappings[i] = null;
                 }
             }
         }
 
-        itemHandlerUpgrades.deserializeNBT(compound.getCompoundTag("Upgrades"));
+        itemHandlerUpgrades.deserializeNBT(compound.getCompound("Upgrades"));
         stackLimiterLimit = compound.getByte("StackLimiter");
-        inputFilter.deserializeNBT(compound.getCompoundTag("InputFilter"));
-        outputFilter.deserializeNBT(compound.getCompoundTag("OutputFilter"));
+        inputFilter.deserializeNBT(compound.getCompound("InputFilter"));
+        outputFilter.deserializeNBT(compound.getCompound("OutputFilter"));
         updateUpgrades();
     }
 
+    @Nonnull
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
         if (cachedConnectedTile != null) {
-            EnumFacing ioSide = getSideMapping(facing);
+            EnumFacing ioSide = getSideMapping(side);
             if (ioSide != null) {
-                return cachedConnectedTile.hasCapability(capability, ioSide);
-            }
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (cachedConnectedTile != null) {
-            EnumFacing ioSide = getSideMapping(facing);
-            if (ioSide != null) {
-                if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && requiresItemHandlerWrapping()) {
+                if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && requiresItemHandlerWrapping()) {
                     int cacheIdx = ioSide.getIndex();
                     if (cachedItemHandlers[cacheIdx] != null) {
                         if (!cachedItemHandlers[cacheIdx].revalidate()) {
@@ -257,7 +254,7 @@ public class TileBlockExtender extends TileMod implements ITickable {
                             return null;
                         }
                     } else {
-                        IItemHandler itemHandler = cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ioSide);
+                        LazyOptional<IItemHandler> itemHandler = cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ioSide);
                         if (itemHandler == null) {
                             return null;
                         }
@@ -265,10 +262,11 @@ public class TileBlockExtender extends TileMod implements ITickable {
                     }
                     return (T) cachedItemHandlers[cacheIdx];
                 }
-                return cachedConnectedTile.getCapability(capability, ioSide);
+                return cachedConnectedTile.getCapability(cap, ioSide);
             }
         }
-        return super.getCapability(capability, facing);
+
+        return super.getCapability(cap, side);
     }
 
     private boolean requiresItemHandlerWrapping() {
@@ -320,12 +318,12 @@ public class TileBlockExtender extends TileMod implements ITickable {
         this.stackLimiterLimit = stackLimiterLimit;
     }
 
-    public IRootFilter getInputFilter() {
-        return inputFilter;
+    public LazyOptional<IRootFilter> getInputFilter() {
+        return LazyOptional.of(() -> inputFilter);
     }
 
-    public IRootFilter getOutputFilter() {
-        return outputFilter;
+    public LazyOptional<IRootFilter> getOutputFilter() {
+        return LazyOptional.of(() -> outputFilter);
     }
 
     public boolean hasInputFilter() {
@@ -334,5 +332,15 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
     public boolean hasOutputFilter() {
         return hasOutputFilter;
+    }
+
+    @Override
+    public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
+        return new ContainerBlockExtender(entityPlayer, this);
+    }
+
+    @Override
+    public String getGuiID() {
+        return "refinedrelocation:block_extender";
     }
 }

@@ -81,7 +81,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setShort("Priority", (short) priority);
+        compound.putShort("Priority", (short) priority);
         return compound;
     }
 

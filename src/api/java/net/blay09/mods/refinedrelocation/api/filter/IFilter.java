@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.api.filter;
 
 import net.blay09.mods.refinedrelocation.api.client.IFilterIcon;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IInteractionObject;
 
 import javax.annotation.Nullable;
 

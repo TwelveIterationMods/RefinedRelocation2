@@ -4,11 +4,22 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface IContainerMessage {
 
-	String getKey();
-	int getIntValue();
-	int getSecondaryIntValue();
-	String getStringValue();
-	NBTTagCompound getNBTValue();
-	byte[] getByteArrayValue();
+    String getKey();
+
+    default int getIntValue() {
+        return 0;
+    }
+
+    default String getStringValue() {
+        return "";
+    }
+
+    default NBTTagCompound getNBTValue() {
+        return new NBTTagCompound();
+    }
+
+    default byte[] getByteArrayValue() {
+        return new byte[0];
+    }
 
 }

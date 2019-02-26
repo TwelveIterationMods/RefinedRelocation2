@@ -18,9 +18,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class ItemSortingUpgrade extends Item {
 
@@ -42,6 +44,7 @@ public class ItemSortingUpgrade extends Item {
         BlockPos pos = useContext.getPos();
         EnumFacing facing = useContext.getFace();
         ItemStack itemStack = useContext.getItem();
+        EnumHand hand = EnumHand.MAIN_HAND;
         if (!world.isRemote) {
             IBlockState state = world.getBlockState(pos);
             if (state.getBlock() == Blocks.CHEST || state.getBlock() == Blocks.TRAPPED_CHEST) {
@@ -55,13 +58,18 @@ public class ItemSortingUpgrade extends Item {
 
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity != null && tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing).isPresent()) {
-                ISortingUpgradable sortingUpgradable = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing);
-                if (sortingUpgradable != null && sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, hitX, hitY, hitZ, hand)) {
-                    if (!player.abilities.isCreativeMode) {
-                        itemStack.shrink(1);
+                LazyOptional<ISortingUpgradable> sortingUpgradableCap = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing);
+                return sortingUpgradableCap.map(sortingUpgradable -> {
+                    if (sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, useContext.getHitX(), useContext.getHitY(), useContext.getHitZ(), hand)) {
+                        if (!player.abilities.isCreativeMode) {
+                            itemStack.shrink(1);
+                        }
+
+                        return EnumActionResult.SUCCESS;
                     }
-                    return EnumActionResult.SUCCESS;
-                }
+
+                    return EnumActionResult.PASS;
+                }).orElse(EnumActionResult.PASS);
             }
         }
 

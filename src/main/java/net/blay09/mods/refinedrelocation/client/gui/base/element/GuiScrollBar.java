@@ -96,10 +96,10 @@ public class GuiScrollBar extends GuiElement {
 			}
 		}
 
-		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		scrollbarTop.draw(getAbsoluteX() - 2, getAbsoluteY() - 1, zLevel);
 		scrollbarBottom.draw(getAbsoluteX() - 2, getAbsoluteY() + getHeight() - 1, zLevel);
-		scrollbarMiddle.draw(getAbsoluteX() - 2, getAbsoluteY() + 2, scrollbarMiddle.getIconWidth(), getHeight() - 3, zLevel);
+		scrollbarMiddle.draw(getAbsoluteX() - 2, getAbsoluteY() + 2, scrollbarMiddle.getWidth(), getHeight() - 3, zLevel);
 
 		drawRect(getAbsoluteX(), barY, getAbsoluteX() + getWidth(), barY + barHeight, 0xFFAAAAAA);
 

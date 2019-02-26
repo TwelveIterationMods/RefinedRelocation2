@@ -11,12 +11,15 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +38,7 @@ public class PresetFilter implements IChecklistFilter {
             return id;
         }
 
-        public abstract boolean passes(ItemStack itemStack, String[] oreNames);
+        public abstract boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags);
     }
 
     private static final Map<String, Preset> presetMap = Maps.newHashMap();
@@ -43,9 +46,9 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset ORES = new Preset("ores") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
-            for (String oreName : oreNames) {
-                if (oreName.startsWith("ore")) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+            for (ResourceLocation tag : tags) {
+                if (tag.getPath().equals("ores")) {
                     return true;
                 }
             }
@@ -55,9 +58,9 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset INGOTS = new Preset("ingots") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
-            for (String oreName : oreNames) {
-                if (oreName.startsWith("ingot")) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+            for (ResourceLocation tag : tags) {
+                if (tag.getPath().equals("ingots")) {
                     return true;
                 }
             }
@@ -67,9 +70,9 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset NUGGETS = new Preset("nuggets") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
-            for (String oreName : oreNames) {
-                if (oreName.startsWith("nugget")) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+            for (ResourceLocation tag : tags) {
+                if (tag.getPath().equals("nuggets")) {
                     return true;
                 }
             }
@@ -79,9 +82,9 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset GEMS = new Preset("gems") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
-            for (String oreName : oreNames) {
-                if (oreName.startsWith("gem")) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+            for (ResourceLocation tag : tags) {
+                if (tag.getPath().equals("gems")) {
                     return true;
                 }
             }
@@ -91,9 +94,9 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset DYES = new Preset("dyes") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
-            for (String oreName : oreNames) {
-                if (oreName.startsWith("dye")) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+            for (ResourceLocation tag : tags) {
+                if (tag.getPath().equals("dyes")) {
                     return true;
                 }
             }
@@ -103,56 +106,56 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset FOOD = new Preset("food") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.getItem() instanceof ItemFood;
         }
     };
 
     public static final Preset FUEL_ITEMS = new Preset("fuel") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return TileEntityFurnace.getItemBurnTime(itemStack) > 0;
         }
     };
 
     public static final Preset BLOCKS = new Preset("blocks") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.getItem() instanceof ItemBlock;
         }
     };
 
     public static final Preset UNSTACKABLE = new Preset("unstackable") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.getMaxStackSize() <= 1;
         }
     };
 
     public static final Preset REPAIRABLE = new Preset("repairable") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.getItem().isRepairable();
         }
     };
 
     public static final Preset WEAPONS = new Preset("weapons") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.getItem() instanceof ItemSword || itemStack.getItem() instanceof ItemBow;
         }
     };
 
     public static final Preset TOOLS = new Preset("tools") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.getItem() == Items.CARROT_ON_A_STICK || itemStack.getItem() == Items.FLINT_AND_STEEL || itemStack.getItem() instanceof ItemTool || itemStack.getItem() instanceof ItemFishingRod || itemStack.getItem() instanceof ItemShears;
         }
     };
 
     public static final Preset ENCHANTED = new Preset("enchanted") {
         @Override
-        public boolean passes(ItemStack itemStack, String[] oreNames) {
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             return itemStack.isEnchanted();
         }
     };
@@ -194,13 +197,9 @@ public class PresetFilter implements IChecklistFilter {
 
     @Override
     public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
-        int[] oreIDs = OreDictionary.getOreIDs(itemStack);
-        String[] oreNames = new String[oreIDs.length];
-        for (int i = 0; i < oreIDs.length; i++) {
-            oreNames[i] = OreDictionary.getOreName(oreIDs[i]);
-        }
+        Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(itemStack.getItem());
         for (int i = 0; i < presetList.size(); i++) {
-            if (presetStates[i] && presetList.get(i).passes(itemStack, oreNames)) {
+            if (presetStates[i] && presetList.get(i).passes(itemStack, tags)) {
                 return true;
             }
         }

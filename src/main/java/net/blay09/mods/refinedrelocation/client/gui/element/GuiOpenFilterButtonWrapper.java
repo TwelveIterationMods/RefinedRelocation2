@@ -23,9 +23,9 @@ public class GuiOpenFilterButtonWrapper extends GuiButtonWrapper {
 	public void actionPerformed() {
 		TileEntity tileEntity = ((GuiOpenFilterButton) button).getTileEntity();
 		if(isReturnButton) {
-			NetworkHandler.wrapper.sendToServer(new MessageReturnGUI());
+			NetworkHandler.channel.sendToServer(new MessageReturnGUI());
 		} else {
-			NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity.getPos()));
+			NetworkHandler.channel.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity.getPos()));
 		}
 	}
 

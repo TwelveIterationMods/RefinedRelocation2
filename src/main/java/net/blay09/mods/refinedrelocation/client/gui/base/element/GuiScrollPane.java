@@ -15,10 +15,4 @@ public class GuiScrollPane extends GuiElement {
 		scrollBar.mouseWheelMoved(mouseX, mouseY, delta);
 	}
 
-//	@Override
-//	public void drawBackground(Minecraft mc, int mouseX, int mouseY) {
-//		super.drawBackground(mc, mouseX, mouseY);
-//		drawRect(getAbsoluteX(), getAbsoluteY(), getAbsoluteX() + getWidth(), getAbsoluteY() + getHeight(), 0xAAFFFFFF);
-//	}
-
 }

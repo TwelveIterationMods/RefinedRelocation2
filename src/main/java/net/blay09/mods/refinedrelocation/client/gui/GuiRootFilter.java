@@ -71,7 +71,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
                 @Override
                 public void actionPerformed(int mouseButton) {
                     if (onGuiAboutToClose()) {
-                        NetworkHandler.wrapper.sendToServer(new MessageReturnGUI());
+                        NetworkHandler.channel.sendToServer(new MessageReturnGUI());
                     }
                 }
             };

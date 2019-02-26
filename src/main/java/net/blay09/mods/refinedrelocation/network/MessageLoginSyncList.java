@@ -1,49 +1,50 @@
 package net.blay09.mods.refinedrelocation.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.blay09.mods.refinedrelocation.filter.CreativeTabFilter;
+import net.blay09.mods.refinedrelocation.filter.ModFilter;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class MessageLoginSyncList {
 
-	public static final int TYPE_CREATIVE_TABS = 0;
-	public static final int TYPE_MODS = 1;
+    public static final int TYPE_CREATIVE_TABS = 0;
+    public static final int TYPE_MODS = 1;
 
-	private final int type;
-	private final String[] values;
+    private final int type;
+    private final String[] values;
 
-	public MessageLoginSyncList(int type, String[] values) {
-		this.type = type;
-		this.values = values;
-	}
+    public MessageLoginSyncList(int type, String[] values) {
+        this.type = type;
+        this.values = values;
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		type = buf.readByte();
-		values = new String[buf.readShort()];
-		for(int i = 0; i < values.length; i++) {
-			values[i] = ByteBufUtils.readUTF8String(buf);
-		}
-	}
+    public static void encode(MessageLoginSyncList message, PacketBuffer buf) {
+        buf.writeByte(message.type);
+        buf.writeShort(message.values.length);
+        for (String value : message.values) {
+            buf.writeString(value);
+        }
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeByte(type);
-		buf.writeShort(values.length);
-		for (String value : values) {
-			ByteBufUtils.writeUTF8String(buf, value);
-		}
-	}
+    public static MessageLoginSyncList decode(PacketBuffer buf) {
+        int type = buf.readByte();
+        String[] values = new String[buf.readShort()];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = buf.readString(Short.MAX_VALUE);
+        }
+        return new MessageLoginSyncList(type, values);
+    }
 
-	public boolean isCreativeTabs() {
-		return type == TYPE_CREATIVE_TABS;
-	}
-
-	public boolean isMods() {
-		return type == TYPE_MODS;
-	}
-
-	public String[] getValues() {
-		return values;
-	}
+    public static void handle(MessageLoginSyncList message, Supplier<NetworkEvent.Context> contextSupplier) {
+        NetworkEvent.Context context = contextSupplier.get();
+        context.enqueueWork(() -> {
+            if (message.type == TYPE_CREATIVE_TABS) {
+                CreativeTabFilter.creativeTabs = message.values;
+            } else if (message.type == TYPE_MODS) {
+                ModFilter.setModList(message.values);
+            }
+        });
+    }
 }

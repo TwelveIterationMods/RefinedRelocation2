@@ -19,7 +19,7 @@ public class CapabilitySortingInventory {
 			@Override
 			public INBTBase writeNBT(Capability<ISortingInventory> capability, ISortingInventory instance, EnumFacing side) {
 				NBTTagCompound compound = new NBTTagCompound();
-				compound.setShort("Priority", (short) instance.getPriority());
+				compound.putShort("Priority", (short) instance.getPriority());
 				return compound;
 			}
 

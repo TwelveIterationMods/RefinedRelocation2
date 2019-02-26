@@ -22,7 +22,7 @@ public interface INameTaggable extends INBTSerializable<NBTTagCompound> {
     @Override
     default NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("CustomName", getCustomName());
+        compound.putString("CustomName", getCustomName());
         return compound;
     }
 

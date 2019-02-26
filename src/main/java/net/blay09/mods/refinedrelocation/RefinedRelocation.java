@@ -2,27 +2,43 @@ package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IConfigurableFilter;
+import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.capability.*;
+import net.blay09.mods.refinedrelocation.client.gui.*;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.compat.Compat;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
+import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.filter.*;
-import net.blay09.mods.refinedrelocation.network.GuiHandler;
 import net.blay09.mods.refinedrelocation.network.LoginSyncHandler;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
+import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,16 +85,85 @@ public class RefinedRelocation {
         RefinedRelocationAPI.registerFilter(ModFilter.class);
         RefinedRelocationAPI.registerFilter(SameModFilter.class);
 
-        RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_SORTING_CHEST, tileEntity.getPos())));
-        RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_BLOCK_EXTENDER, tileEntity.getPos())));
+        RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> NetworkHooks.openGui((EntityPlayerMP) player, (TileSortingChest) tileEntity));
+        RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> NetworkHooks.openGui((EntityPlayerMP) player, (TileBlockExtender) tileEntity, it -> it.writeByte(EnumFacing.UP.getIndex())));
 
-        if (ModList.get().isLoaded(Compat.IRONCHEST)) {
+        if (ModList.get().isLoaded(Compat.IRON_CHEST)) {
             try {
                 inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
             } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RefinedRelocationConfig.commonSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RefinedRelocationConfig.clientSpec);
+
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> it -> {
+            EntityPlayer player = Minecraft.getInstance().player;
+            BlockPos pos;
+            TileEntity tileEntity;
+            switch (it.getId().getPath()) {
+                case "block_extender":
+                    pos = it.getAdditionalData().readBlockPos();
+                    tileEntity = player.world.getTileEntity(pos);
+                    if (tileEntity instanceof TileBlockExtender) {
+                        EnumFacing clickedFace = EnumFacing.byIndex(it.getAdditionalData().readByte());
+                        return new GuiBlockExtender(player, (TileBlockExtender) tileEntity, clickedFace);
+                    }
+                    break;
+                case "sorting_chest":
+                    pos = it.getAdditionalData().readBlockPos();
+                    tileEntity = player.world.getTileEntity(pos);
+                    if (tileEntity instanceof TileSortingChest) {
+                        return new GuiSortingChest(player, (TileSortingChest) tileEntity);
+                    }
+                    break;
+                case "fast_hopper":
+                    pos = it.getAdditionalData().readBlockPos();
+                    tileEntity = player.world.getTileEntity(pos);
+                    if (tileEntity instanceof TileFastHopper) {
+                        return new GuiFastHopper(player, (TileFastHopper) tileEntity);
+                    }
+                    break;
+                case "root_filter":
+                    pos = it.getAdditionalData().readBlockPos();
+                    tileEntity = player.world.getTileEntity(pos);
+                    if (tileEntity != null && tileEntity.getCapability(CapabilityRootFilter.CAPABILITY).isPresent()) {
+                        return new GuiRootFilter(player, tileEntity);
+                    }
+                    break;
+                case "any_filter":
+                    pos = it.getAdditionalData().readBlockPos();
+                    tileEntity = player.world.getTileEntity(pos);
+                    if (tileEntity != null) {
+                        Container container = player.openContainer;
+                        if (container instanceof ContainerRootFilter) {
+                            IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(it.getAdditionalData().readInt());
+                            if (filter instanceof IConfigurableFilter) {
+                                return ((IConfigurableFilter) filter).createGuiScreen(player, tileEntity);
+                            } else if (filter instanceof IChecklistFilter) {
+                                return new GuiChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
+                            }
+                        }
+                    }
+                    break;
+                case "block_extender_root_filter":
+                    pos = it.getAdditionalData().readBlockPos();
+                    tileEntity = player.world.getTileEntity(pos);
+                    if (tileEntity instanceof TileBlockExtender) {
+                        TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
+                        boolean isOutputFilter = it.getAdditionalData().readInt() == 1;
+                        return new GuiRootFilter(new ContainerRootFilter(
+                                player,
+                                tileEntity,
+                                isOutputFilter ? tileBlockExtender.getOutputFilter() : tileBlockExtender.getInputFilter()));
+                    }
+                    break;
+            }
+
+            return null;
+        });
     }
 
     private void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -100,6 +185,10 @@ public class RefinedRelocation {
 
     private void setupClient(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
+
+        for (RefinedAddon addon : inbuiltAddons) {
+            addon.setupClient();
+        }
     }
 
     private void finishLoading(FMLLoadCompleteEvent event) {

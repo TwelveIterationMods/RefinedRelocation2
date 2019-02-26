@@ -1,37 +1,39 @@
 package net.blay09.mods.refinedrelocation.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.blay09.mods.refinedrelocation.client.FilterPreviewHandler;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageFilterPreview implements IMessage {
+import java.util.function.Supplier;
 
-	public static final int STATE_FAILURE = 0;
-	public static final int STATE_SUCCESS = 1;
+public class MessageFilterPreview {
 
-	public static final int INVENTORY_SLOT_COUNT = 36;
+    public static final int STATE_FAILURE = 0;
+    public static final int STATE_SUCCESS = 1;
 
-	private byte[] slotStates;
+    public static final int INVENTORY_SLOT_COUNT = 36;
 
-	public MessageFilterPreview() {
-	}
+    private final byte[] slotStates;
 
-	public MessageFilterPreview(byte[] slotStates) {
-		this.slotStates = slotStates;
-		assert slotStates.length == INVENTORY_SLOT_COUNT;
-	}
+    public MessageFilterPreview(byte[] slotStates) {
+        this.slotStates = slotStates;
+        assert slotStates.length == INVENTORY_SLOT_COUNT;
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		slotStates = new byte[INVENTORY_SLOT_COUNT];
-		buf.readBytes(slotStates);
-	}
+    public static void encode(MessageFilterPreview message, PacketBuffer buf) {
+        buf.writeBytes(message.slotStates);
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeBytes(slotStates);
-	}
+    public static MessageFilterPreview decode(PacketBuffer buf) {
+        byte[] slotStates = new byte[INVENTORY_SLOT_COUNT];
+        buf.readBytes(slotStates);
+        return new MessageFilterPreview(slotStates);
+    }
 
-	public byte[] getSlotStates() {
-		return slotStates;
-	}
+    public static void handle(MessageFilterPreview message, Supplier<NetworkEvent.Context> contextSupplier) {
+        NetworkEvent.Context context = contextSupplier.get();
+        context.enqueueWork(() -> {
+            FilterPreviewHandler.setSlotStates(message.slotStates);
+        });
+    }
 }

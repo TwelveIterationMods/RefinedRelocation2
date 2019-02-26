@@ -4,24 +4,28 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
+import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.util.DoorAnimator;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSortingChest extends TileMod implements ITickable {
+public class TileSortingChest extends TileMod implements ITickable, IInteractionObject {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
         @Override
@@ -49,20 +53,19 @@ public class TileSortingChest extends TileMod implements ITickable {
     }
 
     @Override
-    public void update() {
+    public void tick() {
         sortingInventory.onUpdate(this);
         doorAnimator.update();
     }
 
     @Override
-    public void invalidate() {
-        super.invalidate();
+    public void remove() {
+        super.remove();
         sortingInventory.onInvalidate(this);
     }
 
     @Override
-    public void onChunkUnload() {
-        super.onChunkUnload();
+    public void onChunkUnloaded() {
         sortingInventory.onInvalidate(this);
     }
 
@@ -75,24 +78,24 @@ public class TileSortingChest extends TileMod implements ITickable {
      */
     public static void fixRootFilterTag(NBTTagCompound compound) {
         if (compound.getTagId("RootFilter") == Constants.NBT.TAG_LIST) {
-            NBTTagList tagList = compound.getTagList("RootFilter", Constants.NBT.TAG_COMPOUND);
-            compound.removeTag("RootFilter");
+            NBTTagList tagList = compound.getList("RootFilter", Constants.NBT.TAG_COMPOUND);
+            compound.remove("RootFilter");
             NBTTagCompound rootFilter = new NBTTagCompound();
-            rootFilter.setTag("FilterList", tagList);
-            compound.setTag("RootFilter", rootFilter);
+            rootFilter.put("FilterList", tagList);
+            compound.put("RootFilter", rootFilter);
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        itemHandler.deserializeNBT(compound.getCompoundTag("ItemHandler"));
-        sortingInventory.deserializeNBT(compound.getCompoundTag("SortingInventory"));
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
+        itemHandler.deserializeNBT(compound.getCompound("ItemHandler"));
+        sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
 
         fixRootFilterTag(compound);
 
-        rootFilter.deserializeNBT(compound.getCompoundTag("RootFilter"));
-        nameTaggable.deserializeNBT(compound.getCompoundTag("NameTaggable"));
+        rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
+        nameTaggable.deserializeNBT(compound.getCompound("NameTaggable"));
     }
 
     @Override
@@ -101,18 +104,18 @@ public class TileSortingChest extends TileMod implements ITickable {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        compound.setTag("ItemHandler", itemHandler.serializeNBT());
-        compound.setTag("SortingInventory", sortingInventory.serializeNBT());
-        compound.setTag("RootFilter", rootFilter.serializeNBT());
-        compound.setTag("NameTaggable", nameTaggable.serializeNBT());
+    public NBTTagCompound write(NBTTagCompound compound) {
+        super.write(compound);
+        compound.put("ItemHandler", itemHandler.serializeNBT());
+        compound.put("SortingInventory", sortingInventory.serializeNBT());
+        compound.put("RootFilter", rootFilter.serializeNBT());
+        compound.put("NameTaggable", nameTaggable.serializeNBT());
         return compound;
     }
 
     @Override
     public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
-        compound.setString("CustomName", nameTaggable.getCustomName());
+        compound.putString("CustomName", nameTaggable.getCustomName());
         return compound;
     }
 
@@ -122,29 +125,41 @@ public class TileSortingChest extends TileMod implements ITickable {
         return doorAnimator.receiveClientEvent(id, type) || super.receiveClientEvent(id, type);
     }
 
+    @Nonnull
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-                || capability == Capabilities.NAME_TAGGABLE
-                || Capabilities.isSortingGridCapability(capability)
-                || Capabilities.isFilterCapability(capability)
-                || super.hasCapability(capability, facing);
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        LazyOptional<T> result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
+        if (!result.isPresent()) {
+            result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
+        }
+
+        if (!result.isPresent()) {
+            result = Capabilities.SORTING_INVENTORY.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
+        }
+
+        if (!result.isPresent()) {
+            result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        }
+
+        if (!result.isPresent()) {
+            result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        }
+
+        if (!result.isPresent()) {
+            result = Capabilities.NAME_TAGGABLE.orEmpty(cap, LazyOptional.of(() -> nameTaggable));
+        }
+
+        return result;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) itemHandler;
-        } else if (Capabilities.isSortingGridCapability(capability)) {
-            return (T) sortingInventory;
-        } else if (Capabilities.isFilterCapability(capability)) {
-            return (T) rootFilter;
-        } else if (capability == Capabilities.NAME_TAGGABLE) {
-            return (T) nameTaggable;
-        }
+    public ITextComponent getName() {
+        return null;
+    }
 
-        return super.getCapability(capability, facing);
+    @Override
+    public boolean hasCustomName() {
+        return false;
     }
 
     @Nullable
@@ -153,18 +168,28 @@ public class TileSortingChest extends TileMod implements ITickable {
         return nameTaggable.getDisplayName();
     }
 
+    @Nullable
     @Override
-    public String getUnlocalizedName() {
-        return "container.refinedrelocation:sorting_chest";
+    public ITextComponent getCustomName() {
+        return null;
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return oldState.getBlock() != newSate.getBlock();
+    public String getUnlocalizedName() {
+        return "container.refinedrelocation:sorting_chest";
     }
 
     public ItemStackHandler getItemHandler() {
         return itemHandler;
     }
 
+    @Override
+    public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
+        return new ContainerSortingChest(entityPlayer, this);
+    }
+
+    @Override
+    public String getGuiID() {
+        return "refinedrelocation:sorting_chest";
+    }
 }

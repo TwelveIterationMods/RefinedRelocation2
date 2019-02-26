@@ -27,9 +27,9 @@ public class SubFilterWrapper {
 	}
 
 	public NBTTagCompound writeNBT(NBTTagCompound compound) {
-		compound.setString("Type", filter.getIdentifier());
-		compound.setTag("Data", filter.serializeNBT());
-		compound.setBoolean("IsBlacklist", isBlacklist);
+		compound.putString("Type", filter.getIdentifier());
+		compound.put("Data", filter.serializeNBT());
+		compound.putBoolean("IsBlacklist", isBlacklist);
 		return compound;
 	}
 
@@ -37,7 +37,7 @@ public class SubFilterWrapper {
 	public static SubFilterWrapper loadFromNBT(NBTTagCompound tagCompound) {
 		IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
 		if(filter != null) {
-			filter.deserializeNBT(tagCompound.getTag("Data"));
+			filter.deserializeNBT(tagCompound.get("Data"));
 			SubFilterWrapper wrapper = new SubFilterWrapper(filter);
 			wrapper.isBlacklist = tagCompound.getBoolean("IsBlacklist");
 			return wrapper;

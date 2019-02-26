@@ -29,8 +29,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -54,27 +56,34 @@ public class InternalMethodsImpl implements InternalMethods {
         if (sortingGrid != null) {
             return;
         }
+
         World world = member.getTileEntity().getWorld();
+        if (world == null) {
+            return;
+        }
+
         BlockPos pos = member.getTileEntity().getPos();
         for (EnumFacing facing : EnumFacing.values()) {
             BlockPos facingPos = pos.offset(facing);
             if (world.isBlockLoaded(facingPos)) {
-                TileEntity tileEntity = world.getChunkFromBlockCoords(facingPos).getTileEntity(facingPos, Chunk.EnumCreateEntityType.CHECK);
+                TileEntity tileEntity = world.getChunk(facingPos).getTileEntity(facingPos, Chunk.EnumCreateEntityType.CHECK);
                 if (tileEntity != null) {
-                    ISortingGridMember otherMember = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite());
-                    if (otherMember != null && otherMember.getSortingGrid() != null) {
+                    LazyOptional<ISortingGridMember> otherMemberCap = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite());
+                    otherMemberCap.filter(it -> it.getSortingGrid() != null).ifPresent(otherMember -> {
                         if (sortingGrid != null) {
                             ((SortingGrid) sortingGrid).mergeWith(otherMember.getSortingGrid());
                         } else {
                             sortingGrid = otherMember.getSortingGrid();
                         }
-                    }
+                    });
                 }
             }
         }
+
         if (sortingGrid == null) {
             sortingGrid = new SortingGrid();
         }
+
         sortingGrid.addMember(member);
     }
 
@@ -166,30 +175,30 @@ public class InternalMethodsImpl implements InternalMethods {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
         return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, tileEntity);
     }
 
     @Override
     public void sendContainerMessageToServer(String key, String value) {
-        NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
+        NetworkHandler.channel.sendToServer(new MessageContainer(key, value));
     }
 
     @Override
     public void sendContainerMessageToServer(String key, NBTTagCompound value) {
-        NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
+        NetworkHandler.channel.sendToServer(new MessageContainer(key, value));
     }
 
 
     @Override
     public void sendContainerMessageToServer(String key, int value) {
-        NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value));
+        NetworkHandler.channel.sendToServer(new MessageContainer(key, value));
     }
 
     @Override
     public void sendContainerMessageToServer(String key, int value, int secondaryValue) {
-        NetworkHandler.wrapper.sendToServer(new MessageContainer(key, value, secondaryValue));
+        NetworkHandler.channel.sendToServer(new MessageContainer(key, value, secondaryValue));
     }
 
     @Override
@@ -215,7 +224,7 @@ public class InternalMethodsImpl implements InternalMethods {
     private void syncContainerValue(MessageContainer message, Iterable<IContainerListener> listeners) {
         for (IContainerListener listener : listeners) {
             if (listener instanceof EntityPlayerMP) {
-                NetworkHandler.wrapper.sendTo(message, (EntityPlayerMP) listener);
+                NetworkHandler.channel.send(PacketDistributor.PLAYER.with(() -> (EntityPlayerMP) listener), message);
             }
         }
     }
@@ -233,7 +242,7 @@ public class InternalMethodsImpl implements InternalMethods {
     @Override
     public void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
         if (player.world.isRemote) {
-            NetworkHandler.wrapper.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
+            NetworkHandler.channel.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
         } else {
             RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
         }
@@ -249,30 +258,25 @@ public class InternalMethodsImpl implements InternalMethods {
                     slotStates[i] = (byte) (filter.passes(tileEntity, itemStack) ? MessageFilterPreview.STATE_SUCCESS : MessageFilterPreview.STATE_FAILURE);
                 }
             }
-            NetworkHandler.wrapper.sendTo(new MessageFilterPreview(slotStates), (EntityPlayerMP) entityPlayer);
+
+            NetworkHandler.channel.send(PacketDistributor.PLAYER.with(() -> (EntityPlayerMP) entityPlayer), new MessageFilterPreview(slotStates));
         }
     }
 
     @Override
     public void returnToParentContainer() {
-        NetworkHandler.wrapper.sendToServer(new MessageReturnGUI());
+        NetworkHandler.channel.sendToServer(new MessageReturnGUI());
     }
 
     @Override
     public void transferName(TileEntity source, TileEntity target) {
-        INameTaggable sourceName = source.getCapability(Capabilities.NAME_TAGGABLE, null);
-        if (sourceName == null && source instanceof INameTaggable) {
-            sourceName = (INameTaggable) source;
-        }
-
-        INameTaggable targetName = target.getCapability(Capabilities.NAME_TAGGABLE, null);
-        if (targetName == null && target instanceof INameTaggable) {
-            targetName = (INameTaggable) target;
-        }
-
-        if (sourceName != null && targetName != null) {
-            targetName.setCustomName(sourceName.getCustomName());
-        }
+        LazyOptional<INameTaggable> sourceNameCap = source.getCapability(Capabilities.NAME_TAGGABLE);
+        LazyOptional<INameTaggable> targetNameCap = target.getCapability(Capabilities.NAME_TAGGABLE);
+        sourceNameCap.ifPresent(sourceName -> {
+            targetNameCap.ifPresent(targetName -> {
+                targetName.setCustomName(sourceName.getCustomName());
+            });
+        });
     }
 
 }

@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.IParentScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -23,7 +23,7 @@ public class GuiTextButton extends GuiElement {
 	@Override
 	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (isEnabled()) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1f));
+			Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1f));
 			actionPerformed(mouseButton);
 		}
 		return true;

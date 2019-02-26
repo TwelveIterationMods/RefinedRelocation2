@@ -7,8 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ChatAllowedCharacters;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
@@ -34,7 +33,7 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 	private int lastRowCount;
 
 	public GuiTextFieldMultiLine(int x, int y, int width, int height) {
-		fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		fontRenderer = Minecraft.getInstance().fontRenderer;
 		setPosition(x, y);
 		setSize(width, height);
 	}
@@ -214,35 +213,35 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 			return false;
 		}
 		switch (keyCode) {
-			case Keyboard.KEY_END:
+			case GLFW.GLFW_KEY_END:
 				if (GuiScreen.isCtrlKeyDown()) {
 					setCursorPosition(text.length());
 				} else {
 					setCursorPosition(getEndOfLine(cursorPosition, 1));
 				}
 				return true;
-			case Keyboard.KEY_HOME:
+			case GLFW.GLFW_KEY_HOME:
 				if (GuiScreen.isCtrlKeyDown()) {
 					setCursorPosition(0);
 				} else {
 					setCursorPosition(getStartOfLine(cursorPosition, 1));
 				}
 				return true;
-			case Keyboard.KEY_LEFT:
+			case GLFW.GLFW_KEY_LEFT:
 				if (GuiScreen.isCtrlKeyDown()) {
 					setCursorPosition(getStartOfWord(cursorPosition - 1));
 				} else {
 					setCursorPosition(cursorPosition - 1);
 				}
 				return true;
-			case Keyboard.KEY_RIGHT:
+			case GLFW.GLFW_KEY_RIGHT:
 				if (GuiScreen.isCtrlKeyDown()) {
 					setCursorPosition(getStartOfNextWord(cursorPosition + 1));
 				} else {
 					setCursorPosition(cursorPosition + 1);
 				}
 				return true;
-			case Keyboard.KEY_UP:
+			case GLFW.GLFW_KEY_UP:
 				if (GuiScreen.isCtrlKeyDown()) {
 					scroll(0, -1);
 				} else {
@@ -250,7 +249,7 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 					setCursorPosition(upLine + Math.min(getLineLength(upLine), (cursorPosition - getStartOfLine(cursorPosition, 1))));
 				}
 				return true;
-			case Keyboard.KEY_DOWN:
+			case GLFW.GLFW_KEY_DOWN:
 				if (GuiScreen.isCtrlKeyDown()) {
 					scroll(0, 1);
 				} else {
@@ -258,17 +257,17 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 					setCursorPosition(getStartOfLine(downLine, 1) + Math.min(getLineLength(downLine), (cursorPosition - getStartOfLine(cursorPosition, 1))));
 				}
 				return true;
-			case Keyboard.KEY_RETURN:
+			case GLFW.GLFW_KEY_ENTER:
 				if (isEnabled) {
 					writeText("\n");
 				}
 				return true;
-			case Keyboard.KEY_DELETE:
+			case GLFW.GLFW_KEY_DELETE:
 				if (isEnabled) {
 					deleteFront(GuiScreen.isCtrlKeyDown());
 				}
 				return true;
-			case Keyboard.KEY_BACK:
+			case GLFW.GLFW_KEY_BACKSPACE:
 				if (isEnabled) {
 					deleteBack(GuiScreen.isCtrlKeyDown());
 				}
@@ -333,10 +332,10 @@ public class GuiTextFieldMultiLine extends GuiElement implements IScrollTarget {
 
 	private void drawCursor(int x, int y) {
 		Tessellator tessellator = Tessellator.getInstance();
-		GlStateManager.color(0f, 0f, 1f, 1f);
+		GlStateManager.color4f(0f, 0f, 1f, 1f);
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableColorLogic();
-		GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);
+		GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
 		tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
 		tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
