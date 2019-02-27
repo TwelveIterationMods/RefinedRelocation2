@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
-import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiAddFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
@@ -32,7 +31,7 @@ public class GuiAddFilterButton extends GuiImageButton implements ITooltipElemen
     public void onClick(double p_194829_1_, double p_194829_3_) {
         if (currentFilter != null) {
             RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_ADD_FILTER, currentFilter.getIdentifier());
-            if (!(currentFilter instanceof IConfigurableFilter) && !(currentFilter instanceof IChecklistFilter)) {
+            if (!currentFilter.hasConfiguration()) {
                 Minecraft.getInstance().displayGuiScreen(parentGui.getParentGui());
             }
         }

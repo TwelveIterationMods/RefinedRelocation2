@@ -83,7 +83,7 @@ public class ContainerBlockExtender extends ContainerMod {
                 break;
             case KEY_CONFIGURE_INPUT_FILTER:
                 tileEntity.getInputFilter().ifPresent(it -> {
-                    IInteractionObject config = it.getConfiguration();
+                    IInteractionObject config = it.getConfiguration(player, tileEntity);
                     if (config != null) {
                         NetworkHooks.openGui((EntityPlayerMP) player, config, tileEntity.getPos());
                     }
@@ -91,7 +91,7 @@ public class ContainerBlockExtender extends ContainerMod {
                 break;
             case KEY_CONFIGURE_OUTPUT_FILTER:
                 tileEntity.getOutputFilter().ifPresent(it -> {
-                    IInteractionObject config = it.getConfiguration();
+                    IInteractionObject config = it.getConfiguration(player, tileEntity);
                     if (config != null) {
                         NetworkHooks.openGui((EntityPlayerMP) player, config, tileEntity.getPos());
                     }

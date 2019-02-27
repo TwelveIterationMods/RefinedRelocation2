@@ -37,25 +37,26 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 		ySize = 210;
 		shouldKeyRepeat = true;
 
-		txtFilter = new GuiTextFieldMultiLine(0, 0, 150, 84);
+		txtFilter = new GuiTextFieldMultiLine(0, 0, 0, 150, 84);
 		txtFilter.setFocused(true);
 		txtFilter.setCanLoseFocus(false);
 		txtFilter.setText(container.getValue());
 
-		GuiScrollBar scrollBar = new GuiScrollBar(161, 20, 83, txtFilter);
+		GuiScrollBar scrollBar = new GuiScrollBar(0, 161, 20, 83, txtFilter);
 
 		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 20, 150, 84);
-		rootNode.addChild(scrollPane);
-		scrollPane.addChild(txtFilter);
+		children.add(scrollPane);
+		children.add(txtFilter);
 
-		rootNode.addChild(scrollBar);
+		addButton(scrollBar);
 
-		rootNode.addChild(new GuiReturnFromFilterButton(this, container.getTileEntity(), 0));
+		addButton(new GuiReturnFromFilterButton(0, 0, 0));
 	}
 
 	@Override
-	public void updateScreen() {
-		super.updateScreen();
+	public void tick() {
+		super.tick();
+
 		// Sync from Server
 		if(container.doesGuiNeedUpdate()) {
 			txtFilter.setText(container.getValue());
@@ -75,19 +76,10 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		renderHoveredToolTip(mouseX, mouseY);
-	}
-
-	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		mc.getTextureManager().bindTexture(TEXTURE);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModItems;
+import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
@@ -14,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -31,8 +31,8 @@ import java.util.Collections;
 
 public class TileBlockExtender extends TileMod implements ITickable, IInteractionObjectWithoutName, IDroppableItemHandler {
 
-    public TileBlockExtender(TileEntityType<?> type) {
-        super(type);
+    public TileBlockExtender() {
+        super(ModTiles.blockExtender);
     }
 
     private class ItemHandlerWrapper implements IItemHandler {

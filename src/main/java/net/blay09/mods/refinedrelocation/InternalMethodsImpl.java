@@ -27,11 +27,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -68,14 +70,14 @@ public class InternalMethodsImpl implements InternalMethods {
             if (world.isBlockLoaded(facingPos)) {
                 TileEntity tileEntity = world.getChunk(facingPos).getTileEntity(facingPos, Chunk.EnumCreateEntityType.CHECK);
                 if (tileEntity != null) {
-                    LazyOptional<ISortingGridMember> otherMemberCap = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite());
-                    otherMemberCap.filter(it -> it.getSortingGrid() != null).ifPresent(otherMember -> {
+                    ISortingGridMember otherMember = RefinedRelocationUtils.orNull(tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite()));
+                    if (otherMember != null && otherMember.getSortingGrid() != null) {
                         if (sortingGrid != null) {
                             ((SortingGrid) sortingGrid).mergeWith(otherMember.getSortingGrid());
                         } else {
                             sortingGrid = otherMember.getSortingGrid();
                         }
-                    });
+                    }
                 }
             }
         }
@@ -107,12 +109,12 @@ public class InternalMethodsImpl implements InternalMethods {
     @Override
     public void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {
         List<ISortingInventory> passingList = Lists.newArrayList();
-        IItemHandler itemHandler = sortingInventory.getItemHandler();
+        IItemHandler itemHandler = RefinedRelocationUtils.orNull(sortingInventory.getItemHandler());
         if (itemHandler == null) {
             return;
         }
 
-        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, Items.AIR.getItemStackLimit(), true);
+        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, Items.AIR.getItemStackLimit(ItemStack.EMPTY), true);
         if (restStack.isEmpty()) {
             return;
         }
@@ -122,8 +124,9 @@ public class InternalMethodsImpl implements InternalMethods {
             for (ISortingGridMember member : sortingGrid.getMembers()) {
                 if (member instanceof ISortingInventory) {
                     ISortingInventory memberInventory = (ISortingInventory) member;
-                    ISimpleFilter filter = memberInventory.getFilter();
-                    boolean passes = filter != null && filter.passes(memberInventory.getTileEntity(), restStack);
+                    LazyOptional<? extends ISimpleFilter> filter = memberInventory.getFilter();
+                    final ItemStack testStack = restStack;
+                    boolean passes = filter.filter(it -> it.passes(memberInventory.getTileEntity(), testStack)).isPresent();
                     if (passes) {
                         passingList.add(memberInventory);
                     }
@@ -139,7 +142,11 @@ public class InternalMethodsImpl implements InternalMethods {
                 while (!restStack.isEmpty() && !passingList.isEmpty() && targetInventory != null) {
                     // Insert stack into passing inventories
                     int insertCount = restStack.getCount();
-                    restStack = ItemHandlerHelper.insertItemStacked(targetInventory.getItemHandler(), restStack, false);
+                    IItemHandler targetItemHandler = RefinedRelocationUtils.orNull(targetInventory.getItemHandler());
+                    if (targetItemHandler != null) {
+                        restStack = ItemHandlerHelper.insertItemStacked(targetItemHandler, restStack, false);
+                    }
+
                     int actuallyInserted = insertCount - restStack.getCount();
                     if (actuallyInserted > 0) {
                         ItemStack movedStack = itemHandler.extractItem(fromSlotIndex, actuallyInserted, false);
@@ -182,43 +189,43 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     public void sendContainerMessageToServer(String key, String value) {
-        NetworkHandler.channel.sendToServer(new MessageContainer(key, value));
+        NetworkHandler.channel.sendToServer(new MessageContainerString(key, value));
     }
 
     @Override
     public void sendContainerMessageToServer(String key, NBTTagCompound value) {
-        NetworkHandler.channel.sendToServer(new MessageContainer(key, value));
+        NetworkHandler.channel.sendToServer(new MessageContainerNBT(key, value));
     }
 
 
     @Override
     public void sendContainerMessageToServer(String key, int value) {
-        NetworkHandler.channel.sendToServer(new MessageContainer(key, value));
+        NetworkHandler.channel.sendToServer(new MessageContainerInt(key, value));
     }
 
     @Override
     public void sendContainerMessageToServer(String key, int value, int secondaryValue) {
-        NetworkHandler.channel.sendToServer(new MessageContainer(key, value, secondaryValue));
+        NetworkHandler.channel.sendToServer(new MessageContainerIndexedInt(key, value, secondaryValue));
     }
 
     @Override
     public void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners) {
-        syncContainerValue(new MessageContainer(key, value), listeners);
+        syncContainerValue(new MessageContainerString(key, value), listeners);
     }
 
     @Override
     public void syncContainerValue(String key, int value, Iterable<IContainerListener> listeners) {
-        syncContainerValue(new MessageContainer(key, value), listeners);
+        syncContainerValue(new MessageContainerInt(key, value), listeners);
     }
 
     @Override
     public void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners) {
-        syncContainerValue(new MessageContainer(key, value), listeners);
+        syncContainerValue(new MessageContainerByteArray(key, value), listeners);
     }
 
     @Override
     public void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
-        syncContainerValue(new MessageContainer(key, value), listeners);
+        syncContainerValue(new MessageContainerNBT(key, value), listeners);
     }
 
     private void syncContainerValue(MessageContainer message, Iterable<IContainerListener> listeners) {
@@ -242,9 +249,12 @@ public class InternalMethodsImpl implements InternalMethods {
     @Override
     public void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
         if (player.world.isRemote) {
-            NetworkHandler.channel.sendToServer(new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
+            NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos()));
         } else {
-            RefinedRelocation.proxy.openGui(player, new MessageOpenGui(GuiHandler.GUI_ROOT_FILTER, tileEntity));
+            tileEntity.getCapability(Capabilities.ROOT_FILTER).ifPresent(rootFilter -> {
+                IInteractionObject filterConfig = rootFilter.getConfiguration(player, tileEntity);
+                NetworkHooks.openGui((EntityPlayerMP) player, filterConfig, tileEntity.getPos());
+            });
         }
     }
 

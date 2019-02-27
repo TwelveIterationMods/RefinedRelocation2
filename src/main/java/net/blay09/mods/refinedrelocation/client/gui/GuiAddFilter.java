@@ -15,7 +15,6 @@ import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.IOException;
 import java.util.List;
 
 public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implements IScrollTarget {
@@ -35,37 +34,31 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 
         ySize = 210;
 
-        GuiScrollBar scrollBar = new GuiScrollBar(xSize - 16, 28, 78, this);
-        rootNode.addChild(scrollBar);
+        GuiScrollBar scrollBar = new GuiScrollBar(0, xSize - 16, 28, 78, this);
+        addButton(scrollBar);
 
         GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 28, 152, 80);
-        rootNode.addChild(scrollPane);
+        children.add(scrollPane);
 
         int y = 0;
         for (int i = 0; i < filterButtons.length; i++) {
-            filterButtons[i] = new GuiAddFilterButton(this);
-            filterButtons[i].setPosition(0, y);
-            scrollPane.addChild(filterButtons[i]);
-            y += filterButtons[i].getHeight();
+            filterButtons[i] = new GuiAddFilterButton(i, 0, y, this);
+            addButton(filterButtons[i]);
+            y += filterButtons[i].height;
         }
 
         setCurrentOffset(0);
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // TODO will keybindInventory even be active?
         if (keyCode == GLFW.GLFW_KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(InputMappings.getInputByCode(keyCode, 0))) {
             mc.displayGuiScreen(parentGui);
-            return;
+            return true;
         }
-        super.keyTyped(typedChar, keyCode);
-    }
 
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -73,7 +66,6 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
         GlStateManager.color4f(1f, 1f, 1f, 1f);
         mc.getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
 
     @Override

@@ -4,7 +4,6 @@ import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.BlockChest;
@@ -14,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumActionResult;
@@ -92,7 +92,7 @@ public class ItemSortingUpgrade extends Item {
         }
 
         tileEntity.clear();
-        IBlockState newState = ModBlocks.sortingChest.getDefaultState().with(BlockSortingChest.FACING, state.get(BlockChest.FACING));
+        IBlockState newState = ModBlocks.sortingChest.getDefaultState().with(BlockStateProperties.FACING, state.get(BlockChest.FACING));
         world.setBlockState(pos, newState);
         TileSortingChest tileSortingChest = (TileSortingChest) world.getTileEntity(pos);
         if (tileSortingChest != null) {

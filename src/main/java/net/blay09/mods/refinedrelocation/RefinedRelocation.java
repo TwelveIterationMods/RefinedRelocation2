@@ -29,6 +29,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,7 +37,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,17 +68,7 @@ public class RefinedRelocation {
 
         NetworkHandler.init();
 
-        ModBlocks.registerTileEntities();
-
-        MinecraftForge.EVENT_BUS.register(new LoginSyncHandler());
-        MinecraftForge.EVENT_BUS.register(new BlockRightClickHandler());
-
-        CapabilitySimpleFilter.register();
-        CapabilityRootFilter.register();
-        CapabilitySortingGridMember.register();
-        CapabilitySortingInventory.register();
-        CapabilitySortingUpgradable.register();
-        CapabilityNameTaggable.register();
+        ModTiles.registerTileEntities();
 
         RefinedRelocationAPI.registerFilter(SameItemFilter.class);
         RefinedRelocationAPI.registerFilter(NameFilter.class);
@@ -87,13 +80,19 @@ public class RefinedRelocation {
         RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> NetworkHooks.openGui((EntityPlayerMP) player, (TileSortingChest) tileEntity));
         RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> NetworkHooks.openGui((EntityPlayerMP) player, (TileBlockExtender) tileEntity, it -> it.writeByte(EnumFacing.UP.getIndex())));
 
-        if (ModList.get().isLoaded(Compat.IRON_CHEST)) {
-            try {
-                inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
-            } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (ModList.get().isLoaded(Compat.IRON_CHEST)) {
+//            try {
+//                inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
+//            } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::finishLoading);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RefinedRelocationConfig.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RefinedRelocationConfig.clientSpec);
@@ -139,9 +138,7 @@ public class RefinedRelocation {
                         Container container = player.openContainer;
                         if (container instanceof ContainerRootFilter) {
                             IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(it.getAdditionalData().readInt());
-                            if (filter instanceof IConfigurableFilter) {
-                                return ((IConfigurableFilter) filter).createGuiScreen(player, tileEntity);
-                            } else if (filter instanceof IChecklistFilter) {
+                            if (filter instanceof IChecklistFilter) {
                                 return new GuiChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
                             }
                         }
@@ -180,6 +177,17 @@ public class RefinedRelocation {
         for (RefinedAddon addon : inbuiltAddons) {
             addon.registerItems(event.getRegistry());
         }
+    }
+
+    private void setup(FMLCommonSetupEvent event) {
+        DeferredWorkQueue.runLater(() -> {
+            CapabilitySimpleFilter.register();
+            CapabilityRootFilter.register();
+            CapabilitySortingGridMember.register();
+            CapabilitySortingInventory.register();
+            CapabilitySortingUpgradable.register();
+            CapabilityNameTaggable.register();
+        });
     }
 
     private void setupClient(FMLClientSetupEvent event) {

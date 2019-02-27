@@ -8,7 +8,7 @@ import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 public class GuiReturnFromFilterButton extends GuiImageButton {
 
     public GuiReturnFromFilterButton(int buttonId, int x, int y) {
-        super(buttonId, x, y, 12, 12, GuiTextures.RETURN_FROM_FILTER);
+        super(buttonId, x, y, 12, 12, GuiTextures.CHEST_BUTTON);
     }
 
     @Override

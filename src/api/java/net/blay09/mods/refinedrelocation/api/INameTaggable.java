@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
+@Deprecated // TODO remove me
 public interface INameTaggable extends INBTSerializable<NBTTagCompound> {
     void setCustomName(String displayName);
 

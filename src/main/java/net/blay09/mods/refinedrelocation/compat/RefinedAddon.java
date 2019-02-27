@@ -17,6 +17,9 @@ public interface RefinedAddon {
 	default void registerItems(IForgeRegistry<Item> registry) {
 	}
 
+	default void registerTileEntities() {
+	}
+
 	default void setupClient() {
 	}
 }

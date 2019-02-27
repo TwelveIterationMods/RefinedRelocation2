@@ -272,10 +272,4 @@ public class PresetFilter implements IChecklistFilter {
     public int getVisualOrder() {
         return 1000;
     }
-
-    @Nullable
-    @Override
-    public IInteractionObject getConfiguration() {
-        return null;
-    }
 }

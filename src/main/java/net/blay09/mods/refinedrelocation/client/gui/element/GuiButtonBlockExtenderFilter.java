@@ -16,7 +16,8 @@ public class GuiButtonBlockExtenderFilter extends GuiButton {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_CONFIGURE_FILTER, isOutputFilter ? 1 : 0);
+        String key = isOutputFilter ? ContainerBlockExtender.KEY_CONFIGURE_OUTPUT_FILTER : ContainerBlockExtender.KEY_CONFIGURE_INPUT_FILTER;
+        RefinedRelocationAPI.sendContainerMessageToServer(key, isOutputFilter ? 1 : 0);
     }
 
 }

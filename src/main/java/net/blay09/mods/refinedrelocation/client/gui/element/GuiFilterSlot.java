@@ -23,8 +23,8 @@ public class GuiFilterSlot extends GuiButton implements ITooltipElement {
     private final IRootFilter rootFilter;
     private final int index;
 
-    public GuiFilterSlot(int buttonId, GuiRootFilter parentGui, IRootFilter rootFilter, int index) {
-        super(buttonId, 0, 0, 24, 24, "");
+    public GuiFilterSlot(int buttonId, int x, int y, GuiRootFilter parentGui, IRootFilter rootFilter, int index) {
+        super(buttonId, x, y, 24, 24, "");
         this.parentGui = parentGui;
         this.rootFilter = rootFilter;
         this.index = index;

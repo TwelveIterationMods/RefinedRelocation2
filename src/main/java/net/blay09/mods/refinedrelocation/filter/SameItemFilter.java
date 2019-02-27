@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,7 +56,7 @@ public class SameItemFilter implements IFilter {
     @Override
     public INBTBase serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setBoolean("IgnoreNBT", ignoreNBT);
+        compound.putBoolean("IgnoreNBT", ignoreNBT);
         return compound;
     }
 
@@ -79,7 +80,7 @@ public class SameItemFilter implements IFilter {
     @Override
     @OnlyIn(Dist.CLIENT)
     public IDrawable getFilterIcon() {
-        return ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:icon_same_item_filter");
+        return GuiTextures.SAME_ITEM_FILTER_ICON;
     }
 
 }

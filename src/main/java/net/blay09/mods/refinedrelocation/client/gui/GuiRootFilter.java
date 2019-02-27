@@ -2,17 +2,18 @@ package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.InternalMethodsImpl;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
+import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonPriority;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiDeleteFilterButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiFilterSlot;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiWhitelistButton;
-import net.blay09.mods.refinedrelocation.client.util.TextureAtlasRegion;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -29,7 +31,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     private static final ResourceLocation TEXTURE_NO_PRIORITY = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter_no_priority.png");
     private static final int UPDATE_INTERVAL = 20;
 
-    private final TextureAtlasRegion textureSeparator;
+    private final IDrawable textureSeparator;
 
     private int ticksSinceUpdate;
     private int lastSentPriority;
@@ -51,42 +53,41 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 
         int x = 10;
         for (int i = 0; i < filterSlots.length; i++) {
-            filterSlots[i] = new GuiFilterSlot(this, container.getRootFilter(), i);
-            filterSlots[i].setPosition(x, 30);
-            rootNode.addChild(filterSlots[i]);
+            filterSlots[i] = new GuiFilterSlot(0, x, 30, this, container.getRootFilter(), i);
+            addButton(filterSlots[i]);
 
-            deleteButtons[i] = new GuiDeleteFilterButton(x + 19, 27, filterSlots[i]);
-            rootNode.addChild(deleteButtons[i]);
+            deleteButtons[i] = new GuiDeleteFilterButton(0, x + 19, 27, filterSlots[i]);
+            addButton(deleteButtons[i]);
 
-            whitelistButtons[i] = new GuiWhitelistButton(x + 1, 55, this, filterSlots[i]);
-            rootNode.addChild(whitelistButtons[i]);
+            whitelistButtons[i] = new GuiWhitelistButton(0, x + 1, 55, this, filterSlots[i]);
+            addButton(whitelistButtons[i]);
             x += 40;
         }
 
         ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(container.getTileEntity().getClass());
         if (tileGuiHandler != null) {
-            GuiImageButton btnReturn = new GuiImageButton(guiLeft + xSize - 20, guiTop + 4, "chest_button") {
+            GuiImageButton btnReturn = new GuiImageButton(0, guiLeft + xSize - 20, guiTop + 4, 16, 16, GuiTextures.CHEST_BUTTON) {
                 @Override
-                public void actionPerformed(int mouseButton) {
+                public void onClick(double mouseX, double mouseY) {
                     if (onGuiAboutToClose()) {
                         NetworkHandler.channel.sendToServer(new MessageReturnGUI());
                     }
                 }
             };
-            rootNode.addChild(btnReturn);
+            addButton(btnReturn);
         }
 
         if (container.hasSortingInventory()) {
-            rootNode.addChild(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
-            rootNode.addChild(new GuiButtonPriority(10, 80, 100, 20, container.getSortingInventory()));
+            children.add(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            addButton(new GuiButtonPriority(0, 10, 80, 100, 20, container.getSortingInventory()));
         }
 
-        textureSeparator = ClientProxy.TEXTURE_ATLAS.getSprite("refinedrelocation:filter_separator");
+        textureSeparator = GuiTextures.FILTER_SEPARATOR;
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
 
         ticksSinceUpdate++;
         if (ticksSinceUpdate >= UPDATE_INTERVAL) {
@@ -100,15 +101,8 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color(1f, 1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
         if (container.hasSortingInventory()) {
             mc.getTextureManager().bindTexture(TEXTURE);
         } else {
@@ -123,15 +117,18 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
         textureSeparator.draw(x + 30, y, zLevel);
         textureSeparator.draw(x + 70, y, zLevel);
         GlStateManager.disableBlend();
-
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        ITextComponent displayName = container.getTileEntity().getDisplayName();
+        TileEntity tileEntity = container.getTileEntity();
+        ITextComponent displayName = null;
+        if (tileEntity instanceof INameable) {
+            displayName = ((INameable) tileEntity).getDisplayName();
+        }
+
         fontRenderer.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }

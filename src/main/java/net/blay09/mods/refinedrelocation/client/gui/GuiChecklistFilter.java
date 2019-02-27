@@ -31,39 +31,29 @@ public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter
 
 		ySize = 210;
 
-		GuiScrollBar scrollBar = new GuiScrollBar(xSize - 16, 28, 75, this);
-		rootNode.addChild(scrollBar);
+		GuiScrollBar scrollBar = new GuiScrollBar(0, xSize - 16, 28, 75, this);
+		addButton(scrollBar);
 
 		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 28, 152, 80);
-		rootNode.addChild(scrollPane);
+		children.add(scrollPane);
 
 		int y = 0;
 		for(int i = 0; i < entries.length; i++) {
-			entries[i] = new GuiChecklistEntry(filter);
-			entries[i].setPosition(0, y);
-			scrollPane.addChild(entries[i]);
-			y += entries[i].getHeight();
+			entries[i] = new GuiChecklistEntry(0, 0, y, filter);
+			addButton(entries[i]);
+			y += entries[i].height;
 		}
 
-		rootNode.addChild(new GuiReturnFromFilterButton(this, container.getTileEntity(), 0));
+		addButton(new GuiReturnFromFilterButton(0, 0, 0));
 
 		setCurrentOffset(0);
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		renderHoveredToolTip(mouseX, mouseY);
-	}
-
-	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		mc.getTextureManager().bindTexture(TEXTURE);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
 
 	@Override

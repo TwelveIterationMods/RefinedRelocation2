@@ -24,19 +24,11 @@ public class GuiSortingChest extends GuiContainerMod<ContainerSortingChest> {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1f, 1f, 1f, 1f);
         mc.getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 3 * 18 + 17);
         drawTexturedModalRect(guiLeft, guiTop + 3 * 18 + 17, 0, 126, xSize, 96);
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
 
     @Override

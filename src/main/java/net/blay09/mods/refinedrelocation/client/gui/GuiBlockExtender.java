@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonBlockExtenderFilter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonStackLimiter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiSideButton;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiTooltipButton;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
@@ -64,40 +65,39 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
         } else {
             leftFace = centerFace.rotateY();
         }
-        rootNode.addChild(new GuiSideButton(9, 40, tileEntity, leftFace));
-        rootNode.addChild(new GuiSideButton(26, 40, tileEntity, centerFace));
-        rootNode.addChild(new GuiSideButton(43, 40, tileEntity, leftFace.getOpposite()));
-        rootNode.addChild(new GuiSideButton(60, 40, tileEntity, centerFace.getOpposite()));
-        rootNode.addChild(new GuiSideButton(26, 23, tileEntity, topFace));
-        rootNode.addChild(new GuiSideButton(26, 57, tileEntity, topFace.getOpposite()));
+        addButton(new GuiSideButton(0, 9, 40, tileEntity, leftFace));
+        addButton(new GuiSideButton(0, 26, 40, tileEntity, centerFace));
+        addButton(new GuiSideButton(0, 43, 40, tileEntity, leftFace.getOpposite()));
+        addButton(new GuiSideButton(0, 60, 40, tileEntity, centerFace.getOpposite()));
+        addButton(new GuiSideButton(0, 26, 23, tileEntity, topFace));
+        addButton(new GuiSideButton(0, 26, 57, tileEntity, topFace.getOpposite()));
 
-        btnStackLimiter = new GuiButtonStackLimiter(0, 0, 24, 16, tileEntity);
-        btnStackLimiter.setVisible(false);
-        rootNode.addChild(btnStackLimiter);
+        btnStackLimiter = new GuiButtonStackLimiter(0, 0, 0, 24, 16, tileEntity);
+        btnStackLimiter.visible = false;
+        addButton(btnStackLimiter);
 
-        btnInputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity);
-        btnInputFilter.setVisible(false);
-        rootNode.addChild(btnInputFilter);
+        btnInputFilter = new GuiButtonBlockExtenderFilter(0, 0, 0, 64, 16, false);
+        btnInputFilter.visible = false;
+        addButton(btnInputFilter);
 
-        btnOutputFilter = new GuiButtonBlockExtenderFilter(0, 0, 64, 16, tileEntity);
-        btnOutputFilter.setVisible(false);
-        rootNode.addChild(btnOutputFilter);
+        btnOutputFilter = new GuiButtonBlockExtenderFilter(0, 0, 0, 64, 16, true);
+        btnOutputFilter.visible = false;
+        addButton(btnOutputFilter);
 
-        btnSlotLock = new GuiTextButton(0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock")) {
+        btnSlotLock = new GuiTooltipButton(0, 0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock")) {
             @Override
             public void addTooltip(List<String> list) {
-                super.addTooltip(list);
                 list.add(I18n.format("tooltip.refinedrelocation:slot_lock"));
             }
         };
-        btnSlotLock.setVisible(false);
-        btnSlotLock.setEnabled(false);
-        rootNode.addChild(btnSlotLock);
+        btnSlotLock.visible = false;
+        btnSlotLock.enabled = false;
+        addButton(btnSlotLock);
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
 
         stackLimiterIdx = -1;
         slotLockIdx = -1;
@@ -118,14 +118,18 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
             }
 
         }
-        btnStackLimiter.setVisible(stackLimiterIdx != -1);
-        btnStackLimiter.setPosition(152 - btnStackLimiter.getWidth() - 3, 22 + stackLimiterIdx * 18);
-        btnSlotLock.setVisible(slotLockIdx != -1);
-        btnSlotLock.setPosition(152 - btnSlotLock.getWidth() - 3, 22 + slotLockIdx * 18);
-        btnInputFilter.setVisible(inputFilterIdx != -1);
-        btnInputFilter.setPosition(152 - btnInputFilter.getWidth() - 3, 22 + inputFilterIdx * 18);
-        btnOutputFilter.setVisible(outputFilterIdx != -1);
-        btnOutputFilter.setPosition(152 - btnOutputFilter.getWidth() - 3, 22 + outputFilterIdx * 18);
+        btnStackLimiter.visible = stackLimiterIdx != -1;
+        btnStackLimiter.x = 152 - btnStackLimiter.getWidth() - 3;
+        btnStackLimiter.y = 22 + stackLimiterIdx * 18;
+        btnSlotLock.visible = slotLockIdx != -1;
+        btnSlotLock.x = 152 - btnSlotLock.getWidth() - 3;
+        btnSlotLock.y = 22 + slotLockIdx * 18;
+        btnInputFilter.visible = inputFilterIdx != -1;
+        btnInputFilter.x = 152 - btnInputFilter.getWidth() - 3;
+        btnInputFilter.y = 22 + inputFilterIdx * 18;
+        btnOutputFilter.visible = outputFilterIdx != -1;
+        btnOutputFilter.x = 152 - btnOutputFilter.getWidth() - 3;
+        btnOutputFilter.y = 22 + outputFilterIdx * 18;
 
         ticksSinceUpdate++;
         if (ticksSinceUpdate >= UPDATE_INTERVAL) {
@@ -136,14 +140,6 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
             ticksSinceUpdate = 0;
         }
     }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
-    }
-
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -169,8 +165,6 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
                 Gui.drawRect(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
             }
         }
-
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class GuiChecklistEntry extends GuiButton {
 
     private int currentOption = -1;
 
-    public GuiChecklistEntry(int buttonId, IChecklistFilter filter) {
+    public GuiChecklistEntry(int buttonId, int x, int y, IChecklistFilter filter) {
         super(buttonId, 0, 0, 151, 11, "");
         this.filter = filter;
         texture = GuiTextures.CHECKLIST;

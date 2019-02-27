@@ -22,30 +22,22 @@ public class GuiFastHopper extends GuiContainerMod<ContainerFastHopper> {
 		this.ySize = 133;
 
 		if(tileEntity instanceof TileFilteredHopper) {
-			rootNode.addChild(new GuiReturnFromFilterButton(this, tileEntity, 0));
+			addButton(new GuiReturnFromFilterButton(0, 0, 0));
 		}
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		renderHoveredToolTip(mouseX, mouseY);
-	}
-
-	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		mc.getTextureManager().bindTexture(TEXTURE);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRenderer.drawString(tileEntity.getDisplayNameForGui().getFormattedText(), 8, 6, 4210752);
+		fontRenderer.drawString(tileEntity.getDisplayName().getFormattedText(), 8, 6, 4210752);
 		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 

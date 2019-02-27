@@ -47,6 +47,13 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 
     }
 
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        drawDefaultBackground();
+        super.render(mouseX, mouseY, partialTicks);
+        renderHoveredToolTip(mouseX, mouseY);
+    }
+
     public T getContainer() {
         return container;
     }

@@ -23,7 +23,7 @@ public class ItemStackLimiter extends Item {
 
     @Override
     public void addInformation(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        tooltip.add(new TextComponentTranslation("tooltip.refinedrelocation:stack_limiter_module"));
+        tooltip.add(new TextComponentTranslation("tooltip.refinedrelocation:block_extender_module"));
     }
 
 }

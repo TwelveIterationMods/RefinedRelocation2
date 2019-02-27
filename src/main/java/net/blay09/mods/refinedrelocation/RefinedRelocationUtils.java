@@ -9,6 +9,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
+
 public class RefinedRelocationUtils {
 
     public static void dropItemHandler(World world, BlockPos pos) {
@@ -21,6 +23,16 @@ public class RefinedRelocationUtils {
                 itemHandlerCap.ifPresent(itemHandler -> ItemUtils.dropItemHandlerItems(world, pos, itemHandler));
             }
         }
+    }
+
+    /**
+     * Stupid LazyOptional doesn't allow nullability at all, keeping you locked in optional hell.
+     * Helper function to avoid IDE warnings caused by this, since I'm not willing to rewrite my code just for this.
+     */
+    @Nullable
+    @SuppressWarnings("ConstantConditions")
+    public static <T> T orNull(LazyOptional<T> optional) {
+        return optional.orElse(null);
     }
 
 }

@@ -1,12 +1,13 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.EnumFacing;
 
 public class RenderUtils {
 
 	public static float getFacingAngle(IBlockState state) {
-		return getFacingAngle(state.get(BlockMod.FACING));
+		return getFacingAngle(state.get(BlockStateProperties.FACING));
 	}
 
 	public static float getFacingAngle(EnumFacing facing) {

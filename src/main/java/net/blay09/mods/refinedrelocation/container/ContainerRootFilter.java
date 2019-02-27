@@ -40,7 +40,7 @@ public class ContainerRootFilter extends ContainerMod {
     private final IRootFilter rootFilter;
 
     private ReturnCallback returnCallback;
-    private LazyOptional<ISortingInventory> sortingInventoryCap;
+    private ISortingInventory sortingInventory;
 
     private int lastFilterCount = -1;
     private int lastPriority;
@@ -54,7 +54,8 @@ public class ContainerRootFilter extends ContainerMod {
         this.entityPlayer = player;
         this.tileEntity = tileEntity;
         this.rootFilter = rootFilter.orElseGet(RootFilter::new);
-        sortingInventoryCap = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY);
+        sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY)
+                .orElseGet(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
 
         addPlayerInventory(player, 128);
     }
@@ -79,11 +80,10 @@ public class ContainerRootFilter extends ContainerMod {
             }
         }
 
-        sortingInventoryCap.filter(it -> it.getPriority() != lastPriority).ifPresent(sortingInventory -> {
+        if (sortingInventory.getPriority() != lastPriority) {
             RefinedRelocationAPI.syncContainerValue(KEY_PRIORITY, sortingInventory.getPriority(), listeners);
             lastPriority = sortingInventory.getPriority();
-        });
-
+        }
     }
 
     @Override
@@ -195,10 +195,9 @@ public class ContainerRootFilter extends ContainerMod {
                     // Client tried to set an invalid priority. Bad client!
                     return;
                 }
-                sortingInventoryCap.ifPresent(sortingInventory -> {
-                    sortingInventory.setPriority(value);
-                    tileEntity.markDirty();
-                });
+
+                sortingInventory.setPriority(value);
+                tileEntity.markDirty();
                 break;
             case KEY_BLACKLIST: {
                 NBTTagCompound tagCompound = message.getNBTValue();
@@ -222,7 +221,7 @@ public class ContainerRootFilter extends ContainerMod {
                 rootFilter.deserializeNBT(message.getNBTValue().getCompound(KEY_ROOT_FILTER));
                 break;
             case KEY_PRIORITY:
-                getSortingInventory().ifPresent(it -> it.setPriority(message.getIntValue()));
+                sortingInventory.setPriority(message.getIntValue());
                 break;
             case KEY_BLACKLIST:
                 NBTTagCompound compound = message.getNBTValue();
@@ -239,12 +238,8 @@ public class ContainerRootFilter extends ContainerMod {
         return tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY).isPresent();
     }
 
-    public LazyOptional<ISortingInventory> getSortingInventory() {
-        if (!sortingInventoryCap.isPresent()) {
-            sortingInventoryCap = LazyOptional.of(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
-        }
-
-        return sortingInventoryCap;
+    public ISortingInventory getSortingInventory() {
+        return sortingInventory;
     }
 
     @Nullable
