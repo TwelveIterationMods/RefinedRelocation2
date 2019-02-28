@@ -1,9 +1,9 @@
 {
   "result": {
     "item": "refinedrelocation:sorting_iron_chest",
-    "data": 7
+    "data": 1
   },
-  "type": "forge:ore_shaped",
+  "type": "crafting_shaped",
   "pattern": [
     " B ",
     "RCR",
@@ -14,11 +14,11 @@
       "item": "minecraft:writable_book"
     },
     "R": {
-      "item": "#REDSTONE"
+      "item": "minecraft:redstone"
     },
     "C": {
       "item": "ironchest:iron_chest",
-      "data": 7
+      "data": 1
     },
     "H": {
       "item": "minecraft:hopper"

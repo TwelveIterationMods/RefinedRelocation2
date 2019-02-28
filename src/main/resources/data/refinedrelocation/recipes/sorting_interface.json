@@ -2,7 +2,7 @@
   "result": {
     "item": "refinedrelocation:sorting_interface"
   },
-  "type": "forge:ore_shaped",
+  "type": "crafting_shaped",
   "pattern": [
     "IGI",
     "FCO",
@@ -10,10 +10,10 @@
   ],
   "key": {
     "I": {
-      "item": "#IRON_INGOT"
+      "item": "minecraft:iron_ingot"
     },
     "G": {
-      "item": "#GLASS_PANE"
+      "item": "minecraft:glass_pane"
     },
     "C": {
       "item": "refinedrelocation:sorting_connector"

@@ -1,18 +1,22 @@
 {
   "result": {
-    "item": "refinedrelocation:filtered_hopper"
+    "item": "refinedrelocation:sorting_chest"
   },
-  "type": "forge:ore_shaped",
+  "type": "crafting_shaped",
   "pattern": [
     " B ",
-    "RHR"
+    "RCR",
+    " H "
   ],
   "key": {
     "B": {
       "item": "minecraft:writable_book"
     },
     "R": {
-      "item": "#REDSTONE"
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:chest"
     },
     "H": {
       "item": "minecraft:hopper"

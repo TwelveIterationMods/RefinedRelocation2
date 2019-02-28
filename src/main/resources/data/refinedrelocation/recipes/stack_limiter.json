@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "refinedrelocation:stack_limiter"
+  },
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "minecraft:planks"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "item": "minecraft:paper"
+    }
+  ]
+}

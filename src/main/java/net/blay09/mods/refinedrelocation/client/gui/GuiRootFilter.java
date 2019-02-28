@@ -1,11 +1,9 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import net.blay09.mods.refinedrelocation.InternalMethodsImpl;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
@@ -64,18 +62,15 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
             x += 40;
         }
 
-        ITileGuiHandler tileGuiHandler = InternalMethodsImpl.getGuiHandler(container.getTileEntity().getClass());
-        if (tileGuiHandler != null) {
-            GuiImageButton btnReturn = new GuiImageButton(0, guiLeft + xSize - 20, guiTop + 4, 16, 16, GuiTextures.CHEST_BUTTON) {
-                @Override
-                public void onClick(double mouseX, double mouseY) {
-                    if (onGuiAboutToClose()) {
-                        NetworkHandler.channel.sendToServer(new MessageReturnGUI());
-                    }
+        GuiImageButton btnReturn = new GuiImageButton(0, guiLeft + xSize - 20, guiTop + 4, 16, 16, GuiTextures.CHEST_BUTTON) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                if (onGuiAboutToClose()) {
+                    NetworkHandler.channel.sendToServer(new MessageReturnGUI());
                 }
-            };
-            addButton(btnReturn);
-        }
+            }
+        };
+        addButton(btnReturn);
 
         if (container.hasSortingInventory()) {
             children.add(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));

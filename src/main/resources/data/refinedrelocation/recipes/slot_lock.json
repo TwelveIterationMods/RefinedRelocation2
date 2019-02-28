@@ -5,13 +5,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     {
-      "item": "#IRON_NUGGET"
+      "item": "minecraft:iron_nugget"
     },
     {
-      "item": "#PAPER"
+      "item": "minecraft:paper"
     }
   ]
 }

@@ -96,8 +96,6 @@ public class ItemSortingUpgrade extends Item {
         world.setBlockState(pos, newState);
         TileSortingChest tileSortingChest = (TileSortingChest) world.getTileEntity(pos);
         if (tileSortingChest != null) {
-            RefinedRelocationAPI.transferName(tileEntity, tileSortingChest);
-
             for (int i = 0; i < inventory.length; i++) {
                 tileSortingChest.getItemHandler().setStackInSlot(i, inventory[i]);
             }

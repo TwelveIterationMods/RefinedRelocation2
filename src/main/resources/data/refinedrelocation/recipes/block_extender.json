@@ -2,7 +2,7 @@
   "result": {
     "item": "refinedrelocation:block_extender"
   },
-  "type": "forge:ore_shaped",
+  "type": "crafting_shaped",
   "pattern": [
     "IGI",
     "GHG",
@@ -10,10 +10,10 @@
   ],
   "key": {
     "I": {
-      "item": "#IRON_INGOT"
+      "item": "minecraft:iron_ingot"
     },
     "G": {
-      "item": "#GLASS_PANE"
+      "item": "minecraft:glass_pane"
     },
     "H": {
       "item": "refinedrelocation:fast_hopper"

@@ -1,14 +1,14 @@
 {
   "result": {
-    "item": "refinedrelocation:input_filter"
+    "item": "refinedrelocation:output_filter"
   },
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     {
-      "item": "#GOLD_NUGGET"
+      "item": "minecraft:redstone"
     },
     {
       "item": "minecraft:writable_book"

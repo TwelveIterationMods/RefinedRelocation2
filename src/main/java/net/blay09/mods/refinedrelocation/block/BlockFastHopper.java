@@ -15,7 +15,9 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -42,24 +44,28 @@ public class BlockFastHopper extends BlockContainer {
 
     private static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
-    private static final VoxelShape INPUT_SHAPE = Block.makeCuboidShape(0.0625f, 0f, 0.0625f, 0.9375f, 1f, 0.9375f);
-    private static final VoxelShape MIDDLE_SHAPE = Block.makeCuboidShape(0.0625, 0.625, 0.0625, 0.9375, 1, 0.9375);
-    private static final VoxelShape INSIDE_BOWL_SHAPE = Block.makeCuboidShape(0.25, 0.25, 0.25, 0.75, 0.625, 0.75);
+    private static final VoxelShape INPUT_SHAPE = Block.makeCuboidShape(0.0D, 10.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    private static final VoxelShape MIDDLE_SHAPE = Block.makeCuboidShape(4.0D, 4.0D, 4.0D, 12.0D, 10.0D, 12.0D);
     private static final VoxelShape INPUT_MIDDLE_SHAPE = VoxelShapes.or(MIDDLE_SHAPE, INPUT_SHAPE);
-    private static final VoxelShape HOPPER_BASE = VoxelShapes.combineAndSimplify(INPUT_MIDDLE_SHAPE, INSIDE_BOWL_SHAPE, IBooleanFunction.ONLY_FIRST);
-    private static final VoxelShape DOWN_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(0.375, 0, 0.375, 0.625, 0.25, 0.625));
-    private static final VoxelShape EAST_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(0.75, 0.25, 0.375, 1, 0.5, 0.625));
-    private static final VoxelShape NORTH_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(0.375, 0.25, 0, 0.625, 0.5, 0.25));
-    private static final VoxelShape SOUTH_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(0.375, 0.25, 0.75, 0.625, 0.5, 1));
-    private static final VoxelShape WEST_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(0, 0.25, 0.375, 0.25, 0.5, 0.625));
-    private static final VoxelShape DOWN_RAYTRACE_SHAPE = DOWN_SHAPE;
-    private static final VoxelShape EAST_RAYTRACE_SHAPE = EAST_SHAPE;
-    private static final VoxelShape NORTH_RAYTRACE_SHAPE = NORTH_SHAPE;
-    private static final VoxelShape SOUTH_RAYTRACE_SHAPE = SOUTH_SHAPE;
-    private static final VoxelShape WEST_RAYTRACE_SHAPE = WEST_SHAPE;
+    private static final VoxelShape HOPPER_BASE = VoxelShapes.combineAndSimplify(INPUT_MIDDLE_SHAPE, IHopper.INSIDE_BOWL_SHAPE, IBooleanFunction.ONLY_FIRST);
+    private static final VoxelShape DOWN_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D));
+    private static final VoxelShape EAST_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(12.0D, 4.0D, 6.0D, 16.0D, 8.0D, 10.0D));
+    private static final VoxelShape NORTH_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(6.0D, 4.0D, 0.0D, 10.0D, 8.0D, 4.0D));
+    private static final VoxelShape SOUTH_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(6.0D, 4.0D, 12.0D, 10.0D, 8.0D, 16.0D));
+    private static final VoxelShape WEST_SHAPE = VoxelShapes.or(HOPPER_BASE, Block.makeCuboidShape(0.0D, 4.0D, 6.0D, 4.0D, 8.0D, 10.0D));
+    private static final VoxelShape DOWN_RAYTRACE_SHAPE = IHopper.INSIDE_BOWL_SHAPE;
+    private static final VoxelShape EAST_RAYTRACE_SHAPE = VoxelShapes.or(IHopper.INSIDE_BOWL_SHAPE, Block.makeCuboidShape(12.0D, 8.0D, 6.0D, 16.0D, 10.0D, 10.0D));
+    private static final VoxelShape NORTH_RAYTRACE_SHAPE = VoxelShapes.or(IHopper.INSIDE_BOWL_SHAPE, Block.makeCuboidShape(6.0D, 8.0D, 0.0D, 10.0D, 10.0D, 4.0D));
+    private static final VoxelShape SOUTH_RAYTRACE_SHAPE = VoxelShapes.or(IHopper.INSIDE_BOWL_SHAPE, Block.makeCuboidShape(6.0D, 8.0D, 12.0D, 10.0D, 10.0D, 16.0D));
+    private static final VoxelShape WEST_RAYTRACE_SHAPE = VoxelShapes.or(IHopper.INSIDE_BOWL_SHAPE, Block.makeCuboidShape(0.0D, 8.0D, 6.0D, 4.0D, 10.0D, 10.0D));
 
     public BlockFastHopper() {
         super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3f, 8f));
+    }
+
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 
     // TODO opqaueCube fullBlock false
@@ -69,9 +75,8 @@ public class BlockFastHopper extends BlockContainer {
         return false;
     }
 
-    @Override
-    public VoxelShape getShape(IBlockState state, IBlockReader world, BlockPos pos) {
-        switch (state.get(FACING)) {
+    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        switch(state.get(FACING)) {
             case DOWN:
                 return DOWN_SHAPE;
             case NORTH:
@@ -87,9 +92,8 @@ public class BlockFastHopper extends BlockContainer {
         }
     }
 
-    @Override
-    public VoxelShape getRaytraceShape(IBlockState state, IBlockReader world, BlockPos pos) {
-        switch (state.get(FACING)) {
+    public VoxelShape getRaytraceShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        switch(state.get(FACING)) {
             case DOWN:
                 return DOWN_RAYTRACE_SHAPE;
             case NORTH:
@@ -101,7 +105,7 @@ public class BlockFastHopper extends BlockContainer {
             case EAST:
                 return EAST_RAYTRACE_SHAPE;
             default:
-                return HOPPER_BASE;
+                return IHopper.INSIDE_BOWL_SHAPE;
         }
     }
 
@@ -112,6 +116,7 @@ public class BlockFastHopper extends BlockContainer {
         if (opposite == EnumFacing.UP) {
             opposite = EnumFacing.DOWN;
         }
+
         return getDefaultState().with(FACING, opposite).with(ENABLED, true);
     }
 

@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.api;
 
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
@@ -80,16 +79,8 @@ public class RefinedRelocationAPI {
         internalMethods.updateFilterPreview(player, tileEntity, filter);
     }
 
-    public static void registerGuiHandler(Class<? extends TileEntity> clazz, ITileGuiHandler handler) {
-        internalMethods.registerGuiHandler(clazz, handler);
-    }
-
     public static void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
         internalMethods.openRootFilterGui(player, tileEntity);
-    }
-
-    public static void transferName(TileEntity source, TileEntity target) {
-        internalMethods.transferName(source, target);
     }
 
     public static void returnToParentContainer() {

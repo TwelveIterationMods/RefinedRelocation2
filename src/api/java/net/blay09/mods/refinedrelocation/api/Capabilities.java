@@ -15,9 +15,6 @@ public class Capabilities {
     @CapabilityInject(ISimpleFilter.class)
     public static Capability<ISimpleFilter> SIMPLE_FILTER;
 
-    @CapabilityInject(INameTaggable.class)
-    public static Capability<INameTaggable> NAME_TAGGABLE;
-
     /**
      * Note that instances of this capability are being cached without validity checks.
      */

@@ -3,7 +3,7 @@
     "item": "refinedrelocation:sorting_connector",
     "count": 6
   },
-  "type": "forge:ore_shaped",
+  "type": "crafting_shaped",
   "pattern": [
     "III",
     "RGR",
@@ -11,16 +11,13 @@
   ],
   "key": {
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "nuggetGold"
+      "item": "minecraft:gold_nugget"
     },
     "R": {
-      "type": "forge:ore_dict",
-      "ore": "dustRedstone"
+      "item": "minecraft:redstone"
     },
     "I": {
-      "type": "forge:ore_dict",
-      "ore": "ingotIron"
+      "item": "minecraft:iron_ingot"
     }
   }
 }

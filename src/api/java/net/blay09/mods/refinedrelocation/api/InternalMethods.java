@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.api;
 
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
@@ -17,33 +16,36 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface InternalMethods {
 
-	void registerFilter(Class<? extends IFilter> filterClass);
+    void registerFilter(Class<? extends IFilter> filterClass);
 
-	void addToSortingGrid(ISortingGridMember member);
-	void removeFromSortingGrid(ISortingGridMember member);
+    void addToSortingGrid(ISortingGridMember member);
 
-	void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack);
+    void removeFromSortingGrid(ISortingGridMember member);
 
-	@OnlyIn(Dist.CLIENT)
-	GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId);
+    void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack);
 
-	void sendContainerMessageToServer(String key, String value);
-	void sendContainerMessageToServer(String key, NBTTagCompound value);
-	void sendContainerMessageToServer(String key, int value);
-	void sendContainerMessageToServer(String key, int value, int secondaryValue);
+    @OnlyIn(Dist.CLIENT)
+    GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId);
 
-	void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners);
-	void syncContainerValue(String key, int value, Iterable<IContainerListener> listeners);
-	void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners);
-	void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners);
+    void sendContainerMessageToServer(String key, String value);
 
-	void registerGuiHandler(Class<? extends TileEntity> tileClass, ITileGuiHandler handler);
+    void sendContainerMessageToServer(String key, NBTTagCompound value);
 
-	void openRootFilterGui(EntityPlayer player, TileEntity tileEntity);
+    void sendContainerMessageToServer(String key, int value);
 
-	void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter);
+    void sendContainerMessageToServer(String key, int value, int secondaryValue);
 
-	void returnToParentContainer();
+    void syncContainerValue(String key, String value, Iterable<IContainerListener> listeners);
 
-    void transferName(TileEntity source, TileEntity target);
+    void syncContainerValue(String key, int value, Iterable<IContainerListener> listeners);
+
+    void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners);
+
+    void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners);
+
+    void openRootFilterGui(EntityPlayer player, TileEntity tileEntity);
+
+    void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter);
+
+    void returnToParentContainer();
 }

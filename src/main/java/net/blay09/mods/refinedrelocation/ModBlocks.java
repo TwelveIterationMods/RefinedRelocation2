@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.block.*;
+import net.blay09.mods.refinedrelocation.item.ItemBlockSortingChest;
 import net.blay09.mods.refinedrelocation.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -30,7 +31,7 @@ public class ModBlocks {
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                new ItemBlock(sortingChest, itemBlockProperties()).setRegistryName(BlockSortingChest.name),
+                new ItemBlockSortingChest(sortingChest, itemBlockProperties()).setRegistryName(BlockSortingChest.name),
                 new ItemBlock(blockExtender, itemBlockProperties()).setRegistryName(BlockBlockExtender.name),
                 new ItemBlock(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
                 new ItemBlock(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),

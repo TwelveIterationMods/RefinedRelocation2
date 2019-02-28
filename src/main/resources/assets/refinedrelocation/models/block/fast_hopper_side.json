@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "top": "block/hopper_top",
-    "side": "refinedrelocation:block/filtered_hopper_outside",
+    "side": "refinedrelocation:block/fast_hopper_outside",
     "inside": "block/hopper_inside",
     "particle": "block/hopper_outside"
   },
@@ -202,13 +202,13 @@
     {
       "from": [
         6,
-        0,
-        6
+        4,
+        0
       ],
       "to": [
         10,
-        4,
-        10
+        8,
+        4
       ],
       "faces": {
         "down": {

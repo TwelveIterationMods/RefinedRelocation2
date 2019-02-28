@@ -1,12 +1,9 @@
 package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
-import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.container.ITileGuiHandler;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
@@ -41,11 +38,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class InternalMethodsImpl implements InternalMethods {
-
-    private static final Map<Class, ITileGuiHandler> tileGuiHandlerMap = Maps.newHashMap();
 
     @Override
     public void registerFilter(Class<? extends IFilter> filterClass) {
@@ -237,16 +231,6 @@ public class InternalMethodsImpl implements InternalMethods {
     }
 
     @Override
-    public void registerGuiHandler(Class tileClass, ITileGuiHandler handler) {
-        tileGuiHandlerMap.put(tileClass, handler);
-    }
-
-    @Nullable
-    public static ITileGuiHandler getGuiHandler(Class tileClass) {
-        return tileGuiHandlerMap.get(tileClass);
-    }
-
-    @Override
     public void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
         if (player.world.isRemote) {
             NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos()));
@@ -276,17 +260,6 @@ public class InternalMethodsImpl implements InternalMethods {
     @Override
     public void returnToParentContainer() {
         NetworkHandler.channel.sendToServer(new MessageReturnGUI());
-    }
-
-    @Override
-    public void transferName(TileEntity source, TileEntity target) {
-        LazyOptional<INameTaggable> sourceNameCap = source.getCapability(Capabilities.NAME_TAGGABLE);
-        LazyOptional<INameTaggable> targetNameCap = target.getCapability(Capabilities.NAME_TAGGABLE);
-        sourceNameCap.ifPresent(sourceName -> {
-            targetNameCap.ifPresent(targetName -> {
-                targetName.setCustomName(sourceName.getCustomName());
-            });
-        });
     }
 
 }

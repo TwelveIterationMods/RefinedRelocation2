@@ -1,11 +1,8 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModTiles;
-import net.blay09.mods.refinedrelocation.api.Capabilities;
-import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,6 +18,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -33,11 +32,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ConcurrentModificationException;
 
-public class TileFastHopper extends TileMod implements ITickable, IInteractionObjectWithoutName {
+public class TileFastHopper extends TileMod implements ITickable, IInteractionObject {
 
     private final ItemStackHandler itemHandler = createItemHandler();
-    private final INameTaggable nameTaggable = Capabilities.getDefaultInstance(Capabilities.NAME_TAGGABLE);
 
+    private ITextComponent customName;
     private int cooldown;
 
     public TileFastHopper() {
@@ -135,7 +134,10 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     public NBTTagCompound write(NBTTagCompound tagCompound) {
         super.write(tagCompound);
         tagCompound.put("ItemHandler", itemHandler.serializeNBT());
-        tagCompound.put("NameTaggable", nameTaggable.serializeNBT());
+        if (customName != null) {
+            tagCompound.putString("CustomName", customName.getUnformattedComponentText());
+        }
+
         return tagCompound;
     }
 
@@ -143,7 +145,7 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     public void read(NBTTagCompound tagCompound) {
         super.read(tagCompound);
         itemHandler.deserializeNBT(tagCompound.getCompound("ItemHandler"));
-        nameTaggable.deserializeNBT(tagCompound.getCompound("NameTaggable"));
+        customName = tagCompound.contains("CustomName") ? new TextComponentString(tagCompound.getString("CustomName")) : null;
     }
 
     @Override
@@ -154,12 +156,7 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
-        LazyOptional<T> opt = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
-        if (!opt.isPresent()) {
-            opt = Capabilities.NAME_TAGGABLE.orEmpty(cap, LazyOptional.of(() -> nameTaggable));
-        }
-
-        return opt;
+        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
     }
 
     public ItemStackHandler getItemHandler() {
@@ -174,5 +171,21 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     @Override
     public String getGuiID() {
         return "refinedrelocation:fast_hopper";
+    }
+
+    @Override
+    public ITextComponent getName() {
+        return customName != null ? customName : new TextComponentTranslation(getUnlocalizedName());
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return customName != null;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return customName;
     }
 }

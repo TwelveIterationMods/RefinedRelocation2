@@ -2,19 +2,22 @@ package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
-import net.blay09.mods.refinedrelocation.api.INameTaggable;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.util.DoorAnimator;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.IChestLid;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -23,7 +26,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSortingChest extends TileMod implements ITickable, IInteractionObjectWithoutName {
+public class TileSortingChest extends TileMod implements ITickable, IInteractionObject, IChestLid {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
         @Override
@@ -37,7 +40,8 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
 
     private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
-    private final INameTaggable nameTaggable = Capabilities.getDefaultInstance(Capabilities.NAME_TAGGABLE);
+
+    private ITextComponent customName;
 
     public TileSortingChest() {
         super(ModTiles.sortingChest);
@@ -47,7 +51,6 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
 
     @Override
     public void onLoad() {
-        super.onLoad();
         sortingInventory.onLoad(this);
     }
 
@@ -79,12 +82,13 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
         sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
 
         rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
-        nameTaggable.deserializeNBT(compound.getCompound("NameTaggable"));
+
+        customName = compound.contains("CustomName") ? new TextComponentString(compound.getString("CustomName")) : null;
     }
 
     @Override
     public void readFromNBTSynced(NBTTagCompound compound) {
-        nameTaggable.setCustomName(compound.getString("CustomName"));
+        setCustomName(compound.getString("CustomName"));
     }
 
     @Override
@@ -93,13 +97,16 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
         compound.put("ItemHandler", itemHandler.serializeNBT());
         compound.put("SortingInventory", sortingInventory.serializeNBT());
         compound.put("RootFilter", rootFilter.serializeNBT());
-        compound.put("NameTaggable", nameTaggable.serializeNBT());
+        if (customName != null) {
+            compound.putString("CustomName", customName.getUnformattedComponentText());
+        }
+
         return compound;
     }
 
     @Override
     public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
-        compound.putString("CustomName", nameTaggable.getCustomName());
+        compound.putString("CustomName", customName.getUnformattedComponentText());
         return compound;
     }
 
@@ -129,10 +136,6 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
             result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
         }
 
-        if (!result.isPresent()) {
-            result = Capabilities.NAME_TAGGABLE.orEmpty(cap, LazyOptional.of(() -> nameTaggable));
-        }
-
         return result;
     }
 
@@ -153,5 +156,30 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
     @Override
     public String getGuiID() {
         return "refinedrelocation:sorting_chest";
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = new TextComponentString(customName);
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return customName != null;
+    }
+
+    @Override
+    public ITextComponent getName() {
+        return customName != null ? customName : new TextComponentTranslation(getUnlocalizedName());
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return customName;
+    }
+
+    @Override
+    public float getLidAngle(float partialTicks) {
+        return 0;
     }
 }

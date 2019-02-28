@@ -2,12 +2,14 @@ package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.tile.IDroppableItemHandler;
 import net.blay09.mods.refinedrelocation.util.ItemUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
@@ -35,4 +37,13 @@ public class RefinedRelocationUtils {
         return optional.orElse(null);
     }
 
+    public static int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity != null) {
+            LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+            return itemHandlerCap.map(ItemHandlerHelper::calcRedstoneFromInventory).orElse(0);
+        }
+
+        return 0;
+    }
 }

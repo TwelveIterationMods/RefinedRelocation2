@@ -1,76 +1,9 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "particle": "block/hopper_outside",
-      "top": "block/hopper_top",
-      "side": "refinedrelocation:block/fast_hopper_outside",
-      "inside": "block/hopper_inside"
-    },
-    "model": "refinedrelocation:fast_hopper",
-    "transform": "forge:default-block"
-  },
   "variants": {
-    "normal": [{}],
-    "multipart": [{}],
-    "inventory": [{}],
-    "enabled": {
-      "true": {},
-      "false": {}
-    },
-    "facing": {
-      "up": {},
-      "down": {
-        "submodel": {
-          "down": {
-            "model": "refinedrelocation:hopper_output"
-          }
-        }
-      },
-      "north": {
-        "submodel": {
-          "north": {
-            "model": "refinedrelocation:hopper_output",
-            "transform": {
-              "rotation": [{"x": 90}],
-              "translation": [0, -0.125, 0]
-            }
-          }
-        }
-      },
-      "south": {
-        "submodel": {
-          "south": {
-            "model": "refinedrelocation:hopper_output",
-            "transform": {
-              "rotation": {"x": -90},
-              "translation": [0, -0.125, 0]
-            }
-          }
-        }
-      },
-      "west": {
-        "submodel": {
-          "west": {
-            "model": "refinedrelocation:hopper_output",
-            "transform": {
-              "rotation": [{"z": -90}],
-              "translation": [0, -0.125, 0]
-            }
-          }
-        }
-      },
-      "east": {
-        "submodel": {
-          "east": {
-            "model": "refinedrelocation:hopper_output",
-            "transform": {
-              "rotation": [{"z": 90}],
-              "translation": [0, -0.125, 0]
-            }
-          }
-        }
-      }
-    }
+    "facing=down": { "model": "refinedrelocation:block/fast_hopper" },
+    "facing=north": { "model": "refinedrelocation:block/fast_hopper_side" },
+    "facing=south": { "model": "refinedrelocation:block/fast_hopper_side", "y": 180 },
+    "facing=west": { "model": "refinedrelocation:block/fast_hopper_side", "y": 270 },
+    "facing=east": { "model": "refinedrelocation:block/fast_hopper_side", "y": 90 }
   }
 }

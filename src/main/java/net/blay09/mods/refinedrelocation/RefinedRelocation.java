@@ -7,11 +7,9 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.capability.*;
 import net.blay09.mods.refinedrelocation.client.gui.*;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
-import net.blay09.mods.refinedrelocation.compat.Compat;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.filter.*;
-import net.blay09.mods.refinedrelocation.network.LoginSyncHandler;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
@@ -19,7 +17,6 @@ import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -27,11 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.ExtensionPoint;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -40,7 +35,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,17 +70,6 @@ public class RefinedRelocation {
         RefinedRelocationAPI.registerFilter(CreativeTabFilter.class);
         RefinedRelocationAPI.registerFilter(ModFilter.class);
         RefinedRelocationAPI.registerFilter(SameModFilter.class);
-
-        RefinedRelocationAPI.registerGuiHandler(TileSortingChest.class, (player, tileEntity) -> NetworkHooks.openGui((EntityPlayerMP) player, (TileSortingChest) tileEntity));
-        RefinedRelocationAPI.registerGuiHandler(TileBlockExtender.class, (player, tileEntity) -> NetworkHooks.openGui((EntityPlayerMP) player, (TileBlockExtender) tileEntity, it -> it.writeByte(EnumFacing.UP.getIndex())));
-
-//        if (ModList.get().isLoaded(Compat.IRON_CHEST)) {
-//            try {
-//                inbuiltAddons.add((RefinedAddon) Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance());
-//            } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
