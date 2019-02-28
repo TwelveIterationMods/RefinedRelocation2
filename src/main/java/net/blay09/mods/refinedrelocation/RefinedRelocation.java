@@ -22,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.RegistryEvent;
@@ -62,8 +63,6 @@ public class RefinedRelocation {
 
         NetworkHandler.init();
 
-        ModTiles.registerTileEntities();
-
         RefinedRelocationAPI.registerFilter(SameItemFilter.class);
         RefinedRelocationAPI.registerFilter(NameFilter.class);
         RefinedRelocationAPI.registerFilter(PresetFilter.class);
@@ -75,6 +74,7 @@ public class RefinedRelocation {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::finishLoading);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RefinedRelocationConfig.commonSpec);
@@ -160,6 +160,10 @@ public class RefinedRelocation {
         for (RefinedAddon addon : inbuiltAddons) {
             addon.registerItems(event.getRegistry());
         }
+    }
+
+    private void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+        ModTiles.registerTileEntities(event.getRegistry());
     }
 
     private void setup(FMLCommonSetupEvent event) {

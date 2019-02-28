@@ -106,7 +106,9 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
 
     @Override
     public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
-        compound.putString("CustomName", customName.getUnformattedComponentText());
+        if (customName != null) {
+            compound.putString("CustomName", customName.getUnformattedComponentText());
+        }
         return compound;
     }
 
