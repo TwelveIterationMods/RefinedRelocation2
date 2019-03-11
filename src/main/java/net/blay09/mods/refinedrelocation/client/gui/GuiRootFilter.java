@@ -8,10 +8,7 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonPriority;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiDeleteFilterButton;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiFilterSlot;
-import net.blay09.mods.refinedrelocation.client.gui.element.GuiWhitelistButton;
+import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
@@ -29,7 +26,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     private static final ResourceLocation TEXTURE_NO_PRIORITY = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter_no_priority.png");
     private static final int UPDATE_INTERVAL = 20;
 
-    private final IDrawable textureSeparator;
+    private final IDrawable textureSeparator = GuiTextures.FILTER_SEPARATOR;
 
     private int ticksSinceUpdate;
     private int lastSentPriority;
@@ -44,40 +41,35 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
         if (container.hasSortingInventory()) {
             ySize = 210;
         }
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
 
         final GuiFilterSlot[] filterSlots = new GuiFilterSlot[3];
         final GuiDeleteFilterButton[] deleteButtons = new GuiDeleteFilterButton[3];
         final GuiWhitelistButton[] whitelistButtons = new GuiWhitelistButton[3];
 
-        int x = 10;
+        int x = guiLeft + 10;
         for (int i = 0; i < filterSlots.length; i++) {
-            filterSlots[i] = new GuiFilterSlot(0, x, 30, this, container.getRootFilter(), i);
+            filterSlots[i] = new GuiFilterSlot(0, x, guiTop + 30, this, container.getRootFilter(), i);
             addButton(filterSlots[i]);
 
-            deleteButtons[i] = new GuiDeleteFilterButton(0, x + 19, 27, filterSlots[i]);
+            deleteButtons[i] = new GuiDeleteFilterButton(0, x + 19, guiTop + 27, filterSlots[i]);
             addButton(deleteButtons[i]);
 
-            whitelistButtons[i] = new GuiWhitelistButton(0, x + 1, 55, this, filterSlots[i]);
+            whitelistButtons[i] = new GuiWhitelistButton(0, x + 1, guiTop + 55, this, filterSlots[i]);
             addButton(whitelistButtons[i]);
             x += 40;
         }
 
-        GuiImageButton btnReturn = new GuiImageButton(0, guiLeft + xSize - 20, guiTop + 4, 16, 16, GuiTextures.CHEST_BUTTON) {
-            @Override
-            public void onClick(double mouseX, double mouseY) {
-                if (onGuiAboutToClose()) {
-                    NetworkHandler.channel.sendToServer(new MessageReturnGUI());
-                }
-            }
-        };
-        addButton(btnReturn);
+        addButton(new GuiReturnFromFilterButton(0, guiLeft + xSize - 20, guiTop + 4));
 
         if (container.hasSortingInventory()) {
-            children.add(new GuiLabel(10, 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
-            addButton(new GuiButtonPriority(0, 10, 80, 100, 20, container.getSortingInventory()));
+            children.add(new GuiLabel(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            addButton(new GuiButtonPriority(0, guiLeft + 10, guiTop + 80, 100, 20, container.getSortingInventory()));
         }
-
-        textureSeparator = GuiTextures.FILTER_SEPARATOR;
     }
 
     @Override
@@ -109,6 +101,7 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
         final int x = guiLeft + 10;
         final int y = guiTop + 37;
         GlStateManager.enableBlend();
+        textureSeparator.bind();
         textureSeparator.draw(x + 30, y, zLevel);
         textureSeparator.draw(x + 70, y, zLevel);
         GlStateManager.disableBlend();
@@ -134,4 +127,13 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
         return true;
     }
 
+    @Override
+    public int getLeft() {
+        return guiLeft;
+    }
+
+    @Override
+    public int getTop() {
+        return guiTop;
+    }
 }

@@ -24,7 +24,8 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 
 	private final EntityPlayer player;
 	private final TileEntity tileEntity;
-	private final GuiTextFieldMultiLine txtFilter;
+
+	private GuiTextFieldMultiLine txtFilter;
 
 	private int ticksSinceUpdate;
 	private String lastSentText = "";
@@ -36,6 +37,11 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 
 		ySize = 210;
 		shouldKeyRepeat = true;
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
 
 		txtFilter = new GuiTextFieldMultiLine(0, 0, 0, 150, 84);
 		txtFilter.setFocused(true);
@@ -98,4 +104,13 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 		return false;
 	}
 
+	@Override
+	public int getLeft() {
+		return guiLeft;
+	}
+
+	@Override
+	public int getTop() {
+		return guiTop;
+	}
 }

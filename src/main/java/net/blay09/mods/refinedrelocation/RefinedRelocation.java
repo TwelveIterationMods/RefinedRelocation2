@@ -173,7 +173,6 @@ public class RefinedRelocation {
             CapabilitySortingGridMember.register();
             CapabilitySortingInventory.register();
             CapabilitySortingUpgradable.register();
-            CapabilityNameTaggable.register();
         });
     }
 

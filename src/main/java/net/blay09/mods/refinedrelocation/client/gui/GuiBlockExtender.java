@@ -29,10 +29,12 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     private static final int UPDATE_INTERVAL = 20;
 
     private final TileBlockExtender tileEntity;
-    private final GuiButtonStackLimiter btnStackLimiter;
-    private final GuiButtonBlockExtenderFilter btnInputFilter;
-    private final GuiButtonBlockExtenderFilter btnOutputFilter;
-    private final GuiButton btnSlotLock;
+    private final EnumFacing clickedFace;
+
+    private GuiButtonStackLimiter btnStackLimiter;
+    private GuiButtonBlockExtenderFilter btnInputFilter;
+    private GuiButtonBlockExtenderFilter btnOutputFilter;
+    private GuiButton btnSlotLock;
 
     private int stackLimiterIdx;
     private int slotLockIdx;
@@ -45,7 +47,13 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     public GuiBlockExtender(EntityPlayer player, TileBlockExtender tileEntity, EnumFacing clickedFace) {
         super(new ContainerBlockExtender(player, tileEntity));
         this.tileEntity = tileEntity;
+        this.clickedFace = clickedFace;
         ySize = 176;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
 
         RelativeSide centerFace = RelativeSide.fromFacing(tileEntity.getFacing(), clickedFace);
         RelativeSide topFace = RelativeSide.TOP;
@@ -65,12 +73,12 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
         } else {
             leftFace = centerFace.rotateY();
         }
-        addButton(new GuiSideButton(0, 9, 40, tileEntity, leftFace));
-        addButton(new GuiSideButton(0, 26, 40, tileEntity, centerFace));
-        addButton(new GuiSideButton(0, 43, 40, tileEntity, leftFace.getOpposite()));
-        addButton(new GuiSideButton(0, 60, 40, tileEntity, centerFace.getOpposite()));
-        addButton(new GuiSideButton(0, 26, 23, tileEntity, topFace));
-        addButton(new GuiSideButton(0, 26, 57, tileEntity, topFace.getOpposite()));
+        addButton(new GuiSideButton(0, guiLeft + 9, guiTop + 40, tileEntity, leftFace));
+        addButton(new GuiSideButton(0, guiLeft + 26, guiTop + 40, tileEntity, centerFace));
+        addButton(new GuiSideButton(0, guiLeft + 43, guiTop + 40, tileEntity, leftFace.getOpposite()));
+        addButton(new GuiSideButton(0, guiLeft + 60, guiTop + 40, tileEntity, centerFace.getOpposite()));
+        addButton(new GuiSideButton(0, guiLeft + 26, guiTop + 23, tileEntity, topFace));
+        addButton(new GuiSideButton(0, guiLeft + 26, guiTop + 57, tileEntity, topFace.getOpposite()));
 
         btnStackLimiter = new GuiButtonStackLimiter(0, 0, 0, 24, 16, tileEntity);
         btnStackLimiter.visible = false;
@@ -119,17 +127,17 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
 
         }
         btnStackLimiter.visible = stackLimiterIdx != -1;
-        btnStackLimiter.x = 152 - btnStackLimiter.getWidth() - 3;
-        btnStackLimiter.y = 22 + stackLimiterIdx * 18;
+        btnStackLimiter.x = guiLeft + 152 - btnStackLimiter.getWidth() - 3;
+        btnStackLimiter.y = guiTop + 22 + stackLimiterIdx * 18;
         btnSlotLock.visible = slotLockIdx != -1;
-        btnSlotLock.x = 152 - btnSlotLock.getWidth() - 3;
-        btnSlotLock.y = 22 + slotLockIdx * 18;
+        btnSlotLock.x = guiLeft + 152 - btnSlotLock.getWidth() - 3;
+        btnSlotLock.y = guiTop + 22 + slotLockIdx * 18;
         btnInputFilter.visible = inputFilterIdx != -1;
-        btnInputFilter.x = 152 - btnInputFilter.getWidth() - 3;
-        btnInputFilter.y = 22 + inputFilterIdx * 18;
+        btnInputFilter.x = guiLeft + 152 - btnInputFilter.getWidth() - 3;
+        btnInputFilter.y = guiTop + 22 + inputFilterIdx * 18;
         btnOutputFilter.visible = outputFilterIdx != -1;
-        btnOutputFilter.x = 152 - btnOutputFilter.getWidth() - 3;
-        btnOutputFilter.y = 22 + outputFilterIdx * 18;
+        btnOutputFilter.x = guiLeft + 152 - btnOutputFilter.getWidth() - 3;
+        btnOutputFilter.y = guiTop + 22 + outputFilterIdx * 18;
 
         ticksSinceUpdate++;
         if (ticksSinceUpdate >= UPDATE_INTERVAL) {

@@ -86,13 +86,12 @@ public class GuiScrollBar extends GuiButton implements ITickableElement {
         }
 
         GlStateManager.color4f(1f, 1f, 1f, 1f);
+        scrollbarTop.bind();
         scrollbarTop.draw(x - 2, y - 1, zLevel);
         scrollbarBottom.draw(x - 2, y + height - 1, zLevel);
         scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, zLevel);
-
+//
         drawRect(x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
-
-        super.render(mouseX, mouseY, partialTicks);
     }
 
     public void setCurrentOffset(int offset) {

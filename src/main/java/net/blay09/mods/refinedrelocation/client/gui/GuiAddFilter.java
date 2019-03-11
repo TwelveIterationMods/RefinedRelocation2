@@ -31,18 +31,22 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
         super(parentGui.getContainer());
         this.parentGui = parentGui;
         filterList = FilterRegistry.getApplicableFilters(t -> t.isFilterUsable(parentGui.getContainer().getTileEntity()));
-
         ySize = 210;
+    }
 
-        GuiScrollBar scrollBar = new GuiScrollBar(0, xSize - 16, 28, 78, this);
+    @Override
+    public void initGui() {
+        super.initGui();
+
+        GuiScrollBar scrollBar = new GuiScrollBar(0, guiLeft + xSize - 16, guiTop + 28, 78, this);
         addButton(scrollBar);
 
-        GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 28, 152, 80);
+        GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 28, 152, 80);
         children.add(scrollPane);
 
-        int y = 0;
+        int y = guiTop + 28;
         for (int i = 0; i < filterButtons.length; i++) {
-            filterButtons[i] = new GuiAddFilterButton(i, 0, y, this);
+            filterButtons[i] = new GuiAddFilterButton(i, guiLeft + 8, y, this);
             addButton(filterButtons[i]);
             y += filterButtons[i].height;
         }

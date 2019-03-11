@@ -7,17 +7,6 @@
     }
   },
   "variants": {
-    "normal": [
-      {}
-    ],
-    "multipart": [
-      {}
-    ],
-    "inventory": [
-      {
-        "model": "refinedrelocation:sorting_connector_item"
-      }
-    ],
     "down": {
       "false": {
         "submodel": {

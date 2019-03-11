@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiReturnFromFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
@@ -19,8 +20,13 @@ public class GuiSortingChest extends GuiContainerMod<ContainerSortingChest> {
         super(new ContainerSortingChest(player, tileEntity));
         this.tileEntity = tileEntity;
         this.ySize = 168;
+    }
 
-        addButton(new GuiReturnFromFilterButton(0, 0, 0));
+    @Override
+    public void initGui() {
+        super.initGui();
+
+        addButton(new GuiOpenFilterButton(0, guiLeft + xSize - 20, guiTop + 4, tileEntity));
     }
 
     @Override

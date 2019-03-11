@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
@@ -23,18 +24,10 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
     private final RelativeSide side;
 
     public GuiSideButton(int buttonId, int x, int y, TileBlockExtender tileEntity, RelativeSide side) {
-        super(buttonId, x, y, 16, 16, null); // TODO "side_" + side.name().toLowerCase(Locale.ENGLISH));
+        super(buttonId, x, y, 16, 16, GuiTextures.SIDE_BUTTONS[side.ordinal()]);
         this.tileEntity = tileEntity;
         this.side = side;
     }
-
-//    @Override TODO ???
-//    protected String getHoverTexture() {
-//        if (textureName.equals("side_front")) {
-//            return getNormalTexture();
-//        }
-//        return super.getHoverTexture();
-//    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
@@ -82,6 +75,7 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         if (side != RelativeSide.FRONT) {
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
             char sideChar = getFacingChar(tileEntity.getSideMapping(side));
@@ -90,7 +84,6 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
             GlStateManager.translatef(0.5f, 0.5f, 0);
             fontRenderer.drawString(String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);
             GlStateManager.translatef(-0.5f, -0.5f, 0);
-
         }
     }
 

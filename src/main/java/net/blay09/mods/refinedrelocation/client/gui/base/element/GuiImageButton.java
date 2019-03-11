@@ -18,6 +18,7 @@ public class GuiImageButton extends GuiButton {
         if (visible) {
             hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             GlStateManager.color4f(1f, 1f, 1f, 1f);
+            texture.bind();
             if (!enabled) {
                 texture.asDisabled().draw(x, y, width, height, zLevel);
             } else {

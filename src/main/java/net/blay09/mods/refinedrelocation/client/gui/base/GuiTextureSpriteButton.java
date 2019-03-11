@@ -12,6 +12,10 @@ public class GuiTextureSpriteButton {
         this.disabledTexture = disabledTexture;
     }
 
+    public void bind() {
+        texture.bind();
+    }
+
     public GuiTextureSprite asHovered() {
         return hoveredTexture;
     }

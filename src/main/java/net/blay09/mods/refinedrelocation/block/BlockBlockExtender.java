@@ -55,7 +55,10 @@ public class BlockBlockExtender extends BlockContainer {
     public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             TileBlockExtender tileEntity = (TileBlockExtender) world.getTileEntity(pos);
-            NetworkHooks.openGui((EntityPlayerMP) player, tileEntity, writer -> writer.writeInt(facing.getIndex()));
+            NetworkHooks.openGui((EntityPlayerMP) player, tileEntity, writer -> {
+                writer.writeBlockPos(pos);
+                writer.writeInt(facing.getIndex());
+            });
         }
 
         return true;

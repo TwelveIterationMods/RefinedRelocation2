@@ -10,8 +10,6 @@
     "transform": "forge:default-block"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}],
     "cutout": [{
       "model": "refinedrelocation:block_extender_static"
     }],
