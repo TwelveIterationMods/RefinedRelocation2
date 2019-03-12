@@ -6,7 +6,12 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagList;
@@ -271,5 +276,26 @@ public class PresetFilter implements IChecklistFilter {
     @Override
     public int getVisualOrder() {
         return 1000;
+    }
+
+    @Nullable
+    @Override
+    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+        return new IInteractionObjectWithoutName() {
+            @Override
+            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+                return new ContainerChecklistFilter(playerIn, tileEntity, PresetFilter.this);
+            }
+
+            @Override
+            public String getGuiID() {
+                return "refinedrelocation:any_filter";
+            }
+        };
+    }
+
+    @Override
+    public boolean hasConfiguration() {
+        return true;
     }
 }

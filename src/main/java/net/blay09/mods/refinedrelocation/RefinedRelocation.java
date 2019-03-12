@@ -123,6 +123,8 @@ public class RefinedRelocation {
                             IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(it.getAdditionalData().readInt());
                             if (filter instanceof IChecklistFilter) {
                                 return new GuiChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
+                            } else if (filter instanceof NameFilter) {
+                                return new GuiNameFilter(player, tileEntity, (NameFilter) filter);
                             }
                         }
                     }

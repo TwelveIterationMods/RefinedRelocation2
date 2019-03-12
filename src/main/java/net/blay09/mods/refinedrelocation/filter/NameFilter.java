@@ -4,15 +4,23 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,19 +152,29 @@ public class NameFilter implements IFilter {
         return GuiTextures.NAME_FILTER_ICON;
     }
 
-//	@Override // TODO
-//	public Container createContainer(EntityPlayer player, TileEntity tileEntity) {
-//		return new ContainerNameFilter(player, tileEntity, this);
-//	}
-//
-//	@Override
-//	@OnlyIn(Dist.CLIENT)
-//	public GuiScreen createGuiScreen(EntityPlayer player, TileEntity tileEntity) {
-//		return new GuiNameFilter(player, tileEntity, this);
-//	}
-
     @Override
     public int getVisualOrder() {
         return 900;
+    }
+
+    @Nullable
+    @Override
+    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+        return new IInteractionObjectWithoutName() {
+            @Override
+            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+                return new ContainerNameFilter(playerIn, tileEntity, NameFilter.this);
+            }
+
+            @Override
+            public String getGuiID() {
+                return "refinedrelocation:any_filter";
+            }
+        };
+    }
+
+    @Override
+    public boolean hasConfiguration() {
+        return true;
     }
 }

@@ -35,20 +35,20 @@ public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter
     public void initGui() {
         super.initGui();
 
-        GuiScrollBar scrollBar = new GuiScrollBar(0, xSize - 16, 28, 75, this);
+        GuiScrollBar scrollBar = new GuiScrollBar(0, guiLeft + xSize - 16, guiTop + 28, 75, this);
         addButton(scrollBar);
 
-        GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 28, 152, 80);
+        GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 28, 152, 80);
         children.add(scrollPane);
 
-        int y = 0;
+        int y = guiTop + 28;
         for (int i = 0; i < entries.length; i++) {
-            entries[i] = new GuiChecklistEntry(0, 0, y, filter);
+            entries[i] = new GuiChecklistEntry(0, guiLeft + 8, y, filter);
             addButton(entries[i]);
             y += entries[i].height;
         }
 
-        addButton(new GuiReturnFromFilterButton(0, 0, 0));
+        addButton(new GuiReturnFromFilterButton(0, guiLeft + xSize - 20, guiTop + 4));
 
         setCurrentOffset(0);
     }

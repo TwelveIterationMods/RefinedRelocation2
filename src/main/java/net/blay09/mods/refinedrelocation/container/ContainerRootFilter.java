@@ -143,10 +143,12 @@ public class ContainerRootFilter extends ContainerMod {
                     // Client tried to create a filter that doesn't exist. Bad client!
                     return;
                 }
+
                 if (rootFilter.getFilterCount() >= 3) {
                     // Client tried to create more than three filters. Bad client!
                     return;
                 }
+
                 rootFilter.addFilter(filter);
                 tileEntity.markDirty();
                 lastFilterCount = rootFilter.getFilterCount();

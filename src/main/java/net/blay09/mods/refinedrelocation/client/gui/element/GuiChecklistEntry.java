@@ -20,7 +20,7 @@ public class GuiChecklistEntry extends GuiButton {
     private int currentOption = -1;
 
     public GuiChecklistEntry(int buttonId, int x, int y, IChecklistFilter filter) {
-        super(buttonId, 0, 0, 151, 11, "");
+        super(buttonId, x, y, 151, 11, "");
         this.filter = filter;
         texture = GuiTextures.CHECKLIST;
         textureChecked = GuiTextures.CHECKLIST_CHECKED;
@@ -48,6 +48,7 @@ public class GuiChecklistEntry extends GuiButton {
         GlStateManager.color4f(1f, 1f, 1f, 1f);
 
         if (currentOption != -1) {
+            texture.bind();
             if (filter.isOptionChecked(currentOption)) {
                 textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, zLevel);
             } else {

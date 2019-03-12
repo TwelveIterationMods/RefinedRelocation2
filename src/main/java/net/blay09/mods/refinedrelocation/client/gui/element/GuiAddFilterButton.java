@@ -37,7 +37,6 @@ public class GuiAddFilterButton extends GuiImageButton implements ITooltipElemen
         }
     }
 
-
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);

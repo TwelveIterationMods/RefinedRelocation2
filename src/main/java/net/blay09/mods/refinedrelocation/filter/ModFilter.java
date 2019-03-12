@@ -6,18 +6,25 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -168,5 +175,26 @@ public class ModFilter implements IChecklistFilter {
     @Override
     public int getVisualOrder() {
         return 800;
+    }
+
+    @Nullable
+    @Override
+    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+        return new IInteractionObjectWithoutName() {
+            @Override
+            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+                return new ContainerChecklistFilter(playerIn, tileEntity, ModFilter.this);
+            }
+
+            @Override
+            public String getGuiID() {
+                return "refinedrelocation:any_filter";
+            }
+        };
+    }
+
+    @Override
+    public boolean hasConfiguration() {
+        return true;
     }
 }

@@ -43,20 +43,20 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	public void initGui() {
 		super.initGui();
 
-		txtFilter = new GuiTextFieldMultiLine(0, 0, 0, 150, 84);
+		txtFilter = new GuiTextFieldMultiLine(0, guiLeft, guiTop, 150, 84);
 		txtFilter.setFocused(true);
 		txtFilter.setCanLoseFocus(false);
 		txtFilter.setText(container.getValue());
 
-		GuiScrollBar scrollBar = new GuiScrollBar(0, 161, 20, 83, txtFilter);
+		GuiScrollBar scrollBar = new GuiScrollBar(0, guiLeft + 161, guiTop + 20, 83, txtFilter);
 
-		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, 8, 20, 150, 84);
+		GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 20, 150, 84);
 		children.add(scrollPane);
 		children.add(txtFilter);
 
 		addButton(scrollBar);
 
-		addButton(new GuiReturnFromFilterButton(0, 0, 0));
+		addButton(new GuiReturnFromFilterButton(0, guiLeft + xSize - 20, guiTop + 4));
 	}
 
 	@Override
