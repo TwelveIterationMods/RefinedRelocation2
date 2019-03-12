@@ -56,8 +56,7 @@ public class GuiAddFilter extends GuiContainerMod<ContainerRootFilter> implement
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // TODO will keybindInventory even be active?
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(InputMappings.getInputByCode(keyCode, 0))) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             mc.displayGuiScreen(parentGui);
             return true;
         }
