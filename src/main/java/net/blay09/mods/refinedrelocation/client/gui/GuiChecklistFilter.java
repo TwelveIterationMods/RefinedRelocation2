@@ -48,8 +48,6 @@ public class GuiChecklistFilter extends GuiContainerMod<ContainerChecklistFilter
             y += entries[i].height;
         }
 
-        addButton(new GuiReturnFromFilterButton(0, guiLeft + xSize - 20, guiTop + 4));
-
         setCurrentOffset(0);
     }
 

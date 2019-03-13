@@ -260,7 +260,8 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
                 return true;
             case GLFW.GLFW_KEY_ENTER:
                 if (isEnabled) {
-                    writeText("\n");
+                    setText(getText() + "\n");
+                    setCursorPosition(getCursorPosition() + 1);
                 }
                 return true;
             case GLFW.GLFW_KEY_DELETE:
@@ -282,10 +283,6 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
     public void tick() {
         super.tick();
 
-        if (renderCache == null) {
-            renderCache = getText().split("\n", -1);
-        }
-
         scrollOffset = Math.max(Math.min(scrollOffset, getRowCount() - getVisibleRows()), 0);
 
         cursorCounter++;
@@ -297,20 +294,22 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
             drawRect(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
             drawRect(x, y, x + width, y + height, 0xFF000000);
 
-            if (renderCache != null) {
-                for (int i = scrollOffset; i < renderCache.length; i++) {
-                    int y = (i - scrollOffset) * fontRenderer.FONT_HEIGHT;
-                    if (y + fontRenderer.FONT_HEIGHT >= height) {
-                        break;
-                    }
+            if (renderCache == null) {
+                renderCache = getText().split("\n", -1);
+            }
 
-                    if (lineScrollOffset >= renderCache[i].length()) {
-                        continue;
-                    }
-
-                    String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), width - PADDING);
-                    fontRenderer.drawStringWithShadow(renderText, x + PADDING, y + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR);
+            for (int i = scrollOffset; i < renderCache.length; i++) {
+                int y = (i - scrollOffset) * fontRenderer.FONT_HEIGHT;
+                if (y + fontRenderer.FONT_HEIGHT >= height) {
+                    break;
                 }
+
+                if (lineScrollOffset >= renderCache[i].length()) {
+                    continue;
+                }
+
+                String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), width - PADDING);
+                fontRenderer.drawStringWithShadow(renderText, this.x + PADDING, this.y + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR);
             }
 
             int cursorLine = 0;
@@ -345,7 +344,9 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
     }
 
     public void setText(String text) {
-        setCursorPosition(getCursorPosition());
+        int cursorPosition = getCursorPosition();
+        super.setText(text);
+        setCursorPosition(cursorPosition);
         renderCache = null;
     }
 
