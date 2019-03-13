@@ -63,7 +63,7 @@ public class ModFilter implements IChecklistFilter {
     public static void gatherMods() {
         Set<String> modSet = Sets.newHashSet();
         for (ResourceLocation registryName : ForgeRegistries.ITEMS.getKeys()) {
-            modSet.add(registryName.getPath());
+            modSet.add(registryName.getNamespace());
         }
         String[] unsorted = modSet.toArray(new String[0]);
         Arrays.sort(unsorted, (o1, o2) -> {
