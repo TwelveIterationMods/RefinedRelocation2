@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -44,6 +45,12 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
     @Override
     public void tick() {
         super.tick();
+
+        for (IGuiEventListener child : children) {
+            if (child instanceof GuiTextFieldMultiLine) {
+                ((GuiTextFieldMultiLine) child).tick();
+            }
+        }
     }
 
     @Override
@@ -53,6 +60,8 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
         for (IGuiEventListener child : children) {
             if (child instanceof GuiLabel) {
                 ((GuiLabel) child).render(mouseX, mouseY, partialTicks);
+            } else if (child instanceof GuiTextFieldMultiLine) {
+                ((GuiTextFieldMultiLine) child).drawTextField(mouseX, mouseY, partialTicks);
             }
         }
 

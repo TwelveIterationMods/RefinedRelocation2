@@ -43,7 +43,7 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 	public void initGui() {
 		super.initGui();
 
-		txtFilter = new GuiTextFieldMultiLine(0, guiLeft, guiTop, 150, 84);
+		txtFilter = new GuiTextFieldMultiLine(0, guiLeft + 8, guiTop + 20, 150, 84);
 		txtFilter.setFocused(true);
 		txtFilter.setCanLoseFocus(false);
 		txtFilter.setText(container.getValue());
@@ -55,8 +55,6 @@ public class GuiNameFilter extends GuiContainerMod<ContainerNameFilter> implemen
 		children.add(txtFilter);
 
 		addButton(scrollBar);
-
-		addButton(new GuiReturnFromFilterButton(0, guiLeft + xSize - 20, guiTop + 4));
 	}
 
 	@Override
