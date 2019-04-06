@@ -206,4 +206,8 @@ public class BlockFastHopper extends BlockModTile {
             world.setBlockState(pos, state.withProperty(ENABLED, isEnabled), 4);
         }
     }
+
+    public static boolean isEnabled(int meta) {
+        return (meta & 8) != 8;
+    }
 }

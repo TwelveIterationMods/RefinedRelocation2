@@ -42,7 +42,7 @@ public class TileFastHopper extends TileMod implements ITickable {
     public void update() {
         if (world != null && !world.isRemote) {
             cooldown--;
-            if (cooldown <= 0) {
+            if (cooldown <= 0 && BlockFastHopper.isEnabled(getBlockMetadata())) {
                 EnumFacing facing = world.getBlockState(getPos()).getValue(BlockFastHopper.FACING);
                 EnumFacing opposite = facing.getOpposite();
                 TileEntity facingTile = world.getTileEntity(pos.offset(facing));
