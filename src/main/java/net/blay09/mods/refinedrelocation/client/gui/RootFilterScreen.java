@@ -7,11 +7,11 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.LabelWidget;
 import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
@@ -28,16 +28,16 @@ public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> imple
     private int ticksSinceUpdate;
     private int lastSentPriority;
 
-    public RootFilterScreen(PlayerEntity player, TileEntity tileEntity) {
-        this(new ContainerRootFilter(player, tileEntity));
-    }
-
-    public RootFilterScreen(ContainerRootFilter container) {
-        super(container);
+    public RootFilterScreen(ContainerRootFilter container, PlayerInventory playerInventory, ITextComponent displayName) {
+        super(container, playerInventory, displayName);
 
         if (container.hasSortingInventory()) {
             ySize = 210;
         }
+    }
+
+    public PlayerInventory getPlayerInventory() {
+        return playerInventory;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> imple
         addButton(new GuiReturnFromFilterButton(guiLeft + xSize - 20, guiTop + 4));
 
         if (container.hasSortingInventory()) {
-            children.add(new GuiLabel(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            children.add(new LabelWidget(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
             addButton(new GuiButtonPriority(guiLeft + 10, guiTop + 80, 100, 20, container.getSortingInventory()));
         }
     }

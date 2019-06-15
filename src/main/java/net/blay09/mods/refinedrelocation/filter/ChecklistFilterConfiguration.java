@@ -6,12 +6,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
-public class ChecklistFilterConfiguration implements IContainerProvider {
+public class ChecklistFilterConfiguration implements INamedContainerProvider {
 
     private final ResourceLocation id;
     private final TileEntity tileEntity;
@@ -26,7 +29,11 @@ public class ChecklistFilterConfiguration implements IContainerProvider {
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerChecklistFilter(playerEntity, tileEntity, filter);
+        return new ContainerChecklistFilter(i, playerEntity, tileEntity, filter);
     }
 
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TranslationTextComponent("container.refinedrelocation:checklistFilter");
+    }
 }

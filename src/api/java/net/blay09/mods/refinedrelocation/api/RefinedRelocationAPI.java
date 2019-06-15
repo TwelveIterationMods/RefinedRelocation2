@@ -35,8 +35,8 @@ public class RefinedRelocationAPI {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int buttonId) {
-        return internalMethods.createOpenFilterButton(guiContainer, tileEntity, buttonId);
+    public static Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity) {
+        return internalMethods.createOpenFilterButton(guiContainer, tileEntity);
     }
 
     public static void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {

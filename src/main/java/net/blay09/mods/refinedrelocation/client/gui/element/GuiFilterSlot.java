@@ -12,6 +12,7 @@ import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     public void onClick(double mouseX, double mouseY) {
         IFilter filter = rootFilter.getFilter(index);
         if (filter == null) {
-            Minecraft.getInstance().displayGuiScreen(new AddFilterScreen(parentGui));
+            Minecraft.getInstance().displayGuiScreen(new AddFilterScreen(parentGui, parentGui.getPlayerInventory(), parentGui.getTitle()));
         } else {
             RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_EDIT_FILTER, index);
         }

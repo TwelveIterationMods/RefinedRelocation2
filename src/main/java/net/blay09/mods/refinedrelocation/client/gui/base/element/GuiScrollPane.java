@@ -1,27 +1,22 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.widget.Widget;
 
-public class GuiScrollPane implements IGuiEventListener {
+public class GuiScrollPane extends Widget {
 
     private final GuiScrollBar scrollBar;
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
 
     public GuiScrollPane(GuiScrollBar scrollBar, int x, int y, int width, int height) {
+        super(x, y, width, height, "");
         this.scrollBar = scrollBar;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
     }
 
     @Override
-    public boolean mouseScrolled(double delta) {
-        // TODO check if we're actually inside of it
-        scrollBar.mouseScrolled(delta);
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (isMouseOver(mouseX, mouseY)) {
+            scrollBar.mouseScrolled(mouseX, mouseY, delta);
+        }
+
         return true;
     }
 

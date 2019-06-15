@@ -9,11 +9,14 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiChecklistEntry;
+import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public class ChecklistFilterScreen extends GuiContainerMod<ContainerChecklistFilter> implements IScrollTarget, IFilterPreviewGui {
 
@@ -24,8 +27,8 @@ public class ChecklistFilterScreen extends GuiContainerMod<ContainerChecklistFil
 
     private int currentOffset;
 
-    public ChecklistFilterScreen(PlayerEntity player, TileEntity tileEntity, IChecklistFilter filter) {
-        super(new ContainerChecklistFilter(player, tileEntity, filter));
+    public ChecklistFilterScreen(ContainerChecklistFilter container, PlayerInventory playerInventory, ITextComponent displayName, TileEntity tileEntity, IChecklistFilter filter) {
+        super(container, playerInventory, displayName);
         this.filter = filter;
         ySize = 210;
     }

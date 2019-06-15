@@ -6,13 +6,17 @@ import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -146,8 +150,18 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Nullable
     @Override
-    public IContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
-        return (i, playerInventory, playerEntity) -> new ContainerChecklistFilter(playerEntity, tileEntity, CreativeTabFilter.this);
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+        return new INamedContainerProvider() {
+            @Override
+            public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                return new ContainerChecklistFilter(i, playerEntity, tileEntity, CreativeTabFilter.this);
+            }
+
+            @Override
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("container.refinedrelocation:creativeTabFilter");
+            }
+        };
     }
 
     @Override

@@ -9,11 +9,10 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
 import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
-import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public class NameFilterScreen extends GuiContainerMod<ContainerNameFilter> implements IFilterPreviewGui {
 
@@ -21,18 +20,13 @@ public class NameFilterScreen extends GuiContainerMod<ContainerNameFilter> imple
 
     private static final int UPDATE_INTERVAL = 20;
 
-    private final PlayerEntity player;
-    private final TileEntity tileEntity;
-
     private GuiTextFieldMultiLine txtFilter;
 
     private int ticksSinceUpdate;
     private String lastSentText = "";
 
-    public NameFilterScreen(PlayerEntity player, TileEntity tileEntity, NameFilter filter) {
-        super(new ContainerNameFilter(player, tileEntity, filter));
-        this.player = player;
-        this.tileEntity = tileEntity;
+    public NameFilterScreen(ContainerNameFilter container, PlayerInventory playerInventory, ITextComponent displayName) {
+        super(container, playerInventory, displayName);
 
         ySize = 210;
         shouldKeyRepeat = true;

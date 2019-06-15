@@ -15,11 +15,12 @@ import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -44,8 +45,8 @@ public class BlockExtenderScreen extends GuiContainerMod<ContainerBlockExtender>
     private int ticksSinceUpdate;
     private int lastSentStackLimit;
 
-    public BlockExtenderScreen(PlayerEntity player, TileBlockExtender tileEntity, Direction clickedFace) {
-        super(new ContainerBlockExtender(player, tileEntity));
+    public BlockExtenderScreen(ContainerBlockExtender container, PlayerInventory playerInventory, ITextComponent displayName, TileBlockExtender tileEntity, Direction clickedFace) {
+        super(container, playerInventory, displayName);
         this.tileEntity = tileEntity;
         this.clickedFace = clickedFace;
         ySize = 176;

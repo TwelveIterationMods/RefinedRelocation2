@@ -3,12 +3,15 @@ package net.blay09.mods.refinedrelocation.client.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
+import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public class FastHopperScreen extends GuiContainerMod<ContainerFastHopper> {
 
@@ -16,8 +19,8 @@ public class FastHopperScreen extends GuiContainerMod<ContainerFastHopper> {
 
     private final TileFastHopper tileEntity;
 
-    public FastHopperScreen(PlayerEntity player, TileFastHopper tileEntity) {
-        super(new ContainerFastHopper(player, tileEntity));
+    public FastHopperScreen(ContainerFastHopper container, PlayerInventory playerInventory, ITextComponent displayName, TileFastHopper tileEntity) {
+        super(container, playerInventory, displayName);
         this.tileEntity = tileEntity;
         this.ySize = 133;
     }

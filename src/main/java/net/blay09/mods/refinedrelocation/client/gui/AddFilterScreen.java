@@ -11,7 +11,9 @@ import net.blay09.mods.refinedrelocation.client.gui.element.GuiAddFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -26,8 +28,8 @@ public class AddFilterScreen extends GuiContainerMod<ContainerRootFilter> implem
 
     private int currentOffset;
 
-    public AddFilterScreen(RootFilterScreen parentGui) {
-        super(parentGui.getContainer());
+    public AddFilterScreen(RootFilterScreen parentGui, PlayerInventory playerInventory, ITextComponent displayName) {
+        super(parentGui.getContainer(), playerInventory, displayName);
         this.parentGui = parentGui;
         filterList = FilterRegistry.getApplicableFilters(t -> t.isFilterUsable(parentGui.getContainer().getTileEntity()));
         ySize = 210;
@@ -37,7 +39,7 @@ public class AddFilterScreen extends GuiContainerMod<ContainerRootFilter> implem
     public void init() {
         super.init();
 
-        GuiScrollBar scrollBar = new GuiScrollBar( guiLeft + xSize - 16, guiTop + 28, 78, this);
+        GuiScrollBar scrollBar = new GuiScrollBar(guiLeft + xSize - 16, guiTop + 28, 78, this);
         addButton(scrollBar);
 
         GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 28, 152, 80);
@@ -45,7 +47,7 @@ public class AddFilterScreen extends GuiContainerMod<ContainerRootFilter> implem
 
         int y = guiTop + 28;
         for (int i = 0; i < filterButtons.length; i++) {
-            filterButtons[i] = new GuiAddFilterButton( guiLeft + 8, y, this);
+            filterButtons[i] = new GuiAddFilterButton(guiLeft + 8, y, this);
             addButton(filterButtons[i]);
             y += filterButtons[i].getHeight();
         }

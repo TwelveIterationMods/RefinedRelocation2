@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 public class SortingUpgradable implements ISortingUpgradable {
     @Override
-    public boolean applySortingUpgrade(TileEntity tileEntity, ItemStack itemStack, PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, Hand hand) {
+    public boolean applySortingUpgrade(TileEntity tileEntity, ItemStack itemStack, PlayerEntity player, World world, BlockPos pos, Direction side, double hitX, double hitY, double hitZ, Hand hand) {
         return false;
     }
 }

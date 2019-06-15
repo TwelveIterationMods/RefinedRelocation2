@@ -154,7 +154,7 @@ public class TileSortingChest extends TileMod implements ITickableTileEntity, IN
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerSortingChest(playerEntity, this);
+        return new ContainerSortingChest(i, playerEntity, this);
     }
 
     public void setCustomName(String customName) {

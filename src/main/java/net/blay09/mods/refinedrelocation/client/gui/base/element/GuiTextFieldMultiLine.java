@@ -25,7 +25,7 @@ public class GuiTextFieldMultiLine extends TextFieldWidget implements IScrollTar
     private int lastRowCount;
 
     public GuiTextFieldMultiLine(int x, int y, int width, int height) {
-        super(Minecraft.getInstance().fontRenderer, x, y, width, height);
+        super(Minecraft.getInstance().fontRenderer, x, y, width, height, "");
         fontRenderer = Minecraft.getInstance().fontRenderer;
     }
 
@@ -289,7 +289,7 @@ public class GuiTextFieldMultiLine extends TextFieldWidget implements IScrollTar
     }
 
     @Override
-    public void drawTextField(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
         if (getVisible()) {
             fill(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
             fill(x, y, x + width, y + height, 0xFF000000);
@@ -309,7 +309,7 @@ public class GuiTextFieldMultiLine extends TextFieldWidget implements IScrollTar
                 }
 
                 String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), width - PADDING);
-                fontRenderer.drawStringWithShadow(renderText, this.x + PADDING, this.y + PADDING + y, isEnabled ? ENABLED_COLOR : DISABLED_COLOR);
+                fontRenderer.drawStringWithShadow(renderText, this.x + PADDING, this.y + PADDING + y, active ? ENABLED_COLOR : DISABLED_COLOR);
             }
 
             int cursorLine = 0;

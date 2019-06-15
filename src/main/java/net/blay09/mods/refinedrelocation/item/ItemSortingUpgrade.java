@@ -46,7 +46,7 @@ public class ItemSortingUpgrade extends Item {
             BlockState state = world.getBlockState(pos);
             if (state.getBlock() == Blocks.CHEST || state.getBlock() == Blocks.TRAPPED_CHEST) {
                 if (upgradeVanillaChest(player, world, pos, state)) {
-                    if (!player.playerAbilities.isCreativeMode) {
+                    if (!player.abilities.isCreativeMode) {
                         itemStack.shrink(1);
                     }
                     return ActionResultType.SUCCESS;
@@ -57,9 +57,9 @@ public class ItemSortingUpgrade extends Item {
             if (tileEntity != null && tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing).isPresent()) {
                 LazyOptional<ISortingUpgradable> sortingUpgradableCap = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing);
                 return sortingUpgradableCap.map(sortingUpgradable -> {
-                    Vec3d hit = useContext.func_221532_j();
+                    Vec3d hit = useContext.getHitVec();
                     if (sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, hit.x, hit.y, hit.z, hand)) {
-                        if (!player.playerAbilities.isCreativeMode) {
+                        if (!player.abilities.isCreativeMode) {
                             itemStack.shrink(1);
                         }
 

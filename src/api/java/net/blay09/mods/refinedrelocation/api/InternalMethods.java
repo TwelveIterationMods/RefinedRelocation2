@@ -25,7 +25,7 @@ public interface InternalMethods {
     void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack);
 
     @OnlyIn(Dist.CLIENT)
-    Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int buttonId);
+    Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity);
 
     void sendContainerMessageToServer(String key, String value);
 

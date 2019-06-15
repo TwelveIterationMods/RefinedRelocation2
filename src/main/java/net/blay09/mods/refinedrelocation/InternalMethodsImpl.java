@@ -18,6 +18,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -176,8 +177,8 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int buttonId) {
-        return new GuiOpenFilterButton(buttonId, guiContainer.getGuiLeft() + guiContainer.getXSize() - 18, guiContainer.getGuiTop() + 4, tileEntity);
+    public Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity) {
+        return new GuiOpenFilterButton(guiContainer.getGuiLeft() + guiContainer.getXSize() - 18, guiContainer.getGuiTop() + 4, tileEntity);
     }
 
     @Override
@@ -235,7 +236,7 @@ public class InternalMethodsImpl implements InternalMethods {
             NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos()));
         } else {
             tileEntity.getCapability(Capabilities.ROOT_FILTER).ifPresent(rootFilter -> {
-                IInteractionObject filterConfig = rootFilter.getConfiguration(player, tileEntity);
+                INamedContainerProvider filterConfig = rootFilter.getConfiguration(player, tileEntity);
                 NetworkHooks.openGui((ServerPlayerEntity) player, filterConfig, tileEntity.getPos());
             });
         }
