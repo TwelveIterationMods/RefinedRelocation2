@@ -4,12 +4,12 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,7 +35,7 @@ public class RefinedRelocationAPI {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
+    public static Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int buttonId) {
         return internalMethods.createOpenFilterButton(guiContainer, tileEntity, buttonId);
     }
 
@@ -47,7 +47,7 @@ public class RefinedRelocationAPI {
         internalMethods.sendContainerMessageToServer(key, value);
     }
 
-    public static void sendContainerMessageToServer(String key, NBTTagCompound value) {
+    public static void sendContainerMessageToServer(String key, CompoundNBT value) {
         internalMethods.sendContainerMessageToServer(key, value);
     }
 
@@ -71,15 +71,15 @@ public class RefinedRelocationAPI {
         internalMethods.syncContainerValue(key, value, listeners);
     }
 
-    public static void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
+    public static void syncContainerValue(String key, CompoundNBT value, Iterable<IContainerListener> listeners) {
         internalMethods.syncContainerValue(key, value, listeners);
     }
 
-    public static void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter) {
+    public static void updateFilterPreview(PlayerEntity player, TileEntity tileEntity, ISimpleFilter filter) {
         internalMethods.updateFilterPreview(player, tileEntity, filter);
     }
 
-    public static void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
+    public static void openRootFilterGui(PlayerEntity player, TileEntity tileEntity) {
         internalMethods.openRootFilterGui(player, tileEntity);
     }
 

@@ -1,12 +1,12 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -19,43 +19,43 @@ public class TileMod extends TileEntity {
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         readFromNBTSynced(compound);
     }
 
-    public void readFromNBTSynced(NBTTagCompound compound) {
+    public void readFromNBTSynced(CompoundNBT compound) {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         writeToNBTSynced(compound);
         return compound;
     }
 
-    public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
+    public CompoundNBT writeToNBTSynced(CompoundNBT compound) {
         return compound;
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return writeToNBTSynced(super.write(new NBTTagCompound()));
+    public CompoundNBT getUpdateTag() {
+        return writeToNBTSynced(super.write(new CompoundNBT()));
     }
 
     @Override
-    public void handleUpdateTag(NBTTagCompound compound) {
+    public void handleUpdateTag(CompoundNBT compound) {
         readFromNBTSynced(compound);
     }
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 0, writeToNBTSynced(new NBTTagCompound()));
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(pos, 0, writeToNBTSynced(new CompoundNBT()));
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
         readFromNBTSynced(pkt.getNbtCompound());
     }
@@ -68,7 +68,7 @@ public class TileMod extends TileEntity {
     }
 
     public ITextComponent getDisplayName() {
-        return new TextComponentTranslation(getUnlocalizedName());
+        return new TranslationTextComponent(getUnlocalizedName());
     }
 
     public String getUnlocalizedName() {

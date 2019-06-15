@@ -4,18 +4,15 @@ import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.tile.TileSortingConnector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
@@ -24,12 +21,12 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class BlockSortingConnector extends BlockContainer {
+public class BlockSortingConnector extends ContainerBlock {
 
     public static final String name = "sorting_connector";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-    private static Map<BlockPos, IBlockState> boundingBoxCache = Maps.newHashMap();
+    private static Map<BlockPos, BlockState> boundingBoxCache = Maps.newHashMap();
     private static final VoxelShape CENTER_SHAPE = Block.makeCuboidShape(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
     private static final VoxelShape[] FACING_SHAPES = new VoxelShape[]{
             Block.makeCuboidShape(0.3125, 0, 0.3125, 0.6875, 0.3125, 0.6875),         // Down
@@ -59,7 +56,7 @@ public class BlockSortingConnector extends BlockContainer {
     public BlockSortingConnector() {
         super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(0.3f));
 
-        IBlockState state = getDefaultState();
+        BlockState state = getDefaultState();
         for (BooleanProperty property : CONNECTIONS) {
             state = state.with(property, false);
         }
@@ -67,8 +64,8 @@ public class BlockSortingConnector extends BlockContainer {
     }
 
     @Override
-    public VoxelShape getShape(IBlockState state, IBlockReader world, BlockPos pos) {
-        IBlockState actualState = boundingBoxCache.computeIfAbsent(pos, it -> getActualState(state, world, it));
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+        BlockState actualState = boundingBoxCache.computeIfAbsent(pos, it -> getActualState(state, world, it));
         VoxelShape boundingBox = CENTER_SHAPE;
         for (int i = 0; i < CONNECTIONS.length; i++) {
             BooleanProperty property = CONNECTIONS[i];
@@ -81,50 +78,43 @@ public class BlockSortingConnector extends BlockContainer {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(DOWN, UP, NORTH, SOUTH, WEST, EAST, CORNER);
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
-    // TODO opaqueCube false
+    // TODO opaqueCube fullCube false
 
     @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean what) {
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean what) {
         super.onReplaced(state, world, pos, newState, what);
         boundingBoxCache.remove(pos);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos);
-        IBlockState newState = getConnectionState(world, pos, state);
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean wat) {
+        super.neighborChanged(state, world, pos, block, fromPos, wat);
+        BlockState newState = getConnectionState(world, pos, state);
         if (newState != state) {
             world.setBlockState(pos, newState, 3);
         }
     }
 
-    public IBlockState getActualState(IBlockState state, IBlockReader world, BlockPos pos) {
-        IBlockState actualState = getConnectionState(world, pos, state);
+    public BlockState getActualState(BlockState state, IBlockReader world, BlockPos pos) {
+        BlockState actualState = getConnectionState(world, pos, state);
         boundingBoxCache.put(pos, actualState);
         return actualState;
     }
 
-    private IBlockState getConnectionState(IBlockReader world, BlockPos pos, IBlockState state) {
-        EnumFacing.Axis axis = null;
+    private BlockState getConnectionState(IBlockReader world, BlockPos pos, BlockState state) {
+        Direction.Axis axis = null;
         boolean isCorner = false;
         int connectionCount = 0;
-        for (EnumFacing facing : EnumFacing.values()) {
+        for (Direction facing : Direction.values()) {
             BlockPos neighbourPos = pos.offset(facing);
             TileEntity tileEntity = world.getTileEntity(neighbourPos);
             if (tileEntity != null && tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite()).isPresent()) {

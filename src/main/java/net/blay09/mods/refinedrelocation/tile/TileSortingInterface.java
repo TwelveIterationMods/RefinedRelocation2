@@ -6,11 +6,11 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class TileSortingInterface extends TileMod implements ITickable, IDroppableItemHandler {
+public class TileSortingInterface extends TileMod implements ITickableTileEntity, IDroppableItemHandler {
 
     private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
@@ -99,18 +99,18 @@ public class TileSortingInterface extends TileMod implements ITickable, IDroppab
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
         rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
     }
 
     @Override
-    public void readFromNBTSynced(NBTTagCompound compound) {
+    public void readFromNBTSynced(CompoundNBT compound) {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.put("SortingInventory", sortingInventory.serializeNBT());
         compound.put("RootFilter", rootFilter.serializeNBT());
@@ -118,7 +118,7 @@ public class TileSortingInterface extends TileMod implements ITickable, IDroppab
     }
 
     @Override
-    public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
+    public CompoundNBT writeToNBTSynced(CompoundNBT compound) {
         return compound;
     }
 
@@ -127,13 +127,13 @@ public class TileSortingInterface extends TileMod implements ITickable, IDroppab
         cachedConnectedTile = world.getTileEntity(pos.offset(getFacing()));
     }
 
-    public EnumFacing getFacing() {
+    public Direction getFacing() {
         return getBlockState().get(BlockStateProperties.FACING);
     }
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         LazyOptional<T> result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
         if (!result.isPresent()) {
             result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));

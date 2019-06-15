@@ -3,8 +3,8 @@ package net.blay09.mods.refinedrelocation.network;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.container.IContainerNetworked;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
@@ -24,7 +24,7 @@ public abstract class MessageContainer implements IContainerMessage {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
-                EntityPlayer player = context.getSender();
+                PlayerEntity player = context.getSender();
                 if (player != null) {
                     Container container = player.openContainer;
                     if (container instanceof IContainerNetworked) {

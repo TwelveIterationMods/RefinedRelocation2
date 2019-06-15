@@ -4,15 +4,15 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -25,13 +25,15 @@ public class ContainerBlockExtender extends ContainerMod {
     public static final String KEY_CONFIGURE_INPUT_FILTER = "ConfigureInputFilter";
     public static final String KEY_CONFIGURE_OUTPUT_FILTER = "ConfigureOutputFilter";
 
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private final TileBlockExtender tileEntity;
 
-    private final EnumFacing[] lastSideMapping = new EnumFacing[5];
+    private final Direction[] lastSideMapping = new Direction[5];
     private int lastStackLimiterLimit;
 
-    public ContainerBlockExtender(EntityPlayer player, TileBlockExtender tileEntity) {
+    public ContainerBlockExtender(int windowId, PlayerEntity player, TileBlockExtender tileEntity) {
+        super(ModContainers.blockExtender, windowId);
+
         this.player = player;
         this.tileEntity = tileEntity;
 
@@ -47,9 +49,9 @@ public class ContainerBlockExtender extends ContainerMod {
         super.detectAndSendChanges();
 
         for (int i = 0; i < lastSideMapping.length; i++) {
-            EnumFacing nowSideMapping = tileEntity.getSideMapping(RelativeSide.fromIndex(i));
+            Direction nowSideMapping = tileEntity.getSideMapping(RelativeSide.fromIndex(i));
             if (lastSideMapping[i] != nowSideMapping) {
-                NBTTagCompound compound = new NBTTagCompound();
+                CompoundNBT compound = new CompoundNBT();
                 compound.putByte(KEY_SIDE_INDEX, (byte) i);
                 compound.putByte(KEY_SIDE_MAPPING, nowSideMapping != null ? (byte) nowSideMapping.getIndex() : -1);
                 RefinedRelocationAPI.syncContainerValue(KEY_SIDE_MAPPING, compound, listeners);
@@ -71,7 +73,7 @@ public class ContainerBlockExtender extends ContainerMod {
                 RelativeSide side = RelativeSide.fromIndex(message.getIndex());
                 if (side != RelativeSide.FRONT) {
                     int facingIdx = message.getIntValue();
-                    EnumFacing facing = facingIdx == -1 ? null : EnumFacing.byIndex(facingIdx);
+                    Direction facing = facingIdx == -1 ? null : Direction.byIndex(facingIdx);
                     tileEntity.setSideMapping(side, facing);
                     lastSideMapping[side.ordinal()] = facing;
                 }
@@ -83,17 +85,17 @@ public class ContainerBlockExtender extends ContainerMod {
                 break;
             case KEY_CONFIGURE_INPUT_FILTER:
                 tileEntity.getInputFilter().ifPresent(it -> {
-                    IInteractionObject config = it.getConfiguration(player, tileEntity);
+                    IContainerProvider config = it.getConfiguration(player, tileEntity);
                     if (config != null) {
-                        NetworkHooks.openGui((EntityPlayerMP) player, config, tileEntity.getPos());
+                        NetworkHooks.openGui((ServerPlayerEntity) player, config, tileEntity.getPos());
                     }
                 });
                 break;
             case KEY_CONFIGURE_OUTPUT_FILTER:
                 tileEntity.getOutputFilter().ifPresent(it -> {
-                    IInteractionObject config = it.getConfiguration(player, tileEntity);
+                    IContainerProvider config = it.getConfiguration(player, tileEntity);
                     if (config != null) {
-                        NetworkHooks.openGui((EntityPlayerMP) player, config, tileEntity.getPos());
+                        NetworkHooks.openGui((ServerPlayerEntity) player, config, tileEntity.getPos());
                     }
                 });
                 break;
@@ -103,15 +105,15 @@ public class ContainerBlockExtender extends ContainerMod {
     @Override
     public void receivedMessageClient(IContainerMessage message) {
         if (message.getKey().equals(KEY_SIDE_MAPPING)) {
-            NBTTagCompound compound = message.getNBTValue();
-            tileEntity.setSideMapping(RelativeSide.fromIndex(compound.getByte(KEY_SIDE_INDEX)), EnumFacing.byIndex(compound.getByte(KEY_SIDE_MAPPING)));
+            CompoundNBT compound = message.getNBTValue();
+            tileEntity.setSideMapping(RelativeSide.fromIndex(compound.getByte(KEY_SIDE_INDEX)), Direction.byIndex(compound.getByte(KEY_SIDE_MAPPING)));
         } else if (message.getKey().equals(KEY_STACK_LIMITER)) {
             tileEntity.setStackLimiterLimit(message.getIntValue());
         }
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
@@ -137,7 +139,7 @@ public class ContainerBlockExtender extends ContainerMod {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return !tileEntity.isRemoved() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
     }
 

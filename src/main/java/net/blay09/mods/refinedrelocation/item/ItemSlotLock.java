@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -23,7 +23,7 @@ public class ItemSlotLock extends Item {
 
     @Override
     public void addInformation(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        tooltip.add(new TextComponentTranslation("tooltip.refinedrelocation:block_extender_module"));
+        tooltip.add(new TranslationTextComponent("tooltip.refinedrelocation:block_extender_module"));
     }
 
 }

@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.util;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public enum RelativeSide {
 	BACK,
@@ -10,34 +10,34 @@ public enum RelativeSide {
 	BOTTOM,
 	FRONT;
 
-	public static RelativeSide fromFacing(EnumFacing baseFacing, EnumFacing facing) {
+	public static RelativeSide fromFacing(Direction baseFacing, Direction facing) {
 		if(baseFacing == facing) {
 			return FRONT;
 		} else if(baseFacing.getOpposite() == facing) {
 			return BACK;
 		}
 
-		if(baseFacing.getAxis() == EnumFacing.Axis.Y) {
-			EnumFacing rot = baseFacing.rotateAround(EnumFacing.Axis.X);
+		if(baseFacing.getAxis() == Direction.Axis.Y) {
+			Direction rot = baseFacing.rotateAround(Direction.Axis.X);
 			if(rot == facing) {
 				return BOTTOM;
 			} else if(rot == facing.getOpposite()) {
 				return TOP;
 			}
 		} else {
-			if(facing == EnumFacing.UP) {
+			if(facing == Direction.UP) {
 				return TOP;
-			} else if(facing == EnumFacing.DOWN) {
+			} else if(facing == Direction.DOWN) {
 				return BOTTOM;
 			}
 		}
 
-		if(baseFacing.getAxis() == EnumFacing.Axis.Y) {
-			EnumFacing rot = baseFacing.rotateAround(EnumFacing.Axis.Z);
+		if(baseFacing.getAxis() == Direction.Axis.Y) {
+			Direction rot = baseFacing.rotateAround(Direction.Axis.Z);
 			if(rot == facing) {
-				return baseFacing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? RIGHT : LEFT;
+				return baseFacing.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? RIGHT : LEFT;
 			} else if(rot == facing.getOpposite()) {
-				return baseFacing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? LEFT : RIGHT;
+				return baseFacing.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? LEFT : RIGHT;
 			}
 		} else {
 			if(baseFacing.rotateY() == facing) {
@@ -56,35 +56,35 @@ public enum RelativeSide {
 		return values[Math.abs(i % values.length)];
 	}
 
-	public EnumFacing toFacing(EnumFacing baseFacing) {
+	public Direction toFacing(Direction baseFacing) {
 		switch(this) {
 			case FRONT:
 				return baseFacing;
 			case BACK:
 				return baseFacing.getOpposite();
 			case LEFT:
-				if(baseFacing.getAxis() == EnumFacing.Axis.Y) {
-					return baseFacing.rotateAround(EnumFacing.Axis.Z);
+				if(baseFacing.getAxis() == Direction.Axis.Y) {
+					return baseFacing.rotateAround(Direction.Axis.Z);
 				} else {
 					return baseFacing.rotateY();
 				}
 			case RIGHT:
-				if(baseFacing.getAxis() == EnumFacing.Axis.Y) {
-					return baseFacing.rotateAround(EnumFacing.Axis.Z).getOpposite();
+				if(baseFacing.getAxis() == Direction.Axis.Y) {
+					return baseFacing.rotateAround(Direction.Axis.Z).getOpposite();
 				} else {
 					return baseFacing.rotateYCCW();
 				}
 			case TOP:
-				if(baseFacing.getAxis() == EnumFacing.Axis.Y) {
-					return baseFacing.rotateAround(EnumFacing.Axis.X);
+				if(baseFacing.getAxis() == Direction.Axis.Y) {
+					return baseFacing.rotateAround(Direction.Axis.X);
 				} else {
-					return EnumFacing.UP;
+					return Direction.UP;
 				}
 			case BOTTOM:
-				if(baseFacing.getAxis() == EnumFacing.Axis.Y) {
-					return baseFacing.rotateAround(EnumFacing.Axis.X).getOpposite();
+				if(baseFacing.getAxis() == Direction.Axis.Y) {
+					return baseFacing.rotateAround(Direction.Axis.X).getOpposite();
 				} else {
-					return EnumFacing.DOWN;
+					return Direction.DOWN;
 				}
 		}
 		return null;

@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -57,7 +57,7 @@ public class DoorAnimator {
             // This is Mojang's bad fix for chests staying open. Because it makes so much more sense to do this than to ensure onContainerClosed is always called properly.
             numPlayersUsing = 0;
             float range = 5f;
-            for (EntityPlayer entityplayer : world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range))) {
+            for (PlayerEntity entityplayer : world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - range, y - range, z - range, x + 1 + range, y + 1 + range, z + 1 + range))) {
                 if (entityplayer.openContainer instanceof IContainerWithDoor) {
                     if (((IContainerWithDoor) entityplayer.openContainer).isTileEntity(tileEntity)) {
                         numPlayersUsing++;
@@ -116,7 +116,7 @@ public class DoorAnimator {
         return false;
     }
 
-    public void openContainer(EntityPlayer player) {
+    public void openContainer(PlayerEntity player) {
         if (!player.isSpectator()) {
             numPlayersUsing = Math.max(0, numPlayersUsing + 1);
             Block block = tileEntity.getBlockState().getBlock();
@@ -129,7 +129,7 @@ public class DoorAnimator {
         }
     }
 
-    public void closeContainer(EntityPlayer player) {
+    public void closeContainer(PlayerEntity player) {
         if (!player.isSpectator()) {
             numPlayersUsing--;
             Block block = tileEntity.getBlockState().getBlock();

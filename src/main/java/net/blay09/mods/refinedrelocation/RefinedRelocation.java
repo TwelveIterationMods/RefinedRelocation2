@@ -17,12 +17,14 @@ import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.RegistryEvent;
@@ -81,7 +83,7 @@ public class RefinedRelocation {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RefinedRelocationConfig.clientSpec);
 
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> it -> {
-            EntityPlayer player = Minecraft.getInstance().player;
+            PlayerEntity player = Minecraft.getInstance().player;
             BlockPos pos;
             TileEntity tileEntity;
             switch (it.getId().getPath()) {
@@ -89,7 +91,7 @@ public class RefinedRelocation {
                     pos = it.getAdditionalData().readBlockPos();
                     tileEntity = player.world.getTileEntity(pos);
                     if (tileEntity instanceof TileBlockExtender) {
-                        EnumFacing clickedFace = EnumFacing.byIndex(it.getAdditionalData().readByte());
+                        Direction clickedFace = Direction.byIndex(it.getAdditionalData().readByte());
                         return new GuiBlockExtender(player, (TileBlockExtender) tileEntity, clickedFace);
                     }
                     break;

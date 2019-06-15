@@ -4,45 +4,46 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class BlockBlockExtender extends BlockContainer {
+public class BlockBlockExtender extends ContainerBlock {
 
     public static final String name = "block_extender";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
     public BlockBlockExtender() {
-        super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3f));
+        super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3f));
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, @Nullable EntityLivingBase placer, ItemStack itemStack) {
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onBlockPlacedBy(world, pos, state, placer, itemStack);
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof TileBlockExtender) {
             TileBlockExtender blockExtender = (TileBlockExtender) tileEntity;
-            EnumFacing facing = state.get(BlockStateProperties.FACING);
+            Direction facing = state.get(BlockStateProperties.FACING);
             for (RelativeSide side : RelativeSide.values()) {
                 if (side != RelativeSide.FRONT) {
                     blockExtender.setSideMapping(side, facing);
@@ -52,12 +53,12 @@ public class BlockBlockExtender extends BlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileBlockExtender tileEntity = (TileBlockExtender) world.getTileEntity(pos);
-            NetworkHooks.openGui((EntityPlayerMP) player, tileEntity, writer -> {
+            NetworkHooks.openGui((ServerPlayerEntity) player, tileEntity, writer -> {
                 writer.writeBlockPos(pos);
-                writer.writeInt(facing.getIndex());
+                writer.writeInt(rayTraceResult.getFace().getIndex());
             });
         }
 
@@ -67,18 +68,18 @@ public class BlockBlockExtender extends BlockContainer {
     // TODO opaqueCube = false
 
     @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.TRANSLUCENT;
     }
 
     @Nullable
     @Override
-    public IBlockState getStateForPlacement(BlockItemUseContext useContext) {
+    public BlockState getStateForPlacement(BlockItemUseContext useContext) {
         return getDefaultState().with(BlockStateProperties.FACING, useContext.getFace().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
     }
 

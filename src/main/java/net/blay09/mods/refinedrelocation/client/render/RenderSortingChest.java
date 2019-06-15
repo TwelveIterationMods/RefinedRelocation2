@@ -1,20 +1,20 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.model.ModelChest;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.model.ChestModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.IChestLid;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -22,7 +22,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/entity/sorting_chest/normal.png");
 
-    public static final TileEntityItemStackRenderer sortingChestItemRenderer = new TileEntityItemStackRenderer() {
+    public static final ItemStackTileEntityRenderer sortingChestItemRenderer = new ItemStackTileEntityRenderer() {
         private TileSortingChest sortingChest;
 
         @Override
@@ -36,7 +36,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
         }
     };
 
-    private final ModelChest model = new ModelChest();
+    private final ChestModel model = new ChestModel();
 
     @Override
     public void render(TileSortingChest tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
@@ -44,7 +44,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
         GlStateManager.depthMask(true);
 
-        IBlockState state = tileEntity.hasWorld() ? tileEntity.getBlockState() : ModBlocks.sortingChest.getDefaultState().with(BlockChest.FACING, EnumFacing.SOUTH);
+        BlockState state = tileEntity.hasWorld() ? tileEntity.getBlockState() : ModBlocks.sortingChest.getDefaultState().with(ChestBlock.FACING, Direction.SOUTH);
 
         if (destroyStage >= 0) {
             bindTexture(DESTROY_STAGES[destroyStage]);
@@ -93,7 +93,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
         }
     }
 
-    private void updateLidAngle(IChestLid lid, float partialTicks, ModelChest model) {
+    private void updateLidAngle(IChestLid lid, float partialTicks, ChestModel model) {
         float f = lid.getLidAngle(partialTicks);
         f = 1f - f;
         f = 1f - f * f * f;

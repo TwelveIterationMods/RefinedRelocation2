@@ -13,18 +13,17 @@ import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.grid.SortingGrid;
 import net.blay09.mods.refinedrelocation.network.*;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,10 +58,10 @@ public class InternalMethodsImpl implements InternalMethods {
         }
 
         BlockPos pos = member.getTileEntity().getPos();
-        for (EnumFacing facing : EnumFacing.values()) {
+        for (Direction facing : Direction.values()) {
             BlockPos facingPos = pos.offset(facing);
             if (world.isBlockLoaded(facingPos)) {
-                TileEntity tileEntity = world.getChunk(facingPos).getTileEntity(facingPos, Chunk.EnumCreateEntityType.CHECK);
+                TileEntity tileEntity = world.getChunk(facingPos).getTileEntity(facingPos, Chunk.CreateEntityType.CHECK);
                 if (tileEntity != null) {
                     ISortingGridMember otherMember = RefinedRelocationUtils.orNull(tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite()));
                     if (otherMember != null && otherMember.getSortingGrid() != null) {
@@ -177,8 +176,8 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId) {
-        return new GuiOpenFilterButton(buttonId, guiContainer.guiLeft + guiContainer.xSize - 18, guiContainer.guiTop + 4, tileEntity);
+    public Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int buttonId) {
+        return new GuiOpenFilterButton(buttonId, guiContainer.getGuiLeft() + guiContainer.getXSize() - 18, guiContainer.getGuiTop() + 4, tileEntity);
     }
 
     @Override
@@ -187,7 +186,7 @@ public class InternalMethodsImpl implements InternalMethods {
     }
 
     @Override
-    public void sendContainerMessageToServer(String key, NBTTagCompound value) {
+    public void sendContainerMessageToServer(String key, CompoundNBT value) {
         NetworkHandler.channel.sendToServer(new MessageContainerNBT(key, value));
     }
 
@@ -218,32 +217,32 @@ public class InternalMethodsImpl implements InternalMethods {
     }
 
     @Override
-    public void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners) {
+    public void syncContainerValue(String key, CompoundNBT value, Iterable<IContainerListener> listeners) {
         syncContainerValue(new MessageContainerNBT(key, value), listeners);
     }
 
     private void syncContainerValue(MessageContainer message, Iterable<IContainerListener> listeners) {
         for (IContainerListener listener : listeners) {
-            if (listener instanceof EntityPlayerMP) {
-                NetworkHandler.channel.send(PacketDistributor.PLAYER.with(() -> (EntityPlayerMP) listener), message);
+            if (listener instanceof ServerPlayerEntity) {
+                NetworkHandler.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), message);
             }
         }
     }
 
     @Override
-    public void openRootFilterGui(EntityPlayer player, TileEntity tileEntity) {
+    public void openRootFilterGui(PlayerEntity player, TileEntity tileEntity) {
         if (player.world.isRemote) {
             NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos()));
         } else {
             tileEntity.getCapability(Capabilities.ROOT_FILTER).ifPresent(rootFilter -> {
                 IInteractionObject filterConfig = rootFilter.getConfiguration(player, tileEntity);
-                NetworkHooks.openGui((EntityPlayerMP) player, filterConfig, tileEntity.getPos());
+                NetworkHooks.openGui((ServerPlayerEntity) player, filterConfig, tileEntity.getPos());
             });
         }
     }
 
     @Override
-    public void updateFilterPreview(EntityPlayer entityPlayer, TileEntity tileEntity, ISimpleFilter filter) {
+    public void updateFilterPreview(PlayerEntity entityPlayer, TileEntity tileEntity, ISimpleFilter filter) {
         if (!entityPlayer.world.isRemote) {
             byte[] slotStates = new byte[MessageFilterPreview.INVENTORY_SLOT_COUNT];
             for (int i = 0; i < slotStates.length; i++) {
@@ -253,7 +252,7 @@ public class InternalMethodsImpl implements InternalMethods {
                 }
             }
 
-            NetworkHandler.channel.send(PacketDistributor.PLAYER.with(() -> (EntityPlayerMP) entityPlayer), new MessageFilterPreview(slotStates));
+            NetworkHandler.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) entityPlayer), new MessageFilterPreview(slotStates));
         }
     }
 

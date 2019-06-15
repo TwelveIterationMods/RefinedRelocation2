@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +28,7 @@ public class MessageRequestFilterGUI {
     public static void handle(MessageRequestFilterGUI message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
-            EntityPlayer player = context.getSender();
+            PlayerEntity player = context.getSender();
             if (player == null) {
                 return;
             }

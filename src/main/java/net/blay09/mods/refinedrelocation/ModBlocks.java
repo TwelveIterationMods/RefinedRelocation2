@@ -4,6 +4,7 @@ import net.blay09.mods.refinedrelocation.block.*;
 import net.blay09.mods.refinedrelocation.item.ItemBlockSortingChest;
 import net.blay09.mods.refinedrelocation.tile.*;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -32,11 +33,11 @@ public class ModBlocks {
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
                 new ItemBlockSortingChest(sortingChest, itemBlockProperties()).setRegistryName(BlockSortingChest.name),
-                new ItemBlock(blockExtender, itemBlockProperties()).setRegistryName(BlockBlockExtender.name),
-                new ItemBlock(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
-                new ItemBlock(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),
-                new ItemBlock(sortingConnector, itemBlockProperties()).setRegistryName(BlockSortingConnector.name),
-                new ItemBlock(sortingInterface, itemBlockProperties()).setRegistryName(BlockSortingInterface.name)
+                new BlockItem(blockExtender, itemBlockProperties()).setRegistryName(BlockBlockExtender.name),
+                new BlockItem(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
+                new BlockItem(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),
+                new BlockItem(sortingConnector, itemBlockProperties()).setRegistryName(BlockSortingConnector.name),
+                new BlockItem(sortingInterface, itemBlockProperties()).setRegistryName(BlockSortingInterface.name)
         );
     }
 

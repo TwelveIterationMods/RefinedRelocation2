@@ -7,18 +7,16 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.api.distmarker.Dist;
@@ -120,14 +118,14 @@ public class PresetFilter implements IChecklistFilter {
     public static final Preset FUEL_ITEMS = new Preset("fuel") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return TileEntityFurnace.getItemBurnTime(itemStack) > 0;
+            return FurnaceTileEntity.getItemBurnTime(itemStack) > 0;
         }
     };
 
     public static final Preset BLOCKS = new Preset("blocks") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return itemStack.getItem() instanceof ItemBlock;
+            return itemStack.getItem() instanceof BlockItem;
         }
     };
 
@@ -148,14 +146,14 @@ public class PresetFilter implements IChecklistFilter {
     public static final Preset WEAPONS = new Preset("weapons") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return itemStack.getItem() instanceof ItemSword || itemStack.getItem() instanceof ItemBow;
+            return itemStack.getItem() instanceof SwordItem || itemStack.getItem() instanceof BowItem;
         }
     };
 
     public static final Preset TOOLS = new Preset("tools") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return itemStack.getItem() == Items.CARROT_ON_A_STICK || itemStack.getItem() == Items.FLINT_AND_STEEL || itemStack.getItem() instanceof ItemTool || itemStack.getItem() instanceof ItemFishingRod || itemStack.getItem() instanceof ItemShears;
+            return itemStack.getItem() == Items.CARROT_ON_A_STICK || itemStack.getItem() == Items.FLINT_AND_STEEL || itemStack.getItem() instanceof ToolItem || itemStack.getItem() instanceof FishingRodItem || itemStack.getItem() instanceof ShearsItem;
         }
     };
 
@@ -213,19 +211,19 @@ public class PresetFilter implements IChecklistFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        NBTTagList list = new NBTTagList();
+    public INBT serializeNBT() {
+        ListNBT list = new ListNBT();
         for (int i = 0; i < presetStates.length; i++) {
             if (presetStates[i]) {
-                list.add(new NBTTagString(presetList.get(i).getId()));
+                list.add(new StringNBT(presetList.get(i).getId()));
             }
         }
         return list;
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
-        NBTTagList list = (NBTTagList) nbt;
+    public void deserializeNBT(INBT nbt) {
+        ListNBT list = (ListNBT) nbt;
         for (int i = 0; i < list.size(); i++) {
             Preset preset = presetMap.get(list.getString(i));
             if (preset != null) {
@@ -280,10 +278,10 @@ public class PresetFilter implements IChecklistFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
         return new IInteractionObjectWithoutName() {
             @Override
-            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+            public Container createContainer(PlayerInventory playerInventory, PlayerEntity playerIn) {
                 return new ContainerChecklistFilter(playerIn, tileEntity, PresetFilter.this);
             }
 

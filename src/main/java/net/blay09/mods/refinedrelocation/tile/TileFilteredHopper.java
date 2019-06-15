@@ -4,8 +4,8 @@ import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
@@ -40,7 +40,7 @@ public class TileFilteredHopper extends TileFastHopper {
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         LazyOptional<T> result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
         if (!result.isPresent()) {
             result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
@@ -50,14 +50,14 @@ public class TileFilteredHopper extends TileFastHopper {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tagCompound) {
+    public CompoundNBT write(CompoundNBT tagCompound) {
         super.write(tagCompound);
         tagCompound.put("RootFilter", rootFilter.serializeNBT());
         return tagCompound;
     }
 
     @Override
-    public void read(NBTTagCompound tagCompound) {
+    public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
         rootFilter.deserializeNBT(tagCompound.getCompound("RootFilter"));
     }

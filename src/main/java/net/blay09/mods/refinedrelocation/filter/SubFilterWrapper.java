@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ public class SubFilterWrapper {
 		return filter;
 	}
 
-	public NBTTagCompound writeNBT(NBTTagCompound compound) {
+	public CompoundNBT writeNBT(CompoundNBT compound) {
 		compound.putString("Type", filter.getIdentifier());
 		compound.put("Data", filter.serializeNBT());
 		compound.putBoolean("IsBlacklist", isBlacklist);
@@ -34,7 +34,7 @@ public class SubFilterWrapper {
 	}
 
 	@Nullable
-	public static SubFilterWrapper loadFromNBT(NBTTagCompound tagCompound) {
+	public static SubFilterWrapper loadFromNBT(CompoundNBT tagCompound) {
 		IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
 		if(filter != null) {
 			filter.deserializeNBT(tagCompound.get("Data"));

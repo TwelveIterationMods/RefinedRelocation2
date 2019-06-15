@@ -5,18 +5,18 @@ import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class TileBlockExtender extends TileMod implements ITickable, IInteractionObjectWithoutName, IDroppableItemHandler {
+public class TileBlockExtender extends TileMod implements ITickableTileEntity, IContainerProvider, IDroppableItemHandler {
 
     public TileBlockExtender() {
         super(ModTiles.blockExtender);
@@ -37,10 +37,10 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
 
     private class ItemHandlerWrapper implements IItemHandler {
         private final TileEntity tileEntity;
-        private final EnumFacing facing;
+        private final Direction facing;
         private IItemHandler baseHandler;
 
-        public ItemHandlerWrapper(TileEntity tileEntity, @Nullable EnumFacing facing, IItemHandler baseHandler) {
+        public ItemHandlerWrapper(TileEntity tileEntity, @Nullable Direction facing, IItemHandler baseHandler) {
             this.tileEntity = tileEntity;
             this.facing = facing;
             this.baseHandler = baseHandler;
@@ -63,17 +63,27 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
         }
 
         @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             if (hasSlotLock) {
                 if (stack.isEmpty() || getStackInSlot(slot).isEmpty()) {
-                    return stack;
+                    return false;
                 }
             }
 
             if (hasInputFilter) {
+                //noinspection RedundantIfStatement
                 if (stack.isEmpty() || !inputFilter.passes(tileEntity, stack)) {
-                    return stack;
+                    return false;
                 }
+            }
+
+            return true;
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            if (!isItemValid(slot, stack)) {
+                return stack;
             }
 
             if (hasStackLimiter) {
@@ -95,7 +105,7 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
                             restStack.grow(initialRest);
                         } else if (!world.isRemote) {
                             // If the remainder item is different than the input item upon failed insertion that's most likely a bug or bad game mechanic, so drop the other rest item in the world rather than having it disappear.
-                            world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, otherRestStack));
+                            world.addEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, otherRestStack));
                         }
                     }
                     return restStack;
@@ -145,7 +155,7 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
         }
     };
 
-    private final EnumFacing[] sideMappings = new EnumFacing[5];
+    private final Direction[] sideMappings = new Direction[5];
     private final IRootFilter inputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
     private final IRootFilter outputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
     private int stackLimiterLimit = 64;
@@ -156,14 +166,14 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
     private boolean hasOutputFilter;
     private TileEntity cachedConnectedTile;
     private final ItemHandlerWrapper[] cachedItemHandlers = new ItemHandlerWrapper[6];
-    private final EnumFacing[] cachedFacingToFacingMappings = new EnumFacing[6];
+    private final Direction[] cachedFacingToFacingMappings = new Direction[6];
 
     @Nullable
-    public EnumFacing getSideMapping(RelativeSide side) {
+    public Direction getSideMapping(RelativeSide side) {
         return sideMappings[side.ordinal()];
     }
 
-    public void setSideMapping(RelativeSide side, @Nullable EnumFacing facing) {
+    public void setSideMapping(RelativeSide side, @Nullable Direction facing) {
         sideMappings[side.ordinal()] = facing;
         cachedFacingToFacingMappings[side.toFacing(getFacing()).ordinal()] = facing;
         markDirty();
@@ -193,19 +203,19 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
     }
 
     @Nullable
-    public EnumFacing getSideMapping(@Nullable EnumFacing facing) {
+    public Direction getSideMapping(@Nullable Direction facing) {
         if (facing == null) {
             return getFacing().getOpposite();
         }
         return cachedFacingToFacingMappings[facing.ordinal()];
     }
 
-    public EnumFacing getFacing() {
+    public Direction getFacing() {
         return getBlockState().get(BlockStateProperties.FACING);
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
 
         byte[] mappings = new byte[5];
@@ -222,14 +232,14 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
 
         byte[] mappings = compound.getByteArray("SideMappings");
         if (mappings.length == 5) {
             for (int i = 0; i < mappings.length; i++) {
                 if (mappings[i] != -1) {
-                    sideMappings[i] = EnumFacing.byIndex(mappings[i]);
+                    sideMappings[i] = Direction.byIndex(mappings[i]);
                 } else {
                     sideMappings[i] = null;
                 }
@@ -245,9 +255,9 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cachedConnectedTile != null) {
-            EnumFacing ioSide = getSideMapping(side);
+            Direction ioSide = getSideMapping(side);
             if (ioSide != null) {
                 if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && requiresItemHandlerWrapping()) {
                     int cacheIdx = ioSide.getIndex();
@@ -334,13 +344,10 @@ public class TileBlockExtender extends TileMod implements ITickable, IInteractio
         return hasOutputFilter;
     }
 
+    @Nullable
     @Override
-    public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
-        return new ContainerBlockExtender(entityPlayer, this);
+    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return new ContainerBlockExtender(playerEntity, this);
     }
 
-    @Override
-    public String getGuiID() {
-        return "refinedrelocation:block_extender";
-    }
 }

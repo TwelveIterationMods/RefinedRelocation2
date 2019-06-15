@@ -12,14 +12,14 @@ import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -35,7 +35,7 @@ public class ContainerRootFilter extends ContainerMod {
     public static final String KEY_BLACKLIST = "Blacklist";
     public static final String KEY_BLACKLIST_INDEX = "FilterIndex";
 
-    private final EntityPlayer entityPlayer;
+    private final PlayerEntity entityPlayer;
     private final TileEntity tileEntity;
     private final IRootFilter rootFilter;
 
@@ -46,11 +46,13 @@ public class ContainerRootFilter extends ContainerMod {
     private int lastPriority;
     private final boolean[] lastBlacklist = new boolean[3];
 
-    public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity) {
-        this(player, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
+    public ContainerRootFilter(int windowId, PlayerEntity player, TileEntity tileEntity) {
+        this(windowId, player, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
     }
 
-    public ContainerRootFilter(EntityPlayer player, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
+    public ContainerRootFilter(int windowId, PlayerEntity player, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
+        super(ModContainers.rootFilter, windowId);
+
         this.entityPlayer = player;
         this.tileEntity = tileEntity;
         this.rootFilter = rootFilter.orElseGet(RootFilter::new);
@@ -72,7 +74,7 @@ public class ContainerRootFilter extends ContainerMod {
         for (int i = 0; i < lastBlacklist.length; i++) {
             boolean nowBlacklist = rootFilter.isBlacklist(i);
             if (lastBlacklist[i] != nowBlacklist) {
-                NBTTagCompound compound = new NBTTagCompound();
+                CompoundNBT compound = new CompoundNBT();
                 compound.putInt(KEY_BLACKLIST_INDEX, i);
                 compound.putBoolean(KEY_BLACKLIST, nowBlacklist);
                 RefinedRelocationAPI.syncContainerValue(KEY_BLACKLIST, compound, listeners);
@@ -87,14 +89,14 @@ public class ContainerRootFilter extends ContainerMod {
     }
 
     @Override
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
+    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
         ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
         RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
         return itemStack;
     }
 
     private void syncFilterList() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
+        CompoundNBT tagCompound = new CompoundNBT();
         tagCompound.put(KEY_ROOT_FILTER, rootFilter.serializeNBT());
         RefinedRelocationAPI.syncContainerValue(KEY_ROOT_FILTER, tagCompound, listeners);
         lastFilterCount = rootFilter.getFilterCount();
@@ -108,7 +110,7 @@ public class ContainerRootFilter extends ContainerMod {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
@@ -154,9 +156,9 @@ public class ContainerRootFilter extends ContainerMod {
                 lastFilterCount = rootFilter.getFilterCount();
                 syncFilterList();
                 RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
-                IInteractionObject filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                IContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
                 if (filterConfig != null) {
-                    NetworkHooks.openGui((EntityPlayerMP) entityPlayer, filterConfig, it -> {
+                    NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
                         it.writeBlockPos(tileEntity.getPos());
                         it.writeInt(rootFilter.getFilterCount() - 1);
                     });
@@ -171,9 +173,9 @@ public class ContainerRootFilter extends ContainerMod {
                 }
                 IFilter filter = rootFilter.getFilter(index);
                 if (filter != null) {
-                    IInteractionObject filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                    IContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
                     if (filterConfig != null) {
-                        NetworkHooks.openGui((EntityPlayerMP) entityPlayer, filterConfig, it -> {
+                        NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
                             it.writeBlockPos(tileEntity.getPos());
                             it.writeInt(index);
                         });
@@ -202,7 +204,7 @@ public class ContainerRootFilter extends ContainerMod {
                 tileEntity.markDirty();
                 break;
             case KEY_BLACKLIST: {
-                NBTTagCompound tagCompound = message.getNBTValue();
+                CompoundNBT tagCompound = message.getNBTValue();
                 int index = tagCompound.getInt(KEY_BLACKLIST_INDEX);
                 if (index < 0 || index >= rootFilter.getFilterCount()) {
                     // Client tried to delete a filter that doesn't exist. Bad client!
@@ -226,7 +228,7 @@ public class ContainerRootFilter extends ContainerMod {
                 sortingInventory.setPriority(message.getIntValue());
                 break;
             case KEY_BLACKLIST:
-                NBTTagCompound compound = message.getNBTValue();
+                CompoundNBT compound = message.getNBTValue();
                 rootFilter.setIsBlacklist(compound.getInt(KEY_BLACKLIST_INDEX), compound.getBoolean(KEY_BLACKLIST));
                 break;
         }

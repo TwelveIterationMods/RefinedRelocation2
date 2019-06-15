@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.tile.IDroppableItemHandler;
 import net.blay09.mods.refinedrelocation.util.ItemUtils;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,7 +37,7 @@ public class RefinedRelocationUtils {
         return optional.orElse(null);
     }
 
-    public static int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
+    public static int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null) {
             LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);

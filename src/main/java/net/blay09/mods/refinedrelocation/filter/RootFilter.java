@@ -4,14 +4,13 @@ import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.util.Constants;
@@ -81,11 +80,11 @@ public class RootFilter implements IRootFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        NBTTagCompound compound = new NBTTagCompound();
-        NBTTagList filterList = new NBTTagList();
+    public INBT serializeNBT() {
+        CompoundNBT compound = new CompoundNBT();
+        ListNBT filterList = new ListNBT();
         for (SubFilterWrapper filter : this.filterList) {
-            NBTTagCompound tagCompound = new NBTTagCompound();
+            CompoundNBT tagCompound = new CompoundNBT();
             filter.writeNBT(tagCompound);
             filterList.add(tagCompound);
         }
@@ -94,12 +93,12 @@ public class RootFilter implements IRootFilter {
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
+    public void deserializeNBT(INBT nbt) {
         filterList.clear();
-        NBTTagCompound compound = (NBTTagCompound) nbt;
-        NBTTagList filterList = compound.getList("FilterList", Constants.NBT.TAG_COMPOUND);
+        CompoundNBT compound = (CompoundNBT) nbt;
+        ListNBT filterList = compound.getList("FilterList", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < filterList.size(); i++) {
-            NBTTagCompound tagCompound = filterList.getCompound(i);
+            CompoundNBT tagCompound = filterList.getCompound(i);
             SubFilterWrapper filter = SubFilterWrapper.loadFromNBT(tagCompound);
             if (filter != null) {
                 this.filterList.add(filter);
@@ -109,10 +108,10 @@ public class RootFilter implements IRootFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
         return new IInteractionObjectWithoutName() {
             @Override
-            public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
+            public Container createContainer(PlayerInventory inventoryPlayer, PlayerEntity entityPlayer) {
                 return new ContainerRootFilter(player, tileEntity, LazyOptional.of(() -> RootFilter.this));
             }
 

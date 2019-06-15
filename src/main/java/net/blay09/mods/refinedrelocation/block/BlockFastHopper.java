@@ -4,28 +4,27 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -35,9 +34,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
-public class BlockFastHopper extends BlockContainer {
+public class BlockFastHopper extends ContainerBlock {
 
-    public static final DirectionProperty FACING = DirectionProperty.create("facing", facing -> facing != EnumFacing.UP);
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", facing -> facing != Direction.UP);
 
     public static final String name = "fast_hopper";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
@@ -64,19 +63,16 @@ public class BlockFastHopper extends BlockContainer {
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
-    // TODO opqaueCube fullBlock false
+    // TODO opqaueCube fullBlock fullCube false
+
 
     @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
-        switch(state.get(FACING)) {
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
             case DOWN:
                 return DOWN_SHAPE;
             case NORTH:
@@ -92,8 +88,9 @@ public class BlockFastHopper extends BlockContainer {
         }
     }
 
-    public VoxelShape getRaytraceShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
-        switch(state.get(FACING)) {
+    @Override
+    public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        switch (state.get(FACING)) {
             case DOWN:
                 return DOWN_RAYTRACE_SHAPE;
             case NORTH:
@@ -111,10 +108,10 @@ public class BlockFastHopper extends BlockContainer {
 
     @Nullable
     @Override
-    public IBlockState getStateForPlacement(BlockItemUseContext useContext) {
-        EnumFacing opposite = useContext.getFace().getOpposite();
-        if (opposite == EnumFacing.UP) {
-            opposite = EnumFacing.DOWN;
+    public BlockState getStateForPlacement(BlockItemUseContext useContext) {
+        Direction opposite = useContext.getFace().getOpposite();
+        if (opposite == Direction.UP) {
+            opposite = Direction.DOWN;
         }
 
         return getDefaultState().with(FACING, opposite).with(ENABLED, true);
@@ -127,38 +124,38 @@ public class BlockFastHopper extends BlockContainer {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, ENABLED);
     }
 
     @Nullable
     @Override
-    public EnumFacing[] getValidRotations(IBlockState state, IBlockReader world, BlockPos pos) {
-        return new EnumFacing[]{
-                EnumFacing.NORTH,
-                EnumFacing.EAST,
-                EnumFacing.SOUTH,
-                EnumFacing.WEST,
-                EnumFacing.DOWN,
+    public Direction[] getValidRotations(BlockState state, IBlockReader world, BlockPos pos) {
+        return new Direction[]{
+                Direction.NORTH,
+                Direction.EAST,
+                Direction.SOUTH,
+                Direction.WEST,
+                Direction.DOWN,
         };
     }
 
     // TODO shouldSideBeRendered = true
 
     @Override
-    public void onBlockAdded(IBlockState state, World world, BlockPos pos, IBlockState oldState) {
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
         updateState(state, world, pos);
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof TileFastHopper) {
                 if (player.isSneaking()) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 } else {
-                    NetworkHooks.openGui((EntityPlayerMP) player, (TileFastHopper) tileEntity, it -> it.writeBlockPos(pos));
+                    NetworkHooks.openGui((ServerPlayerEntity) player, (TileFastHopper) tileEntity, it -> it.writeBlockPos(pos));
                 }
             }
 
@@ -169,24 +166,24 @@ public class BlockFastHopper extends BlockContainer {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean wat) {
         updateState(world.getBlockState(pos), world, pos);
     }
 
     @Override
-    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         RefinedRelocationUtils.dropItemHandler(world, pos);
         world.updateComparatorOutputLevel(pos, this);
         super.onReplaced(state, world, pos, newState, isMoving);
     }
 
     @Override
-    public boolean hasComparatorInputOverride(IBlockState state) {
+    public boolean hasComparatorInputOverride(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
+    public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null) {
             LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
@@ -196,7 +193,7 @@ public class BlockFastHopper extends BlockContainer {
         return 0;
     }
 
-    private void updateState(IBlockState state, World world, BlockPos pos) {
+    private void updateState(BlockState state, World world, BlockPos pos) {
         boolean isEnabled = !world.isBlockPowered(pos);
         if (isEnabled != state.get(ENABLED)) {
             world.setBlockState(pos, state.with(ENABLED, isEnabled), 4);

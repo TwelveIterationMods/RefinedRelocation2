@@ -6,18 +6,19 @@ import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
 import net.blay09.mods.refinedrelocation.util.DoorAnimator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.IChestLid;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.INameable;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IInteractionObject;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -26,7 +27,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSortingChest extends TileMod implements ITickable, IInteractionObject, IChestLid {
+public class TileSortingChest extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable, IChestLid {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
         @Override
@@ -76,23 +77,23 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         itemHandler.deserializeNBT(compound.getCompound("ItemHandler"));
         sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
 
         rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
 
-        customName = compound.contains("CustomName") ? new TextComponentString(compound.getString("CustomName")) : null;
+        customName = compound.contains("CustomName") ? new StringTextComponent(compound.getString("CustomName")) : null;
     }
 
     @Override
-    public void readFromNBTSynced(NBTTagCompound compound) {
+    public void readFromNBTSynced(CompoundNBT compound) {
         setCustomName(compound.getString("CustomName"));
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.put("ItemHandler", itemHandler.serializeNBT());
         compound.put("SortingInventory", sortingInventory.serializeNBT());
@@ -105,7 +106,7 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
     }
 
     @Override
-    public NBTTagCompound writeToNBTSynced(NBTTagCompound compound) {
+    public CompoundNBT writeToNBTSynced(CompoundNBT compound) {
         if (customName != null) {
             compound.putString("CustomName", customName.getUnformattedComponentText());
         }
@@ -120,7 +121,7 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         LazyOptional<T> result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
         if (!result.isPresent()) {
             result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
@@ -150,18 +151,14 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
         return itemHandler;
     }
 
+    @Nullable
     @Override
-    public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
-        return new ContainerSortingChest(entityPlayer, this);
-    }
-
-    @Override
-    public String getGuiID() {
-        return "refinedrelocation:sorting_chest";
+    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return new ContainerSortingChest(playerEntity, this);
     }
 
     public void setCustomName(String customName) {
-        this.customName = new TextComponentString(customName);
+        this.customName = new StringTextComponent(customName);
     }
 
     @Override
@@ -171,7 +168,7 @@ public class TileSortingChest extends TileMod implements ITickable, IInteraction
 
     @Override
     public ITextComponent getName() {
-        return customName != null ? customName : new TextComponentTranslation(getUnlocalizedName());
+        return customName != null ? customName : new TranslationTextComponent(getUnlocalizedName());
     }
 
     @Nullable

@@ -2,8 +2,8 @@ package net.blay09.mods.refinedrelocation.capability;
 
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
 import net.blay09.mods.refinedrelocation.api.SortingUpgradable;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -19,12 +19,12 @@ public class CapabilitySortingUpgradable {
         CapabilityManager.INSTANCE.register(ISortingUpgradable.class, new Capability.IStorage<ISortingUpgradable>() {
             @Override
             @Nullable
-            public INBTBase writeNBT(Capability<ISortingUpgradable> capability, ISortingUpgradable instance, EnumFacing side) {
+            public INBT writeNBT(Capability<ISortingUpgradable> capability, ISortingUpgradable instance, Direction side) {
                 return null;
             }
 
             @Override
-            public void readNBT(Capability<ISortingUpgradable> capability, ISortingUpgradable instance, EnumFacing side, INBTBase nbt) {
+            public void readNBT(Capability<ISortingUpgradable> capability, ISortingUpgradable instance, Direction side, INBT nbt) {
             }
         }, SortingUpgradable::new);
     }

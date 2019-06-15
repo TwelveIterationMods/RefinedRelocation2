@@ -4,19 +4,16 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
-import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -124,15 +121,15 @@ public class NameFilter implements IFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        NBTTagCompound compound = new NBTTagCompound();
+    public INBT serializeNBT() {
+        CompoundNBT compound = new CompoundNBT();
         compound.putString("Patterns", value);
         return compound;
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
-        NBTTagCompound compound = (NBTTagCompound) nbt;
+    public void deserializeNBT(INBT nbt) {
+        CompoundNBT compound = (CompoundNBT) nbt;
         value = compound.getString("Patterns");
     }
 
@@ -159,10 +156,10 @@ public class NameFilter implements IFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
         return new IInteractionObjectWithoutName() {
             @Override
-            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+            public Container createContainer(PlayerInventory playerInventory, PlayerEntity playerIn) {
                 return new ContainerNameFilter(playerIn, tileEntity, NameFilter.this);
             }
 

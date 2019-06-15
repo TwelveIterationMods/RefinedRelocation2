@@ -5,9 +5,9 @@ import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
 import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -17,7 +17,7 @@ public class ContainerNameFilter extends ContainerMod implements IContainerRetur
 
 	public static final String KEY_VALUE = "Value";
 
-	private final EntityPlayer player;
+	private final PlayerEntity player;
 	private final TileEntity tileEntity;
 	private final NameFilter filter;
 
@@ -26,7 +26,8 @@ public class ContainerNameFilter extends ContainerMod implements IContainerRetur
 	private boolean guiNeedsUpdate;
 	private ReturnCallback returnCallback;
 
-	public ContainerNameFilter(EntityPlayer player, TileEntity tileEntity, NameFilter filter) {
+	public ContainerNameFilter(int windowId, PlayerEntity player, TileEntity tileEntity, NameFilter filter) {
+		super(ModContainers.nameFilter, windowId);
 		this.player = player;
 		this.tileEntity = tileEntity;
 		this.filter = filter;
@@ -64,14 +65,14 @@ public class ContainerNameFilter extends ContainerMod implements IContainerRetur
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
 		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 		RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 		return itemStack;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int index) {
 		ItemStack itemStack = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 		if (slot != null && slot.getHasStack()) {

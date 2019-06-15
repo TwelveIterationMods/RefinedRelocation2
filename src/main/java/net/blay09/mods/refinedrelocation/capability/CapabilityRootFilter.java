@@ -2,8 +2,8 @@ package net.blay09.mods.refinedrelocation.capability;
 
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -16,12 +16,12 @@ public class CapabilityRootFilter {
 	public static void register() {
 		CapabilityManager.INSTANCE.register(IRootFilter.class, new Capability.IStorage<IRootFilter>() {
 			@Override
-			public INBTBase writeNBT(Capability<IRootFilter> capability, IRootFilter instance, EnumFacing side) {
+			public INBT writeNBT(Capability<IRootFilter> capability, IRootFilter instance, Direction side) {
 				return instance.serializeNBT();
 			}
 
 			@Override
-			public void readNBT(Capability<IRootFilter> capability, IRootFilter instance, EnumFacing side, INBTBase nbt) {
+			public void readNBT(Capability<IRootFilter> capability, IRootFilter instance, Direction side, INBT nbt) {
 				instance.deserializeNBT(nbt);
 			}
 		}, RootFilter::new);

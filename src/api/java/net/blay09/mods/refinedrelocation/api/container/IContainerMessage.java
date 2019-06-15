@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.api.container;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public interface IContainerMessage {
 
@@ -18,8 +18,8 @@ public interface IContainerMessage {
         return "";
     }
 
-    default NBTTagCompound getNBTValue() {
-        return new NBTTagCompound();
+    default CompoundNBT getNBTValue() {
+        return new CompoundNBT();
     }
 
     default byte[] getByteArrayValue() {

@@ -6,8 +6,8 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -54,15 +54,15 @@ public class SameItemFilter implements IFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        NBTTagCompound compound = new NBTTagCompound();
+    public INBT serializeNBT() {
+        CompoundNBT compound = new CompoundNBT();
         compound.putBoolean("IgnoreNBT", ignoreNBT);
         return compound;
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
-        NBTTagCompound compound = (NBTTagCompound) nbt;
+    public void deserializeNBT(INBT nbt) {
+        CompoundNBT compound = (CompoundNBT) nbt;
         ignoreNBT = compound.getBoolean("IgnoreNBT");
     }
 

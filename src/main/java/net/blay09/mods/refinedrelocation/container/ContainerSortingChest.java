@@ -3,8 +3,8 @@ package net.blay09.mods.refinedrelocation.container;
 import invtweaks.api.container.ChestContainer;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.blay09.mods.refinedrelocation.util.IContainerWithDoor;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
@@ -14,7 +14,9 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 
     private final TileSortingChest tileEntity;
 
-    public ContainerSortingChest(EntityPlayer player, TileSortingChest tileEntity) {
+    public ContainerSortingChest(int windowId, PlayerEntity player, TileSortingChest tileEntity) {
+        super(ModContainers.sortingChest, windowId);
+
         this.tileEntity = tileEntity;
 
         for (int i = 0; i < 3; i++) {
@@ -29,7 +31,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
@@ -55,7 +57,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return !tileEntity.isRemoved() && player.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64;
     }
 
@@ -65,7 +67,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer player) {
+    public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
         tileEntity.getDoorAnimator().closeContainer(player);
     }

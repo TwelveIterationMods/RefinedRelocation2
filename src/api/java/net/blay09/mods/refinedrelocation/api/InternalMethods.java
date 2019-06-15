@@ -4,12 +4,12 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,11 +25,11 @@ public interface InternalMethods {
     void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack);
 
     @OnlyIn(Dist.CLIENT)
-    GuiButton createOpenFilterButton(GuiContainer guiContainer, TileEntity tileEntity, int buttonId);
+    Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int buttonId);
 
     void sendContainerMessageToServer(String key, String value);
 
-    void sendContainerMessageToServer(String key, NBTTagCompound value);
+    void sendContainerMessageToServer(String key, CompoundNBT value);
 
     void sendContainerMessageToServer(String key, int value);
 
@@ -41,11 +41,11 @@ public interface InternalMethods {
 
     void syncContainerValue(String key, byte[] value, Iterable<IContainerListener> listeners);
 
-    void syncContainerValue(String key, NBTTagCompound value, Iterable<IContainerListener> listeners);
+    void syncContainerValue(String key, CompoundNBT value, Iterable<IContainerListener> listeners);
 
-    void openRootFilterGui(EntityPlayer player, TileEntity tileEntity);
+    void openRootFilterGui(PlayerEntity player, TileEntity tileEntity);
 
-    void updateFilterPreview(EntityPlayer player, TileEntity tileEntity, ISimpleFilter filter);
+    void updateFilterPreview(PlayerEntity player, TileEntity tileEntity, ISimpleFilter filter);
 
     void returnToParentContainer();
 }

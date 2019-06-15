@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.util;
 
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,12 +27,10 @@ public class ItemUtils {
 		float offsetZ = rand.nextFloat() * 0.8F + 0.1F;
 
 		while (!stack.isEmpty()) {
-			EntityItem entityitem = new EntityItem(world, x + (double) offsetX, y + (double) offsetY, z + (double) offsetZ, stack.split(rand.nextInt(21) + 10));
+			ItemEntity entityItem = new ItemEntity(world, x + (double) offsetX, y + (double) offsetY, z + (double) offsetZ, stack.split(rand.nextInt(21) + 10));
 			float motion = 0.05F;
-			entityitem.motionX = rand.nextGaussian() * motion;
-			entityitem.motionY = rand.nextGaussian() * motion + 0.2;
-			entityitem.motionZ = rand.nextGaussian() * motion;
-			world.spawnEntity(entityitem);
+			entityItem.setMotion(rand.nextGaussian() * motion, rand.nextGaussian() * motion + 0.2, rand.nextGaussian() * motion);
+			world.addEntity(entityItem);
 		}
 	}
 

@@ -6,6 +6,8 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -57,14 +59,13 @@ public class SameModFilter implements IFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        return new NBTTagCompound();
+    public INBT serializeNBT() {
+        return new CompoundNBT();
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
+    public void deserializeNBT(INBT nbt) {
     }
-
 
     @Override
     public String getLangKey() {

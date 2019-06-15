@@ -5,17 +5,14 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.IContainerProvider;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -83,19 +80,19 @@ public class CreativeTabFilter implements IChecklistFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        NBTTagList list = new NBTTagList();
+    public INBT serializeNBT() {
+        ListNBT list = new ListNBT();
         for (int i = 0; i < tabStates.length; i++) {
             if (tabStates[i]) {
-                list.add(new NBTTagString(creativeTabs[i]));
+                list.add(new StringNBT(creativeTabs[i]));
             }
         }
         return list;
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
-        NBTTagList list = (NBTTagList) nbt;
+    public void deserializeNBT(INBT nbt) {
+        ListNBT list = (ListNBT) nbt;
         for (int i = 0; i < list.size(); i++) {
             String tabLabel = list.getString(i);
             for (int j = 0; j < creativeTabs.length; j++) {
@@ -149,18 +146,8 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
-        return new IInteractionObjectWithoutName() {
-            @Override
-            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
-                return new ContainerChecklistFilter(playerIn, tileEntity, CreativeTabFilter.this);
-            }
-
-            @Override
-            public String getGuiID() {
-                return "refinedrelocation:any_filter";
-            }
-        };
+    public IContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+        return (i, playerInventory, playerEntity) -> new ContainerChecklistFilter(playerEntity, tileEntity, CreativeTabFilter.this);
     }
 
     @Override

@@ -3,24 +3,25 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IInteractionObject;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ConcurrentModificationException;
 
-public class TileFastHopper extends TileMod implements ITickable, IInteractionObject {
+public class TileFastHopper extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable {
 
     private final ItemStackHandler itemHandler = createItemHandler();
 
@@ -61,8 +62,8 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
         if (world != null && !world.isRemote) {
             cooldown--;
             if (cooldown <= 0) {
-                EnumFacing facing = world.getBlockState(getPos()).get(BlockFastHopper.FACING);
-                EnumFacing opposite = facing.getOpposite();
+                Direction facing = world.getBlockState(getPos()).get(BlockFastHopper.FACING);
+                Direction opposite = facing.getOpposite();
                 TileEntity facingTile = world.getTileEntity(pos.offset(facing));
                 LazyOptional<IItemHandler> targetItemHandlerCap = facingTile != null ? facingTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, opposite) : LazyOptional.empty();
                 boolean hasSpace = false;
@@ -86,14 +87,14 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
                 }
 
                 if (hasSpace) {
-                    BlockPos upPos = pos.offset(EnumFacing.UP);
+                    BlockPos upPos = pos.offset(Direction.UP);
                     TileEntity upTile = world.getTileEntity(upPos);
-                    LazyOptional<IItemHandler> itemHandlerCap = upTile != null ? upTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN) : LazyOptional.empty();
+                    LazyOptional<IItemHandler> itemHandlerCap = upTile != null ? upTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN) : LazyOptional.empty();
                     if (itemHandlerCap.isPresent()) {
                         pullItem(itemHandlerCap.orElseThrow(ConcurrentModificationException::new));
                     } else {
                         float range = 0.75f;
-                        world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + 1.5f, pos.getZ() + range), EntitySelectors.IS_ALIVE).forEach(this::pullItem);
+                        world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + 1.5f, pos.getZ() + range), Entity::isAlive).forEach(this::pullItem);
                     }
                 }
 
@@ -119,7 +120,7 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
         }
     }
 
-    public boolean pullItem(EntityItem entityItem) {
+    public boolean pullItem(ItemEntity entityItem) {
         ItemStack sourceStack = entityItem.getItem();
         ItemStack restStack = ItemHandlerHelper.insertItem(itemHandler, sourceStack, false);
         if (!restStack.isEmpty()) {
@@ -131,7 +132,7 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tagCompound) {
+    public CompoundNBT write(CompoundNBT tagCompound) {
         super.write(tagCompound);
         tagCompound.put("ItemHandler", itemHandler.serializeNBT());
         if (customName != null) {
@@ -142,10 +143,10 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
     }
 
     @Override
-    public void read(NBTTagCompound tagCompound) {
+    public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
         itemHandler.deserializeNBT(tagCompound.getCompound("ItemHandler"));
-        customName = tagCompound.contains("CustomName") ? new TextComponentString(tagCompound.getString("CustomName")) : null;
+        customName = tagCompound.contains("CustomName") ? new StringTextComponent(tagCompound.getString("CustomName")) : null;
     }
 
     @Override
@@ -155,7 +156,7 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
     }
 
@@ -163,19 +164,15 @@ public class TileFastHopper extends TileMod implements ITickable, IInteractionOb
         return itemHandler;
     }
 
+    @Nullable
     @Override
-    public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
-        return new ContainerFastHopper(entityPlayer, this);
-    }
-
-    @Override
-    public String getGuiID() {
-        return "refinedrelocation:fast_hopper";
+    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity player) {
+        return new ContainerFastHopper(player, this);
     }
 
     @Override
     public ITextComponent getName() {
-        return customName != null ? customName : new TextComponentTranslation(getUnlocalizedName());
+        return customName != null ? customName : new TranslationTextComponent(getUnlocalizedName());
     }
 
     @Override

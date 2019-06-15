@@ -3,24 +3,21 @@ package net.blay09.mods.refinedrelocation.item;
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
-import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -34,25 +31,25 @@ public class ItemSortingUpgrade extends Item {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemUseContext useContext) {
-        EntityPlayer player = useContext.getPlayer();
+    public ActionResultType onItemUse(ItemUseContext useContext) {
+        PlayerEntity player = useContext.getPlayer();
         if (player == null) {
-            return EnumActionResult.PASS;
+            return ActionResultType.PASS;
         }
 
         World world = useContext.getWorld();
         BlockPos pos = useContext.getPos();
-        EnumFacing facing = useContext.getFace();
+        Direction facing = useContext.getFace();
         ItemStack itemStack = useContext.getItem();
-        EnumHand hand = EnumHand.MAIN_HAND;
+        Hand hand = Hand.MAIN_HAND;
         if (!world.isRemote) {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
             if (state.getBlock() == Blocks.CHEST || state.getBlock() == Blocks.TRAPPED_CHEST) {
                 if (upgradeVanillaChest(player, world, pos, state)) {
-                    if (!player.abilities.isCreativeMode) {
+                    if (!player.playerAbilities.isCreativeMode) {
                         itemStack.shrink(1);
                     }
-                    return EnumActionResult.SUCCESS;
+                    return ActionResultType.SUCCESS;
                 }
             }
 
@@ -60,29 +57,30 @@ public class ItemSortingUpgrade extends Item {
             if (tileEntity != null && tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing).isPresent()) {
                 LazyOptional<ISortingUpgradable> sortingUpgradableCap = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing);
                 return sortingUpgradableCap.map(sortingUpgradable -> {
-                    if (sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, useContext.getHitX(), useContext.getHitY(), useContext.getHitZ(), hand)) {
-                        if (!player.abilities.isCreativeMode) {
+                    Vec3d hit = useContext.func_221532_j();
+                    if (sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, hit.x, hit.y, hit.z, hand)) {
+                        if (!player.playerAbilities.isCreativeMode) {
                             itemStack.shrink(1);
                         }
 
-                        return EnumActionResult.SUCCESS;
+                        return ActionResultType.SUCCESS;
                     }
 
-                    return EnumActionResult.PASS;
-                }).orElse(EnumActionResult.PASS);
+                    return ActionResultType.PASS;
+                }).orElse(ActionResultType.PASS);
             }
         }
 
-        return EnumActionResult.PASS;
+        return ActionResultType.PASS;
     }
 
-    private static boolean upgradeVanillaChest(EntityPlayer player, World world, BlockPos pos, IBlockState state) {
-        TileEntityChest tileEntity = (TileEntityChest) world.getTileEntity(pos);
+    private static boolean upgradeVanillaChest(PlayerEntity player, World world, BlockPos pos, BlockState state) {
+        ChestTileEntity tileEntity = (ChestTileEntity) world.getTileEntity(pos);
         if (tileEntity == null) {
             return false;
         }
 
-        if (tileEntity.numPlayersUsing > 0) {
+        if (ChestTileEntity.getPlayersUsing(world, pos) > 0) {
             return false;
         }
 
@@ -92,7 +90,7 @@ public class ItemSortingUpgrade extends Item {
         }
 
         tileEntity.clear();
-        IBlockState newState = ModBlocks.sortingChest.getDefaultState().with(BlockStateProperties.FACING, state.get(BlockChest.FACING));
+        BlockState newState = ModBlocks.sortingChest.getDefaultState().with(BlockStateProperties.FACING, state.get(ChestBlock.FACING));
         world.setBlockState(pos, newState);
         TileSortingChest tileSortingChest = (TileSortingChest) world.getTileEntity(pos);
         if (tileSortingChest != null) {

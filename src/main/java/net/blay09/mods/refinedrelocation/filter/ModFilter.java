@@ -7,14 +7,13 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IInteractionObject;
@@ -113,19 +112,19 @@ public class ModFilter implements IChecklistFilter {
     }
 
     @Override
-    public INBTBase serializeNBT() {
-        NBTTagList list = new NBTTagList();
+    public INBT serializeNBT() {
+        ListNBT list = new ListNBT();
         for (int i = 0; i < modStates.length; i++) {
             if (modStates[i]) {
-                list.add(new NBTTagString(modIds[i]));
+                list.add(new StringNBT(modIds[i]));
             }
         }
         return list;
     }
 
     @Override
-    public void deserializeNBT(INBTBase nbt) {
-        NBTTagList list = (NBTTagList) nbt;
+    public void deserializeNBT(INBT nbt) {
+        ListNBT list = (ListNBT) nbt;
         for (int i = 0; i < list.size(); i++) {
             String modId = list.getString(i);
             for (int j = 0; j < modIds.length; j++) {
@@ -179,10 +178,10 @@ public class ModFilter implements IChecklistFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(EntityPlayer player, TileEntity tileEntity) {
+    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
         return new IInteractionObjectWithoutName() {
             @Override
-            public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+            public Container createContainer(PlayerInventory playerInventory, PlayerEntity playerIn) {
                 return new ContainerChecklistFilter(playerIn, tileEntity, ModFilter.this);
             }
 

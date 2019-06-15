@@ -2,14 +2,16 @@ package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
-import net.blay09.mods.refinedrelocation.util.IInteractionObjectWithoutName;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class ChecklistFilterConfiguration implements IInteractionObjectWithoutName {
+import javax.annotation.Nullable;
+
+public class ChecklistFilterConfiguration implements IContainerProvider {
 
     private final ResourceLocation id;
     private final TileEntity tileEntity;
@@ -21,13 +23,10 @@ public class ChecklistFilterConfiguration implements IInteractionObjectWithoutNa
         this.filter = filter;
     }
 
+    @Nullable
     @Override
-    public Container createContainer(InventoryPlayer inventoryPlayer, EntityPlayer entityPlayer) {
-        return new ContainerChecklistFilter(entityPlayer, tileEntity, filter);
+    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return new ContainerChecklistFilter(playerEntity, tileEntity, filter);
     }
 
-    @Override
-    public String getGuiID() {
-        return id.toString();
-    }
 }

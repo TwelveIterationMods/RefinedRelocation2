@@ -5,9 +5,9 @@ import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
 import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -21,7 +21,7 @@ public class ContainerChecklistFilter extends ContainerMod implements IContainer
 
 	private static final int UPDATE_INTERVAL = 20;
 
-	private final EntityPlayer player;
+	private final PlayerEntity player;
 	private final TileEntity tileEntity;
 	private final IChecklistFilter filter;
 
@@ -29,7 +29,9 @@ public class ContainerChecklistFilter extends ContainerMod implements IContainer
 	private int ticksSinceUpdate = UPDATE_INTERVAL;
 	private ReturnCallback returnCallback;
 
-	public ContainerChecklistFilter(EntityPlayer player, TileEntity tileEntity, IChecklistFilter filter) {
+	public ContainerChecklistFilter(int windowId, PlayerEntity player, TileEntity tileEntity, IChecklistFilter filter) {
+		super(ModContainers.checkListFilter, windowId);
+
 		this.player = player;
 		this.tileEntity = tileEntity;
 		this.filter = filter;
@@ -61,14 +63,14 @@ public class ContainerChecklistFilter extends ContainerMod implements IContainer
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
 		ItemStack itemStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 		RefinedRelocationAPI.updateFilterPreview(player, tileEntity, filter);
 		return itemStack;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int index) {
 		ItemStack itemStack = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 		if (slot != null && slot.getHasStack()) {
