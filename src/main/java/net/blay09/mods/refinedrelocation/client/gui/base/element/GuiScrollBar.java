@@ -24,7 +24,8 @@ public class GuiScrollBar extends Button implements ITickableElement {
     private int lastOffset;
 
     public GuiScrollBar(int x, int y, int height, IScrollTarget scrollTarget) {
-        super(x, y, 7, height, "", it -> {});
+        super(x, y, 7, height, "", it -> {
+        });
         this.scrollTarget = scrollTarget;
         updateBarPosition();
 
@@ -35,9 +36,12 @@ public class GuiScrollBar extends Button implements ITickableElement {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        // TODO check if inside
-        setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
-        return true;
+        if (isMouseOver(mouseX, mouseY)) {
+            setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
+            return true;
+        }
+
+        return false;
     }
 
     @Override

@@ -65,8 +65,6 @@ public class BlockBlockExtender extends ContainerBlock {
         return true;
     }
 
-    // TODO opaqueCube = false
-
     @Override
     public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.TRANSLUCENT;

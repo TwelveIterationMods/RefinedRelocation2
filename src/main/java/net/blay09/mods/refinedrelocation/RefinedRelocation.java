@@ -2,31 +2,21 @@ package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.capability.*;
-import net.blay09.mods.refinedrelocation.client.gui.*;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
-import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
-import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -72,79 +62,13 @@ public class RefinedRelocation {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::registerContainers);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::finishLoading);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RefinedRelocationConfig.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RefinedRelocationConfig.clientSpec);
-
-        /* TODO Port to new container system
-        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> it -> {
-            PlayerEntity player = Minecraft.getInstance().player;
-            BlockPos pos;
-            TileEntity tileEntity;
-            switch (it.getId().getPath()) {
-                case "block_extender":
-                    pos = it.getAdditionalData().readBlockPos();
-                    tileEntity = player.world.getTileEntity(pos);
-                    if (tileEntity instanceof TileBlockExtender) {
-                        Direction clickedFace = Direction.byIndex(it.getAdditionalData().readByte());
-                        return new BlockExtenderScreen(player, (TileBlockExtender) tileEntity, clickedFace);
-                    }
-                    break;
-                case "sorting_chest":
-                    pos = it.getAdditionalData().readBlockPos();
-                    tileEntity = player.world.getTileEntity(pos);
-                    if (tileEntity instanceof TileSortingChest) {
-                        return new SortingChestScreen(player, (TileSortingChest) tileEntity);
-                    }
-                    break;
-                case "fast_hopper":
-                    pos = it.getAdditionalData().readBlockPos();
-                    tileEntity = player.world.getTileEntity(pos);
-                    if (tileEntity instanceof TileFastHopper) {
-                        return new FastHopperScreen(player, (TileFastHopper) tileEntity);
-                    }
-                    break;
-                case "root_filter":
-                    pos = it.getAdditionalData().readBlockPos();
-                    tileEntity = player.world.getTileEntity(pos);
-                    if (tileEntity != null && tileEntity.getCapability(CapabilityRootFilter.CAPABILITY).isPresent()) {
-                        return new RootFilterScreen(player, tileEntity);
-                    }
-                    break;
-                case "any_filter":
-                    pos = it.getAdditionalData().readBlockPos();
-                    tileEntity = player.world.getTileEntity(pos);
-                    if (tileEntity != null) {
-                        Container container = player.openContainer;
-                        if (container instanceof ContainerRootFilter) {
-                            IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(it.getAdditionalData().readInt());
-                            if (filter instanceof IChecklistFilter) {
-                                return new ChecklistFilterScreen(player, tileEntity, (IChecklistFilter) filter);
-                            } else if (filter instanceof NameFilter) {
-                                return new NameFilterScreen(player, tileEntity, (NameFilter) filter);
-                            }
-                        }
-                    }
-                    break;
-                case "block_extender_root_filter":
-                    pos = it.getAdditionalData().readBlockPos();
-                    tileEntity = player.world.getTileEntity(pos);
-                    if (tileEntity instanceof TileBlockExtender) {
-                        TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
-                        boolean isOutputFilter = it.getAdditionalData().readInt() == 1;
-                        return new RootFilterScreen(new ContainerRootFilter(
-                                player,
-                                tileEntity,
-                                isOutputFilter ? tileBlockExtender.getOutputFilter() : tileBlockExtender.getInputFilter()));
-                    }
-                    break;
-            }
-
-            return null;
-        });*/
     }
 
     private void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -153,6 +77,10 @@ public class RefinedRelocation {
         for (RefinedAddon addon : inbuiltAddons) {
             addon.registerBlocks(event.getRegistry());
         }
+    }
+
+    private void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
+        ModContainers.register(event.getRegistry());
     }
 
     private void registerItems(RegistryEvent.Register<Item> event) {

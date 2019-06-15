@@ -4,6 +4,7 @@ import invtweaks.api.container.ChestContainer;
 import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
 import net.blay09.mods.refinedrelocation.util.IContainerWithDoor;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +15,7 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
 
     private final TileSortingChest tileEntity;
 
-    public ContainerSortingChest(int windowId, PlayerEntity player, TileSortingChest tileEntity) {
+    public ContainerSortingChest(int windowId, PlayerInventory playerInventory, TileSortingChest tileEntity) {
         super(ModContainers.sortingChest, windowId);
 
         this.tileEntity = tileEntity;
@@ -25,9 +26,9 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
             }
         }
 
-        addPlayerInventory(player, 85);
+        addPlayerInventory(playerInventory, 85);
 
-        tileEntity.getDoorAnimator().openContainer(player);
+        tileEntity.getDoorAnimator().openContainer(playerInventory.player);
     }
 
     @Override

@@ -15,9 +15,10 @@ public class GuiScrollPane extends Widget {
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         if (isMouseOver(mouseX, mouseY)) {
             scrollBar.mouseScrolled(mouseX, mouseY, delta);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 }

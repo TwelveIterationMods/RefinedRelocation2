@@ -13,6 +13,7 @@ import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.IContainerProvider;
@@ -47,20 +48,20 @@ public class ContainerRootFilter extends ContainerMod {
     private int lastPriority;
     private final boolean[] lastBlacklist = new boolean[3];
 
-    public ContainerRootFilter(int windowId, PlayerEntity player, TileEntity tileEntity) {
-        this(windowId, player, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
+    public ContainerRootFilter(int windowId, PlayerInventory playerInventory, TileEntity tileEntity) {
+        this(windowId, playerInventory, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
     }
 
-    public ContainerRootFilter(int windowId, PlayerEntity player, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
+    public ContainerRootFilter(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
         super(ModContainers.rootFilter, windowId);
 
-        this.entityPlayer = player;
+        this.entityPlayer = playerInventory.player;
         this.tileEntity = tileEntity;
         this.rootFilter = rootFilter.orElseGet(RootFilter::new);
         sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY)
                 .orElseGet(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
 
-        addPlayerInventory(player, 128);
+        addPlayerInventory(playerInventory, 128);
     }
 
     @Override

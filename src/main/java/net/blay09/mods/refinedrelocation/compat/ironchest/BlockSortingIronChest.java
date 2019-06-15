@@ -43,8 +43,6 @@
 //        return delegateBlock.getShape(state, world, pos);
 //    }
 //
-//    // TODO opaque cube false
-//
 //    @Override
 //    @SuppressWarnings("deprecation")
 //    public boolean isFullCube(IBlockState state) {

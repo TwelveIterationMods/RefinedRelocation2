@@ -135,7 +135,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     private final ItemStackHandler itemHandlerUpgrades = new ItemStackHandler(3) {
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter && stack.getItem() != ModItems.slotLock) { // TODO this is getting messy
+            if (isUpgradeItem(stack)) {
                 return stack;
             }
 
@@ -154,6 +154,10 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
             markDirty();
         }
     };
+
+    private boolean isUpgradeItem(ItemStack stack) {
+        return stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter && stack.getItem() != ModItems.slotLock;
+    }
 
     private final Direction[] sideMappings = new Direction[5];
     private final IRootFilter inputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
@@ -347,7 +351,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerBlockExtender(i, playerEntity, this);
+        return new ContainerBlockExtender(i, playerEntity, this, clickedFace);
     }
 
 }

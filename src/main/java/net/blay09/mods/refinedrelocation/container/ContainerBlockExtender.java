@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
@@ -27,21 +28,23 @@ public class ContainerBlockExtender extends ContainerMod {
 
     private final PlayerEntity player;
     private final TileBlockExtender tileEntity;
+    private final Direction clickedFace;
 
     private final Direction[] lastSideMapping = new Direction[5];
     private int lastStackLimiterLimit;
 
-    public ContainerBlockExtender(int windowId, PlayerEntity player, TileBlockExtender tileEntity) {
+    public ContainerBlockExtender(int windowId, PlayerInventory playerInventory, TileBlockExtender tileEntity, Direction clickedFace) {
         super(ModContainers.blockExtender, windowId);
 
-        this.player = player;
+        this.player = playerInventory.player;
         this.tileEntity = tileEntity;
+        this.clickedFace = clickedFace;
 
         for (int i = 0; i < 3; i++) {
             addSlot(new SlotItemHandler(tileEntity.getItemHandlerUpgrades(), i, 152, 22 + i * 18));
         }
 
-        addPlayerInventory(player, 94);
+        addPlayerInventory(playerInventory, 94);
     }
 
     @Override

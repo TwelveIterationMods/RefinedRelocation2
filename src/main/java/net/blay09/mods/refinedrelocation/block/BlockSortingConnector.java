@@ -87,8 +87,6 @@ public class BlockSortingConnector extends ContainerBlock {
         return BlockRenderType.MODEL;
     }
 
-    // TODO opaqueCube fullCube false
-
     @Override
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean what) {
         super.onReplaced(state, world, pos, newState, what);

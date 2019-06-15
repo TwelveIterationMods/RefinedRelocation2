@@ -39,8 +39,6 @@ public class BlockSortingChest extends ContainerBlock {
         super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f));
     }
 
-    // TODO fullCube false
-
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return SHAPE;

@@ -67,9 +67,6 @@ public class BlockFastHopper extends ContainerBlock {
         return BlockRenderType.MODEL;
     }
 
-    // TODO opqaueCube fullBlock fullCube false
-
-
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         switch (state.get(FACING)) {
@@ -139,8 +136,6 @@ public class BlockFastHopper extends ContainerBlock {
                 Direction.DOWN,
         };
     }
-
-    // TODO shouldSideBeRendered = true
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
