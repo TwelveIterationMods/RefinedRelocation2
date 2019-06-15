@@ -1,16 +1,16 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget {
+public class GuiTextFieldMultiLine extends TextFieldWidget implements IScrollTarget {
 
     private static final int ENABLED_COLOR = 0xE0E0E0;
     private static final int DISABLED_COLOR = 0x707070;
@@ -24,8 +24,8 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
     private String[] renderCache;
     private int lastRowCount;
 
-    public GuiTextFieldMultiLine(int id, int x, int y, int width, int height) {
-        super(id, Minecraft.getInstance().fontRenderer, x, y, width, height);
+    public GuiTextFieldMultiLine(int x, int y, int width, int height) {
+        super(Minecraft.getInstance().fontRenderer, x, y, width, height);
         fontRenderer = Minecraft.getInstance().fontRenderer;
     }
 
@@ -215,35 +215,35 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
         int cursorPosition = getCursorPosition();
         switch (keyCode) {
             case GLFW.GLFW_KEY_END:
-                if (GuiScreen.isCtrlKeyDown()) {
+                if (Screen.hasControlDown()) {
                     setCursorPosition(getText().length());
                 } else {
                     setCursorPosition(getEndOfLine(cursorPosition, 1));
                 }
                 return true;
             case GLFW.GLFW_KEY_HOME:
-                if (GuiScreen.isCtrlKeyDown()) {
+                if (Screen.hasControlDown()) {
                     setCursorPosition(0);
                 } else {
                     setCursorPosition(getStartOfLine(cursorPosition, 1));
                 }
                 return true;
             case GLFW.GLFW_KEY_LEFT:
-                if (GuiScreen.isCtrlKeyDown()) {
+                if (Screen.hasControlDown()) {
                     setCursorPosition(getStartOfWord(cursorPosition - 1));
                 } else {
                     setCursorPosition(cursorPosition - 1);
                 }
                 return true;
             case GLFW.GLFW_KEY_RIGHT:
-                if (GuiScreen.isCtrlKeyDown()) {
+                if (Screen.hasControlDown()) {
                     setCursorPosition(getStartOfNextWord(cursorPosition + 1));
                 } else {
                     setCursorPosition(cursorPosition + 1);
                 }
                 return true;
             case GLFW.GLFW_KEY_UP:
-                if (GuiScreen.isCtrlKeyDown()) {
+                if (Screen.hasControlDown()) {
                     scroll(0, -1);
                 } else {
                     int upLine = getStartOfLine(cursorPosition, 2);
@@ -251,7 +251,7 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
                 }
                 return true;
             case GLFW.GLFW_KEY_DOWN:
-                if (GuiScreen.isCtrlKeyDown()) {
+                if (Screen.hasControlDown()) {
                     scroll(0, 1);
                 } else {
                     int downLine = getEndOfLine(cursorPosition, 2);
@@ -259,19 +259,19 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
                 }
                 return true;
             case GLFW.GLFW_KEY_ENTER:
-                if (isEnabled) {
+                if (active) {
                     setText(getText() + "\n");
                     setCursorPosition(getCursorPosition() + 1);
                 }
                 return true;
             case GLFW.GLFW_KEY_DELETE:
-                if (isEnabled) {
-                    deleteFront(GuiScreen.isCtrlKeyDown());
+                if (active) {
+                    deleteFront(Screen.hasControlDown());
                 }
                 return true;
             case GLFW.GLFW_KEY_BACKSPACE:
-                if (isEnabled) {
-                    deleteBack(GuiScreen.isCtrlKeyDown());
+                if (active) {
+                    deleteBack(Screen.hasControlDown());
                 }
                 return true;
         }
@@ -291,8 +291,8 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
     @Override
     public void drawTextField(int mouseX, int mouseY, float partialTicks) {
         if (getVisible()) {
-            drawRect(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
-            drawRect(x, y, x + width, y + height, 0xFF000000);
+            fill(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
+            fill(x, y, x + width, y + height, 0xFF000000);
 
             if (renderCache == null) {
                 renderCache = getText().split("\n", -1);
@@ -330,8 +330,8 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
     private void drawCursor(int x, int y) {
         Tessellator tessellator = Tessellator.getInstance();
         GlStateManager.color4f(0f, 0f, 1f, 1f);
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableColorLogic();
+        GlStateManager.disableTexture();
+        GlStateManager.enableColorLogicOp();
         GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
         tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
         tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
@@ -339,8 +339,8 @@ public class GuiTextFieldMultiLine extends GuiTextField implements IScrollTarget
         tessellator.getBuffer().pos(x + 1, y, 0).endVertex();
         tessellator.getBuffer().pos(x, y, 0).endVertex();
         tessellator.draw();
-        GlStateManager.disableColorLogic();
-        GlStateManager.enableTexture2D();
+        GlStateManager.disableColorLogicOp();
+        GlStateManager.enableTexture();
     }
 
     public void setText(String text) {

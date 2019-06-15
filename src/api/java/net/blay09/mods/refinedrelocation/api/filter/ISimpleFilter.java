@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.api.filter;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +14,7 @@ public interface ISimpleFilter extends INBTSerializable<INBT> {
     boolean passes(TileEntity tilePos, ItemStack itemStack);
 
     @Nullable
-    default IContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+    default INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
         return null;
     }
 

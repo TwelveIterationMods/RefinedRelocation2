@@ -6,7 +6,7 @@ import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -85,7 +85,7 @@ public class ContainerBlockExtender extends ContainerMod {
                 break;
             case KEY_CONFIGURE_INPUT_FILTER:
                 tileEntity.getInputFilter().ifPresent(it -> {
-                    IContainerProvider config = it.getConfiguration(player, tileEntity);
+                    INamedContainerProvider config = it.getConfiguration(player, tileEntity);
                     if (config != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) player, config, tileEntity.getPos());
                     }
@@ -93,7 +93,7 @@ public class ContainerBlockExtender extends ContainerMod {
                 break;
             case KEY_CONFIGURE_OUTPUT_FILTER:
                 tileEntity.getOutputFilter().ifPresent(it -> {
-                    IContainerProvider config = it.getConfiguration(player, tileEntity);
+                    INamedContainerProvider config = it.getConfiguration(player, tileEntity);
                     if (config != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) player, config, tileEntity.getPos());
                     }

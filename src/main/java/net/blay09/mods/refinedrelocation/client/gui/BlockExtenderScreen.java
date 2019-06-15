@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -11,30 +12,29 @@ import net.blay09.mods.refinedrelocation.client.gui.element.GuiTooltipButton;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
-public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
+public class BlockExtenderScreen extends GuiContainerMod<ContainerBlockExtender> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/block_extender.png");
     private static final int UPDATE_INTERVAL = 20;
 
     private final TileBlockExtender tileEntity;
-    private final EnumFacing clickedFace;
+    private final Direction clickedFace;
 
     private GuiButtonStackLimiter btnStackLimiter;
     private GuiButtonBlockExtenderFilter btnInputFilter;
     private GuiButtonBlockExtenderFilter btnOutputFilter;
-    private GuiButton btnSlotLock;
+    private Button btnSlotLock;
 
     private int stackLimiterIdx;
     private int slotLockIdx;
@@ -44,7 +44,7 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     private int ticksSinceUpdate;
     private int lastSentStackLimit;
 
-    public GuiBlockExtender(EntityPlayer player, TileBlockExtender tileEntity, EnumFacing clickedFace) {
+    public BlockExtenderScreen(PlayerEntity player, TileBlockExtender tileEntity, Direction clickedFace) {
         super(new ContainerBlockExtender(player, tileEntity));
         this.tileEntity = tileEntity;
         this.clickedFace = clickedFace;
@@ -52,19 +52,19 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
         RelativeSide centerFace = RelativeSide.fromFacing(tileEntity.getFacing(), clickedFace);
         RelativeSide topFace = RelativeSide.TOP;
         RelativeSide leftFace;
-        if (clickedFace.getAxis() == EnumFacing.Axis.Y) {
+        if (clickedFace.getAxis() == Direction.Axis.Y) {
             centerFace = RelativeSide.FRONT;
             topFace = RelativeSide.TOP;
             leftFace = RelativeSide.LEFT;
-        } else if (tileEntity.getFacing().getAxis() == EnumFacing.Axis.Y) {
-            leftFace = clickedFace.getAxis() == EnumFacing.Axis.Z ? centerFace.rotateX() : centerFace.rotateX().getOpposite();
-            if (tileEntity.getFacing().getAxisDirection() == EnumFacing.AxisDirection.POSITIVE) {
+        } else if (tileEntity.getFacing().getAxis() == Direction.Axis.Y) {
+            leftFace = clickedFace.getAxis() == Direction.Axis.Z ? centerFace.rotateX() : centerFace.rotateX().getOpposite();
+            if (tileEntity.getFacing().getAxisDirection() == Direction.AxisDirection.POSITIVE) {
                 leftFace = leftFace.getOpposite();
                 topFace = RelativeSide.FRONT;
             } else {
@@ -73,14 +73,14 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
         } else {
             leftFace = centerFace.rotateY();
         }
-        addButton(new GuiSideButton(0, guiLeft + 9, guiTop + 40, tileEntity, leftFace));
-        addButton(new GuiSideButton(0, guiLeft + 26, guiTop + 40, tileEntity, centerFace));
-        addButton(new GuiSideButton(0, guiLeft + 43, guiTop + 40, tileEntity, leftFace.getOpposite()));
-        addButton(new GuiSideButton(0, guiLeft + 60, guiTop + 40, tileEntity, centerFace.getOpposite()));
-        addButton(new GuiSideButton(0, guiLeft + 26, guiTop + 23, tileEntity, topFace));
-        addButton(new GuiSideButton(0, guiLeft + 26, guiTop + 57, tileEntity, topFace.getOpposite()));
+        addButton(new GuiSideButton(guiLeft + 9, guiTop + 40, tileEntity, leftFace));
+        addButton(new GuiSideButton(guiLeft + 26, guiTop + 40, tileEntity, centerFace));
+        addButton(new GuiSideButton(guiLeft + 43, guiTop + 40, tileEntity, leftFace.getOpposite()));
+        addButton(new GuiSideButton(guiLeft + 60, guiTop + 40, tileEntity, centerFace.getOpposite()));
+        addButton(new GuiSideButton(guiLeft + 26, guiTop + 23, tileEntity, topFace));
+        addButton(new GuiSideButton(guiLeft + 26, guiTop + 57, tileEntity, topFace.getOpposite()));
 
-        btnStackLimiter = new GuiButtonStackLimiter(0, 0, 0, 24, 16, tileEntity);
+        btnStackLimiter = new GuiButtonStackLimiter(0, 0, 24, 16, tileEntity);
         btnStackLimiter.visible = false;
         addButton(btnStackLimiter);
 
@@ -92,14 +92,15 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
         btnOutputFilter.visible = false;
         addButton(btnOutputFilter);
 
-        btnSlotLock = new GuiTooltipButton(0, 0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock")) {
+        btnSlotLock = new GuiTooltipButton(0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock"), it -> {
+        }) {
             @Override
             public void addTooltip(List<String> list) {
                 list.add(I18n.format("tooltip.refinedrelocation:slot_lock"));
             }
         };
         btnSlotLock.visible = false;
-        btnSlotLock.enabled = false;
+        btnSlotLock.active = false;
         addButton(btnSlotLock);
     }
 
@@ -152,11 +153,11 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1f, 1f, 1f, 1f);
-        mc.getTextureManager().bindTexture(TEXTURE);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        minecraft.getTextureManager().bindTexture(TEXTURE);
+        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         // Render upgrade conflicts
-        ItemStack mouseStack = mc.player.inventory.getItemStack();
+        ItemStack mouseStack = minecraft.player.inventory.getItemStack();
         if (!mouseStack.isEmpty()) {
             int conflictSlot = -1;
             if (mouseStack.getItem() == ModItems.stackLimiter && stackLimiterIdx != -1) {
@@ -170,7 +171,7 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
             }
             if (conflictSlot != -1) {
                 Slot slot = container.getUpgradeSlot(conflictSlot);
-                Gui.drawRect(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
+                AbstractGui.fill(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
             }
         }
     }
@@ -178,8 +179,8 @@ public class GuiBlockExtender extends GuiContainerMod<ContainerBlockExtender> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        fontRenderer.drawString(tileEntity.getDisplayName().getFormattedText(), 8, 6, 4210752);
-        fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        minecraft.fontRenderer.drawString(tileEntity.getDisplayName().getFormattedText(), 8, 6, 4210752);
+        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

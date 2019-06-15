@@ -92,28 +92,28 @@ public class RefinedRelocation {
                     tileEntity = player.world.getTileEntity(pos);
                     if (tileEntity instanceof TileBlockExtender) {
                         Direction clickedFace = Direction.byIndex(it.getAdditionalData().readByte());
-                        return new GuiBlockExtender(player, (TileBlockExtender) tileEntity, clickedFace);
+                        return new BlockExtenderScreen(player, (TileBlockExtender) tileEntity, clickedFace);
                     }
                     break;
                 case "sorting_chest":
                     pos = it.getAdditionalData().readBlockPos();
                     tileEntity = player.world.getTileEntity(pos);
                     if (tileEntity instanceof TileSortingChest) {
-                        return new GuiSortingChest(player, (TileSortingChest) tileEntity);
+                        return new SortingChestScreen(player, (TileSortingChest) tileEntity);
                     }
                     break;
                 case "fast_hopper":
                     pos = it.getAdditionalData().readBlockPos();
                     tileEntity = player.world.getTileEntity(pos);
                     if (tileEntity instanceof TileFastHopper) {
-                        return new GuiFastHopper(player, (TileFastHopper) tileEntity);
+                        return new FastHopperScreen(player, (TileFastHopper) tileEntity);
                     }
                     break;
                 case "root_filter":
                     pos = it.getAdditionalData().readBlockPos();
                     tileEntity = player.world.getTileEntity(pos);
                     if (tileEntity != null && tileEntity.getCapability(CapabilityRootFilter.CAPABILITY).isPresent()) {
-                        return new GuiRootFilter(player, tileEntity);
+                        return new RootFilterScreen(player, tileEntity);
                     }
                     break;
                 case "any_filter":
@@ -124,9 +124,9 @@ public class RefinedRelocation {
                         if (container instanceof ContainerRootFilter) {
                             IFilter filter = ((ContainerRootFilter) container).getRootFilter().getFilter(it.getAdditionalData().readInt());
                             if (filter instanceof IChecklistFilter) {
-                                return new GuiChecklistFilter(player, tileEntity, (IChecklistFilter) filter);
+                                return new ChecklistFilterScreen(player, tileEntity, (IChecklistFilter) filter);
                             } else if (filter instanceof NameFilter) {
-                                return new GuiNameFilter(player, tileEntity, (NameFilter) filter);
+                                return new NameFilterScreen(player, tileEntity, (NameFilter) filter);
                             }
                         }
                     }
@@ -137,7 +137,7 @@ public class RefinedRelocation {
                     if (tileEntity instanceof TileBlockExtender) {
                         TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
                         boolean isOutputFilter = it.getAdditionalData().readInt() == 1;
-                        return new GuiRootFilter(new ContainerRootFilter(
+                        return new RootFilterScreen(new ContainerRootFilter(
                                 player,
                                 tileEntity,
                                 isOutputFilter ? tileBlockExtender.getOutputFilter() : tileBlockExtender.getInputFilter()));

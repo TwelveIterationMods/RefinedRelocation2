@@ -10,7 +10,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class TileBlockExtender extends TileMod implements ITickableTileEntity, IContainerProvider, IDroppableItemHandler {
+public class TileBlockExtender extends TileMod implements ITickableTileEntity, INamedContainerProvider, IDroppableItemHandler {
 
     public TileBlockExtender() {
         super(ModTiles.blockExtender);
@@ -347,7 +347,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerBlockExtender(playerEntity, this);
+        return new ContainerBlockExtender(i, playerEntity, this);
     }
 
 }

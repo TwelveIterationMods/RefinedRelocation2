@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
@@ -7,11 +8,10 @@ import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
-public class GuiChecklistEntry extends GuiButton {
+public class GuiChecklistEntry extends Button {
 
     private final IChecklistFilter filter;
     private final IDrawable texture;
@@ -19,8 +19,9 @@ public class GuiChecklistEntry extends GuiButton {
 
     private int currentOption = -1;
 
-    public GuiChecklistEntry(int buttonId, int x, int y, IChecklistFilter filter) {
-        super(buttonId, x, y, 151, 11, "");
+    public GuiChecklistEntry(int x, int y, IChecklistFilter filter) {
+        super(x, y, 151, 11, "", it -> {
+        });
         this.filter = filter;
         texture = GuiTextures.CHECKLIST;
         textureChecked = GuiTextures.CHECKLIST_CHECKED;
@@ -41,8 +42,8 @@ public class GuiChecklistEntry extends GuiButton {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        if (isPressable(mouseX, mouseY)) {
-            drawRect(x, y, x + width, y + height, 0x66FFFFFF);
+        if (isMouseOver(mouseX, mouseY)) {
+            fill(x, y, x + width, y + height, 0x66FFFFFF);
         }
 
         GlStateManager.color4f(1f, 1f, 1f, 1f);
@@ -50,9 +51,9 @@ public class GuiChecklistEntry extends GuiButton {
         if (currentOption != -1) {
             texture.bind();
             if (filter.isOptionChecked(currentOption)) {
-                textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, zLevel);
+                textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, blitOffset);
             } else {
-                texture.draw(x + 1, y + height / 2f - 11 / 2f, zLevel);
+                texture.draw(x + 1, y + height / 2f - 11 / 2f, blitOffset);
             }
 
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;

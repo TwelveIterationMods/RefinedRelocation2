@@ -3,28 +3,30 @@ package net.blay09.mods.refinedrelocation.client.gui.base;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
 import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-public abstract class GuiContainerMod<T extends Container> extends GuiContainer {
+public abstract class GuiContainerMod<T extends Container> extends ContainerScreen<T> {
 
     protected final T container;
     protected boolean shouldKeyRepeat;
 
-    public GuiContainerMod(T container) {
-        super(container);
+    public GuiContainerMod(T container, PlayerInventory playerInventory, ITextComponent displayName) {
+        super(container, playerInventory, displayName);
         this.container = container;
     }
 
     @Override
     @OverridingMethodsMustInvokeSuper
-    public void initGui() {
-        super.initGui();
+    protected void init() {
+        super.init();
 
         if (shouldKeyRepeat) {
-            mc.keyboardListener.enableRepeatEvents(true);
+            minecraft.keyboardListener.enableRepeatEvents(true);
         }
     }
 
@@ -34,11 +36,11 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 
     @Override
     @OverridingMethodsMustInvokeSuper
-    public void onGuiClosed() {
-        super.onGuiClosed();
+    public void onClose() {
+        super.onClose();
 
         if (shouldKeyRepeat) {
-            mc.keyboardListener.enableRepeatEvents(false);
+            minecraft.keyboardListener.enableRepeatEvents(false);
         }
     }
 
@@ -55,7 +57,7 @@ public abstract class GuiContainerMod<T extends Container> extends GuiContainer 
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        renderBackground();
         super.render(mouseX, mouseY, partialTicks);
         for (IGuiEventListener child : children) {
             if (child instanceof GuiLabel) {

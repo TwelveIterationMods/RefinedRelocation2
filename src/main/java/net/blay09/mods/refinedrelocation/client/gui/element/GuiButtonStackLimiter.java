@@ -4,28 +4,28 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class GuiButtonStackLimiter extends GuiButton implements ITickableElement, ITooltipElement {
+public class GuiButtonStackLimiter extends Button implements ITickableElement, ITooltipElement {
 
     private final TileBlockExtender blockExtender;
 
-    public GuiButtonStackLimiter(int buttonId, int x, int y, int width, int height, TileBlockExtender blockExtender) {
-        super(buttonId, x, y, width, height, "");
+    public GuiButtonStackLimiter(int x, int y, int width, int height, TileBlockExtender blockExtender) {
+        super(x, y, width, height, "", it -> {});
         this.blockExtender = blockExtender;
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (isPressable(mouseX, mouseY)) {
-            playPressSound(Minecraft.getInstance().getSoundHandler());
+        if (isMouseOver(mouseX, mouseY)) {
+            playDownSound(Minecraft.getInstance().getSoundHandler());
             onClick(mouseX, mouseY, mouseButton);
         }
 
@@ -50,7 +50,7 @@ public class GuiButtonStackLimiter extends GuiButton implements ITickableElement
     }
 
     @Override
-    public boolean mouseScrolled(double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         int limit = blockExtender.getStackLimiterLimit();
         if (delta > 0) {
             limit++;
@@ -65,7 +65,7 @@ public class GuiButtonStackLimiter extends GuiButton implements ITickableElement
 
     @Override
     public void tick() {
-        displayString = String.valueOf(blockExtender.getStackLimiterLimit());
+        setMessage(String.valueOf(blockExtender.getStackLimiterLimit()));
     }
 
     @Override

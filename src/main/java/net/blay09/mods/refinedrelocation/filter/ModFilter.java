@@ -10,13 +10,15 @@ import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IInteractionObject;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModContainer;
@@ -178,16 +180,16 @@ public class ModFilter implements IChecklistFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
-        return new IInteractionObjectWithoutName() {
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+        return new INamedContainerProvider() {
             @Override
-            public Container createContainer(PlayerInventory playerInventory, PlayerEntity playerIn) {
-                return new ContainerChecklistFilter(playerIn, tileEntity, ModFilter.this);
+            public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                return new ContainerChecklistFilter(i, playerEntity, tileEntity, ModFilter.this);
             }
 
             @Override
-            public String getGuiID() {
-                return "refinedrelocation:any_filter";
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("container.refinedrelocation:any_filter");
             }
         };
     }

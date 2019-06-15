@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.client.gui.base;
 
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -28,11 +28,11 @@ public class GuiTextureSprite implements IDrawable {
 
     @Override
     public void draw(double x, double y, double zLevel) {
-        Gui.drawModalRectWithCustomSizedTexture((int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
+        AbstractGui.blit((int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
     }
 
     @Override
     public void draw(double x, double y, double width, double height, double zLevel) {
-        Gui.drawScaledCustomSizeModalRect((int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, (int) width, (int) height, 256, 256);
+        AbstractGui.blit((int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, (int) width, (int) height, 256, 256);
     }
 }

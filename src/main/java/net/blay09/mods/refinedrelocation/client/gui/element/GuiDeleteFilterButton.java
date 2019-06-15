@@ -15,8 +15,9 @@ public class GuiDeleteFilterButton extends GuiImageButton implements ITickableEl
 
     private final GuiFilterSlot parentSlot;
 
-    public GuiDeleteFilterButton(int buttonId, int x, int y, GuiFilterSlot parentSlot) {
-        super(buttonId, x, y, 8, 8, GuiTextures.DELETE_FILTER);
+    public GuiDeleteFilterButton(int x, int y, GuiFilterSlot parentSlot) {
+        super(x, y, 8, 8, GuiTextures.DELETE_FILTER, it -> {
+        });
         this.parentSlot = parentSlot;
         visible = false;
     }

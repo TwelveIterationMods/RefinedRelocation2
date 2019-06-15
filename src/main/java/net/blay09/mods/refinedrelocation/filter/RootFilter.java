@@ -7,12 +7,14 @@ import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IInteractionObject;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -108,16 +110,16 @@ public class RootFilter implements IRootFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
-        return new IInteractionObjectWithoutName() {
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+        return new INamedContainerProvider() {
             @Override
-            public Container createContainer(PlayerInventory inventoryPlayer, PlayerEntity entityPlayer) {
-                return new ContainerRootFilter(player, tileEntity, LazyOptional.of(() -> RootFilter.this));
+            public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                return new ContainerRootFilter(i, playerEntity, tileEntity, LazyOptional.of(() -> RootFilter.this));
             }
 
             @Override
-            public String getGuiID() {
-                return "refinedrelocation:root_filter";
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("refinedrelocation:root_filter");
             }
         };
     }

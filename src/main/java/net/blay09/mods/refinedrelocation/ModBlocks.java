@@ -2,12 +2,9 @@ package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.block.*;
 import net.blay09.mods.refinedrelocation.item.ItemBlockSortingChest;
-import net.blay09.mods.refinedrelocation.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {

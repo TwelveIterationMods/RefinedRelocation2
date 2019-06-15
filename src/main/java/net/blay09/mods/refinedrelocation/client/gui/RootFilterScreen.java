@@ -1,26 +1,23 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiLabel;
 import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
-import net.blay09.mods.refinedrelocation.network.MessageReturnGUI;
-import net.blay09.mods.refinedrelocation.network.NetworkHandler;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
+public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter.png");
     private static final ResourceLocation TEXTURE_NO_PRIORITY = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter_no_priority.png");
@@ -31,11 +28,11 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     private int ticksSinceUpdate;
     private int lastSentPriority;
 
-    public GuiRootFilter(EntityPlayer player, TileEntity tileEntity) {
+    public RootFilterScreen(PlayerEntity player, TileEntity tileEntity) {
         this(new ContainerRootFilter(player, tileEntity));
     }
 
-    public GuiRootFilter(ContainerRootFilter container) {
+    public RootFilterScreen(ContainerRootFilter container) {
         super(container);
 
         if (container.hasSortingInventory()) {
@@ -44,8 +41,8 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
         final GuiFilterSlot[] filterSlots = new GuiFilterSlot[3];
         final GuiDeleteFilterButton[] deleteButtons = new GuiDeleteFilterButton[3];
@@ -53,22 +50,22 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
 
         int x = guiLeft + 10;
         for (int i = 0; i < filterSlots.length; i++) {
-            filterSlots[i] = new GuiFilterSlot(0, x, guiTop + 30, this, container.getRootFilter(), i);
+            filterSlots[i] = new GuiFilterSlot(x, guiTop + 30, this, container.getRootFilter(), i);
             addButton(filterSlots[i]);
 
-            deleteButtons[i] = new GuiDeleteFilterButton(0, x + 19, guiTop + 27, filterSlots[i]);
+            deleteButtons[i] = new GuiDeleteFilterButton(x + 19, guiTop + 27, filterSlots[i]);
             addButton(deleteButtons[i]);
 
-            whitelistButtons[i] = new GuiWhitelistButton(0, x + 1, guiTop + 55, this, filterSlots[i]);
+            whitelistButtons[i] = new GuiWhitelistButton(x + 1, guiTop + 55, this, filterSlots[i]);
             addButton(whitelistButtons[i]);
             x += 40;
         }
 
-        addButton(new GuiReturnFromFilterButton(0, guiLeft + xSize - 20, guiTop + 4));
+        addButton(new GuiReturnFromFilterButton(guiLeft + xSize - 20, guiTop + 4));
 
         if (container.hasSortingInventory()) {
             children.add(new GuiLabel(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
-            addButton(new GuiButtonPriority(0, guiLeft + 10, guiTop + 80, 100, 20, container.getSortingInventory()));
+            addButton(new GuiButtonPriority(guiLeft + 10, guiTop + 80, 100, 20, container.getSortingInventory()));
         }
     }
 
@@ -91,19 +88,19 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1f, 1f, 1f, 1f);
         if (container.hasSortingInventory()) {
-            mc.getTextureManager().bindTexture(TEXTURE);
+            minecraft.getTextureManager().bindTexture(TEXTURE);
         } else {
-            mc.getTextureManager().bindTexture(TEXTURE_NO_PRIORITY);
+            minecraft.getTextureManager().bindTexture(TEXTURE_NO_PRIORITY);
         }
 
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         final int x = guiLeft + 10;
         final int y = guiTop + 37;
         GlStateManager.enableBlend();
         textureSeparator.bind();
-        textureSeparator.draw(x + 30, y, zLevel);
-        textureSeparator.draw(x + 70, y, zLevel);
+        textureSeparator.draw(x + 30, y, blitOffset);
+        textureSeparator.draw(x + 70, y, blitOffset);
         GlStateManager.disableBlend();
     }
 
@@ -117,8 +114,8 @@ public class GuiRootFilter extends GuiContainerMod<ContainerRootFilter> implemen
             displayName = ((INameable) tileEntity).getDisplayName();
         }
 
-        fontRenderer.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
-        fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        minecraft.fontRenderer.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
+        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

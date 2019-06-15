@@ -1,16 +1,16 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.client.gui.GuiAddFilter;
+import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 import javax.annotation.Nullable;
@@ -19,11 +19,12 @@ import java.util.List;
 
 public class GuiAddFilterButton extends GuiImageButton implements ITooltipElement {
 
-    private final GuiAddFilter parentGui;
+    private final AddFilterScreen parentGui;
     private IFilter currentFilter;
 
-    public GuiAddFilterButton(int buttonId, int x, int y, GuiAddFilter parentGui) {
-        super(buttonId, x, y, 151, 27, GuiTextures.BUTTON_NONE);
+    public GuiAddFilterButton(int x, int y, AddFilterScreen parentGui) {
+        super(x, y, 151, 27, GuiTextures.BUTTON_NONE, it -> {
+        });
         this.parentGui = parentGui;
     }
 
@@ -41,15 +42,15 @@ public class GuiAddFilterButton extends GuiImageButton implements ITooltipElemen
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
 
-        if (hovered) {
-            drawRect(x, y, x + width, y + height, 0xAAFFFFFF);
+        if (isHovered) {
+            fill(x, y, x + width, y + height, 0xAAFFFFFF);
         }
 
         if (currentFilter != null) {
             IDrawable filterIcon = currentFilter.getFilterIcon();
             if (filterIcon != null) {
                 GlStateManager.color4f(1f, 1f, 1f, 1f);
-                filterIcon.draw(x + 2, y + height / 2f - 12, 24, 24, zLevel);
+                filterIcon.draw(x + 2, y + height / 2f - 12, 24, 24, blitOffset);
             }
 
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;

@@ -10,6 +10,7 @@ import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.*;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -18,9 +19,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IInteractionObject;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -111,14 +114,16 @@ public class PresetFilter implements IChecklistFilter {
     public static final Preset FOOD = new Preset("food") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return itemStack.getItem() instanceof ItemFood;
+            return itemStack.getItem().isFood();
         }
     };
 
     public static final Preset FUEL_ITEMS = new Preset("fuel") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return FurnaceTileEntity.getItemBurnTime(itemStack) > 0;
+            int burnTime = itemStack.getBurnTime();
+            burnTime = burnTime == -1 ? FurnaceTileEntity.getBurnTimes().getOrDefault(itemStack.getItem(), 0) : burnTime;
+            return ForgeEventFactory.getItemBurnTime(itemStack, burnTime) > 0;
         }
     };
 
@@ -278,16 +283,16 @@ public class PresetFilter implements IChecklistFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
-        return new IInteractionObjectWithoutName() {
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+        return new INamedContainerProvider() {
             @Override
-            public Container createContainer(PlayerInventory playerInventory, PlayerEntity playerIn) {
-                return new ContainerChecklistFilter(playerIn, tileEntity, PresetFilter.this);
+            public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                return new ContainerChecklistFilter(i, playerEntity, tileEntity, PresetFilter.this);
             }
 
             @Override
-            public String getGuiID() {
-                return "refinedrelocation:any_filter";
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("refinedrelocation:any_filter");
             }
         };
     }

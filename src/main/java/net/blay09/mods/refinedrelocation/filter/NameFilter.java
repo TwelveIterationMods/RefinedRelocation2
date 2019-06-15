@@ -8,12 +8,15 @@ import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -156,16 +159,16 @@ public class NameFilter implements IFilter {
 
     @Nullable
     @Override
-    public IInteractionObject getConfiguration(PlayerEntity player, TileEntity tileEntity) {
-        return new IInteractionObjectWithoutName() {
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+        return new INamedContainerProvider() {
             @Override
-            public Container createContainer(PlayerInventory playerInventory, PlayerEntity playerIn) {
-                return new ContainerNameFilter(playerIn, tileEntity, NameFilter.this);
+            public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                return new ContainerNameFilter(i, playerEntity, tileEntity, NameFilter.this);
             }
 
             @Override
-            public String getGuiID() {
-                return "refinedrelocation:any_filter";
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("refinedrelocation:any_filter");
             }
         };
     }

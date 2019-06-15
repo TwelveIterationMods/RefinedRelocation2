@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -25,7 +25,7 @@ public abstract class SafeTESR<T extends TileEntity> extends TileEntityRenderer<
             super.render(tileEntity, x, y, z, partialTicks, destroyStage);
         }
 
-        IBlockState state = tileEntity.hasWorld() ? tileEntity.getWorld().getBlockState(tileEntity.getPos()) : null;
+        BlockState state = tileEntity.hasWorld() ? tileEntity.getWorld().getBlockState(tileEntity.getPos()) : null;
         if (state != null && state.getBlock() != block) {
             return;
         }
@@ -33,7 +33,7 @@ public abstract class SafeTESR<T extends TileEntity> extends TileEntityRenderer<
         renderTileEntityAt(tileEntity, x, y, z, partialTicks, destroyStage, state);
     }
 
-    protected abstract void renderTileEntityAt(T tileEntity, double x, double y, double z, float partialTicks, int destroyStage, @Nullable IBlockState state);
+    protected abstract void renderTileEntityAt(T tileEntity, double x, double y, double z, float partialTicks, int destroyStage, @Nullable BlockState state);
 
     protected boolean shouldRenderNameTag(T tileEntity) {
         return false;

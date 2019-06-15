@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.IContainerProvider;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -156,7 +157,7 @@ public class ContainerRootFilter extends ContainerMod {
                 lastFilterCount = rootFilter.getFilterCount();
                 syncFilterList();
                 RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
-                IContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                INamedContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
                 if (filterConfig != null) {
                     NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
                         it.writeBlockPos(tileEntity.getPos());
@@ -173,7 +174,7 @@ public class ContainerRootFilter extends ContainerMod {
                 }
                 IFilter filter = rootFilter.getFilter(index);
                 if (filter != null) {
-                    IContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                    INamedContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
                     if (filterConfig != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
                             it.writeBlockPos(tileEntity.getPos());

@@ -10,8 +10,9 @@ public class GuiOpenFilterButton extends GuiImageButton {
 
     private final TileEntity tileEntity;
 
-    public GuiOpenFilterButton(int id, int x, int y, TileEntity tileEntity) {
-        super(id, x, y, 12, 12, GuiTextures.OPEN_FILTER);
+    public GuiOpenFilterButton(int x, int y, TileEntity tileEntity) {
+        super(x, y, 12, 12, GuiTextures.OPEN_FILTER, it -> {
+        });
         this.tileEntity = tileEntity;
     }
 

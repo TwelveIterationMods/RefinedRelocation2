@@ -5,28 +5,29 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class GuiButtonPriority extends GuiButton implements ITooltipElement, ITickableElement {
+public class GuiButtonPriority extends Button implements ITooltipElement, ITickableElement {
 
     private static final Priority.Enum[] values = Priority.Enum.values();
     private final ISortingInventory sortingInventory;
     private int currentIndex = 2;
 
-    public GuiButtonPriority(int buttonId, int x, int y, int width, int height, ISortingInventory sortingInventory) {
-        super(buttonId, x, y, width, height, I18n.format(values[2].getLangKey()));
+    public GuiButtonPriority(int x, int y, int width, int height, ISortingInventory sortingInventory) {
+        super(x, y, width, height, I18n.format(values[2].getLangKey()), it -> {
+        });
         this.sortingInventory = sortingInventory;
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (isPressable(mouseX, mouseY)) {
-            playPressSound(Minecraft.getInstance().getSoundHandler());
+        if (isMouseOver(mouseX, mouseY)) {
+            playDownSound(Minecraft.getInstance().getSoundHandler());
             onClick(mouseX, mouseY, mouseButton);
         }
 
@@ -34,7 +35,7 @@ public class GuiButtonPriority extends GuiButton implements ITooltipElement, ITi
     }
 
     public void onClick(double mouseX, double mouseY, int mouseButton) {
-        if (!GuiScreen.isShiftKeyDown()) {
+        if (!Screen.hasShiftDown()) {
             int oldIndex = currentIndex != -1 ? currentIndex : (sortingInventory.getPriority() + 1000) / 500;
             if (mouseButton == 0) {
                 oldIndex++;
@@ -43,7 +44,7 @@ public class GuiButtonPriority extends GuiButton implements ITooltipElement, ITi
             }
 
             currentIndex = Math.max(0, Math.min(values.length - 1, oldIndex));
-            displayString = I18n.format(values[currentIndex].getLangKey());
+            setMessage(I18n.format(values[currentIndex].getLangKey()));
             sortingInventory.setPriority(values[currentIndex].getPriority());
         } else {
             currentIndex = -1;
@@ -60,7 +61,7 @@ public class GuiButtonPriority extends GuiButton implements ITooltipElement, ITi
     }
 
     @Override
-    public boolean mouseScrolled(double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         currentIndex = -1;
         int oldPriority = sortingInventory.getPriority();
         if (delta > 0) {
@@ -84,12 +85,12 @@ public class GuiButtonPriority extends GuiButton implements ITooltipElement, ITi
             }
         }
 
-        displayString = currentIndex != -1 ? I18n.format(values[currentIndex].getLangKey()) : I18n.format("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority());
+        setMessage(currentIndex != -1 ? I18n.format(values[currentIndex].getLangKey()) : I18n.format("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority()));
     }
 
     @Override
     public void addTooltip(List<String> list) {
-        if (!GuiScreen.isShiftKeyDown()) {
+        if (!Screen.hasShiftDown()) {
             list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:root_filter.priority_increase"));
             list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:root_filter.priority_decrease"));
         } else {

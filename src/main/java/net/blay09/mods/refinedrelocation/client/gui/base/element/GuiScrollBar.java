@@ -1,12 +1,12 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 
-public class GuiScrollBar extends GuiButton implements ITickableElement {
+public class GuiScrollBar extends Button implements ITickableElement {
 
     private final IDrawable scrollbarTop;
     private final IDrawable scrollbarMiddle;
@@ -23,8 +23,8 @@ public class GuiScrollBar extends GuiButton implements ITickableElement {
     private int lastVisibleRows;
     private int lastOffset;
 
-    public GuiScrollBar(int buttonId, int x, int y, int height, IScrollTarget scrollTarget) {
-        super(buttonId, x, y, 7, height, "");
+    public GuiScrollBar(int x, int y, int height, IScrollTarget scrollTarget) {
+        super(x, y, 7, height, "", it -> {});
         this.scrollTarget = scrollTarget;
         updateBarPosition();
 
@@ -34,7 +34,7 @@ public class GuiScrollBar extends GuiButton implements ITickableElement {
     }
 
     @Override
-    public boolean mouseScrolled(double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         // TODO check if inside
         setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
         return true;
@@ -87,11 +87,11 @@ public class GuiScrollBar extends GuiButton implements ITickableElement {
 
         GlStateManager.color4f(1f, 1f, 1f, 1f);
         scrollbarTop.bind();
-        scrollbarTop.draw(x - 2, y - 1, zLevel);
-        scrollbarBottom.draw(x - 2, y + height - 1, zLevel);
-        scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, zLevel);
+        scrollbarTop.draw(x - 2, y - 1, blitOffset);
+        scrollbarBottom.draw(x - 2, y + height - 1, blitOffset);
+        scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, blitOffset);
 //
-        drawRect(x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
+        fill(x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
     }
 
     public void setCurrentOffset(int offset) {

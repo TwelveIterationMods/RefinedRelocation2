@@ -4,27 +4,28 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.client.gui.GuiAddFilter;
-import net.blay09.mods.refinedrelocation.client.gui.GuiRootFilter;
+import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
+import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class GuiFilterSlot extends GuiButton implements ITooltipElement {
+public class GuiFilterSlot extends Button implements ITooltipElement {
 
-    private final GuiRootFilter parentGui;
+    private final RootFilterScreen parentGui;
     private final IDrawable texture;
     private final IRootFilter rootFilter;
     private final int index;
 
-    public GuiFilterSlot(int buttonId, int x, int y, GuiRootFilter parentGui, IRootFilter rootFilter, int index) {
-        super(buttonId, x, y, 24, 24, "");
+    public GuiFilterSlot(int x, int y, RootFilterScreen parentGui, IRootFilter rootFilter, int index) {
+        super(x, y, 24, 24, "", it -> {
+        });
         this.parentGui = parentGui;
         this.rootFilter = rootFilter;
         this.index = index;
@@ -34,17 +35,17 @@ public class GuiFilterSlot extends GuiButton implements ITooltipElement {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         texture.bind();
-        texture.draw(x, y, zLevel);
+        texture.draw(x, y, blitOffset);
 
         IFilter filter = rootFilter.getFilter(index);
         if (filter != null) {
             IDrawable filterIcon = filter.getFilterIcon();
             if (filterIcon != null) {
-                filterIcon.draw(x, y, 24, 24, zLevel);
+                filterIcon.draw(x, y, 24, 24, blitOffset);
             }
         }
-        if (isPressable(mouseX, mouseY)) {
-            drawRect(x + 1, y + 1, x + width - 1, y + height - 1, 0x99FFFFFF);
+        if (isMouseOver(mouseX, mouseY)) {
+            fill(x + 1, y + 1, x + width - 1, y + height - 1, 0x99FFFFFF);
         }
     }
 
@@ -52,7 +53,7 @@ public class GuiFilterSlot extends GuiButton implements ITooltipElement {
     public void onClick(double mouseX, double mouseY) {
         IFilter filter = rootFilter.getFilter(index);
         if (filter == null) {
-            Minecraft.getInstance().displayGuiScreen(new GuiAddFilter(parentGui));
+            Minecraft.getInstance().displayGuiScreen(new AddFilterScreen(parentGui));
         } else {
             RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_EDIT_FILTER, index);
         }
