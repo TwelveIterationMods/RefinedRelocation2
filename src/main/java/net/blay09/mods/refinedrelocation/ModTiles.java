@@ -2,8 +2,8 @@ package net.blay09.mods.refinedrelocation;
 
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.types.Type;
-import net.blay09.mods.refinedrelocation.block.*;
 import net.blay09.mods.refinedrelocation.tile.*;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -26,19 +26,28 @@ public class ModTiles {
 
     public static void registerTileEntities(IForgeRegistry<TileEntityType<?>> registry) {
         registry.registerAll(
-                sortingChest = build(SortingChestTileEntity::new, SortingChestBlock.registryName),
-                blockExtender = build(TileBlockExtender::new, BlockBlockExtender.registryName),
-                fastHopper = build(TileFastHopper::new, BlockFastHopper.registryName),
-                filteredHopper = build(TileFilteredHopper::new, BlockFilteredHopper.registryName),
-                sortingConnector = build(TileSortingConnector::new, BlockSortingConnector.registryName),
-                sortingInterface = build(TileSortingInterface::new, BlockSortingInterface.registryName)
+                sortingChest = build(SortingChestTileEntity::new, ModBlocks.sortingChest),
+                blockExtender = build(TileBlockExtender::new, ModBlocks.blockExtender),
+                fastHopper = build(TileFastHopper::new, ModBlocks.fastHopper),
+                filteredHopper = build(TileFilteredHopper::new, ModBlocks.filteredHopper),
+                sortingConnector = build(TileSortingConnector::new, ModBlocks.sortingConnector),
+                sortingInterface = build(TileSortingInterface::new, ModBlocks.sortingInterface)
         );
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends TileEntity> TileEntityType<T> build(Supplier<T> factory, ResourceLocation registryName) {
-        //noinspection ConstantConditions
-        return (TileEntityType<T>) TileEntityType.Builder.create(factory).build(dataFixerType(registryName)).setRegistryName(registryName);
+    private static <T extends TileEntity> TileEntityType<T> build(Supplier<T> factory, Block block) {
+        ResourceLocation registryName = block.getRegistryName();
+        if (registryName == null) {
+            throw new IllegalArgumentException("Block passed into tile entity registration is not registered correctly");
+        }
+
+        Type<?> dataFixerType = dataFixerType(registryName);
+        if (dataFixerType == null) {
+            throw new IllegalArgumentException("Could not create data fixer for tile entity registration of " + registryName);
+        }
+
+        return (TileEntityType<T>) TileEntityType.Builder.create(factory, block).build(dataFixerType).setRegistryName(registryName);
     }
 
     @Nullable
