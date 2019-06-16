@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
+import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +14,7 @@ public class SortingChestScreen extends GuiContainerMod<ContainerSortingChest> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
-    private final TileSortingChest tileEntity;
+    private final SortingChestTileEntity tileEntity;
 
     public SortingChestScreen(ContainerSortingChest container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);

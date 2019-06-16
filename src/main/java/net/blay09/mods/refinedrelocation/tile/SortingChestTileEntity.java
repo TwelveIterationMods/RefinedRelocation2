@@ -27,7 +27,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSortingChest extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable, IChestLid {
+public class SortingChestTileEntity extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable, IChestLid {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
         @Override
@@ -44,7 +44,7 @@ public class TileSortingChest extends TileMod implements ITickableTileEntity, IN
 
     private ITextComponent customName;
 
-    public TileSortingChest() {
+    public SortingChestTileEntity() {
         super(ModTiles.sortingChest);
         doorAnimator.setSoundEventOpen(SoundEvents.BLOCK_CHEST_OPEN);
         doorAnimator.setSoundEventClose(SoundEvents.BLOCK_CHEST_CLOSE);

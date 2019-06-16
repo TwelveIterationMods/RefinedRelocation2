@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.block;
 
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
+import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-public class BlockSortingChest extends ContainerBlock {
+public class SortingChestBlock extends ContainerBlock {
 
     public static final String name = "sorting_chest";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
@@ -35,7 +35,7 @@ public class BlockSortingChest extends ContainerBlock {
 
     private static final VoxelShape SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
-    public BlockSortingChest() {
+    public SortingChestBlock() {
         super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f));
     }
 
@@ -56,7 +56,7 @@ public class BlockSortingChest extends ContainerBlock {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING);
+        builder.add(FACING);
     }
 
     @Override
@@ -79,8 +79,8 @@ public class BlockSortingChest extends ContainerBlock {
     public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasDisplayName()) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof TileSortingChest) {
-                ((TileSortingChest) tileEntity).setCustomName(itemStack.getDisplayName().getUnformattedComponentText());
+            if (tileEntity instanceof SortingChestTileEntity) {
+                ((SortingChestTileEntity) tileEntity).setCustomName(itemStack.getDisplayName().getUnformattedComponentText());
             }
         }
     }
@@ -89,8 +89,8 @@ public class BlockSortingChest extends ContainerBlock {
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof TileSortingChest) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (TileSortingChest) tileEntity, pos);
+            if (tileEntity instanceof SortingChestTileEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (SortingChestTileEntity) tileEntity, pos);
             }
         }
 
@@ -110,7 +110,7 @@ public class BlockSortingChest extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileSortingChest();
+        return new SortingChestTileEntity();
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class ModTiles {
 
-    public static TileEntityType<TileSortingChest> sortingChest;
+    public static TileEntityType<SortingChestTileEntity> sortingChest;
     public static TileEntityType<TileBlockExtender> blockExtender;
     public static TileEntityType<TileFastHopper> fastHopper;
     public static TileEntityType<TileFilteredHopper> filteredHopper;
@@ -26,7 +26,7 @@ public class ModTiles {
 
     public static void registerTileEntities(IForgeRegistry<TileEntityType<?>> registry) {
         registry.registerAll(
-                sortingChest = build(TileSortingChest::new, BlockSortingChest.registryName),
+                sortingChest = build(SortingChestTileEntity::new, SortingChestBlock.registryName),
                 blockExtender = build(TileBlockExtender::new, BlockBlockExtender.registryName),
                 fastHopper = build(TileFastHopper::new, BlockFastHopper.registryName),
                 filteredHopper = build(TileFilteredHopper::new, BlockFilteredHopper.registryName),

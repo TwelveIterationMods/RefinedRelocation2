@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.*;
 import net.blay09.mods.refinedrelocation.client.ModScreens;
-import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
+import net.blay09.mods.refinedrelocation.client.render.SortingChestTileEntityRenderer;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
+import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -110,7 +110,7 @@ public class RefinedRelocation {
     private void setupClient(FMLClientSetupEvent event) {
         ModScreens.register();
 
-        ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
+        ClientRegistry.bindTileEntitySpecialRenderer(SortingChestTileEntity.class, new SortingChestTileEntityRenderer());
 
         for (RefinedAddon addon : inbuiltAddons) {
             addon.setupClient();

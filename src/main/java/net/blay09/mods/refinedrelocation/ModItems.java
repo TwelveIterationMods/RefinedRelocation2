@@ -13,7 +13,7 @@ public class ModItems {
 
     public static void register(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                sortingUpgrade = new ItemSortingUpgrade().setRegistryName(ItemSortingUpgrade.name),
+                sortingUpgrade = new SortingUpgradeItem().setRegistryName(SortingUpgradeItem.name),
                 stackLimiter = new ItemStackLimiter().setRegistryName(ItemStackLimiter.name),
                 inputFilter = new ItemInputFilter().setRegistryName(ItemInputFilter.name),
                 outputFilter = new ItemOutputFilter().setRegistryName(ItemOutputFilter.name),

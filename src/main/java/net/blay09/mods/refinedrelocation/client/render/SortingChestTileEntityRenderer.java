@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
-import net.blay09.mods.refinedrelocation.block.BlockSortingChest;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
+import net.blay09.mods.refinedrelocation.block.SortingChestBlock;
+import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -18,18 +18,18 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
+public class SortingChestTileEntityRenderer extends TileEntityRenderer<SortingChestTileEntity> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/entity/sorting_chest/normal.png");
 
     public static final ItemStackTileEntityRenderer sortingChestItemRenderer = new ItemStackTileEntityRenderer() {
-        private TileSortingChest sortingChest;
+        private SortingChestTileEntity sortingChest;
 
         @Override
         public void renderByItem(ItemStack itemStack) {
             // Lazy-load the tile entity to prevent it from being loaded in client setup before capabilities are initialized
             if (sortingChest == null) {
-                sortingChest = new TileSortingChest();
+                sortingChest = new SortingChestTileEntity();
             }
 
             TileEntityRendererDispatcher.instance.renderAsItem(sortingChest);
@@ -39,7 +39,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
     private final ChestModel model = new ChestModel();
 
     @Override
-    public void render(TileSortingChest tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(SortingChestTileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.enableDepthTest();
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
         GlStateManager.depthMask(true);
@@ -64,7 +64,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
         GlStateManager.translatef((float) x, (float) y + 1f, (float) z + 1f);
         GlStateManager.scalef(1f, -1f, -1f);
 
-        float angle = state.get(BlockSortingChest.FACING).getHorizontalAngle();
+        float angle = state.get(SortingChestBlock.FACING).getHorizontalAngle();
         if (Math.abs(angle) > 0f) {
             GlStateManager.translatef(0.5f, 0.5f, 0.5f);
             GlStateManager.rotatef(angle, 0f, 1f, 0f);
@@ -87,7 +87,7 @@ public class RenderSortingChest extends TileEntityRenderer<TileSortingChest> {
     }
 
     @Override
-    protected void drawNameplate(TileSortingChest tileEntity, String name, double x, double y, double z, int maxDistance) {
+    protected void drawNameplate(SortingChestTileEntity tileEntity, String name, double x, double y, double z, int maxDistance) {
         if (RefinedRelocationConfig.CLIENT.renderChestNameTags.get()) {
             super.drawNameplate(tileEntity, name, x, y, z, maxDistance);
         }

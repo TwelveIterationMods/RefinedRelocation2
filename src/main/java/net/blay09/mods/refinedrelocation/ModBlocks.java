@@ -18,7 +18,7 @@ public class ModBlocks {
 
     public static void register(IForgeRegistry<Block> registry) {
         registry.registerAll(
-                sortingChest = new BlockSortingChest().setRegistryName(BlockSortingChest.name),
+                sortingChest = new SortingChestBlock().setRegistryName(SortingChestBlock.name),
                 blockExtender = new BlockBlockExtender().setRegistryName(BlockBlockExtender.name),
                 fastHopper = new BlockFastHopper().setRegistryName(BlockFastHopper.name),
                 filteredHopper = new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name),
@@ -29,7 +29,7 @@ public class ModBlocks {
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                new ItemBlockSortingChest(sortingChest, itemBlockProperties()).setRegistryName(BlockSortingChest.name),
+                new ItemBlockSortingChest(sortingChest, itemBlockProperties()).setRegistryName(SortingChestBlock.name),
                 new BlockItem(blockExtender, itemBlockProperties()).setRegistryName(BlockBlockExtender.name),
                 new BlockItem(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
                 new BlockItem(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),

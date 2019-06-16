@@ -3,8 +3,9 @@ package net.blay09.mods.refinedrelocation.item;
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
+import net.blay09.mods.refinedrelocation.block.SortingChestBlock;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
-import net.blay09.mods.refinedrelocation.tile.TileSortingChest;
+import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
@@ -12,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -21,26 +21,26 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class ItemSortingUpgrade extends Item {
+public class SortingUpgradeItem extends Item {
 
     public static final String name = "sorting_upgrade";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-    public ItemSortingUpgrade() {
+    public SortingUpgradeItem() {
         super(new Item.Properties().group(RefinedRelocation.itemGroup));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext useContext) {
-        PlayerEntity player = useContext.getPlayer();
+    public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
+        PlayerEntity player = context.getPlayer();
         if (player == null) {
             return ActionResultType.PASS;
         }
 
-        World world = useContext.getWorld();
-        BlockPos pos = useContext.getPos();
-        Direction facing = useContext.getFace();
-        ItemStack itemStack = useContext.getItem();
+        World world = context.getWorld();
+        BlockPos pos = context.getPos();
+        Direction facing = context.getFace();
+        ItemStack itemStack = context.getItem();
         Hand hand = Hand.MAIN_HAND;
         if (!world.isRemote) {
             BlockState state = world.getBlockState(pos);
@@ -57,7 +57,7 @@ public class ItemSortingUpgrade extends Item {
             if (tileEntity != null && tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing).isPresent()) {
                 LazyOptional<ISortingUpgradable> sortingUpgradableCap = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing);
                 return sortingUpgradableCap.map(sortingUpgradable -> {
-                    Vec3d hit = useContext.getHitVec();
+                    Vec3d hit = context.getHitVec();
                     if (sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, hit.x, hit.y, hit.z, hand)) {
                         if (!player.abilities.isCreativeMode) {
                             itemStack.shrink(1);
@@ -90,9 +90,9 @@ public class ItemSortingUpgrade extends Item {
         }
 
         tileEntity.clear();
-        BlockState newState = ModBlocks.sortingChest.getDefaultState().with(BlockStateProperties.FACING, state.get(ChestBlock.FACING));
+        BlockState newState = ModBlocks.sortingChest.getDefaultState().with(SortingChestBlock.FACING, state.get(ChestBlock.FACING));
         world.setBlockState(pos, newState);
-        TileSortingChest tileSortingChest = (TileSortingChest) world.getTileEntity(pos);
+        SortingChestTileEntity tileSortingChest = (SortingChestTileEntity) world.getTileEntity(pos);
         if (tileSortingChest != null) {
             for (int i = 0; i < inventory.length; i++) {
                 tileSortingChest.getItemHandler().setStackInSlot(i, inventory[i]);
