@@ -10,9 +10,9 @@ import net.minecraft.inventory.container.Slot;
 
 import javax.annotation.Nullable;
 
-public class ContainerMod extends Container implements IContainerNetworked {
+public class BaseContainer extends Container implements IContainerNetworked {
 
-    protected ContainerMod(@Nullable ContainerType<?> type, int windowId) {
+    protected BaseContainer(@Nullable ContainerType<?> type, int windowId) {
         super(type, windowId);
     }
 

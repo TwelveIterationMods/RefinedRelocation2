@@ -17,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerBlockExtender extends ContainerMod {
+public class ContainerBlockExtender extends BaseContainer {
 
     public static final String KEY_TOGGLE_SIDE = "ToggleSide";
     public static final String KEY_SIDE_INDEX = "SideIndex";
@@ -28,23 +28,34 @@ public class ContainerBlockExtender extends ContainerMod {
 
     private final PlayerEntity player;
     private final TileBlockExtender tileEntity;
-    private final Direction clickedFace;
+    private Direction clickedFace;
 
     private final Direction[] lastSideMapping = new Direction[5];
     private int lastStackLimiterLimit;
 
-    public ContainerBlockExtender(int windowId, PlayerInventory playerInventory, TileBlockExtender tileEntity, Direction clickedFace) {
+    public ContainerBlockExtender(int windowId, PlayerInventory playerInventory, TileBlockExtender tileEntity) {
         super(ModContainers.blockExtender, windowId);
 
         this.player = playerInventory.player;
         this.tileEntity = tileEntity;
-        this.clickedFace = clickedFace;
 
         for (int i = 0; i < 3; i++) {
             addSlot(new SlotItemHandler(tileEntity.getItemHandlerUpgrades(), i, 152, 22 + i * 18));
         }
 
         addPlayerInventory(playerInventory, 94);
+    }
+
+    public TileBlockExtender getTileEntity() {
+        return tileEntity;
+    }
+
+    public Direction getClickedFace() {
+        return clickedFace;
+    }
+
+    public void setClickedFace(Direction clickedFace) {
+        this.clickedFace = clickedFace;
     }
 
     @Override

@@ -1,11 +1,10 @@
 package net.blay09.mods.refinedrelocation.filter;
 
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
-import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.container.ChecklistFilterContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerProvider;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +28,7 @@ public class ChecklistFilterConfiguration implements INamedContainerProvider {
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerChecklistFilter(i, playerEntity, tileEntity, filter);
+        return new ChecklistFilterContainer(i, playerInventory, tileEntity, filter);
     }
 
     @Override

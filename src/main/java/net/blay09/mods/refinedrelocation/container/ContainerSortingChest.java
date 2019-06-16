@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 @ChestContainer
-public class ContainerSortingChest extends ContainerMod implements IContainerWithDoor {
+public class ContainerSortingChest extends BaseContainer implements IContainerWithDoor {
 
     private final TileSortingChest tileEntity;
 
@@ -29,6 +29,10 @@ public class ContainerSortingChest extends ContainerMod implements IContainerWit
         addPlayerInventory(playerInventory, 85);
 
         tileEntity.getDoorAnimator().openContainer(playerInventory.player);
+    }
+
+    public TileSortingChest getTileEntity() {
+        return tileEntity;
     }
 
     @Override

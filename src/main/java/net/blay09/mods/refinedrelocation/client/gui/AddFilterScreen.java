@@ -8,7 +8,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiAddFilterButton;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class AddFilterScreen extends GuiContainerMod<ContainerRootFilter> implements IScrollTarget {
+public class AddFilterScreen extends GuiContainerMod<RootFilterContainer> implements IScrollTarget {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/add_filter.png");
 

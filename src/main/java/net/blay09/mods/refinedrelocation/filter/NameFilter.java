@@ -4,7 +4,7 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
-import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
+import net.blay09.mods.refinedrelocation.container.NameFilterContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -163,7 +163,7 @@ public class NameFilter implements IFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new ContainerNameFilter(i, playerEntity, tileEntity, NameFilter.this);
+                return new NameFilterContainer(i, playerInventory, tileEntity, NameFilter.this);
             }
 
             @Override

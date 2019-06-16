@@ -6,7 +6,7 @@ import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TextFormatting;
@@ -42,9 +42,9 @@ public class GuiWhitelistButton extends GuiImageButton implements ITickableEleme
     public void onClick(double mouseX, double mouseY) {
         boolean isBlacklist = !parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
         CompoundNBT tagCompound = new CompoundNBT();
-        tagCompound.putInt(ContainerRootFilter.KEY_BLACKLIST_INDEX, parentSlot.getFilterIndex());
-        tagCompound.putBoolean(ContainerRootFilter.KEY_BLACKLIST, isBlacklist);
-        RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_BLACKLIST, tagCompound);
+        tagCompound.putInt(RootFilterContainer.KEY_BLACKLIST_INDEX, parentSlot.getFilterIndex());
+        tagCompound.putBoolean(RootFilterContainer.KEY_BLACKLIST, isBlacklist);
+        RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_BLACKLIST, tagCompound);
         parentGui.getContainer().getRootFilter().setIsBlacklist(parentSlot.getFilterIndex(), isBlacklist);
     }
 

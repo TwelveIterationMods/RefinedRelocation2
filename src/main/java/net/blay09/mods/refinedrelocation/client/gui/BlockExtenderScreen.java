@@ -45,10 +45,10 @@ public class BlockExtenderScreen extends GuiContainerMod<ContainerBlockExtender>
     private int ticksSinceUpdate;
     private int lastSentStackLimit;
 
-    public BlockExtenderScreen(ContainerBlockExtender container, PlayerInventory playerInventory, ITextComponent displayName, TileBlockExtender tileEntity, Direction clickedFace) {
+    public BlockExtenderScreen(ContainerBlockExtender container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
-        this.tileEntity = tileEntity;
-        this.clickedFace = clickedFace;
+        this.tileEntity = container.getTileEntity();
+        this.clickedFace = container.getClickedFace();
         ySize = 176;
     }
 

@@ -8,11 +8,10 @@ import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
         if (filter == null) {
             Minecraft.getInstance().displayGuiScreen(new AddFilterScreen(parentGui, parentGui.getPlayerInventory(), parentGui.getTitle()));
         } else {
-            RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_EDIT_FILTER, index);
+            RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_EDIT_FILTER, index);
         }
     }
 

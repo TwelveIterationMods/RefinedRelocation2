@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.*;
+import net.blay09.mods.refinedrelocation.client.ModScreens;
 import net.blay09.mods.refinedrelocation.client.render.RenderSortingChest;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
@@ -107,6 +108,8 @@ public class RefinedRelocation {
     }
 
     private void setupClient(FMLClientSetupEvent event) {
+        ModScreens.register();
+
         ClientRegistry.bindTileEntitySpecialRenderer(TileSortingChest.class, new RenderSortingChest());
 
         for (RefinedAddon addon : inbuiltAddons) {

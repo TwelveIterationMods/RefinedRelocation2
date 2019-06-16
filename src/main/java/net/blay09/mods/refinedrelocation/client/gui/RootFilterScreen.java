@@ -9,7 +9,8 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.LabelWidget;
 import net.blay09.mods.refinedrelocation.client.gui.element.*;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
+import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +18,7 @@ import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> implements IFilterPreviewGui {
+public class RootFilterScreen extends FilterScreen<RootFilterContainer> implements IFilterPreviewGui, IHasContainer<RootFilterContainer> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter.png");
     private static final ResourceLocation TEXTURE_NO_PRIORITY = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter_no_priority.png");
@@ -28,7 +29,7 @@ public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> imple
     private int ticksSinceUpdate;
     private int lastSentPriority;
 
-    public RootFilterScreen(ContainerRootFilter container, PlayerInventory playerInventory, ITextComponent displayName) {
+    public RootFilterScreen(RootFilterContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
 
         if (container.hasSortingInventory()) {
@@ -77,7 +78,7 @@ public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> imple
         if (ticksSinceUpdate >= UPDATE_INTERVAL) {
             ISortingInventory sortingInventory = container.getSortingInventory();
             if (lastSentPriority != sortingInventory.getPriority()) {
-                RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_PRIORITY, sortingInventory.getPriority());
+                RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_PRIORITY, sortingInventory.getPriority());
                 lastSentPriority = sortingInventory.getPriority();
             }
             ticksSinceUpdate = 0;
@@ -120,7 +121,7 @@ public class RootFilterScreen extends GuiContainerMod<ContainerRootFilter> imple
 
     @Override
     public boolean onGuiAboutToClose() {
-        RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_PRIORITY, container.getSortingInventory().getPriority());
+        RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_PRIORITY, container.getSortingInventory().getPriority());
         return true;
     }
 

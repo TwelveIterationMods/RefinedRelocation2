@@ -5,7 +5,7 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
-import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.container.ChecklistFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
@@ -33,9 +33,9 @@ public class GuiChecklistEntry extends Button {
             boolean oldState = filter.isOptionChecked(currentOption);
             filter.setOptionChecked(currentOption, !oldState);
             if (!oldState) {
-                RefinedRelocationAPI.sendContainerMessageToServer(ContainerChecklistFilter.KEY_CHECK, currentOption);
+                RefinedRelocationAPI.sendContainerMessageToServer(ChecklistFilterContainer.KEY_CHECK, currentOption);
             } else {
-                RefinedRelocationAPI.sendContainerMessageToServer(ContainerChecklistFilter.KEY_UNCHECK, currentOption);
+                RefinedRelocationAPI.sendContainerMessageToServer(ChecklistFilterContainer.KEY_UNCHECK, currentOption);
             }
         }
     }

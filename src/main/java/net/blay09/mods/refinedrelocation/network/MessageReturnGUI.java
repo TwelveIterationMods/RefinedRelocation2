@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.network;
 
 import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
 import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -23,8 +23,8 @@ public class MessageReturnGUI {
             }
 
             Container container = player.openContainer;
-            if (container instanceof ContainerRootFilter) {
-                TileEntity tileEntity = ((ContainerRootFilter) container).getTileEntity();
+            if (container instanceof RootFilterContainer) {
+                TileEntity tileEntity = ((RootFilterContainer) container).getTileEntity();
                 if (tileEntity instanceof INamedContainerProvider) {
                     NetworkHooks.openGui(player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
                 }

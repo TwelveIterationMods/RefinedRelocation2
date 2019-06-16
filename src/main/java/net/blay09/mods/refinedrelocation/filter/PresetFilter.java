@@ -6,7 +6,7 @@ import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
-import net.blay09.mods.refinedrelocation.container.ContainerChecklistFilter;
+import net.blay09.mods.refinedrelocation.container.ChecklistFilterContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -287,7 +287,7 @@ public class PresetFilter implements IChecklistFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new ContainerChecklistFilter(i, playerEntity, tileEntity, PresetFilter.this);
+                return new ChecklistFilterContainer(i, playerInventory, tileEntity, PresetFilter.this);
             }
 
             @Override

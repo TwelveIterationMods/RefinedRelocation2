@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerFastHopper extends ContainerMod {
+public class ContainerFastHopper extends BaseContainer {
 
     private final TileFastHopper tileEntity;
 
@@ -20,6 +20,10 @@ public class ContainerFastHopper extends ContainerMod {
         }
 
         addPlayerInventory(player, 51);
+    }
+
+    public TileFastHopper getTileEntity() {
+        return tileEntity;
     }
 
     @Override

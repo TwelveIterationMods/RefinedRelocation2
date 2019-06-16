@@ -6,6 +6,7 @@ import net.blay09.mods.refinedrelocation.api.container.IContainerReturnable;
 import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 
-public class ContainerChecklistFilter extends ContainerMod implements IContainerReturnable {
+public class ChecklistFilterContainer extends FilterContainer implements IContainerReturnable {
 
 	public static final String KEY_CHECK = "Check";
 	public static final String KEY_UNCHECK = "Uncheck";
@@ -29,15 +30,19 @@ public class ContainerChecklistFilter extends ContainerMod implements IContainer
 	private int ticksSinceUpdate = UPDATE_INTERVAL;
 	private ReturnCallback returnCallback;
 
-	public ContainerChecklistFilter(int windowId, PlayerEntity player, TileEntity tileEntity, IChecklistFilter filter) {
-		super(ModContainers.checkListFilter, windowId);
+	public ChecklistFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, IChecklistFilter filter) {
+		super(ModContainers.checklistFilter, windowId);
 
-		this.player = player;
+		this.player = playerInventory.player;
 		this.tileEntity = tileEntity;
 		this.filter = filter;
 		lastStates = new byte[filter.getOptionCount()];
 
-		addPlayerInventory(player, 128);
+		addPlayerInventory(playerInventory, 128);
+	}
+
+	public IChecklistFilter getFilter() {
+		return filter;
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -114,7 +114,7 @@ public class RootFilter implements IRootFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new ContainerRootFilter(i, playerEntity, tileEntity, LazyOptional.of(() -> RootFilter.this));
+                return new RootFilterContainer(i, playerInventory, tileEntity, LazyOptional.of(() -> RootFilter.this));
             }
 
             @Override

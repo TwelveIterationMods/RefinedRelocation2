@@ -16,7 +16,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.IContainerProvider;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -27,7 +26,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class ContainerRootFilter extends ContainerMod {
+public class RootFilterContainer extends FilterContainer {
 
     public static final String KEY_ROOT_FILTER = "RootFilter";
     public static final String KEY_ADD_FILTER = "AddFilter";
@@ -48,11 +47,11 @@ public class ContainerRootFilter extends ContainerMod {
     private int lastPriority;
     private final boolean[] lastBlacklist = new boolean[3];
 
-    public ContainerRootFilter(int windowId, PlayerInventory playerInventory, TileEntity tileEntity) {
+    public RootFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity) {
         this(windowId, playerInventory, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
     }
 
-    public ContainerRootFilter(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
+    public RootFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
         super(ModContainers.rootFilter, windowId);
 
         this.entityPlayer = playerInventory.player;
@@ -253,7 +252,7 @@ public class ContainerRootFilter extends ContainerMod {
         return returnCallback;
     }
 
-    public ContainerRootFilter setReturnCallback(@Nullable ReturnCallback returnCallback) {
+    public RootFilterContainer setReturnCallback(@Nullable ReturnCallback returnCallback) {
         this.returnCallback = returnCallback;
         return this;
     }

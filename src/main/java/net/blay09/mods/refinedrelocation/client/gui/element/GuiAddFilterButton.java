@@ -8,7 +8,7 @@ import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
-import net.blay09.mods.refinedrelocation.container.ContainerRootFilter;
+import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -31,7 +31,7 @@ public class GuiAddFilterButton extends GuiImageButton implements ITooltipElemen
     @Override
     public void onClick(double p_194829_1_, double p_194829_3_) {
         if (currentFilter != null) {
-            RefinedRelocationAPI.sendContainerMessageToServer(ContainerRootFilter.KEY_ADD_FILTER, currentFilter.getIdentifier());
+            RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_ADD_FILTER, currentFilter.getIdentifier());
             if (!currentFilter.hasConfiguration()) {
                 Minecraft.getInstance().displayGuiScreen(parentGui.getParentGui());
             }

@@ -16,9 +16,9 @@ public class SortingChestScreen extends GuiContainerMod<ContainerSortingChest> {
 
     private final TileSortingChest tileEntity;
 
-    public SortingChestScreen(ContainerSortingChest container, PlayerInventory playerInventory, ITextComponent displayName, TileSortingChest tileEntity) {
+    public SortingChestScreen(ContainerSortingChest container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
-        this.tileEntity = tileEntity;
+        this.tileEntity = container.getTileEntity();
         this.ySize = 168;
     }
 

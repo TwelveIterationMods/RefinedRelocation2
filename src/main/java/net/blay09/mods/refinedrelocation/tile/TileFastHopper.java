@@ -167,7 +167,7 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity player) {
-        return new ContainerFastHopper(i, player, this);
+        return new ContainerFastHopper(i, playerInventory, this);
     }
 
     @Override

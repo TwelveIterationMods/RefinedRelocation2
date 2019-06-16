@@ -351,7 +351,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerBlockExtender(i, playerEntity, this, clickedFace);
+        return new ContainerBlockExtender(i, playerInventory, this);
     }
 
 }

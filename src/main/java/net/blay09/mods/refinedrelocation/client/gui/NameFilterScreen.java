@@ -4,17 +4,17 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
-import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
-import net.blay09.mods.refinedrelocation.container.ContainerNameFilter;
+import net.blay09.mods.refinedrelocation.container.NameFilterContainer;
+import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class NameFilterScreen extends GuiContainerMod<ContainerNameFilter> implements IFilterPreviewGui {
+public class NameFilterScreen extends FilterScreen<NameFilterContainer> implements IFilterPreviewGui, IHasContainer<NameFilterContainer> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/root_filter.png");
 
@@ -25,7 +25,7 @@ public class NameFilterScreen extends GuiContainerMod<ContainerNameFilter> imple
     private int ticksSinceUpdate;
     private String lastSentText = "";
 
-    public NameFilterScreen(ContainerNameFilter container, PlayerInventory playerInventory, ITextComponent displayName) {
+    public NameFilterScreen(NameFilterContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
 
         ySize = 210;
