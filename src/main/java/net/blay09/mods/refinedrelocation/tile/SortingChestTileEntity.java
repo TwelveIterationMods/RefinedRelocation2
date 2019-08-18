@@ -51,8 +51,8 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     }
 
     @Override
-    public void onLoad() {
-        sortingInventory.onLoad(this);
+    public void onFirstTick() {
+        sortingInventory.onFirstTick(this);
     }
 
     @Override

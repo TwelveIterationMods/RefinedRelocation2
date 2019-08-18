@@ -14,9 +14,9 @@ public interface ISortingGridMember {
 	ISortingGrid getSortingGrid();
 
 	/**
-	 * Implementing tile entities MUST call this from onLoad
+	 * Implementing tile entities MUST call this on their first tick
 	 */
-	void onLoad(TileEntity tileEntity);
+	void onFirstTick(TileEntity tileEntity);
 
 	/**
 	 * Implementing tile entities CAN call this from update, if they are tickable. Required for sorting inventories.

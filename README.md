@@ -42,12 +42,14 @@ private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilit
 * If your tile should act as a member of the sorting grid, but does not expose an inventory of its own to the network, you can use `ISortingGridMember` instead of `ISortingInventory`.
 * If your tile has a simple non-configurable filter (e.g. a barrel with simple item match), you use implement `ISimpleFilter` instead of `IRootFilter`.
 
-To support the `ISortingGridMember` capability, you must delegate `onLoad()`, `invalidate()` and `onChunkUnload()` to the capability.
+To support the `ISortingGridMember` capability, you must delegate `onFirstTick()`, `invalidate()` and `onChunkUnload()` to the capability.
 ```java
 @Override
-public void onLoad() {
-    super.onLoad();
-    sortingInventory.onLoad(this);
+public void tick() {
+    if(firstTick) {
+        sortingInventory.onFirstTick(this);
+        firstTick = false;
+    }
 }
 
 @Override

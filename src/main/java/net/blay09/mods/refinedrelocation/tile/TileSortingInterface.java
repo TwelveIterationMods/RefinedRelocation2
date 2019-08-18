@@ -35,12 +35,6 @@ public class TileSortingInterface extends TileMod implements ITickableTileEntity
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        sortingInventory.onLoad(this);
-    }
-
-    @Override
     public void tick() {
         baseTick();
 
@@ -125,6 +119,8 @@ public class TileSortingInterface extends TileMod implements ITickableTileEntity
     @Override
     protected void onFirstTick() {
         cachedConnectedTile = world.getTileEntity(pos.offset(getFacing()));
+        
+        sortingInventory.onFirstTick(this);
     }
 
     public Direction getFacing() {

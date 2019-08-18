@@ -36,9 +36,9 @@
 //    }
 //
 //    @Override
-//    public void onLoad() {
-//        super.onLoad();
-//        sortingInventory.onLoad(this);
+//    public void onFirstTick() {
+//        super.onFirstTick();
+//        sortingInventory.onFirstTick(this);
 //    }
 //
 //    @Override

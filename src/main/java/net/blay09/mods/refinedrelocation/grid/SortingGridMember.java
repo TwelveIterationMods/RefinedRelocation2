@@ -47,7 +47,7 @@ public class SortingGridMember implements ISortingGridMember {
 	}
 
 	@Override
-	public final void onLoad(TileEntity tileEntity) {
+	public final void onFirstTick(TileEntity tileEntity) {
 		this.tileEntity = tileEntity;
 		RefinedRelocationAPI.addToSortingGrid(this);
 		onLoad();

@@ -37,11 +37,10 @@ import javax.annotation.Nullable;
 public class BlockFastHopper extends ContainerBlock {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing", facing -> facing != Direction.UP);
+    public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
     public static final String name = "fast_hopper";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
-
-    private static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
     private static final VoxelShape INPUT_SHAPE = Block.makeCuboidShape(0.0D, 10.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape MIDDLE_SHAPE = Block.makeCuboidShape(4.0D, 4.0D, 4.0D, 12.0D, 10.0D, 12.0D);

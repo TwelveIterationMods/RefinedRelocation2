@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.ModTiles;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,7 +63,13 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
         if (world != null && !world.isRemote) {
             cooldown--;
             if (cooldown <= 0) {
-                Direction facing = world.getBlockState(getPos()).get(BlockFastHopper.FACING);
+                BlockState state = world.getBlockState(getPos());
+                boolean isEnabled = state.get(BlockFastHopper.ENABLED);
+                if (!isEnabled) {
+                    return;
+                }
+
+                Direction facing = state.get(BlockFastHopper.FACING);
                 Direction opposite = facing.getOpposite();
                 TileEntity facingTile = world.getTileEntity(pos.offset(facing));
                 LazyOptional<IItemHandler> targetItemHandlerCap = facingTile != null ? facingTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, opposite) : LazyOptional.empty();
