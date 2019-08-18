@@ -144,7 +144,7 @@ public class PresetFilter implements IChecklistFilter {
     public static final Preset REPAIRABLE = new Preset("repairable") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return itemStack.getItem().isRepairable();
+            return itemStack.getItem().isRepairable(itemStack);
         }
     };
 

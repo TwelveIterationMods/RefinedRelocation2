@@ -26,7 +26,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -62,7 +61,7 @@ public class InternalMethodsImpl implements InternalMethods {
         for (Direction facing : Direction.values()) {
             BlockPos facingPos = pos.offset(facing);
             if (world.isBlockLoaded(facingPos)) {
-                TileEntity tileEntity = world.getChunk(facingPos).getTileEntity(facingPos, Chunk.CreateEntityType.CHECK);
+                TileEntity tileEntity = world.getChunk(facingPos).getTileEntity(facingPos);
                 if (tileEntity != null) {
                     ISortingGridMember otherMember = RefinedRelocationUtils.orNull(tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite()));
                     if (otherMember != null && otherMember.getSortingGrid() != null) {

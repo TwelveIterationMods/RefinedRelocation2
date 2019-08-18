@@ -33,6 +33,6 @@ public class GuiTextureSprite implements IDrawable {
 
     @Override
     public void draw(double x, double y, double width, double height, double zLevel) {
-        AbstractGui.blit((int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, (int) width, (int) height, 256, 256);
+        AbstractGui.blit((int) x, (int) y, (int) width, (int) height, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
     }
 }

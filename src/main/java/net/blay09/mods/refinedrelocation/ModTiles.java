@@ -1,18 +1,12 @@
 package net.blay09.mods.refinedrelocation;
 
-import com.mojang.datafixers.DataFixUtils;
-import com.mojang.datafixers.types.Type;
 import net.blay09.mods.refinedrelocation.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedConstants;
-import net.minecraft.util.datafix.DataFixesManager;
-import net.minecraft.util.datafix.TypeReferences;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class ModTiles {
@@ -42,26 +36,8 @@ public class ModTiles {
             throw new IllegalArgumentException("Block passed into tile entity registration is not registered correctly");
         }
 
-        Type<?> dataFixerType = dataFixerType(registryName);
-        if (dataFixerType == null) {
-            throw new IllegalArgumentException("Could not create data fixer for tile entity registration of " + registryName);
-        }
-
-        return (TileEntityType<T>) TileEntityType.Builder.create(factory, block).build(dataFixerType).setRegistryName(registryName);
-    }
-
-    @Nullable
-    private static Type<?> dataFixerType(ResourceLocation registryName) {
-        try {
-            return DataFixesManager.getDataFixer()
-                    .getSchema(DataFixUtils.makeKey(1519))
-                    .getChoiceType(TypeReferences.BLOCK_ENTITY, registryName.toString());
-        } catch (IllegalArgumentException e) {
-            if (SharedConstants.developmentMode) {
-                throw e;
-            }
-        }
-        return null;
+        //noinspection ConstantConditions dataFixerType can be null apparently
+        return (TileEntityType<T>) TileEntityType.Builder.create(factory, block).build(null).setRegistryName(registryName);
     }
 
 }
