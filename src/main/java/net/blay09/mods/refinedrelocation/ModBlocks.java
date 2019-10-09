@@ -19,22 +19,22 @@ public class ModBlocks {
     public static void register(IForgeRegistry<Block> registry) {
         registry.registerAll(
                 sortingChest = new SortingChestBlock().setRegistryName(SortingChestBlock.name),
-                blockExtender = new BlockBlockExtender().setRegistryName(BlockBlockExtender.name),
+                blockExtender = new BlockExtenderBlock().setRegistryName(BlockExtenderBlock.name),
                 fastHopper = new BlockFastHopper().setRegistryName(BlockFastHopper.name),
                 filteredHopper = new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name),
-                sortingConnector = new BlockSortingConnector().setRegistryName(BlockSortingConnector.name),
-                sortingInterface = new BlockSortingInterface().setRegistryName(BlockSortingInterface.name)
+                sortingConnector = new SortingConnectorBlock().setRegistryName(SortingConnectorBlock.name),
+                sortingInterface = new SortingInterfaceBlock().setRegistryName(SortingInterfaceBlock.name)
         );
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
                 new ItemBlockSortingChest(sortingChest, itemBlockProperties()).setRegistryName(SortingChestBlock.name),
-                new BlockItem(blockExtender, itemBlockProperties()).setRegistryName(BlockBlockExtender.name),
+                new BlockItem(blockExtender, itemBlockProperties()).setRegistryName(BlockExtenderBlock.name),
                 new BlockItem(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
                 new BlockItem(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),
-                new BlockItem(sortingConnector, itemBlockProperties()).setRegistryName(BlockSortingConnector.name),
-                new BlockItem(sortingInterface, itemBlockProperties()).setRegistryName(BlockSortingInterface.name)
+                new BlockItem(sortingConnector, itemBlockProperties()).setRegistryName(SortingConnectorBlock.name),
+                new BlockItem(sortingInterface, itemBlockProperties()).setRegistryName(SortingInterfaceBlock.name)
         );
     }
 

@@ -1,41 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "forge:multi-layer",
-    "custom": {
-      "base": "refinedrelocation:sorting_interface#cutout",
-      "Cutout": "refinedrelocation:sorting_interface#cutout",
-      "Translucent": "refinedrelocation:sorting_interface#translucent"
-    },
-    "transform": "forge:default-block"
-  },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}],
-    "cutout": [{
-      "model": "refinedrelocation:sorting_interface_static"
-    }],
-    "translucent": [{
-      "model": "refinedrelocation:sorting_interface_glass"
-    }],
-    "facing": {
-      "west": {
-        "y": -90
-      },
-      "east": {
-        "y": 90
-      },
-      "north": {
-      },
-      "south": {
-        "y": 180
-      },
-      "up": {
-        "x": -90
-      },
-      "down": {
-        "x": 90
-      }
-    }
+    "facing=down":  { "model": "refinedrelocation:block/sorting_interface", "x": 180 },
+    "facing=up":    { "model": "refinedrelocation:block/sorting_interface" },
+    "facing=north": { "model": "refinedrelocation:block/sorting_interface" },
+    "facing=south": { "model": "refinedrelocation:block/sorting_interface", "y": 180 },
+    "facing=west":  { "model": "refinedrelocation:block/sorting_interface", "y": 270 },
+    "facing=east":  { "model": "refinedrelocation:block/sorting_interface", "y": 90 }
   }
 }

@@ -1,133 +1,116 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "all": "refinedrelocation:block/sorting_connector",
-      "particle": "refinedrelocation:block/sorting_connector"
-    }
-  },
-  "variants": {
-    "down": {
-      "false": {
-        "submodel": {
-          "down": {
-            "model": "refinedrelocation:sorting_connector_closed",
-            "x": 180
-          }
-        }
+  "multipart": [
+    {
+      "when": {
+        "down": "true"
       },
-      "true": {
-        "submodel": {
-          "down": {
-            "model": "refinedrelocation:sorting_connector_open",
-            "x": 180
-          }
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_open",
+        "x": 180
       }
     },
-    "up": {
-      "false": {
-        "submodel": {
-          "up": {
-            "model": "refinedrelocation:sorting_connector_closed"
-          }
-        }
+    {
+      "when": {
+        "down": "false"
       },
-      "true": {
-        "submodel": {
-          "up": {
-            "model": "refinedrelocation:sorting_connector_open"
-          }
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_closed",
+        "x": 180
       }
     },
-    "north": {
-      "false": {
-        "submodel": {
-          "north": {
-            "model": "refinedrelocation:sorting_connector_closed",
-            "x": 90
-          }
-        }
+    {
+      "when": {
+        "up": "true"
       },
-      "true": {
-        "submodel": {
-          "north": {
-            "model": "refinedrelocation:sorting_connector_open",
-            "x": 90
-          }
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_open"
       }
     },
-    "south": {
-      "false": {
-        "submodel": {
-          "south": {
-            "model": "refinedrelocation:sorting_connector_closed",
-            "x": 90,
-            "y": 180
-          }
-        }
+    {
+      "when": {
+        "up": "false"
       },
-      "true": {
-        "submodel": {
-          "south": {
-            "model": "refinedrelocation:sorting_connector_open",
-            "x": 90,
-            "y": 180
-          }
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_closed"
       }
     },
-    "west": {
-      "false": {
-        "submodel": {
-          "west": {
-            "model": "refinedrelocation:sorting_connector_closed",
-            "x": 90,
-            "y": 270
-          }
-        }
+    {
+      "when": {
+        "north": "true"
       },
-      "true": {
-        "submodel": {
-          "west": {
-            "model": "refinedrelocation:sorting_connector_open",
-            "x": 90,
-            "y": 270
-          }
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_open",
+        "x": 90
       }
     },
-    "east": {
-      "false": {
-        "submodel": {
-          "east": {
-            "model": "refinedrelocation:sorting_connector_closed",
-            "x": 90,
-            "y": 90
-          }
-        }
+    {
+      "when": {
+        "north": "false"
       },
-      "true": {
-        "submodel": {
-          "east": {
-            "model": "refinedrelocation:sorting_connector_open",
-            "x": 90,
-            "y": 90
-          }
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_closed",
+        "x": 90
       }
     },
-    "corner": {
-      "true": {
-
+    {
+      "when": {
+        "south": "true"
       },
-      "false": {
-        "textures": {
-          "all": "refinedrelocation:block/sorting_connector_line"
-        }
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_open",
+        "x": 90,
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_closed",
+        "x": 90,
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_open",
+        "x": 90,
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_closed",
+        "x": 90,
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_open",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "refinedrelocation:block/sorting_connector_closed",
+        "x": 90,
+        "y": 90
       }
     }
-  }
+  ]
 }

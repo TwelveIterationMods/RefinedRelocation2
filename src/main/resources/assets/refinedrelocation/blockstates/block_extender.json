@@ -1,39 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "forge:multi-layer",
-    "custom": {
-      "base": "refinedrelocation:block_extender#cutout",
-      "Cutout": "refinedrelocation:block_extender#cutout",
-      "Translucent": "refinedrelocation:block_extender#translucent"
-    },
-    "transform": "forge:default-block"
-  },
   "variants": {
-    "cutout": [{
-      "model": "refinedrelocation:block_extender_static"
-    }],
-    "translucent": [{
-      "model": "refinedrelocation:block_extender_glass"
-    }],
-    "facing": {
-      "west": {
-        "y": -90
-      },
-      "east": {
-        "y": 90
-      },
-      "north": {
-      },
-      "south": {
-        "y": 180
-      },
-      "up": {
-        "x": -90
-      },
-      "down": {
-        "x": 90
-      }
-    }
+    "facing=down":  { "model": "refinedrelocation:block/block_extender", "x": 180 },
+    "facing=up":    { "model": "refinedrelocation:block/block_extender" },
+    "facing=north": { "model": "refinedrelocation:block/block_extender" },
+    "facing=south": { "model": "refinedrelocation:block/block_extender", "y": 180 },
+    "facing=west":  { "model": "refinedrelocation:block/block_extender", "y": 270 },
+    "facing=east":  { "model": "refinedrelocation:block/block_extender", "y": 90 }
   }
 }

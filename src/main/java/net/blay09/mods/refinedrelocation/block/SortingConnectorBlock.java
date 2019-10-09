@@ -21,20 +21,20 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class BlockSortingConnector extends ContainerBlock {
+public class SortingConnectorBlock extends ContainerBlock {
 
     public static final String name = "sorting_connector";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
     private static Map<BlockPos, BlockState> boundingBoxCache = Maps.newHashMap();
-    private static final VoxelShape CENTER_SHAPE = Block.makeCuboidShape(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
+    private static final VoxelShape CENTER_SHAPE = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
     private static final VoxelShape[] FACING_SHAPES = new VoxelShape[]{
-            Block.makeCuboidShape(0.3125, 0, 0.3125, 0.6875, 0.3125, 0.6875),         // Down
-            Block.makeCuboidShape(0.3125, 0.6875, 0.3125, 0.6875, 1, 0.6875),         // Up
-            Block.makeCuboidShape(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.3125),         // North
-            Block.makeCuboidShape(0.3125, 0.3125, 0.6875, 0.6875, 0.6875, 1),         // South
-            Block.makeCuboidShape(0, 0.3125, 0.3125, 0.3125, 0.6875, 0.6875),         // West
-            Block.makeCuboidShape(0.6875, 0.3125, 0.3125, 1, 0.6875, 0.6875)          // East
+            Block.makeCuboidShape(5, 0, 5, 11, 5, 11),         // Down
+            Block.makeCuboidShape(5, 11, 5, 11, 16, 11),         // Up
+            Block.makeCuboidShape(5, 5, 0, 11, 11, 5),         // North
+            Block.makeCuboidShape(5, 5, 11, 11, 11, 16),         // South
+            Block.makeCuboidShape(0, 5, 5, 5, 11, 11),         // West
+            Block.makeCuboidShape(11, 5, 5, 16, 11, 11)          // East
     };
 
     private static final BooleanProperty DOWN = BooleanProperty.create("down");
@@ -53,7 +53,7 @@ public class BlockSortingConnector extends ContainerBlock {
             EAST
     };
 
-    public BlockSortingConnector() {
+    public SortingConnectorBlock() {
         super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(0.3f));
 
         BlockState state = getDefaultState();

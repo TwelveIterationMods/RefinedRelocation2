@@ -3,10 +3,7 @@ package net.blay09.mods.refinedrelocation.block;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.tile.TileSortingInterface;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateContainer;
@@ -25,12 +22,12 @@ import javax.annotation.Nullable;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-public class BlockSortingInterface extends ContainerBlock {
+public class SortingInterfaceBlock extends ContainerBlock {
 
     public static final String name = "sorting_interface";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-    public BlockSortingInterface() {
+    public SortingInterfaceBlock() {
         super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3f));
     }
 
@@ -44,6 +41,16 @@ public class BlockSortingInterface extends ContainerBlock {
         }
 
         return true;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override

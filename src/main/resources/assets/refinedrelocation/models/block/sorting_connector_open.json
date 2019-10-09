@@ -1,4 +1,8 @@
 {
+  "textures": {
+    "all": "refinedrelocation:block/sorting_connector",
+    "particle": "refinedrelocation:block/sorting_connector"
+  },
   "elements": [
     { "from": [ 6, 10, 6 ],
       "to": [ 10, 16, 10 ],
