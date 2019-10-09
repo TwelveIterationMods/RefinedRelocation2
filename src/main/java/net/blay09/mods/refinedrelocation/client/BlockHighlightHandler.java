@@ -10,9 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,7 +26,7 @@ import net.minecraftforge.fml.common.Mod;
 public class BlockHighlightHandler {
 
     @SubscribeEvent
-    public void onBlockHighlight(DrawBlockHighlightEvent event) {
+    public static void onBlockHighlight(DrawBlockHighlightEvent event) {
         PlayerEntity player = Minecraft.getInstance().player;
         if (!player.isSneaking()) {
             return;
@@ -45,18 +46,15 @@ public class BlockHighlightHandler {
                         GlStateManager.lineWidth(2f);
                         GlStateManager.disableTexture();
                         GlStateManager.depthMask(false);
-                        double expansion = 0.002;
-                        double offsetX = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) event.getPartialTicks();
-                        double offsetY = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) event.getPartialTicks();
-                        double offsetZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) event.getPartialTicks();
+                        double offsetX = event.getInfo().getProjectedView().x;
+                        double offsetY = event.getInfo().getProjectedView().y;
+                        double offsetZ = event.getInfo().getProjectedView().z;
                         for (ISortingGridMember member : sortingGrid.getMembers()) {
                             TileEntity memberTile = member.getTileEntity();
-                            BlockState blockState = world.getBlockState(memberTile.getPos());
-                            VoxelShape shape = blockState.getRaytraceShape(world, memberTile.getPos());
-                            AxisAlignedBB boundingBox = shape.getBoundingBox()
-                                    .expand(expansion, expansion, expansion)
-                                    .offset(-offsetX, -offsetY, -offsetZ);
-                            WorldRenderer.drawSelectionBoundingBox(boundingBox, 1f, 1f, 0f, 0.75f);
+                            BlockPos pos = memberTile.getPos();
+                            BlockState blockState = world.getBlockState(pos);
+                            VoxelShape shape = blockState.getShape(world, pos, ISelectionContext.forEntity(player));
+                            WorldRenderer.drawShape(shape, pos.getX() - offsetX, pos.getY() - offsetY, pos.getZ() - offsetZ, 1f, 1f, 0f, 0.75f);
                         }
                         GlStateManager.depthMask(true);
                         GlStateManager.enableTexture();
