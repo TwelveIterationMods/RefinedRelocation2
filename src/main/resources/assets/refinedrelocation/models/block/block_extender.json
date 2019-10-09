@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"textures": {
 		"block_extender_center": "refinedrelocation:block/block_extender_center",
 		"block_extender_cable": "refinedrelocation:block/block_extender_cable",
