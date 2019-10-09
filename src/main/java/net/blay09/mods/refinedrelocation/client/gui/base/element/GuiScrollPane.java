@@ -14,11 +14,15 @@ public class GuiScrollPane extends Widget {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         if (isMouseOver(mouseX, mouseY)) {
-            scrollBar.mouseScrolled(mouseX, mouseY, delta);
+            scrollBar.forceMouseScrolled(delta);
             return true;
         }
 
         return false;
     }
 
+    @Override
+    protected boolean clicked(double p_clicked_1_, double p_clicked_3_) {
+        return false;
+    }
 }

@@ -42,11 +42,11 @@ public class SameModFilter implements IFilter {
 
                     String modId = itemStack.getItem().getCreatorModId(itemStack);
                     String otherModId = otherStack.getItem().getCreatorModId(otherStack);
-                    if (modId == null && otherModId == null) {
-                        return true;
+                    if (modId == null || otherModId == null || "minecraft".equals(modId) || "minecraft".equals(otherModId)) {
+                        return false;
                     }
 
-                    if (modId != null && modId.equals(otherModId)) {
+                    if (modId.equals(otherModId)) {
                         return true;
                     }
                 }

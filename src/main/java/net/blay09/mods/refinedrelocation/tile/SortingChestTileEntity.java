@@ -57,6 +57,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
 
     @Override
     public void tick() {
+        baseTick();
         sortingInventory.onUpdate(this);
         doorAnimator.update();
     }

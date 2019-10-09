@@ -37,11 +37,15 @@ public class GuiScrollBar extends Button implements ITickableElement {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         if (isMouseOver(mouseX, mouseY)) {
-            setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
+            forceMouseScrolled(delta);
             return true;
         }
 
         return false;
+    }
+
+    public void forceMouseScrolled(double delta) {
+        setCurrentOffset(delta > 0 ? scrollTarget.getCurrentOffset() - 1 : scrollTarget.getCurrentOffset() + 1);
     }
 
     @Override

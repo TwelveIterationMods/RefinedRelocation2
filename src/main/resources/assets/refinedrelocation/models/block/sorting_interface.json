@@ -1,5 +1,6 @@
 {
   "__comment": "Designed by Blay09 with BDcraft Cubik PRO 0.96 Beta - http://bdcraft.net (Sub Model: static)",
+  "parent": "block/block",
   "textures": {
     "particle": "refinedrelocation:block/block_extender_glass_top",
     "block_extender_center": "refinedrelocation:block/block_extender_center",
