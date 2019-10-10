@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
@@ -11,7 +11,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class FastHopperScreen extends GuiContainerMod<ContainerFastHopper> {
+public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/hopper.png");
 

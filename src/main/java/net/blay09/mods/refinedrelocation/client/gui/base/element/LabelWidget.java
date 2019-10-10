@@ -20,7 +20,7 @@ public class LabelWidget extends Widget {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
         FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
         fontRenderer.drawString(text, x, y, textColor);
     }

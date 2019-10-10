@@ -14,7 +14,7 @@ public class GuiImageButton extends Button {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             GlStateManager.color4f(1f, 1f, 1f, 1f);

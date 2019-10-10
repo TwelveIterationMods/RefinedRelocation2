@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.client.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class AddFilterScreen extends GuiContainerMod<RootFilterContainer> implements IScrollTarget {
+public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> implements IScrollTarget {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/add_filter.png");
 

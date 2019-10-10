@@ -40,6 +40,7 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
         txtFilter.changeFocus(true);
         txtFilter.setCanLoseFocus(false);
         txtFilter.setText(container.getValue());
+        addButton(txtFilter);
 
         GuiScrollBar scrollBar = new GuiScrollBar(guiLeft + 161, guiTop + 20, 83, txtFilter);
 
@@ -75,7 +76,7 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1f, 1f, 1f, 1f);
-        minecraft.getTextureManager().bindTexture(TEXTURE);
+        getMinecraft().getTextureManager().bindTexture(TEXTURE);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
@@ -83,8 +84,8 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        minecraft.fontRenderer.drawString(I18n.format("container.refinedrelocation:name_filter"), 8, 6, 4210752);
-        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        getMinecraft().fontRenderer.drawString(I18n.format("container.refinedrelocation:name_filter"), 8, 6, 4210752);
+        getMinecraft().fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

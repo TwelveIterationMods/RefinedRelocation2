@@ -44,7 +44,7 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
                 filterIcon.draw(x, y, 24, 24, blitOffset);
             }
         }
-        if (isMouseOver(mouseX, mouseY)) {
+        if (parentGui.isTopMostElement(this, mouseX, mouseY)) {
             fill(x + 1, y + 1, x + width - 1, y + height - 1, 0x99FFFFFF);
         }
     }

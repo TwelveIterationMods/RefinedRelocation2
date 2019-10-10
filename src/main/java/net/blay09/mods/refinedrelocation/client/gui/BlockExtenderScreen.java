@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
+import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonBlockExtenderFilter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonStackLimiter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiSideButton;
@@ -24,7 +24,7 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class BlockExtenderScreen extends GuiContainerMod<ContainerBlockExtender> {
+public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtender> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/block_extender.png");
     private static final int UPDATE_INTERVAL = 20;

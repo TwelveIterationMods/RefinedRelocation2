@@ -6,7 +6,6 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.client.gui.base.GuiContainerMod;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.LabelWidget;
 import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
@@ -65,7 +64,7 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
         addButton(new GuiReturnFromFilterButton(guiLeft + xSize - 20, guiTop + 4));
 
         if (container.hasSortingInventory()) {
-            children.add(new LabelWidget(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            addButton(new LabelWidget(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
             addButton(new GuiButtonPriority(guiLeft + 10, guiTop + 80, 100, 20, container.getSortingInventory()));
         }
     }
