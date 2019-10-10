@@ -1,12 +1,14 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.MultiLineTextFieldWidget;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
@@ -51,8 +53,8 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
         super.tick();
 
         for (IGuiEventListener child : saneChildren) {
-            if (child instanceof GuiTextFieldMultiLine) {
-                ((GuiTextFieldMultiLine) child).tick();
+            if (child instanceof MultiLineTextFieldWidget) {
+                ((MultiLineTextFieldWidget) child).tick();
             } else if (child instanceof ITickableElement) {
                 ((ITickableElement) child).tick();
             }
@@ -86,6 +88,22 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
         this.buttons.add(button);
         this.saneChildren.add(button);
         return button;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            getMinecraft().player.closeScreen();
+        }
+
+        IGuiEventListener focused = this.getFocused();
+        if (focused instanceof TextFieldWidget) {
+            if (focused.keyPressed(keyCode, scanCode, modifier) || ((TextFieldWidget) focused).func_212955_f()) {
+                return true;
+            }
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifier);
     }
 
     @Override

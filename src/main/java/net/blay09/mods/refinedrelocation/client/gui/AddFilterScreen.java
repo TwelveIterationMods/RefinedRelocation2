@@ -56,13 +56,13 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             minecraft.displayGuiScreen(parentGui);
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyCode, scanCode, modifier);
     }
 
     @Override

@@ -6,7 +6,7 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiTextFieldMultiLine;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.MultiLineTextFieldWidget;
 import net.blay09.mods.refinedrelocation.container.NameFilterContainer;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
@@ -20,7 +20,7 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
 
     private static final int UPDATE_INTERVAL = 20;
 
-    private GuiTextFieldMultiLine txtFilter;
+    private MultiLineTextFieldWidget txtFilter;
 
     private int ticksSinceUpdate;
     private String lastSentText = "";
@@ -36,19 +36,18 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
     public void init() {
         super.init();
 
-        txtFilter = new GuiTextFieldMultiLine(guiLeft + 8, guiTop + 20, 150, 84);
+        txtFilter = new MultiLineTextFieldWidget(guiLeft + 8, guiTop + 20, 150, 84);
         txtFilter.changeFocus(true);
         txtFilter.setCanLoseFocus(false);
         txtFilter.setText(container.getValue());
         addButton(txtFilter);
+        setFocusedDefault(txtFilter);
 
         GuiScrollBar scrollBar = new GuiScrollBar(guiLeft + 161, guiTop + 20, 83, txtFilter);
+        addButton(scrollBar);
 
         GuiScrollPane scrollPane = new GuiScrollPane(scrollBar, guiLeft + 8, guiTop + 20, 150, 84);
-        children.add(scrollPane);
-        children.add(txtFilter);
-
-        addButton(scrollBar);
+        addButton(scrollPane);
     }
 
     @Override

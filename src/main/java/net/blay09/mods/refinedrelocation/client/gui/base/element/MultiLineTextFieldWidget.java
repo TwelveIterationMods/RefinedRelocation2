@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-public class GuiTextFieldMultiLine extends TextFieldWidget implements IScrollTarget {
+public class MultiLineTextFieldWidget extends TextFieldWidget implements IScrollTarget {
 
     private static final int ENABLED_COLOR = 0xE0E0E0;
     private static final int DISABLED_COLOR = 0x707070;
@@ -24,7 +24,7 @@ public class GuiTextFieldMultiLine extends TextFieldWidget implements IScrollTar
     private String[] renderCache;
     private int lastRowCount;
 
-    public GuiTextFieldMultiLine(int x, int y, int width, int height) {
+    public MultiLineTextFieldWidget(int x, int y, int width, int height) {
         super(Minecraft.getInstance().fontRenderer, x, y, width, height, "");
         fontRenderer = Minecraft.getInstance().fontRenderer;
     }

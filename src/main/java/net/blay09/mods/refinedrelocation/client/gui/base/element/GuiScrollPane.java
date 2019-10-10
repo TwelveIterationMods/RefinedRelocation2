@@ -25,4 +25,8 @@ public class GuiScrollPane extends Widget {
     protected boolean clicked(double p_clicked_1_, double p_clicked_3_) {
         return false;
     }
+
+    @Override
+    public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+    }
 }

@@ -133,4 +133,9 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
     public int getTop() {
         return guiTop;
     }
+
+    @Override
+    protected boolean hasOpenFilterButton() {
+        return false;
+    }
 }
