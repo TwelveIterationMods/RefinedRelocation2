@@ -11,6 +11,7 @@ import net.blay09.mods.refinedrelocation.container.NameFilterContainer;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -96,12 +97,17 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
     }
 
     @Override
-    public int getLeft() {
+    public Container getFilterContainer() {
+        return container;
+    }
+
+    @Override
+    public int getFilterGuiLeft() {
         return guiLeft;
     }
 
     @Override
-    public int getTop() {
+    public int getFilterGuiTop() {
         return guiTop;
     }
 }

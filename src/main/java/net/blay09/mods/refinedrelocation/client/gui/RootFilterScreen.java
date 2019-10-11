@@ -12,6 +12,7 @@ import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
@@ -125,12 +126,17 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
     }
 
     @Override
-    public int getLeft() {
+    public Container getFilterContainer() {
+        return container;
+    }
+
+    @Override
+    public int getFilterGuiLeft() {
         return guiLeft;
     }
 
     @Override
-    public int getTop() {
+    public int getFilterGuiTop() {
         return guiTop;
     }
 

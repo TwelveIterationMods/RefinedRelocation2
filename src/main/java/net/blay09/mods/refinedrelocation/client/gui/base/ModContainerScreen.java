@@ -68,10 +68,6 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
         renderHoveredToolTip(mouseX, mouseY);
     }
 
-    public T getContainer() {
-        return container;
-    }
-
     /**
      * We can't use Mojang's event system as it's completely wrong, e.g.
      * - mouseClicked is handled in direction of rendering, meaning you always click things rendered below others

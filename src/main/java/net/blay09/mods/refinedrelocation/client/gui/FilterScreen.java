@@ -23,4 +23,5 @@ public abstract class FilterScreen<T extends FilterContainer> extends ModContain
     protected boolean hasOpenFilterButton() {
         return true;
     }
+
 }

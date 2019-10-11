@@ -29,13 +29,13 @@ public class FilterPreviewHandler {
             if (event.getGui() instanceof IFilterPreviewGui) {
                 IFilterPreviewGui gui = (IFilterPreviewGui) event.getGui();
                 PlayerEntity entityPlayer = Minecraft.getInstance().player;
-                Container container = gui.getContainer();
+                Container container = gui.getFilterContainer();
                 GlStateManager.pushMatrix();
                 GlStateManager.translatef(0, 0, 300);
                 for (Slot slot : container.inventorySlots) {
                     if (slot.inventory == entityPlayer.inventory) {
-                        int guiLeft = gui.getLeft();
-                        int guiTop = gui.getTop();
+                        int guiLeft = gui.getFilterGuiLeft();
+                        int guiTop = gui.getFilterGuiTop();
                         if (slotStates[slot.getSlotIndex()] == MessageFilterPreview.STATE_SUCCESS) {
                             AbstractGui.fill(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x5500FF00);
                         }

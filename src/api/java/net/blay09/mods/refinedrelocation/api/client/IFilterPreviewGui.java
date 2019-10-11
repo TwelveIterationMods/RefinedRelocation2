@@ -3,9 +3,9 @@ package net.blay09.mods.refinedrelocation.api.client;
 import net.minecraft.inventory.container.Container;
 
 public interface IFilterPreviewGui {
-    Container getContainer();
+    Container getFilterContainer();
 
-    int getLeft();
+    int getFilterGuiLeft();
 
-    int getTop();
+    int getFilterGuiTop();
 }
