@@ -161,6 +161,11 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
         return "container.refinedrelocation:fast_hopper";
     }
 
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TranslationTextComponent(getUnlocalizedName());
+    }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {

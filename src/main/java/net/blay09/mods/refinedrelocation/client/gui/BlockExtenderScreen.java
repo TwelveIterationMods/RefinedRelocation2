@@ -180,7 +180,7 @@ public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtend
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        minecraft.fontRenderer.drawString(tileEntity.getDisplayName().getFormattedText(), 8, 6, 4210752);
+        minecraft.fontRenderer.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
         minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

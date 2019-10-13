@@ -148,6 +148,11 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         return "container.refinedrelocation:sorting_chest";
     }
 
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TranslationTextComponent(getUnlocalizedName());
+    }
+
     public ItemStackHandler getItemHandler() {
         return itemHandler;
     }

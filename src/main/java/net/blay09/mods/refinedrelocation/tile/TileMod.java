@@ -67,10 +67,6 @@ public class TileMod extends TileEntity {
         }
     }
 
-    public ITextComponent getDisplayName() {
-        return new TranslationTextComponent(getUnlocalizedName());
-    }
-
     public String getUnlocalizedName() {
         return "container.refinedrelocation.unnamed";
     }
