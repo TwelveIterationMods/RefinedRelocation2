@@ -38,30 +38,33 @@ public class BlockHighlightHandler {
             TileEntity tileEntity = world.getTileEntity(rayTraceResult.getPos());
             if (tileEntity != null) {
                 LazyOptional<ISortingGridMember> sortingMemberCap = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, rayTraceResult.getFace());
-                sortingMemberCap.ifPresent(sortingMember -> {
-                    ISortingGrid sortingGrid = sortingMember.getSortingGrid();
-                    if (sortingGrid != null) {
-                        GlStateManager.enableBlend();
-                        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-                        GlStateManager.lineWidth(2f);
-                        GlStateManager.disableTexture();
-                        GlStateManager.depthMask(false);
-                        double offsetX = event.getInfo().getProjectedView().x;
-                        double offsetY = event.getInfo().getProjectedView().y;
-                        double offsetZ = event.getInfo().getProjectedView().z;
-                        for (ISortingGridMember member : sortingGrid.getMembers()) {
-                            TileEntity memberTile = member.getTileEntity();
-                            BlockPos pos = memberTile.getPos();
-                            BlockState blockState = world.getBlockState(pos);
-                            VoxelShape shape = blockState.getShape(world, pos, ISelectionContext.forEntity(player));
-                            WorldRenderer.drawShape(shape, pos.getX() - offsetX, pos.getY() - offsetY, pos.getZ() - offsetZ, 1f, 1f, 0f, 0.75f);
+                //noinspection ConstantConditions - null check is necessary because some mods still didn't quite understand what Nonnull means
+                if (sortingMemberCap != null) {
+                    sortingMemberCap.ifPresent(sortingMember -> {
+                        ISortingGrid sortingGrid = sortingMember.getSortingGrid();
+                        if (sortingGrid != null) {
+                            GlStateManager.enableBlend();
+                            GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+                            GlStateManager.lineWidth(2f);
+                            GlStateManager.disableTexture();
+                            GlStateManager.depthMask(false);
+                            double offsetX = event.getInfo().getProjectedView().x;
+                            double offsetY = event.getInfo().getProjectedView().y;
+                            double offsetZ = event.getInfo().getProjectedView().z;
+                            for (ISortingGridMember member : sortingGrid.getMembers()) {
+                                TileEntity memberTile = member.getTileEntity();
+                                BlockPos pos = memberTile.getPos();
+                                BlockState blockState = world.getBlockState(pos);
+                                VoxelShape shape = blockState.getShape(world, pos, ISelectionContext.forEntity(player));
+                                WorldRenderer.drawShape(shape, pos.getX() - offsetX, pos.getY() - offsetY, pos.getZ() - offsetZ, 1f, 1f, 0f, 0.75f);
+                            }
+                            GlStateManager.depthMask(true);
+                            GlStateManager.enableTexture();
+                            GlStateManager.disableBlend();
+                            event.setCanceled(true);
                         }
-                        GlStateManager.depthMask(true);
-                        GlStateManager.enableTexture();
-                        GlStateManager.disableBlend();
-                        event.setCanceled(true);
-                    }
-                });
+                    });
+                }
             }
         }
     }
