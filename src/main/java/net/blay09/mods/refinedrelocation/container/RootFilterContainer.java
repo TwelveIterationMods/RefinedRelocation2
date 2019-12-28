@@ -60,7 +60,7 @@ public class RootFilterContainer extends FilterContainer {
         sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY)
                 .orElseGet(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
 
-        addPlayerInventory(playerInventory, 128);
+        addPlayerInventory(playerInventory, hasSortingInventory() ? 128 : 84);
     }
 
     @Override
