@@ -280,6 +280,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
                     }
                     return LazyOptional.of(() -> (T) cachedItemHandlers[cacheIdx]);
                 }
+
                 return cachedConnectedTile.getCapability(cap, ioSide);
             }
         }

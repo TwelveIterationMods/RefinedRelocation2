@@ -119,7 +119,7 @@ public class TileSortingInterface extends TileMod implements ITickableTileEntity
     @Override
     protected void onFirstTick() {
         cachedConnectedTile = world.getTileEntity(pos.offset(getFacing()));
-        
+
         sortingInventory.onFirstTick(this);
     }
 
@@ -130,7 +130,11 @@ public class TileSortingInterface extends TileMod implements ITickableTileEntity
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        LazyOptional<T> result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        LazyOptional<T> result = super.getCapability(cap, side);
+        if (!result.isPresent()) {
+            result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        }
+
         if (!result.isPresent()) {
             result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
         }
@@ -147,11 +151,11 @@ public class TileSortingInterface extends TileMod implements ITickableTileEntity
             result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
         }
 
-        if (!result.isPresent() && cachedConnectedTile != null) {
-            return cachedConnectedTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getFacing().getOpposite()).cast();
+        if (!result.isPresent() && cachedConnectedTile != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return cachedConnectedTile.getCapability(cap, getFacing().getOpposite()).cast();
         }
 
-        return super.getCapability(cap, side);
+        return result;
     }
 
     @Override

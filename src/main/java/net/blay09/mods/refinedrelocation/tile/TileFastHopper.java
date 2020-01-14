@@ -169,7 +169,12 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
+        LazyOptional<T> result = super.getCapability(cap, side);
+        if (!result.isPresent()) {
+            result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
+        }
+
+        return result;
     }
 
     public ItemStackHandler getItemHandler() {

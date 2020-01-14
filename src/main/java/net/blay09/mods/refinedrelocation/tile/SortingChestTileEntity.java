@@ -123,7 +123,11 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        LazyOptional<T> result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
+        LazyOptional<T> result = super.getCapability(cap, side);
+        if (!result.isPresent()) {
+            result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> itemHandler));
+        }
+
         if (!result.isPresent()) {
             result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
         }

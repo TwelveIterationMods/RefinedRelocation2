@@ -41,7 +41,11 @@ public class TileFilteredHopper extends TileFastHopper {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        LazyOptional<T> result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        LazyOptional<T> result = super.getCapability(cap, side);
+        if (!result.isPresent()) {
+            result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
+        }
+
         if (!result.isPresent()) {
             result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
         }
