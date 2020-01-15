@@ -1,0 +1,118 @@
+tile.refinedrelocation:sorting_chest.name=Сортировочный сундук
+tile.refinedrelocation:block_extender.name=Блок расширитель
+tile.refinedrelocation:fast_hopper.name=Быстрая воронка
+tile.refinedrelocation:filtered_hopper.name=Фильтрующая воронка
+tile.refinedrelocation:buffer.name=Буфер
+tile.refinedrelocation:sorting_connector.name=Сортировочный соединитель
+tile.refinedrelocation:sorting_interface.name=Сортировочный интерфейс
+
+item.refinedrelocation:sorting_upgrade.name=Сортировочный обновление
+item.refinedrelocation:stack_limiter.name=Ограничитель стека
+item.refinedrelocation:slot_lock.name=Блокировка слота
+item.refinedrelocation:input_filter.name=Входной фильтр
+item.refinedrelocation:output_filter.name=Выходной фильтр
+
+container.refinedrelocation:root_filter=Редактировать фильтр
+container.refinedrelocation:root_filter_with_name=%s (фильтр)
+container.refinedrelocation:sorting_chest=Сортировочный сундук
+container.refinedrelocation:root_filter=Редактировать фильтр
+container.refinedrelocation:name_filter=Название фильтра
+container.refinedrelocation:add_filter=Выбрать тип фильтра
+container.refinedrelocation:fast_hopper=Быстрая воронка
+container.refinedrelocation:filtered_hopper=Фильтрующая воронка
+container.refinedrelocation:block_extender=Блок расширитель
+container.refinedrelocation:sorting_interface=Сортировочный интерфейс
+
+gui.refinedrelocation:root_filter.help_text=Настройте до трех фильтров, щелкнув пустые слоты выше.
+gui.refinedrelocation:root_filter.priority_label=Приоритет:
+gui.refinedrelocation:root_filter.priority_lowest=Наименьший
+gui.refinedrelocation:root_filter.priority_low=Низкий
+gui.refinedrelocation:root_filter.priority_normal=Нормальный
+gui.refinedrelocation:root_filter.priority_high=Высокий
+gui.refinedrelocation:root_filter.priority_highest=Наибольший
+gui.refinedrelocation:root_filter.priority_custom=Пользовательский: %d
+gui.refinedrelocation:root_filter.priority_increase=ЛКМ, чтобы увеличить
+gui.refinedrelocation:root_filter.priority_decrease=ПКМ, чтобы уменьшить
+gui.refinedrelocation:root_filter.priority_increase10=ЛКМ, чтобы увеличить на 10
+gui.refinedrelocation:root_filter.priority_decrease10=ПКМ, чтобы уменьшить на 10
+gui.refinedrelocation:root_filter.priority_tooltip=Приоритет: %d
+gui.refinedrelocation:root_filter.delete_filter=Удалить фильтр
+gui.refinedrelocation:root_filter.no_filter_set=Не установлен фильтр
+gui.refinedrelocation:root_filter.click_to_add_filter=Нажмите, чтобы добавить фильтр
+gui.refinedrelocation:root_filter.click_to_configure=Нажмите, чтобы настроить
+gui.refinedrelocation:root_filter.not_configurable=Не настраиваемый
+gui.refinedrelocation:root_filter.click_to_toggle=Нажмите, чтобы переключить
+gui.refinedrelocation:root_filter.blacklist=Черный список
+gui.refinedrelocation:root_filter.whitelist=Белый список
+gui.refinedrelocation:block_extender.front=Передняя сторона
+gui.refinedrelocation:block_extender.toggle_side=Нажмите, чтобы переключить
+gui.refinedrelocation:block_extender.side_tooltip=Вход/Выход: %s
+gui.refinedrelocation:block_extender.side_north=Север
+gui.refinedrelocation:block_extender.side_south=Юг
+gui.refinedrelocation:block_extender.side_east=Восток
+gui.refinedrelocation:block_extender.side_west=Запад
+gui.refinedrelocation:block_extender.side_up=Сверху
+gui.refinedrelocation:block_extender.side_down=Снизу
+gui.refinedrelocation:block_extender.side_none=Отключено
+gui.refinedrelocation:block_extender.stack_limiter=Ограничитель стека
+gui.refinedrelocation:block_extender.stack_limiter_increase=Нажмите, чтобы увеличить
+gui.refinedrelocation:block_extender.stack_limiter_decrease=ПКМ, чтобы уменьшить
+gui.refinedrelocation:block_extender.slot_lock=Блокировка слота
+gui.refinedrelocation:block_extender.configure=Настройка
+
+itemGroup.refinedrelocation=Refined Relocation 2
+
+filter.refinedrelocation:name_filter=Название фильтра
+filter.refinedrelocation:name_filter.description=Фильтр имени предмета на основе текста
+
+filter.refinedrelocation:same_item_filter=Фильтр соответствия предмета
+filter.refinedrelocation:same_item_filter.description=Позволяет элементам, которые уже существуют\nв этом инвентаре, пройти
+
+filter.refinedrelocation:same_mod_filter=Фильтр соответствия мода
+filter.refinedrelocation:same_mod_filter.description=Позволяет предметам, чьи предметы мода\nуже существуют в этом инвентаре пройти
+
+filter.refinedrelocation:creative_tab_filter=Фильтр творческой вкладки
+filter.refinedrelocation:creative_tab_filter.description=Контрольный список на основе\nтворческих вкладок
+
+filter.refinedrelocation:mod_filter=Мод фильтр
+filter.refinedrelocation:mod_filter.description=Контрольный список на основе\nдоступных модов
+
+filter.refinedrelocation:preset_filter=Предустановленный фильтр
+filter.refinedrelocation:preset_filter.description=Контрольный список на основе\nсамых распространенных вещей
+filter.refinedrelocation:preset_filter.option_ores=Все руды
+filter.refinedrelocation:preset_filter.option_ingots=Все слитки
+filter.refinedrelocation:preset_filter.option_nuggets=Все самородки
+filter.refinedrelocation:preset_filter.option_gems=Все драгоценные камни
+filter.refinedrelocation:preset_filter.option_dyes=Все красители
+filter.refinedrelocation:preset_filter.option_food=Вся пища
+filter.refinedrelocation:preset_filter.option_fuel=Все топливо
+filter.refinedrelocation:preset_filter.option_blocks=Все блоки
+filter.refinedrelocation:preset_filter.option_unstackable=Все нестекуемое
+filter.refinedrelocation:preset_filter.option_repairable=Все ремонтируемое
+filter.refinedrelocation:preset_filter.option_weapons=Все оружия
+filter.refinedrelocation:preset_filter.option_tools=Все инструменты
+filter.refinedrelocation:preset_filter.option_enchanted=Все зачарованное
+
+tooltip.refinedrelocation:stack_limiter=Ограничение: %d
+tooltip.refinedrelocation:slot_lock=Предметы не будут занимать новые слоты.
+tooltip.refinedrelocation:block_extender_module=Модуль блока расширителя
+
+# Iron Chest Support
+
+tile.refinedrelocation:ironchest.sorting_chest_iron.name=Сортировочный железный сундук
+tile.refinedrelocation:ironchest.sorting_chest_gold.name=Сортировочный золотой сундук
+tile.refinedrelocation:ironchest.sorting_chest_diamond.name=Сортировочный алмазный сундук
+tile.refinedrelocation:ironchest.sorting_chest_copper.name=Сортировочный медный сундук
+tile.refinedrelocation:ironchest.sorting_chest_silver.name=Сортировочный серебряный сундук
+tile.refinedrelocation:ironchest.sorting_chest_crystal.name=Сортировочный кристальный сундук
+tile.refinedrelocation:ironchest.sorting_chest_obsidian.name=Сортировочный обсидиановый сундук
+tile.refinedrelocation:ironchest.sorting_chest_dirtchest9000.name=Земельный сундук 9001!!
+
+container.refinedrelocation:ironchest.sorting_chest_iron=Сортировочный железный сундук
+container.refinedrelocation:ironchest.sorting_chest_gold=Сортировочный золотой сундук
+container.refinedrelocation:ironchest.sorting_chest_diamond=Сортировочный алмазный сундук
+container.refinedrelocation:ironchest.sorting_chest_copper=Сортировочный медный сундук
+container.refinedrelocation:ironchest.sorting_chest_silver=Сортировочный серебряный сундук
+container.refinedrelocation:ironchest.sorting_chest_crystal=Сортировочный кристальный сундук
+container.refinedrelocation:ironchest.sorting_chest_obsidian=Сортировочный обсидиановый сундук
+container.refinedrelocation:ironchest.sorting_chest_dirtchest9000=Земельный сундук 9001
