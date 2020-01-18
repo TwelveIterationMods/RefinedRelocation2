@@ -307,8 +307,6 @@ public class TileBlockExtender extends TileMod implements ITickable {
 
     @Override
     public void dropItemHandlers() {
-        super.dropItemHandlers();
-
         ItemUtils.dropItemHandlerItems(world, pos, itemHandlerUpgrades);
     }
 
