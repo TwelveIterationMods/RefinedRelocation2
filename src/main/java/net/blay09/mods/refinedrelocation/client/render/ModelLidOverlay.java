@@ -1,18 +1,15 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.model.ModelBox;
-import net.minecraft.client.renderer.model.PositionTextureVertex;
-import net.minecraft.client.renderer.model.TexturedQuad;
+import net.minecraft.client.renderer.model.ModelRenderer;
 
 public class ModelLidOverlay extends Model {
 
-    public static class ModelQuad extends ModelBox {
+    public static class ModelQuad extends ModelRenderer.ModelBox {
         private final TexturedQuad actualQuad;
 
-        public ModelQuad(RendererModel renderer, int texOffsetX, int texOffsetY, float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor, boolean mirror) {
+        public ModelQuad(ModelRenderer renderer, int texOffsetX, int texOffsetY, float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor, boolean mirror) {
             super(renderer, texOffsetX, texOffsetY, offX, offY, offZ, width, height, depth, scaleFactor, mirror);
 
             float x1 = offX - scaleFactor;
@@ -40,10 +37,10 @@ public class ModelLidOverlay extends Model {
         }
     }
 
-    public final RendererModel chestLid;
+    public final ModelRenderer chestLid;
 
     public ModelLidOverlay() {
-        chestLid = new RendererModel(this, 0, 0);
+        chestLid = new ModelRenderer(this, 0, 0);
         chestLid.setTextureSize(16, 16);
         chestLid.cubeList.add(new ModelQuad(chestLid, 3, 1, 0f, -5.001f, -14f, 14, 5, 14, 0f, chestLid.mirror));
         chestLid.rotationPointX = 1f;

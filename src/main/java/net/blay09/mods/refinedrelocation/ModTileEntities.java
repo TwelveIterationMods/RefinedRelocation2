@@ -9,7 +9,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
 
-public class ModTiles {
+public class ModTileEntities {
 
     public static TileEntityType<SortingChestTileEntity> sortingChest;
     public static TileEntityType<TileBlockExtender> blockExtender;

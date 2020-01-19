@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.ModTiles;
+import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.minecraft.block.BlockState;
@@ -42,7 +42,7 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
     private int cooldown;
 
     public TileFastHopper() {
-        super(ModTiles.fastHopper);
+        super(ModTileEntities.fastHopper);
     }
 
     public TileFastHopper(TileEntityType<?> type) {

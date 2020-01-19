@@ -1,8 +1,10 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.block.*;
+import net.blay09.mods.refinedrelocation.client.render.SortingChestTileEntityRenderer;
 import net.blay09.mods.refinedrelocation.item.ItemBlockSortingChest;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;

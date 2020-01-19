@@ -118,7 +118,7 @@ public class ModFilter implements IChecklistFilter {
         ListNBT list = new ListNBT();
         for (int i = 0; i < modStates.length; i++) {
             if (modStates[i]) {
-                list.add(new StringNBT(modIds[i]));
+                list.add(StringNBT.func_229705_a_(modIds[i]));
             }
         }
         return list;

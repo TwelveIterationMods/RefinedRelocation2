@@ -5,12 +5,10 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.*;
 import net.blay09.mods.refinedrelocation.client.ModRenderers;
 import net.blay09.mods.refinedrelocation.client.ModScreens;
-import net.blay09.mods.refinedrelocation.client.render.SortingChestTileEntityRenderer;
 import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
-import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -20,7 +18,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -95,7 +92,7 @@ public class RefinedRelocation {
     }
 
     private void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        ModTiles.registerTileEntities(event.getRegistry());
+        ModTileEntities.registerTileEntities(event.getRegistry());
     }
 
     private void setup(FMLCommonSetupEvent event) {

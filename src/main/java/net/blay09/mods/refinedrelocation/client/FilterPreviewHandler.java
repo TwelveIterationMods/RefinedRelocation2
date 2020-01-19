@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
@@ -30,8 +30,8 @@ public class FilterPreviewHandler {
                 IFilterPreviewGui gui = (IFilterPreviewGui) event.getGui();
                 PlayerEntity entityPlayer = Minecraft.getInstance().player;
                 Container container = gui.getFilterContainer();
-                GlStateManager.pushMatrix();
-                GlStateManager.translatef(0, 0, 300);
+                RenderSystem.pushMatrix();
+                RenderSystem.translatef(0, 0, 300);
                 for (Slot slot : container.inventorySlots) {
                     if (slot.inventory == entityPlayer.inventory) {
                         int guiLeft = gui.getFilterGuiLeft();
@@ -41,7 +41,7 @@ public class FilterPreviewHandler {
                         }
                     }
                 }
-                GlStateManager.popMatrix();
+                RenderSystem.popMatrix();
             } else {
                 slotStates = null;
             }

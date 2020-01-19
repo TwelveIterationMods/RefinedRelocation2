@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.ModTiles;
+import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -45,7 +45,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     private ITextComponent customName;
 
     public SortingChestTileEntity() {
-        super(ModTiles.sortingChest);
+        super(ModTileEntities.sortingChest);
         doorAnimator.setSoundEventOpen(SoundEvents.BLOCK_CHEST_OPEN);
         doorAnimator.setSoundEventClose(SoundEvents.BLOCK_CHEST_CLOSE);
     }

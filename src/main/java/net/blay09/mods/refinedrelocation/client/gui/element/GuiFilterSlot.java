@@ -35,13 +35,13 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         texture.bind();
-        texture.draw(x, y, blitOffset);
+        texture.draw(x, y, getBlitOffset());
 
         IFilter filter = rootFilter.getFilter(index);
         if (filter != null) {
             IDrawable filterIcon = filter.getFilterIcon();
             if (filterIcon != null) {
-                filterIcon.draw(x, y, 24, 24, blitOffset);
+                filterIcon.draw(x, y, 24, 24, getBlitOffset());
             }
         }
         if (parentGui.isTopMostElement(this, mouseX, mouseY)) {

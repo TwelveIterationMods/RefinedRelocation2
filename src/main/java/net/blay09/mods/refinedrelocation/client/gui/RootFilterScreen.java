@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
@@ -9,6 +9,7 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.LabelWidget;
 import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -87,22 +88,22 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
         if (container.hasSortingInventory()) {
-            minecraft.getTextureManager().bindTexture(TEXTURE);
+            Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         } else {
-            minecraft.getTextureManager().bindTexture(TEXTURE_NO_PRIORITY);
+            Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_NO_PRIORITY);
         }
 
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         final int x = guiLeft + 10;
         final int y = guiTop + 37;
-        GlStateManager.enableBlend();
+        RenderSystem.enableBlend();
         textureSeparator.bind();
-        textureSeparator.draw(x + 30, y, blitOffset);
-        textureSeparator.draw(x + 70, y, blitOffset);
-        GlStateManager.disableBlend();
+        textureSeparator.draw(x + 30, y, getBlitOffset());
+        textureSeparator.draw(x + 70, y, getBlitOffset());
+        RenderSystem.disableBlend();
     }
 
     @Override
@@ -115,8 +116,8 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
             displayName = ((INameable) tileEntity).getDisplayName();
         }
 
-        minecraft.fontRenderer.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
-        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        font.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
+        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

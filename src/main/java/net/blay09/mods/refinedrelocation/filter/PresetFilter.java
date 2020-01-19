@@ -23,6 +23,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
@@ -122,7 +123,7 @@ public class PresetFilter implements IChecklistFilter {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
             int burnTime = itemStack.getBurnTime();
-            burnTime = burnTime == -1 ? FurnaceTileEntity.getBurnTimes().getOrDefault(itemStack.getItem(), 0) : burnTime;
+            burnTime = burnTime == -1 ? ForgeHooks.getBurnTime(itemStack) : burnTime;
             return ForgeEventFactory.getItemBurnTime(itemStack, burnTime) > 0;
         }
     };
@@ -220,7 +221,7 @@ public class PresetFilter implements IChecklistFilter {
         ListNBT list = new ListNBT();
         for (int i = 0; i < presetStates.length; i++) {
             if (presetStates[i]) {
-                list.add(new StringNBT(presetList.get(i).getId()));
+                list.add(StringNBT.func_229705_a_(presetList.get(i).getId()));
             }
         }
         return list;

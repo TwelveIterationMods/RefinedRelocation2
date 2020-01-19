@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
@@ -9,6 +9,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiChecklistEntry;
 import net.blay09.mods.refinedrelocation.container.ChecklistFilterContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -53,8 +54,8 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
-        minecraft.getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
@@ -62,8 +63,8 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        minecraft.fontRenderer.drawString(I18n.format(filter.getLangKey()), 8, 6, 4210752);
-        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        font.drawString(I18n.format(filter.getLangKey()), 8, 6, 4210752);
+        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

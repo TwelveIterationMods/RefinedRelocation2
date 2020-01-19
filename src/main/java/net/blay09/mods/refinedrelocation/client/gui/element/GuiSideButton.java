@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
@@ -82,9 +82,9 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
             char sideChar = getFacingChar(tileEntity.getSideMapping(side));
             float labelX = x + width / 2f - fontRenderer.getCharWidth(sideChar) / 2f;
             float labelY = y + height / 2f - fontRenderer.FONT_HEIGHT / 2f;
-            GlStateManager.translatef(0.5f, 0.5f, 0);
+            RenderSystem.translatef(0.5f, 0.5f, 0);
             fontRenderer.drawString(String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);
-            GlStateManager.translatef(-0.5f, -0.5f, 0);
+            RenderSystem.translatef(-0.5f, -0.5f, 0);
         }
     }
 

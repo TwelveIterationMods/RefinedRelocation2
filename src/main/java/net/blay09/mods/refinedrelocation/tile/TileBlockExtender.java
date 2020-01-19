@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModItems;
-import net.blay09.mods.refinedrelocation.ModTiles;
+import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
@@ -34,7 +34,7 @@ import java.util.Collections;
 public class TileBlockExtender extends TileMod implements ITickableTileEntity, INamedContainerProvider, IDroppableItemHandler {
 
     public TileBlockExtender() {
-        super(ModTiles.blockExtender);
+        super(ModTileEntities.blockExtender);
     }
 
     private class ItemHandlerWrapper implements IItemHandler {

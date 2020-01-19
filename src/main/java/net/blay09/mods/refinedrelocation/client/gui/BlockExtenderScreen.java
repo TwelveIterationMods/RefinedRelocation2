@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -12,9 +12,11 @@ import net.blay09.mods.refinedrelocation.client.gui.element.GuiTooltipButton;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -153,12 +155,13 @@ public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtend
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
-        minecraft.getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         // Render upgrade conflicts
-        ItemStack mouseStack = minecraft.player.inventory.getItemStack();
+        PlayerEntity player = Minecraft.getInstance().player;
+        ItemStack mouseStack = player != null ? player.inventory.getItemStack() : ItemStack.EMPTY;
         if (!mouseStack.isEmpty()) {
             int conflictSlot = -1;
             if (mouseStack.getItem() == ModItems.stackLimiter && stackLimiterIdx != -1) {
@@ -180,8 +183,8 @@ public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtend
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        minecraft.fontRenderer.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
-        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        font.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
+        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

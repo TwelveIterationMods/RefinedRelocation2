@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
@@ -10,6 +10,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiAddFilterButton;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -58,7 +59,7 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifier) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.displayGuiScreen(parentGui);
+            Minecraft.getInstance().displayGuiScreen(parentGui);
             return true;
         }
 
@@ -67,8 +68,8 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
-        minecraft.getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
@@ -76,8 +77,8 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        minecraft.fontRenderer.drawString(I18n.format("container.refinedrelocation:add_filter"), 8, 6, 4210752);
-        minecraft.fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        font.drawString(I18n.format("container.refinedrelocation:add_filter"), 8, 6, 4210752);
+        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -142,21 +143,19 @@ public class BlockFastHopper extends ContainerBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof TileFastHopper) {
-                if (player.isSneaking()) {
+                if (player.func_225608_bj_()) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 } else {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (TileFastHopper) tileEntity, it -> it.writeBlockPos(pos));
                 }
             }
-
-            return true;
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

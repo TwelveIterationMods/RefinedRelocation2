@@ -1,13 +1,12 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.ModTiles;
+import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,7 +16,7 @@ public class TileSortingConnector extends TileMod implements ITickableTileEntity
     private final ISortingGridMember sortingGridMember = Capabilities.getDefaultInstance(Capabilities.SORTING_GRID_MEMBER);
 
     public TileSortingConnector() {
-        super(ModTiles.sortingConnector);
+        super(ModTileEntities.sortingConnector);
     }
 
     @Override

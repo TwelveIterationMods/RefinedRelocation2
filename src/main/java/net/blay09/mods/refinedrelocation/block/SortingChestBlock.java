@@ -44,7 +44,7 @@ public class SortingChestBlock extends ContainerBlock {
         return SHAPE;
     }
 
-    @Override
+    // TODO @Override
     public boolean hasCustomBreakingProgress(BlockState state) {
         return true;
     }
@@ -86,7 +86,7 @@ public class SortingChestBlock extends ContainerBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof SortingChestTileEntity) {
@@ -94,7 +94,7 @@ public class SortingChestBlock extends ContainerBlock {
             }
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -122,4 +122,5 @@ public class SortingChestBlock extends ContainerBlock {
     public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
         return RefinedRelocationUtils.getComparatorInputOverride(state, world, pos);
     }
+
 }

@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
@@ -93,11 +94,11 @@ public class GuiScrollBar extends Button implements ITickableElement {
             }
         }
 
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
         scrollbarTop.bind();
-        scrollbarTop.draw(x - 2, y - 1, blitOffset);
-        scrollbarBottom.draw(x - 2, y + height - 1, blitOffset);
-        scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, blitOffset);
+        scrollbarTop.draw(x - 2, y - 1, getBlitOffset());
+        scrollbarBottom.draw(x - 2, y + height - 1, getBlitOffset());
+        scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, getBlitOffset());
 //
         fill(x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
     }

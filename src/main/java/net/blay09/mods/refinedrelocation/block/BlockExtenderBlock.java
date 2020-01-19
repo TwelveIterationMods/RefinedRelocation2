@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -50,7 +50,7 @@ public class BlockExtenderBlock extends ContainerBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileBlockExtender tileEntity = (TileBlockExtender) world.getTileEntity(pos);
             NetworkHooks.openGui((ServerPlayerEntity) player, tileEntity, writer -> {
@@ -59,7 +59,7 @@ public class BlockExtenderBlock extends ContainerBlock {
             });
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BlockExtenderBlock extends ContainerBlock {
         return BlockRenderType.MODEL;
     }
 
-    @Override
+    /* TODO BlockRenderLayer @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
@@ -75,7 +75,7 @@ public class BlockExtenderBlock extends ContainerBlock {
     @Override
     public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT || layer == BlockRenderLayer.TRANSLUCENT;
-    }
+    }*/
 
     @Nullable
     @Override

@@ -88,7 +88,7 @@ public class CreativeTabFilter implements IChecklistFilter {
         ListNBT list = new ListNBT();
         for (int i = 0; i < tabStates.length; i++) {
             if (tabStates[i]) {
-                list.add(new StringNBT(creativeTabs[i]));
+                list.add(StringNBT.func_229705_a_(creativeTabs[i]));
             }
         }
         return list;

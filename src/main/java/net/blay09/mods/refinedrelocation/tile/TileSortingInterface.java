@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.ModTiles;
+import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
@@ -31,7 +31,7 @@ public class TileSortingInterface extends TileMod implements ITickableTileEntity
     private int currentDetectionSlot;
 
     public TileSortingInterface() {
-        super(ModTiles.sortingInterface);
+        super(ModTileEntities.sortingInterface);
     }
 
     @Override

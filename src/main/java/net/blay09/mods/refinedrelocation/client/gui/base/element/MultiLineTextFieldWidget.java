@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -329,18 +330,18 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
     private void drawCursor(int x, int y) {
         Tessellator tessellator = Tessellator.getInstance();
-        GlStateManager.color4f(0f, 0f, 1f, 1f);
-        GlStateManager.disableTexture();
-        GlStateManager.enableColorLogicOp();
-        GlStateManager.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+        RenderSystem.color4f(0f, 0f, 1f, 1f);
+        RenderSystem.disableTexture();
+        RenderSystem.enableColorLogicOp();
+        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
         tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
         tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
         tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
         tessellator.getBuffer().pos(x + 1, y, 0).endVertex();
         tessellator.getBuffer().pos(x, y, 0).endVertex();
         tessellator.draw();
-        GlStateManager.disableColorLogicOp();
-        GlStateManager.enableTexture();
+        RenderSystem.disableColorLogicOp();
+        RenderSystem.enableTexture();
     }
 
     public void setText(String text) {
