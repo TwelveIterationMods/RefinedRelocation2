@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
@@ -33,32 +32,30 @@ public class BlockHighlightHandler {
             return;
         }
 
-        if (event.getTarget() != null && event.getTarget().getType() == RayTraceResult.Type.BLOCK) {
-            World world = player.world;
-            BlockRayTraceResult rayTraceResult = event.getTarget();
-            TileEntity tileEntity = world.getTileEntity(rayTraceResult.getPos());
-            if (tileEntity != null) {
-                LazyOptional<ISortingGridMember> sortingMemberCap = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, rayTraceResult.getFace());
-                //noinspection ConstantConditions - null check is necessary because some mods still didn't quite understand what Nonnull means
-                if (sortingMemberCap != null) {
-                    sortingMemberCap.ifPresent(sortingMember -> {
-                        ISortingGrid sortingGrid = sortingMember.getSortingGrid();
-                        if (sortingGrid != null) {
-                            double camX = event.getInfo().getProjectedView().x;
-                            double camY = event.getInfo().getProjectedView().y;
-                            double camZ = event.getInfo().getProjectedView().z;
-                            for (ISortingGridMember member : sortingGrid.getMembers()) {
-                                TileEntity memberTile = member.getTileEntity();
-                                BlockPos pos = memberTile.getPos();
-                                BlockState blockState = world.getBlockState(pos);
-                                VoxelShape shape = blockState.getShape(world, pos, ISelectionContext.forEntity(player));
-                                IVertexBuilder vertexBuilder = event.getBuffers().getBuffer(RenderType.lines());
-                                WorldRenderer.drawShape(event.getMatrix(), vertexBuilder, shape, -camX, -camY, -camZ, 1f, 1f, 0f, 0.75f);
-                            }
-                            event.setCanceled(true);
+        World world = player.world;
+        BlockRayTraceResult rayTraceResult = event.getTarget();
+        TileEntity tileEntity = world.getTileEntity(rayTraceResult.getPos());
+        if (tileEntity != null) {
+            LazyOptional<ISortingGridMember> sortingMemberCap = tileEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, rayTraceResult.getFace());
+            //noinspection ConstantConditions - null check is necessary because some mods still didn't quite understand what Nonnull means
+            if (sortingMemberCap != null) {
+                sortingMemberCap.ifPresent(sortingMember -> {
+                    ISortingGrid sortingGrid = sortingMember.getSortingGrid();
+                    if (sortingGrid != null) {
+                        double camX = event.getInfo().getProjectedView().x;
+                        double camY = event.getInfo().getProjectedView().y;
+                        double camZ = event.getInfo().getProjectedView().z;
+                        for (ISortingGridMember member : sortingGrid.getMembers()) {
+                            TileEntity memberTile = member.getTileEntity();
+                            BlockPos pos = memberTile.getPos();
+                            BlockState blockState = world.getBlockState(pos);
+                            VoxelShape shape = blockState.getShape(world, pos, ISelectionContext.forEntity(player));
+                            IVertexBuilder vertexBuilder = event.getBuffers().getBuffer(RenderType.lines());
+                            WorldRenderer.drawShape(event.getMatrix(), vertexBuilder, shape, pos.getX() - camX, pos.getY() - camY, pos.getZ() - camZ, 1f, 1f, 0f, 0.75f);
                         }
-                    });
-                }
+                        event.setCanceled(true);
+                    }
+                });
             }
         }
     }

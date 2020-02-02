@@ -1,10 +1,9 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
-import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
+import net.blay09.mods.refinedrelocation.container.SortingChestContainer;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -12,13 +11,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class SortingChestScreen extends ModContainerScreen<ContainerSortingChest> {
+public class SortingChestScreen extends ModContainerScreen<SortingChestContainer> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
     private final SortingChestTileEntity tileEntity;
 
-    public SortingChestScreen(ContainerSortingChest container, PlayerInventory playerInventory, ITextComponent displayName) {
+    public SortingChestScreen(SortingChestContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
         this.ySize = 168;

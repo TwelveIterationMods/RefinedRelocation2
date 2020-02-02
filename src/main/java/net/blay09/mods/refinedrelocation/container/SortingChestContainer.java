@@ -11,11 +11,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 @ChestContainer
-public class ContainerSortingChest extends BaseContainer implements IContainerWithDoor {
+public class SortingChestContainer extends BaseContainer implements IContainerWithDoor {
 
     private final SortingChestTileEntity tileEntity;
 
-    public ContainerSortingChest(int windowId, PlayerInventory playerInventory, SortingChestTileEntity tileEntity) {
+    public SortingChestContainer(int windowId, PlayerInventory playerInventory, SortingChestTileEntity tileEntity) {
         super(ModContainers.sortingChest, windowId);
 
         this.tileEntity = tileEntity;
@@ -28,7 +28,7 @@ public class ContainerSortingChest extends BaseContainer implements IContainerWi
 
         addPlayerInventory(playerInventory, 85);
 
-        tileEntity.getDoorAnimator().openContainer(playerInventory.player);
+        tileEntity.openChest();
     }
 
     public SortingChestTileEntity getTileEntity() {
@@ -74,7 +74,7 @@ public class ContainerSortingChest extends BaseContainer implements IContainerWi
     @Override
     public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
-        tileEntity.getDoorAnimator().closeContainer(player);
+        tileEntity.closeChest();
     }
 
 }

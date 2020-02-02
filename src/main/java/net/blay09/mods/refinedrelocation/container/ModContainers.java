@@ -18,7 +18,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModContainers {
     public static ContainerType<ContainerBlockExtender> blockExtender;
     public static ContainerType<ContainerFastHopper> fastHopper;
-    public static ContainerType<ContainerSortingChest> sortingChest;
+    public static ContainerType<SortingChestContainer> sortingChest;
 
     public static ContainerType<RootFilterContainer> rootFilter;
     public static ContainerType<NameFilterContainer> nameFilter;
@@ -46,7 +46,7 @@ public class ModContainers {
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity instanceof SortingChestTileEntity) {
-                return new ContainerSortingChest(windowId, inv, (SortingChestTileEntity) tileEntity);
+                return new SortingChestContainer(windowId, inv, (SortingChestTileEntity) tileEntity);
             }
 
             return null;

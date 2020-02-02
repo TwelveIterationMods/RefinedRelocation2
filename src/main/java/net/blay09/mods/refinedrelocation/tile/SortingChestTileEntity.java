@@ -1,11 +1,12 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.container.ContainerSortingChest;
-import net.blay09.mods.refinedrelocation.util.DoorAnimator;
+import net.blay09.mods.refinedrelocation.container.SortingChestContainer;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -15,7 +16,9 @@ import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -29,6 +32,8 @@ import javax.annotation.Nullable;
 
 public class SortingChestTileEntity extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable, IChestLid {
 
+    private static final int EVENT_NUM_PLAYERS = 1;
+
     private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -37,17 +42,18 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         }
     };
 
-    private final DoorAnimator doorAnimator = new DoorAnimator(this, 0, 1);
-
     private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
+
+    private float lidAngle;
+    private float prevLidAngle;
+    private int numPlayersUsing;
+    private int ticksSinceSync;
 
     private ITextComponent customName;
 
     public SortingChestTileEntity() {
         super(ModTileEntities.sortingChest);
-        doorAnimator.setSoundEventOpen(SoundEvents.BLOCK_CHEST_OPEN);
-        doorAnimator.setSoundEventClose(SoundEvents.BLOCK_CHEST_CLOSE);
     }
 
     @Override
@@ -59,7 +65,39 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     public void tick() {
         baseTick();
         sortingInventory.onUpdate(this);
-        doorAnimator.update();
+
+        if (++ticksSinceSync % 20 * 4 == 0) {
+            world.addBlockEvent(pos, ModBlocks.sortingChest, EVENT_NUM_PLAYERS, numPlayersUsing);
+        }
+
+        prevLidAngle = lidAngle;
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        if (numPlayersUsing > 0 && lidAngle == 0f) {
+            world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1f + 0.9f);
+        }
+
+        if (numPlayersUsing == 0 && lidAngle > 0f || numPlayersUsing > 0 && lidAngle < 1f) {
+            float oldLidAngle = lidAngle;
+            if (numPlayersUsing > 0) {
+                lidAngle += 0.1f;
+            } else {
+                lidAngle -= 0.1f;
+            }
+
+            if (lidAngle > 1f) {
+                lidAngle = 1f;
+            }
+
+            if (lidAngle < 0.5f && oldLidAngle >= 0.5f) {
+                world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1f + 0.9f);
+            }
+
+            if (lidAngle < 0f) {
+                lidAngle = 0f;
+            }
+        }
     }
 
     @Override
@@ -71,10 +109,6 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Override
     public void onChunkUnloaded() {
         sortingInventory.onInvalidate(this);
-    }
-
-    public DoorAnimator getDoorAnimator() {
-        return doorAnimator;
     }
 
     @Override
@@ -112,12 +146,6 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
             compound.putString("CustomName", customName.getUnformattedComponentText());
         }
         return compound;
-    }
-
-
-    @Override
-    public boolean receiveClientEvent(int id, int type) {
-        return doorAnimator.receiveClientEvent(id, type) || super.receiveClientEvent(id, type);
     }
 
     @Nonnull
@@ -164,7 +192,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerSortingChest(i, playerInventory, this);
+        return new SortingChestContainer(i, playerInventory, this);
     }
 
     public void setCustomName(String customName) {
@@ -188,7 +216,27 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     }
 
     @Override
+    public boolean receiveClientEvent(int id, int value) {
+        if (id == EVENT_NUM_PLAYERS) {
+            numPlayersUsing = value;
+            return true;
+        }
+
+        return super.receiveClientEvent(id, value);
+    }
+
+    public void openChest() {
+        ++numPlayersUsing;
+        world.addBlockEvent(pos, Blocks.ENDER_CHEST, EVENT_NUM_PLAYERS, numPlayersUsing);
+    }
+
+    public void closeChest() {
+        --numPlayersUsing;
+        world.addBlockEvent(pos, Blocks.ENDER_CHEST, EVENT_NUM_PLAYERS, numPlayersUsing);
+    }
+
+    @Override
     public float getLidAngle(float partialTicks) {
-        return 0;
+        return MathHelper.lerp(partialTicks, this.prevLidAngle, this.lidAngle);
     }
 }

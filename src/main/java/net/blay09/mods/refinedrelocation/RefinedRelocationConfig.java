@@ -17,13 +17,7 @@ public class RefinedRelocationConfig {
 	}
 
 	public static class Client {
-		public final ForgeConfigSpec.BooleanValue renderChestNameTags;
-
 		Client(ForgeConfigSpec.Builder builder) {
-			renderChestNameTags = builder
-					.comment("If true, chests that have been named with a name tag will display their name above them.")
-					.translation("refinedrelocation.config.renderChestNameTags")
-					.define("renderChestNameTags", true);
 		}
 	}
 

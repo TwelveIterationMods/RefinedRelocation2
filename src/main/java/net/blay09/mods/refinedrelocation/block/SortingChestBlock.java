@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.block;
 
+import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
@@ -13,7 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityMerger;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -21,13 +24,15 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-public class SortingChestBlock extends ContainerBlock {
+public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity> {
 
     public static final String name = "sorting_chest";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
@@ -36,7 +41,13 @@ public class SortingChestBlock extends ContainerBlock {
     private static final VoxelShape SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
     public SortingChestBlock() {
-        super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f));
+        super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f), () -> ModTileEntities.sortingChest);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public TileEntityMerger.ICallbackWrapper<? extends ChestTileEntity> func_225536_a_(BlockState p_225536_1_, World p_225536_2_, BlockPos p_225536_3_, boolean p_225536_4_) {
+        return TileEntityMerger.ICallback::func_225537_b_;
     }
 
     @Override
