@@ -16,7 +16,6 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -221,7 +220,7 @@ public class PresetFilter implements IChecklistFilter {
         ListNBT list = new ListNBT();
         for (int i = 0; i < presetStates.length; i++) {
             if (presetStates[i]) {
-                list.add(StringNBT.func_229705_a_(presetList.get(i).getId()));
+                list.add(StringNBT.valueOf(presetList.get(i).getId()));
             }
         }
         return list;

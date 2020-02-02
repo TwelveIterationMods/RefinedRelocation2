@@ -1,10 +1,7 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.block.*;
-import net.blay09.mods.refinedrelocation.client.render.SortingChestTileEntityRenderer;
-import net.blay09.mods.refinedrelocation.item.ItemBlockSortingChest;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -31,7 +28,7 @@ public class ModBlocks {
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                new ItemBlockSortingChest(sortingChest, itemBlockProperties()).setRegistryName(SortingChestBlock.name),
+                new BlockItem(sortingChest, itemBlockProperties()).setRegistryName(SortingChestBlock.name),
                 new BlockItem(blockExtender, itemBlockProperties()).setRegistryName(BlockExtenderBlock.name),
                 new BlockItem(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
                 new BlockItem(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),
@@ -40,7 +37,7 @@ public class ModBlocks {
         );
     }
 
-    public static Item.Properties itemBlockProperties() {
+    private static Item.Properties itemBlockProperties() {
         return new Item.Properties().group(RefinedRelocation.itemGroup);
     }
 

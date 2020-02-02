@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class ModelLidOverlay extends Model {
+/*public class ModelLidOverlay extends Model {
 
     public static class ModelQuad extends ModelRenderer.ModelBox {
         private final TexturedQuad actualQuad;
@@ -52,4 +52,4 @@ public class ModelLidOverlay extends Model {
         chestLid.render(0.0625f);
     }
 
-}
+}*/

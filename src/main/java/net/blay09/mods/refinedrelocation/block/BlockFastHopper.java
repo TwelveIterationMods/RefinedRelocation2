@@ -143,11 +143,11 @@ public class BlockFastHopper extends ContainerBlock {
     }
 
     @Override
-    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof TileFastHopper) {
-                if (player.func_225608_bj_()) {
+                if (player.isShiftKeyDown()) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 } else {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (TileFastHopper) tileEntity, it -> it.writeBlockPos(pos));

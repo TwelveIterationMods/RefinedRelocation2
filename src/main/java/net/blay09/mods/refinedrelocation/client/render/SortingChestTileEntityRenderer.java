@@ -1,26 +1,25 @@
 package net.blay09.mods.refinedrelocation.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.blay09.mods.refinedrelocation.ModBlocks;
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
-import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
-import net.blay09.mods.refinedrelocation.block.SortingChestBlock;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.IChestLid;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public class SortingChestTileEntityRenderer extends TileEntityRenderer<SortingChestTileEntity> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/entity/sorting_chest/normal.png");
+    //private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/entity/sorting_chest/normal.png");
+
+    public SortingChestTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
+    }
+
+    @Override
+    public void render(SortingChestTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+        // TODO
+    }
+
+    /*
 
     public static final ItemStackTileEntityRenderer sortingChestItemRenderer = new ItemStackTileEntityRenderer() {
         private SortingChestTileEntity sortingChest;
@@ -98,5 +97,5 @@ public class SortingChestTileEntityRenderer extends TileEntityRenderer<SortingCh
         f = 1f - f;
         f = 1f - f * f * f;
         model.getLid().rotateAngleX = -(f * ((float) Math.PI / 2f));
-    }
+    }*/
 }

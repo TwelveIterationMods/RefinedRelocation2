@@ -1,5 +1,7 @@
 package net.blay09.mods.refinedrelocation.util;
 
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.util.Direction;
 
 public enum RelativeSide {
@@ -18,7 +20,9 @@ public enum RelativeSide {
 		}
 
 		if(baseFacing.getAxis() == Direction.Axis.Y) {
-			Direction rot = baseFacing.rotateAround(Direction.Axis.X);
+			Matrix4f matrix = new Matrix4f();
+			matrix.multiply(new Quaternion(90f, 0f, 0f, true));
+			Direction rot = Direction.rotateFace(matrix, baseFacing);
 			if(rot == facing) {
 				return BOTTOM;
 			} else if(rot == facing.getOpposite()) {
@@ -33,7 +37,9 @@ public enum RelativeSide {
 		}
 
 		if(baseFacing.getAxis() == Direction.Axis.Y) {
-			Direction rot = baseFacing.rotateAround(Direction.Axis.Z);
+			Matrix4f matrix = new Matrix4f();
+			matrix.multiply(new Quaternion(0f, 0f, 90f, true));
+			Direction rot = Direction.rotateFace(matrix, baseFacing);
 			if(rot == facing) {
 				return baseFacing.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? RIGHT : LEFT;
 			} else if(rot == facing.getOpposite()) {
@@ -64,25 +70,33 @@ public enum RelativeSide {
 				return baseFacing.getOpposite();
 			case LEFT:
 				if(baseFacing.getAxis() == Direction.Axis.Y) {
-					return baseFacing.rotateAround(Direction.Axis.Z);
+					Matrix4f matrix = new Matrix4f();
+					matrix.multiply(new Quaternion(0f, 0f, 90f, true));
+					return Direction.rotateFace(matrix, baseFacing);
 				} else {
 					return baseFacing.rotateY();
 				}
 			case RIGHT:
 				if(baseFacing.getAxis() == Direction.Axis.Y) {
-					return baseFacing.rotateAround(Direction.Axis.Z).getOpposite();
+					Matrix4f matrix = new Matrix4f();
+					matrix.multiply(new Quaternion(0f, 0f, 90f, true));
+					return Direction.rotateFace(matrix, baseFacing).getOpposite();
 				} else {
 					return baseFacing.rotateYCCW();
 				}
 			case TOP:
 				if(baseFacing.getAxis() == Direction.Axis.Y) {
-					return baseFacing.rotateAround(Direction.Axis.X);
+					Matrix4f matrix = new Matrix4f();
+					matrix.multiply(new Quaternion(90f, 0f, 0f, true));
+					return Direction.rotateFace(matrix, baseFacing);
 				} else {
 					return Direction.UP;
 				}
 			case BOTTOM:
 				if(baseFacing.getAxis() == Direction.Axis.Y) {
-					return baseFacing.rotateAround(Direction.Axis.X).getOpposite();
+					Matrix4f matrix = new Matrix4f();
+					matrix.multiply(new Quaternion(90f, 0f, 0f, true));
+					return Direction.rotateFace(matrix, baseFacing).getOpposite();
 				} else {
 					return Direction.DOWN;
 				}
