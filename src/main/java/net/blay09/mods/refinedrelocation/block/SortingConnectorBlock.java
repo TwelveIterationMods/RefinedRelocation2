@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.block;
 
-import com.google.common.collect.Maps;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.tile.TileSortingConnector;
@@ -19,6 +18,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SortingConnectorBlock extends ContainerBlock {
@@ -26,7 +26,7 @@ public class SortingConnectorBlock extends ContainerBlock {
     public static final String name = "sorting_connector";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-    private static Map<BlockPos, BlockState> boundingBoxCache = Maps.newHashMap();
+    private static Map<BlockPos, BlockState> boundingBoxCache = new HashMap<>();
     private static final VoxelShape CENTER_SHAPE = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
     private static final VoxelShape[] FACING_SHAPES = new VoxelShape[]{
             Block.makeCuboidShape(5, 0, 5, 11, 5, 11),         // Down
@@ -103,9 +103,7 @@ public class SortingConnectorBlock extends ContainerBlock {
     }
 
     public BlockState getActualState(BlockState state, IBlockReader world, BlockPos pos) {
-        BlockState actualState = getConnectionState(world, pos, state);
-        boundingBoxCache.put(pos, actualState);
-        return actualState;
+        return getConnectionState(world, pos, state);
     }
 
     private BlockState getConnectionState(IBlockReader world, BlockPos pos, BlockState state) {

@@ -55,11 +55,6 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
         return SHAPE;
     }
 
-    // TODO @Override
-    public boolean hasCustomBreakingProgress(BlockState state) {
-        return true;
-    }
-
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
