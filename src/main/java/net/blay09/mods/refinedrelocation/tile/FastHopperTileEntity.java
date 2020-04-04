@@ -36,8 +36,12 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class FastHopperTileEntity extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable {
+
+    private static final Predicate<? super Entity> HAS_ITEM_HANDLER = (entity) -> entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
 
     private final ItemStackHandler itemHandler = createItemHandler();
 
@@ -97,9 +101,7 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
                 }
 
                 if (hasSpace) {
-                    BlockPos upPos = pos.offset(Direction.UP);
-                    TileEntity upTile = world.getTileEntity(upPos);
-                    LazyOptional<IItemHandler> itemHandlerCap = upTile != null ? upTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN) : LazyOptional.empty();
+                    LazyOptional<IItemHandler> itemHandlerCap = getItemHandlerAt(pos.offset(Direction.UP));
                     if (itemHandlerCap.isPresent()) {
                         pullItem(itemHandlerCap.orElseThrow(ConcurrentModificationException::new));
                     }
@@ -110,7 +112,22 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
         }
     }
 
-    public void pushItem(int sourceSlot, IItemHandler targetItemHandler) {
+    private LazyOptional<IItemHandler> getItemHandlerAt(BlockPos pos) {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity != null) {
+            return tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
+        }
+
+        List<Entity> list = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(pos.getX() - 0.5, pos.getY() - 0.5, pos.getZ() - 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), null);
+        if (!list.isEmpty()) {
+            Entity entity = list.get(world.rand.nextInt(list.size()));
+            return entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        }
+
+        return LazyOptional.empty();
+    }
+
+    private void pushItem(int sourceSlot, IItemHandler targetItemHandler) {
         ItemStack sourceStack = itemHandler.extractItem(sourceSlot, Items.AIR.getItemStackLimit(ItemStack.EMPTY), true);
         ItemStack restStack = ItemHandlerHelper.insertItem(targetItemHandler, sourceStack, false);
         itemHandler.extractItem(sourceSlot, restStack.isEmpty() ? sourceStack.getCount() : sourceStack.getCount() - restStack.getCount(), false);
@@ -127,7 +144,7 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
         }
     }
 
-    public boolean pullItem(ItemEntity entityItem) {
+    private boolean pullItem(ItemEntity entityItem) {
         ItemStack sourceStack = entityItem.getItem();
         ItemStack restStack = ItemHandlerHelper.insertItem(itemHandler, sourceStack, false);
         if (!restStack.isEmpty()) {
