@@ -28,7 +28,7 @@ public class SortingChestContainer extends BaseContainer implements IContainerWi
 
         addPlayerInventory(playerInventory, 85);
 
-        tileEntity.openChest();
+        tileEntity.openChest(playerInventory.player);
     }
 
     public SortingChestTileEntity getTileEntity() {
@@ -74,7 +74,7 @@ public class SortingChestContainer extends BaseContainer implements IContainerWi
     @Override
     public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
-        tileEntity.closeChest();
+        tileEntity.closeChest(player);
     }
 
 }

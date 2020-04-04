@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.tile;
 
-import net.blay09.mods.refinedrelocation.ModBlocks;
+
 import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
@@ -18,6 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -30,7 +31,11 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SortingChestTileEntity extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable, IChestLid {
+
+public class SortingChestTileEntity extends TileMod implements ITickableTileEntity,
+        INamedContainerProvider,
+        INameable,
+        IChestLid {
 
     private static final int EVENT_NUM_PLAYERS = 1;
 
@@ -66,8 +71,8 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         baseTick();
         sortingInventory.onUpdate(this);
 
-        if (++ticksSinceSync % 20 * 4 == 0) {
-            world.addBlockEvent(pos, ModBlocks.sortingChest, EVENT_NUM_PLAYERS, numPlayersUsing);
+        if (!world.isRemote && numPlayersUsing != 0 && (ticksSinceSync + pos.getX() + pos.getY() + pos.getZ()) % 200 == 0) {
+            numPlayersUsing = calculatePlayersUsing();
         }
 
         prevLidAngle = lidAngle;
@@ -75,7 +80,14 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         int y = pos.getY();
         int z = pos.getZ();
         if (numPlayersUsing > 0 && lidAngle == 0f) {
-            world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1f + 0.9f);
+            world.playSound(null,
+                    x + 0.5,
+                    y + 0.5,
+                    z + 0.5,
+                    SoundEvents.BLOCK_CHEST_OPEN,
+                    SoundCategory.BLOCKS,
+                    0.5f,
+                    world.rand.nextFloat() * 0.1f + 0.9f);
         }
 
         if (numPlayersUsing == 0 && lidAngle > 0f || numPlayersUsing > 0 && lidAngle < 1f) {
@@ -91,13 +103,41 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
             }
 
             if (lidAngle < 0.5f && oldLidAngle >= 0.5f) {
-                world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1f + 0.9f);
+                world.playSound(null,
+                        x + 0.5,
+                        y + 0.5,
+                        z + 0.5,
+                        SoundEvents.BLOCK_CHEST_CLOSE,
+                        SoundCategory.BLOCKS,
+                        0.5f,
+                        world.rand.nextFloat() * 0.1f + 0.9f);
             }
 
             if (lidAngle < 0f) {
                 lidAngle = 0f;
             }
         }
+    }
+
+    private int calculatePlayersUsing() {
+        int result = 0;
+        float distance = 5f;
+
+        for (PlayerEntity player : world.getEntitiesWithinAABB(PlayerEntity.class,
+                new AxisAlignedBB((float) pos.getX() - distance,
+                        (float) pos.getY() - distance,
+                        (float) pos.getZ() - distance,
+                        (float) (pos.getX() + 1) + distance,
+                        (float) (pos.getY() + 1) + distance,
+                        (float) (pos.getZ() + 1) + distance))) {
+            if (player.openContainer instanceof SortingChestContainer) {
+                if (((SortingChestContainer) player.openContainer).getTileEntity() == this) {
+                    ++result;
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -119,7 +159,9 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
 
         rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
 
-        customName = compound.contains("CustomName") ? new StringTextComponent(compound.getString("CustomName")) : null;
+        customName = compound.contains("CustomName")
+                ? new StringTextComponent(compound.getString("CustomName"))
+                : null;
     }
 
     @Override
@@ -218,6 +260,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Override
     public boolean receiveClientEvent(int id, int value) {
         if (id == EVENT_NUM_PLAYERS) {
+            System.out.println("Received Client Event: " + numPlayersUsing);
             numPlayersUsing = value;
             return true;
         }
@@ -225,14 +268,18 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         return super.receiveClientEvent(id, value);
     }
 
-    public void openChest() {
-        ++numPlayersUsing;
-        world.addBlockEvent(pos, Blocks.ENDER_CHEST, EVENT_NUM_PLAYERS, numPlayersUsing);
+    public void openChest(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            numPlayersUsing = Math.max(0, numPlayersUsing + 1);
+            world.addBlockEvent(pos, Blocks.ENDER_CHEST, EVENT_NUM_PLAYERS, numPlayersUsing);
+        }
     }
 
-    public void closeChest() {
-        --numPlayersUsing;
-        world.addBlockEvent(pos, Blocks.ENDER_CHEST, EVENT_NUM_PLAYERS, numPlayersUsing);
+    public void closeChest(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            numPlayersUsing = Math.max(0, numPlayersUsing - 1);
+            world.addBlockEvent(pos, Blocks.ENDER_CHEST, EVENT_NUM_PLAYERS, numPlayersUsing);
+        }
     }
 
     @Override
