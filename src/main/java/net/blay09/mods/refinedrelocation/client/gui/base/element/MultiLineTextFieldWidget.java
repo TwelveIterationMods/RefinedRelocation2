@@ -1,15 +1,11 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 public class MultiLineTextFieldWidget extends TextFieldWidget implements IScrollTarget {
 
@@ -188,6 +184,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        this.field_212956_h = Screen.hasShiftDown();
+
         boolean isInside = mouseX >= x && mouseX < (x + width) && mouseY >= y && mouseY < (y + height);
 
         if (isFocused() && isInside && mouseButton == 0) {
@@ -213,6 +211,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         if (!isFocused()) {
             return false;
         }
+
+        this.field_212956_h = Screen.hasShiftDown();
 
         if (Screen.isPaste(keyCode)) {
             String clipboardString = Minecraft.getInstance().keyboardListener.getClipboardString();
@@ -341,26 +341,42 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 int startIndex = lastLineStartIdx + lineScrollOffset;
                 int endIndex = getCursorPosition();
                 if (startIndex <= endIndex) {
-                    drawCursor(x + fontRenderer.getStringWidth(getText().substring(startIndex, endIndex)) + PADDING, y + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING);
+                    int cursorX = x + fontRenderer.getStringWidth(getText().substring(startIndex, endIndex)) + PADDING;
+                    int cursorY = y + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING;
+                    AbstractGui.fill(cursorX, cursorY, cursorX + 1, cursorY + 9, -3092272);
+                }
+            }
+
+            // Note that selection can go in both ways, either cursorPos or selectionEnd can be the min/max
+            int selectionStart = Math.min(this.selectionEnd, getCursorPosition());
+            int selectionEnd = Math.max(this.selectionEnd, getCursorPosition());
+            if (selectionEnd != selectionStart) {
+                int currentLineStartIndex = 0;
+                int lineSelectionStartIndex = selectionStart;
+                int linesPassed = 0;
+                for (int i = 0; i < selectionEnd; i++) {
+                    char charAt = getText().charAt(i);
+                    if (charAt == '\n' || i == selectionEnd - 1) {
+                        if (i >= selectionStart) {
+                            int offsetX = 0;
+                            if (currentLineStartIndex < selectionStart) {
+                                String unselectedLineText = getText().substring(currentLineStartIndex, selectionStart);
+                                offsetX = fontRenderer.getStringWidth(unselectedLineText);
+                            }
+
+                            String selectedLineText = getText().substring(lineSelectionStartIndex, charAt != '\n' ? i + 1 : i);
+                            int selectedLineWidth = fontRenderer.getStringWidth(selectedLineText);
+                            int selectionX = x + offsetX + 1;
+                            int selectionY = y + linesPassed * 9 + 1;
+                            drawSelectionBox(selectionX, selectionY, selectionX + selectedLineWidth + 1, selectionY + 9);
+                            lineSelectionStartIndex = i + 1;
+                        }
+                        currentLineStartIndex = i + 1;
+                        linesPassed++;
+                    }
                 }
             }
         }
-    }
-
-    private void drawCursor(int x, int y) {
-        Tessellator tessellator = Tessellator.getInstance();
-        RenderSystem.color4f(0f, 0f, 1f, 1f);
-        RenderSystem.disableTexture();
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-        tessellator.getBuffer().pos(x, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
-        tessellator.getBuffer().pos(x + 1, y + fontRenderer.FONT_HEIGHT, 0).endVertex();
-        tessellator.getBuffer().pos(x + 1, y, 0).endVertex();
-        tessellator.getBuffer().pos(x, y, 0).endVertex();
-        tessellator.draw();
-        RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
     }
 
     public void setText(String text) {
