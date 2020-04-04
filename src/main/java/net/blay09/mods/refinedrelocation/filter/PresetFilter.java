@@ -155,6 +155,13 @@ public class PresetFilter implements IChecklistFilter {
         }
     };
 
+    public static final Preset ARMORS = new Preset("armors") {
+        @Override
+        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+            return itemStack.getItem() instanceof ArmorItem;
+        }
+    };
+
     public static final Preset TOOLS = new Preset("tools") {
         @Override
         public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
@@ -181,6 +188,7 @@ public class PresetFilter implements IChecklistFilter {
         registerPreset(FUEL_ITEMS);
         registerPreset(REPAIRABLE);
         registerPreset(WEAPONS);
+        registerPreset(ARMORS);
         registerPreset(TOOLS);
         registerPreset(ENCHANTED);
 
