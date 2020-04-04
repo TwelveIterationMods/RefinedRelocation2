@@ -356,19 +356,26 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 int linesPassed = 0;
                 for (int i = 0; i < selectionEnd; i++) {
                     char charAt = getText().charAt(i);
-                    if (charAt == '\n' || i == selectionEnd - 1) {
+                    if (charAt == '\n' || i + 1 == selectionEnd) {
                         if (i >= selectionStart) {
                             int offsetX = 0;
-                            if (currentLineStartIndex < selectionStart) {
-                                String unselectedLineText = getText().substring(currentLineStartIndex, selectionStart);
+                            int unselectedScrolledStartIndex = currentLineStartIndex + lineScrollOffset;
+                            if (unselectedScrolledStartIndex < selectionStart) {
+                                String unselectedLineText = getText().substring(unselectedScrolledStartIndex, selectionStart);
                                 offsetX = fontRenderer.getStringWidth(unselectedLineText);
                             }
 
-                            String selectedLineText = getText().substring(lineSelectionStartIndex, charAt != '\n' ? i + 1 : i);
-                            int selectedLineWidth = fontRenderer.getStringWidth(selectedLineText);
-                            int selectionX = x + offsetX + 1;
-                            int selectionY = y + linesPassed * 9 + 1;
-                            drawSelectionBox(selectionX, selectionY, selectionX + selectedLineWidth + 1, selectionY + 9);
+                            int scrolledStartIndex = lineSelectionStartIndex;
+                            if (currentLineStartIndex + lineScrollOffset > selectionStart) {
+                                scrolledStartIndex += lineScrollOffset;
+                            }
+                            if (scrolledStartIndex <= i) {
+                                String selectedLineText = getText().substring(scrolledStartIndex, charAt == '\n' ? i : i + 1);
+                                int selectedLineWidth = fontRenderer.getStringWidth(selectedLineText);
+                                int selectionX = x + offsetX + 1;
+                                int selectionY = y + (linesPassed - scrollOffset) * 9 + 1;
+                                drawSelectionBox(selectionX, selectionY, selectionX + selectedLineWidth + 1, selectionY + 9);
+                            }
                             lineSelectionStartIndex = i + 1;
                         }
                         currentLineStartIndex = i + 1;
@@ -376,6 +383,10 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                     }
                 }
             }
+
+            /*fontRenderer.drawStringWithShadow("LineScrollOffset: " + lineScrollOffset, 10f, 10f, 0xFFFFFFFF);
+            fontRenderer.drawStringWithShadow("SelectionStart: " + selectionStart, 10f, 20f, 0xFFFFFFFF);
+            fontRenderer.drawStringWithShadow("SelectionEnd: " + selectionEnd, 10f, 30f, 0xFFFFFFFF);*/
         }
     }
 
