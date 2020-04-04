@@ -19,8 +19,8 @@ public class ModBlocks {
         registry.registerAll(
                 sortingChest = new SortingChestBlock().setRegistryName(SortingChestBlock.name),
                 blockExtender = new BlockExtenderBlock().setRegistryName(BlockExtenderBlock.name),
-                fastHopper = new BlockFastHopper().setRegistryName(BlockFastHopper.name),
-                filteredHopper = new BlockFilteredHopper().setRegistryName(BlockFilteredHopper.name),
+                fastHopper = new FastHopperBlock().setRegistryName(FastHopperBlock.name),
+                filteredHopper = new FilteredHopperBlock().setRegistryName(FilteredHopperBlock.name),
                 sortingConnector = new SortingConnectorBlock().setRegistryName(SortingConnectorBlock.name),
                 sortingInterface = new SortingInterfaceBlock().setRegistryName(SortingInterfaceBlock.name)
         );
@@ -30,8 +30,8 @@ public class ModBlocks {
         registry.registerAll(
                 new BlockItem(sortingChest, itemBlockProperties()).setRegistryName(SortingChestBlock.name),
                 new BlockItem(blockExtender, itemBlockProperties()).setRegistryName(BlockExtenderBlock.name),
-                new BlockItem(fastHopper, itemBlockProperties()).setRegistryName(BlockFastHopper.name),
-                new BlockItem(filteredHopper, itemBlockProperties()).setRegistryName(BlockFilteredHopper.name),
+                new BlockItem(fastHopper, itemBlockProperties()).setRegistryName(FastHopperBlock.name),
+                new BlockItem(filteredHopper, itemBlockProperties()).setRegistryName(FilteredHopperBlock.name),
                 new BlockItem(sortingConnector, itemBlockProperties()).setRegistryName(SortingConnectorBlock.name),
                 new BlockItem(sortingInterface, itemBlockProperties()).setRegistryName(SortingInterfaceBlock.name)
         );

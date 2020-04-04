@@ -13,10 +13,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileFilteredHopper extends TileFastHopper {
+public class FilteredHopperTileEntity extends FastHopperTileEntity {
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
 
-    public TileFilteredHopper() {
+    public FilteredHopperTileEntity() {
         super(ModTileEntities.filteredHopper);
     }
 
@@ -25,7 +25,7 @@ public class TileFilteredHopper extends TileFastHopper {
         return new ItemStackHandler(5) {
             @Override
             public ItemStack insertItem(int slot, ItemStack itemStack, boolean simulate) {
-                if (itemStack.isEmpty() || !rootFilter.passes(TileFilteredHopper.this, itemStack)) {
+                if (itemStack.isEmpty() || !rootFilter.passes(FilteredHopperTileEntity.this, itemStack)) {
                     return itemStack;
                 }
                 return super.insertItem(slot, itemStack, simulate);

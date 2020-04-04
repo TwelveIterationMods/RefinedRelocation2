@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModTileEntities;
-import net.blay09.mods.refinedrelocation.block.BlockFastHopper;
+import net.blay09.mods.refinedrelocation.block.FastHopperBlock;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -13,6 +13,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -20,6 +21,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -34,18 +37,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ConcurrentModificationException;
 
-public class TileFastHopper extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable {
+public class FastHopperTileEntity extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable {
 
     private final ItemStackHandler itemHandler = createItemHandler();
 
     private ITextComponent customName;
     private int cooldown;
 
-    public TileFastHopper() {
+    public FastHopperTileEntity() {
         super(ModTileEntities.fastHopper);
     }
 
-    public TileFastHopper(TileEntityType<?> type) {
+    public FastHopperTileEntity(TileEntityType<?> type) {
         super(type);
     }
 
@@ -64,12 +67,12 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
             cooldown--;
             if (cooldown <= 0) {
                 BlockState state = world.getBlockState(getPos());
-                boolean isEnabled = state.get(BlockFastHopper.ENABLED);
+                boolean isEnabled = state.get(FastHopperBlock.ENABLED);
                 if (!isEnabled) {
                     return;
                 }
 
-                Direction facing = state.get(BlockFastHopper.FACING);
+                Direction facing = state.get(FastHopperBlock.FACING);
                 Direction opposite = facing.getOpposite();
                 TileEntity facingTile = world.getTileEntity(pos.offset(facing));
                 LazyOptional<IItemHandler> targetItemHandlerCap = facingTile != null ? facingTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, opposite) : LazyOptional.empty();
@@ -99,9 +102,6 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
                     LazyOptional<IItemHandler> itemHandlerCap = upTile != null ? upTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN) : LazyOptional.empty();
                     if (itemHandlerCap.isPresent()) {
                         pullItem(itemHandlerCap.orElseThrow(ConcurrentModificationException::new));
-                    } else {
-                        float range = 0.75f;
-                        world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + 1.5f, pos.getZ() + range), Entity::isAlive).forEach(this::pullItem);
                     }
                 }
 
@@ -201,5 +201,13 @@ public class TileFastHopper extends TileMod implements ITickableTileEntity, INam
     @Override
     public ITextComponent getCustomName() {
         return customName;
+    }
+
+    public void onEntityCollision(Entity entity) {
+        if (entity instanceof ItemEntity) {
+            if (VoxelShapes.compare(VoxelShapes.create(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), IHopper.COLLECTION_AREA_SHAPE, IBooleanFunction.AND)) {
+                pullItem((ItemEntity) entity);
+            }
+        }
     }
 }

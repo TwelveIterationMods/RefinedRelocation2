@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.container;
 
-import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
+import net.blay09.mods.refinedrelocation.tile.FastHopperTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerFastHopper extends BaseContainer {
 
-    private final TileFastHopper tileEntity;
+    private final FastHopperTileEntity tileEntity;
 
-    public ContainerFastHopper(int windowId, PlayerInventory player, TileFastHopper tileEntity) {
+    public ContainerFastHopper(int windowId, PlayerInventory player, FastHopperTileEntity tileEntity) {
         super(ModContainers.fastHopper, windowId);
 
         this.tileEntity = tileEntity;
@@ -22,7 +22,7 @@ public class ContainerFastHopper extends BaseContainer {
         addPlayerInventory(player, 51);
     }
 
-    public TileFastHopper getTileEntity() {
+    public FastHopperTileEntity getTileEntity() {
         return tileEntity;
     }
 

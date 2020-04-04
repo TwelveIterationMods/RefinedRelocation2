@@ -1,12 +1,11 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
-import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
-import net.blay09.mods.refinedrelocation.tile.TileFilteredHopper;
+import net.blay09.mods.refinedrelocation.tile.FastHopperTileEntity;
+import net.blay09.mods.refinedrelocation.tile.FilteredHopperTileEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +15,7 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/hopper.png");
 
-    private final TileFastHopper tileEntity;
+    private final FastHopperTileEntity tileEntity;
 
     public FastHopperScreen(ContainerFastHopper container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
@@ -28,7 +27,7 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
     public void init() {
         super.init();
 
-        if (tileEntity instanceof TileFilteredHopper) {
+        if (tileEntity instanceof FilteredHopperTileEntity) {
             addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity));
         }
     }

@@ -13,8 +13,8 @@ public class ModTileEntities {
 
     public static TileEntityType<SortingChestTileEntity> sortingChest;
     public static TileEntityType<TileBlockExtender> blockExtender;
-    public static TileEntityType<TileFastHopper> fastHopper;
-    public static TileEntityType<TileFilteredHopper> filteredHopper;
+    public static TileEntityType<FastHopperTileEntity> fastHopper;
+    public static TileEntityType<FilteredHopperTileEntity> filteredHopper;
     public static TileEntityType<TileSortingConnector> sortingConnector;
     public static TileEntityType<TileSortingInterface> sortingInterface;
 
@@ -22,8 +22,8 @@ public class ModTileEntities {
         registry.registerAll(
                 sortingChest = build(SortingChestTileEntity::new, ModBlocks.sortingChest),
                 blockExtender = build(TileBlockExtender::new, ModBlocks.blockExtender),
-                fastHopper = build(TileFastHopper::new, ModBlocks.fastHopper),
-                filteredHopper = build(TileFilteredHopper::new, ModBlocks.filteredHopper),
+                fastHopper = build(FastHopperTileEntity::new, ModBlocks.fastHopper),
+                filteredHopper = build(FilteredHopperTileEntity::new, ModBlocks.filteredHopper),
                 sortingConnector = build(TileSortingConnector::new, ModBlocks.sortingConnector),
                 sortingInterface = build(TileSortingInterface::new, ModBlocks.sortingInterface)
         );

@@ -3,9 +3,10 @@ package net.blay09.mods.refinedrelocation.block;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
+import net.blay09.mods.refinedrelocation.tile.FastHopperTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -25,7 +26,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -35,7 +35,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
-public class BlockFastHopper extends ContainerBlock {
+public class FastHopperBlock extends ContainerBlock {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing", facing -> facing != Direction.UP);
     public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
@@ -58,7 +58,7 @@ public class BlockFastHopper extends ContainerBlock {
     private static final VoxelShape SOUTH_RAYTRACE_SHAPE = VoxelShapes.or(IHopper.INSIDE_BOWL_SHAPE, Block.makeCuboidShape(6.0D, 8.0D, 12.0D, 10.0D, 10.0D, 16.0D));
     private static final VoxelShape WEST_RAYTRACE_SHAPE = VoxelShapes.or(IHopper.INSIDE_BOWL_SHAPE, Block.makeCuboidShape(0.0D, 8.0D, 6.0D, 4.0D, 10.0D, 10.0D));
 
-    public BlockFastHopper() {
+    public FastHopperBlock() {
         super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3f, 8f));
     }
 
@@ -117,7 +117,7 @@ public class BlockFastHopper extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileFastHopper();
+        return new FastHopperTileEntity();
     }
 
     @Override
@@ -146,11 +146,11 @@ public class BlockFastHopper extends ContainerBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof TileFastHopper) {
+            if (tileEntity instanceof FastHopperTileEntity) {
                 if (player.isShiftKeyDown()) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
                 } else {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, (TileFastHopper) tileEntity, it -> it.writeBlockPos(pos));
+                    NetworkHooks.openGui((ServerPlayerEntity) player, (FastHopperTileEntity) tileEntity, it -> it.writeBlockPos(pos));
                 }
             }
         }
@@ -190,6 +190,14 @@ public class BlockFastHopper extends ContainerBlock {
         boolean isEnabled = !world.isBlockPowered(pos);
         if (isEnabled != state.get(ENABLED)) {
             world.setBlockState(pos, state.with(ENABLED, isEnabled), 4);
+        }
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity instanceof FastHopperTileEntity) {
+            ((FastHopperTileEntity) tileEntity).onEntityCollision(entity);
         }
     }
 }

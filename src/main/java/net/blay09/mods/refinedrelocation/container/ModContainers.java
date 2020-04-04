@@ -5,7 +5,7 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
-import net.blay09.mods.refinedrelocation.tile.TileFastHopper;
+import net.blay09.mods.refinedrelocation.tile.FastHopperTileEntity;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -56,8 +56,8 @@ public class ModContainers {
             BlockPos pos = data.readBlockPos();
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
-            if (tileEntity instanceof TileFastHopper) {
-                return new ContainerFastHopper(windowId, inv, (TileFastHopper) tileEntity);
+            if (tileEntity instanceof FastHopperTileEntity) {
+                return new ContainerFastHopper(windowId, inv, (FastHopperTileEntity) tileEntity);
             }
 
             return null;
