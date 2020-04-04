@@ -31,7 +31,7 @@ public class FilterPreviewHandler {
                 PlayerEntity entityPlayer = Minecraft.getInstance().player;
                 Container container = gui.getFilterContainer();
                 RenderSystem.pushMatrix();
-                RenderSystem.translatef(0, 0, 300);
+                RenderSystem.translatef(0, 0, 200);
                 for (Slot slot : container.inventorySlots) {
                     if (slot.inventory == entityPlayer.inventory) {
                         int guiLeft = gui.getFilterGuiLeft();
