@@ -260,7 +260,6 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Override
     public boolean receiveClientEvent(int id, int value) {
         if (id == EVENT_NUM_PLAYERS) {
-            System.out.println("Received Client Event: " + numPlayersUsing);
             numPlayersUsing = value;
             return true;
         }
