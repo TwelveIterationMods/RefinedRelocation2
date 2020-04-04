@@ -143,7 +143,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
     }
 
-    public void scroll(int x, int y) {
+    private void scroll(int x, int y) {
         lineScrollOffset = Math.max(lineScrollOffset + x, 0);
         scrollOffset = Math.max(scrollOffset + y, 0);
     }
@@ -292,8 +292,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     }
 
     private void addNewLine() {
-        setText(getText() + "\n");
-        setCursorPosition(getCursorPosition() + 1);
+        writeUnfiltered("\n");
     }
 
     @Override
@@ -392,6 +391,34 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     @Override
     public void setCurrentOffset(int offset) {
         this.scrollOffset = offset;
+    }
+
+    public void writeUnfiltered(String inputText) {
+        String resultText = "";
+        int lvt_4_1_ = Math.min(getCursorPosition(), selectionEnd);
+        int lvt_5_1_ = Math.max(getCursorPosition(), selectionEnd);
+        int lvt_6_1_ = maxStringLength - getText().length() - (lvt_4_1_ - lvt_5_1_);
+        if (!getText().isEmpty()) {
+            resultText = resultText + getText().substring(0, lvt_4_1_);
+        }
+
+        int lvt_7_2_;
+        if (lvt_6_1_ < inputText.length()) {
+            resultText = resultText + inputText.substring(0, lvt_6_1_);
+            lvt_7_2_ = lvt_6_1_;
+        } else {
+            resultText = resultText + inputText;
+            lvt_7_2_ = inputText.length();
+        }
+
+        if (!getText().isEmpty() && lvt_5_1_ < getText().length()) {
+            resultText = resultText + getText().substring(lvt_5_1_);
+        }
+
+        setText(resultText);
+        clampCursorPosition(lvt_4_1_ + lvt_7_2_);
+        setSelectionPos(getCursorPosition());
+        onTextChanged(getText());
     }
 
 }

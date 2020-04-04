@@ -80,7 +80,7 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
         if (side != RelativeSide.FRONT) {
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
             char sideChar = getFacingChar(tileEntity.getSideMapping(side));
-            float labelX = x + width / 2f - fontRenderer.getCharWidth(sideChar) / 2f;
+            float labelX = x + width / 2f - fontRenderer.getStringWidth(String.valueOf(sideChar)) / 2f;
             float labelY = y + height / 2f - fontRenderer.FONT_HEIGHT / 2f;
             RenderSystem.translatef(0.5f, 0.5f, 0);
             fontRenderer.drawString(String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);

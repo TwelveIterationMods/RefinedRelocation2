@@ -27,7 +27,7 @@ public enum RelativeSide {
 
         if( baseFacing.getAxis() == Direction.Axis.Y ) {
             Matrix4f matrix = new Matrix4f();
-            matrix.multiply( new Quaternion( 90f, 0f, 0f, true ) );
+            matrix.mul( new Quaternion( 90f, 0f, 0f, true ) );
             Direction rot = Direction.rotateFace( matrix, baseFacing );
             if( rot == facing ) {
                 return BOTTOM;
@@ -47,7 +47,7 @@ public enum RelativeSide {
 
         if( baseFacing.getAxis() == Direction.Axis.Y ) {
             Matrix4f matrix = new Matrix4f();
-            matrix.multiply( new Quaternion( 0f, 0f, 90f, true ) );
+            matrix.mul( new Quaternion( 0f, 0f, 90f, true ) );
             Direction rot = Direction.rotateFace( matrix, baseFacing );
             if( rot == facing ) {
                 return baseFacing.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? RIGHT : LEFT;

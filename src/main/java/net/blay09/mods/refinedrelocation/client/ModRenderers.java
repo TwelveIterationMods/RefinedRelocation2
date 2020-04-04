@@ -11,7 +11,7 @@ public class ModRenderers {
     public static void register() {
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.sortingChest, SortingChestTileEntityRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.blockExtender, it -> it == RenderType.cutout() || it == RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.sortingInterface, it -> it == RenderType.cutout() || it == RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.blockExtender, it -> it == RenderType.getCutout() || it == RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.sortingInterface, it -> it == RenderType.getCutout() || it == RenderType.getTranslucent());
     }
 }

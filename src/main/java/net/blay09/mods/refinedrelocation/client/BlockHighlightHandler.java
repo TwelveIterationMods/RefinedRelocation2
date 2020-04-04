@@ -50,7 +50,7 @@ public class BlockHighlightHandler {
                             BlockPos pos = memberTile.getPos();
                             BlockState blockState = world.getBlockState(pos);
                             VoxelShape shape = blockState.getShape(world, pos, ISelectionContext.forEntity(player));
-                            IVertexBuilder vertexBuilder = event.getBuffers().getBuffer(RenderType.lines());
+                            IVertexBuilder vertexBuilder = event.getBuffers().getBuffer(RenderType.getLines());
                             WorldRenderer.drawShape(event.getMatrix(), vertexBuilder, shape, pos.getX() - camX, pos.getY() - camY, pos.getZ() - camZ, 1f, 1f, 0f, 0.75f);
                         }
                         event.setCanceled(true);
