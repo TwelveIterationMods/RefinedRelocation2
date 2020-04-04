@@ -37,11 +37,12 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
     public void init() {
         super.init();
 
+        String initialText = txtFilter != null ? txtFilter.getText() : container.getValue();
         txtFilter = new MultiLineTextFieldWidget(guiLeft + 8, guiTop + 20, 150, 84);
-        txtFilter.setMaxStringLength( Short.MAX_VALUE );
+        txtFilter.setMaxStringLength(Short.MAX_VALUE);
         txtFilter.changeFocus(true);
         txtFilter.setCanLoseFocus(false);
-        txtFilter.setText(container.getValue());
+        txtFilter.setText(initialText);
         addButton(txtFilter);
         setFocusedDefault(txtFilter);
 

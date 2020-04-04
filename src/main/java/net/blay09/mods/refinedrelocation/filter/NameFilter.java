@@ -22,6 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -33,9 +34,15 @@ public class NameFilter implements IFilter {
     private static final Pattern WILDCARD_PATTERN = Pattern.compile("[^*]+|(\\*)");
     private static final Matcher WILDCARD_MATCHER = WILDCARD_PATTERN.matcher("");
 
+    public enum NameFilterType {
+        NAME,
+        TAG,
+        MOD
+    }
+
     private String value = "";
     private Pattern[] cachedPatterns;
-    private boolean[] isOreDict;
+    private NameFilterType[] cachedNameFilterType;
 
     @Override
     public String getIdentifier() {
@@ -55,7 +62,7 @@ public class NameFilter implements IFilter {
         for (int i = 0; i < patterns.length; i++) {
             Pattern pattern = patterns[i];
             if (pattern != null) {
-                if (isOreDict[i]) {
+                if (cachedNameFilterType[i] == NameFilterType.TAG) {
                     if (tags == null) {
                         tags = ItemTags.getCollection().getOwningTags(itemStack.getItem());
                     }
@@ -67,6 +74,14 @@ public class NameFilter implements IFilter {
                         }
 
                         matcher.reset(tag.getPath());
+                        if (matcher.matches()) {
+                            return true;
+                        }
+                    }
+                } else if (cachedNameFilterType[i] == NameFilterType.MOD) {
+                    ResourceLocation registryName = itemStack.getItem().getRegistryName();
+                    if (registryName != null) {
+                        Matcher matcher = pattern.matcher(registryName.getNamespace());
                         if (matcher.matches()) {
                             return true;
                         }
@@ -97,11 +112,14 @@ public class NameFilter implements IFilter {
         if (cachedPatterns == null) {
             String[] patternsSplit = value.split("[\n,]");
             cachedPatterns = new Pattern[patternsSplit.length];
-            isOreDict = new boolean[patternsSplit.length];
+            cachedNameFilterType = new NameFilterType[patternsSplit.length];
             for (int i = 0; i < patternsSplit.length; i++) {
-                if (patternsSplit[i].startsWith("ore:") && patternsSplit[i].length() > 4) {
+                if ((patternsSplit[i].startsWith("tag:") || patternsSplit[i].startsWith("ore:")) && patternsSplit[i].length() > 4) {
                     patternsSplit[i] = patternsSplit[i].substring(4);
-                    isOreDict[i] = true;
+                    cachedNameFilterType[i] = NameFilterType.TAG;
+                } else if (patternsSplit[i].startsWith("mod:") && patternsSplit[i].length() > 4) {
+                    patternsSplit[i] = patternsSplit[i].substring(4).toLowerCase(Locale.ENGLISH).replace(' ', '*');
+                    cachedNameFilterType[i] = NameFilterType.MOD;
                 }
                 WILDCARD_MATCHER.reset(patternsSplit[i]);
                 StringBuffer sb = new StringBuffer();
