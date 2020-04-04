@@ -63,7 +63,9 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
             x += 40;
         }
 
-        addButton(new GuiReturnFromFilterButton(guiLeft + xSize - 20, guiTop + 4));
+        if (container.canReturnFromFilter()) {
+            addButton(new GuiReturnFromFilterButton(guiLeft + xSize - 20, guiTop + 4));
+        }
 
         if (container.hasSortingInventory()) {
             addButton(new LabelWidget(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));

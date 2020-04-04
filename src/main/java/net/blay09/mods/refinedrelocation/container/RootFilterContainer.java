@@ -256,4 +256,8 @@ public class RootFilterContainer extends FilterContainer {
         this.returnCallback = returnCallback;
         return this;
     }
+
+    public boolean canReturnFromFilter() {
+        return tileEntity instanceof INamedContainerProvider;
+    }
 }
