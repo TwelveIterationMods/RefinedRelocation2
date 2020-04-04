@@ -3,10 +3,12 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
+import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,6 +26,12 @@ import java.util.List;
 public class RootFilter implements IRootFilter {
 
     private final List<SubFilterWrapper> filterList = Lists.newArrayList();
+    private ContainerType<RootFilterContainer> containerType = ModContainers.rootFilter;
+
+    public RootFilter setContainerType(ContainerType<RootFilterContainer> containerType) {
+        this.containerType = containerType;
+        return this;
+    }
 
     @Override
     public int getFilterCount() {
@@ -114,7 +122,7 @@ public class RootFilter implements IRootFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new RootFilterContainer(i, playerInventory, tileEntity, LazyOptional.of(() -> RootFilter.this));
+                return new RootFilterContainer(containerType, i, playerInventory, tileEntity, LazyOptional.of(() -> RootFilter.this));
             }
 
             @Override

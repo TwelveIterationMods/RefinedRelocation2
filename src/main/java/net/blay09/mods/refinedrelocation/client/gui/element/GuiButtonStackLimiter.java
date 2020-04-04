@@ -35,7 +35,8 @@ public class GuiButtonStackLimiter extends Button implements ITickableElement, I
     public void onClick(double mouseX, double mouseY, int mouseButton) {
         int limit = blockExtender.getStackLimiterLimit();
         int index = (int) (Math.log(limit) / Math.log(2));
-        int maxIndex = (int) (Math.log(Items.AIR.getItemStackLimit(ItemStack.EMPTY) / Math.log(2)));
+        int maxStackSize = Items.AIR.getItemStackLimit(ItemStack.EMPTY);
+        int maxIndex = (int) (Math.log(maxStackSize) / Math.log(2));
         if (mouseButton == 0) {
             if (index < maxIndex) {
                 index++;

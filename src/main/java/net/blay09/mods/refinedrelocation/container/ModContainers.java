@@ -4,9 +4,9 @@ import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
-import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.tile.FastHopperTileEntity;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
+import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +23,8 @@ public class ModContainers {
     public static ContainerType<RootFilterContainer> rootFilter;
     public static ContainerType<NameFilterContainer> nameFilter;
     public static ContainerType<ChecklistFilterContainer> checklistFilter;
-    public static ContainerType<RootFilterContainer> blockExtenderRootFilter;
+    public static ContainerType<RootFilterContainer> blockExtenderInputFilter;
+    public static ContainerType<RootFilterContainer> blockExtenderOutputFilter;
 
     public static void register(IForgeRegistry<ContainerType<?>> registry) {
         registry.register(blockExtender = register("block_extender", (windowId, inv, data) -> {
@@ -110,14 +111,25 @@ public class ModContainers {
             return null;
         }));
 
-        registry.register(blockExtenderRootFilter = register("block_extender_root_filter", (windowId, inv, data) -> {
+        registry.register(blockExtenderInputFilter = register("block_extender_input_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
-            boolean isOutputFilter = data.readInt() == 1;
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity instanceof TileBlockExtender) {
                 TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
-                return new RootFilterContainer(windowId, inv, tileEntity, isOutputFilter ? tileBlockExtender.getOutputFilter() : tileBlockExtender.getInputFilter());
+                return new RootFilterContainer(rootFilter, windowId, inv, tileEntity, tileBlockExtender.getInputFilter());
+            }
+
+            return null;
+        }));
+
+        registry.register(blockExtenderOutputFilter = register("block_extender_output_filter", (windowId, inv, data) -> {
+            BlockPos pos = data.readBlockPos();
+
+            TileEntity tileEntity = inv.player.world.getTileEntity(pos);
+            if (tileEntity instanceof TileBlockExtender) {
+                TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
+                return new RootFilterContainer(rootFilter, windowId, inv, tileEntity, tileBlockExtender.getOutputFilter());
             }
 
             return null;

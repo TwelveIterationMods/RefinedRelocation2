@@ -5,6 +5,8 @@ import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
+import net.blay09.mods.refinedrelocation.container.ModContainers;
+import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -162,8 +164,8 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     }
 
     private final Direction[] sideMappings = new Direction[5];
-    private final IRootFilter inputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
-    private final IRootFilter outputFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
+    private final IRootFilter inputFilter = new RootFilter().setContainerType(ModContainers.blockExtenderInputFilter);
+    private final IRootFilter outputFilter = new RootFilter().setContainerType(ModContainers.blockExtenderOutputFilter);
     private int stackLimiterLimit = 64;
 
     private boolean hasStackLimiter;

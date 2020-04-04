@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -48,11 +49,11 @@ public class RootFilterContainer extends FilterContainer {
     private final boolean[] lastBlacklist = new boolean[3];
 
     public RootFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity) {
-        this(windowId, playerInventory, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
+        this(ModContainers.rootFilter, windowId, playerInventory, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
     }
 
-    public RootFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
-        super(ModContainers.rootFilter, windowId);
+    public RootFilterContainer(ContainerType<RootFilterContainer> containerType, int windowId, PlayerInventory playerInventory, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
+        super(containerType, windowId);
 
         this.entityPlayer = playerInventory.player;
         this.tileEntity = tileEntity;
