@@ -38,6 +38,7 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
         super.init();
 
         txtFilter = new MultiLineTextFieldWidget(guiLeft + 8, guiTop + 20, 150, 84);
+        txtFilter.setMaxStringLength( Short.MAX_VALUE );
         txtFilter.changeFocus(true);
         txtFilter.setCanLoseFocus(false);
         txtFilter.setText(container.getValue());
