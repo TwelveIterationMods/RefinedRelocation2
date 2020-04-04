@@ -107,7 +107,7 @@ public class ModFilter implements IChecklistFilter {
     public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
         ResourceLocation resourceLocation = itemStack.getItem().getRegistryName();
         if (resourceLocation != null) {
-            ModWithName modWithName = modList.get(resourceLocation.getPath());
+            ModWithName modWithName = modList.get(resourceLocation.getNamespace());
             return modWithName != null && modStates[modWithName.getIndex()];
         }
         return false;
