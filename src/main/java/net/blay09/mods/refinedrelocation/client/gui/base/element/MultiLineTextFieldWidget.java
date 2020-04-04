@@ -102,7 +102,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     }
 
     @Override
-    public void setSelectionPos( int cursorPosition ) {
+    public void setSelectionPos(int cursorPosition) {
         String text = getText();
         super.setSelectionPos(Math.min(Math.max(cursorPosition, 0), text.length()));
 
@@ -324,7 +324,11 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
             }
 
             if (cursorCounter / 6 % 2 == 0 && (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT >= 0 && (cursorLine - scrollOffset + 1) * fontRenderer.FONT_HEIGHT < height + PADDING) {
-                drawCursor(x + fontRenderer.getStringWidth(getText().substring(lastLineStartIdx + lineScrollOffset, getCursorPosition())) + PADDING, y + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING);
+                int startIndex = lastLineStartIdx + lineScrollOffset;
+                int endIndex = getCursorPosition();
+                if (startIndex <= endIndex) {
+                    drawCursor(x + fontRenderer.getStringWidth(getText().substring(startIndex, endIndex)) + PADDING, y + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING);
+                }
             }
         }
     }
