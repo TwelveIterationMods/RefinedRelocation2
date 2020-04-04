@@ -214,6 +214,17 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
             return false;
         }
 
+        if (Screen.isPaste(keyCode)) {
+            String clipboardString = Minecraft.getInstance().keyboardListener.getClipboardString();
+            String[] lines = clipboardString.split("\n");
+            for (String line : lines) {
+                writeText(line);
+                addNewLine();
+            }
+
+            return true;
+        }
+
         int cursorPosition = getCursorPosition();
         switch (keyCode) {
             case GLFW.GLFW_KEY_END:
@@ -262,8 +273,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 return true;
             case GLFW.GLFW_KEY_ENTER:
                 if (active) {
-                    setText(getText() + "\n");
-                    setCursorPosition(getCursorPosition() + 1);
+                    addNewLine();
                 }
                 return true;
             case GLFW.GLFW_KEY_DELETE:
@@ -279,6 +289,11 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    private void addNewLine() {
+        setText(getText() + "\n");
+        setCursorPosition(getCursorPosition() + 1);
     }
 
     @Override
