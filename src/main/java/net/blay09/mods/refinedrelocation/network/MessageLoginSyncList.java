@@ -46,5 +46,6 @@ public class MessageLoginSyncList {
                 ModFilter.setModList(message.values);
             }
         });
+        context.setPacketHandled(true);
     }
 }

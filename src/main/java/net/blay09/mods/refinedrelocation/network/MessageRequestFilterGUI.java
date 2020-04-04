@@ -38,5 +38,6 @@ public class MessageRequestFilterGUI {
                 RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
             }
         });
+        context.setPacketHandled(true);
     }
 }

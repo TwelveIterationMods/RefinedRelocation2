@@ -40,6 +40,7 @@ public abstract class MessageContainer implements IContainerMessage {
                 });
             }
         });
+        context.setPacketHandled(true);
     }
 
     @Override

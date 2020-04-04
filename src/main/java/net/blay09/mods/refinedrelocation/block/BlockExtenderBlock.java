@@ -19,6 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -27,11 +29,21 @@ import javax.annotation.Nullable;
 
 public class BlockExtenderBlock extends ContainerBlock {
 
+    /**
+     * We provide a slightly smaller render shape to prevent neighbour blocks from being culled.
+     */
+    private static final VoxelShape RENDER_SHAPE = VoxelShapes.create(1 / 16f, 1 / 16f, 1 / 16f, 15 / 16f, 15 / 16f, 15 / 16f);
+
     public static final String name = "block_extender";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
     public BlockExtenderBlock() {
         super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3f));
+    }
+
+    @Override
+    public VoxelShape getRenderShape(BlockState p_196247_1_, IBlockReader p_196247_2_, BlockPos p_196247_3_) {
+        return RENDER_SHAPE;
     }
 
     @Override

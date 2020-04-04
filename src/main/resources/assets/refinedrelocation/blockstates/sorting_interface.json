@@ -1,7 +1,7 @@
 {
   "variants": {
-    "facing=down":  { "model": "refinedrelocation:block/sorting_interface", "x": 180 },
-    "facing=up":    { "model": "refinedrelocation:block/sorting_interface" },
+    "facing=down":  { "model": "refinedrelocation:block/sorting_interface", "x": 90 },
+    "facing=up":    { "model": "refinedrelocation:block/sorting_interface", "x": -90 },
     "facing=north": { "model": "refinedrelocation:block/sorting_interface" },
     "facing=south": { "model": "refinedrelocation:block/sorting_interface", "y": 180 },
     "facing=west":  { "model": "refinedrelocation:block/sorting_interface", "y": 270 },

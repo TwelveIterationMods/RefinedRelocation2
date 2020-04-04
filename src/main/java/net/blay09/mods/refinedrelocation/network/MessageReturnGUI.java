@@ -35,5 +35,6 @@ public class MessageReturnGUI {
                 }
             }
         });
+        context.setPacketHandled(true);
     }
 }

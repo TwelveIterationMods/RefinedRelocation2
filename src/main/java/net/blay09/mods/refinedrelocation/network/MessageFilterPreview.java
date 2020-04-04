@@ -35,5 +35,6 @@ public class MessageFilterPreview {
         context.enqueueWork(() -> {
             FilterPreviewHandler.setSlotStates(message.slotStates);
         });
+        context.setPacketHandled(true);
     }
 }

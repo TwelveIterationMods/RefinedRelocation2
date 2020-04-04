@@ -1,7 +1,7 @@
 {
   "variants": {
-    "facing=down":  { "model": "refinedrelocation:block/block_extender", "x": 180 },
-    "facing=up":    { "model": "refinedrelocation:block/block_extender" },
+    "facing=down":  { "model": "refinedrelocation:block/block_extender", "x": 90 },
+    "facing=up":    { "model": "refinedrelocation:block/block_extender", "x": -90 },
     "facing=north": { "model": "refinedrelocation:block/block_extender" },
     "facing=south": { "model": "refinedrelocation:block/block_extender", "y": 180 },
     "facing=west":  { "model": "refinedrelocation:block/block_extender", "y": 270 },
