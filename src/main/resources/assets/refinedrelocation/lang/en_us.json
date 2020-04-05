@@ -34,6 +34,8 @@
   "gui.refinedrelocation:root_filter.priority_decrease10": "Right-click to decrease by 10",
   "gui.refinedrelocation:root_filter.priority_tooltip": "Priority: %d",
   "gui.refinedrelocation:root_filter.delete_filter": "Delete Filter",
+  "gui.refinedrelocation:root_filter.hold_shift_to_delete": "Hold Shift to Delete",
+  "gui.refinedrelocation:root_filter.delete_cannot_be_undone": "This action cannot be undone.",
   "gui.refinedrelocation:root_filter.no_filter_set": "No filter set",
   "gui.refinedrelocation:root_filter.click_to_add_filter": "Click to add filter",
   "gui.refinedrelocation:root_filter.click_to_configure": "Click to configure",
