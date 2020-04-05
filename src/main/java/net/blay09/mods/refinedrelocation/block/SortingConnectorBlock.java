@@ -5,6 +5,7 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.tile.TileSortingConnector;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,15 +19,12 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SortingConnectorBlock extends ContainerBlock {
 
     public static final String name = "sorting_connector";
     public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
-    private static Map<BlockPos, BlockState> boundingBoxCache = new HashMap<>();
     private static final VoxelShape CENTER_SHAPE = Block.makeCuboidShape(5, 5, 5, 11, 11, 11);
     private static final VoxelShape[] FACING_SHAPES = new VoxelShape[]{
             Block.makeCuboidShape(5, 0, 5, 11, 5, 11),         // Down
@@ -65,11 +63,10 @@ public class SortingConnectorBlock extends ContainerBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        BlockState actualState = boundingBoxCache.computeIfAbsent(pos, it -> getActualState(state, world, it));
         VoxelShape boundingBox = CENTER_SHAPE;
         for (int i = 0; i < CONNECTIONS.length; i++) {
             BooleanProperty property = CONNECTIONS[i];
-            if (actualState.get(property)) {
+            if (state.get(property)) {
                 boundingBox = VoxelShapes.or(boundingBox, FACING_SHAPES[i]);
             }
         }
@@ -88,12 +85,6 @@ public class SortingConnectorBlock extends ContainerBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean what) {
-        super.onReplaced(state, world, pos, newState, what);
-        boundingBoxCache.remove(pos);
-    }
-
-    @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean wat) {
         super.neighborChanged(state, world, pos, block, fromPos, wat);
         BlockState newState = getConnectionState(world, pos, state);
@@ -102,8 +93,10 @@ public class SortingConnectorBlock extends ContainerBlock {
         }
     }
 
-    public BlockState getActualState(BlockState state, IBlockReader world, BlockPos pos) {
-        return getConnectionState(world, pos, state);
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return getConnectionState(context.getWorld(), context.getPos(), getDefaultState());
     }
 
     private BlockState getConnectionState(IBlockReader world, BlockPos pos, BlockState state) {
