@@ -7,6 +7,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MultiLineTextFieldWidget extends TextFieldWidget implements IScrollTarget {
 
     private static final int ENABLED_COLOR = 0xE0E0E0;
@@ -20,6 +23,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
     private String[] renderCache;
     private int lastRowCount;
+
+    private Map<String, String> debugRenders = new HashMap<>();
 
     public MultiLineTextFieldWidget(int x, int y, int width, int height) {
         super(Minecraft.getInstance().fontRenderer, x, y, width, height, "");
@@ -102,6 +107,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         String text = getText();
         super.setSelectionPos(Math.min(Math.max(cursorPosition, 0), text.length()));
 
+        // Vertical Scrolling
         int cursorLine = 0;
         for (int i = 0; i < this.getCursorPosition(); i++) {
             if (text.charAt(i) == '\n') {
@@ -117,19 +123,20 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
             scroll(0, (cursorRenderY - innerHeight) / fontRenderer.FONT_HEIGHT + 1);
         }
 
-        int innerWidth = width - PADDING;
-        int startOfLine = getStartOfLine(cursorPosition, 1);
-        int endOfLine = getEndOfLine(cursorPosition, 1);
-        int cursorPositionX = Math.min(getLineLength(cursorPosition), cursorPosition - startOfLine);
-        String lineText = text.substring(startOfLine, endOfLine);
+        // Horizontal Scrolling
+        final int innerWidth = width - PADDING;
+        final int startOfLine = getStartOfLine(cursorPosition, 1);
+        final int endOfLine = getEndOfLine(cursorPosition, 1);
+        final int cursorPositionX = Math.min(getLineLength(cursorPosition), cursorPosition - startOfLine);
+        final String lineText = text.substring(startOfLine, endOfLine);
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-        String renderText = fontRenderer.trimStringToWidth(lineText, innerWidth);
+        final String renderText = fontRenderer.trimStringToWidth(lineText.substring(lineScrollOffset), innerWidth);
         if (cursorPositionX == lineScrollOffset) {
             lineScrollOffset -= renderText.length();
         }
 
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-        int offset = renderText.length() + lineScrollOffset;
+        final int offset = renderText.length() + lineScrollOffset;
         if (cursorPositionX > offset) {
             lineScrollOffset += cursorPositionX - offset;
         } else if (cursorPositionX <= lineScrollOffset) {
@@ -137,6 +144,12 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         }
 
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
+
+        debugRenders.put("StartOfLine", "" + startOfLine);
+        debugRenders.put("EndOfLine", "" + endOfLine);
+        debugRenders.put("CursorPosX", "" + cursorPositionX);
+        debugRenders.put("LineText", "" + lineText);
+        debugRenders.put("RenderText", "" + renderText);
     }
 
     private void scroll(int x, int y) {
@@ -197,8 +210,14 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
             if (startOfLine == endOfLine) {
                 setCursorPosition(startOfLine);
             } else {
-                String renderText = fontRenderer.trimStringToWidth(getText().substring(Math.max(startOfLine + lineScrollOffset, 0), Math.max(0, endOfLine)), width - PADDING);
-                setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, (int) relX).length() + lineScrollOffset);
+                int lineRenderStartIndex = Math.max(startOfLine + lineScrollOffset, 0);
+                int lineRenderEndIndex = Math.max(0, endOfLine);
+                if (lineRenderStartIndex <= lineRenderEndIndex) {
+                    String renderText = fontRenderer.trimStringToWidth(getText().substring(lineRenderStartIndex, lineRenderEndIndex), width - PADDING);
+                    setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, (int) relX).length() + lineScrollOffset);
+                } else {
+                    setCursorPosition(endOfLine);
+                }
             }
             return true;
         }
@@ -384,9 +403,11 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 }
             }
 
-            /*fontRenderer.drawStringWithShadow("LineScrollOffset: " + lineScrollOffset, 10f, 10f, 0xFFFFFFFF);
-            fontRenderer.drawStringWithShadow("SelectionStart: " + selectionStart, 10f, 20f, 0xFFFFFFFF);
-            fontRenderer.drawStringWithShadow("SelectionEnd: " + selectionEnd, 10f, 30f, 0xFFFFFFFF);*/
+            float debugY = 10f;
+            for (Map.Entry<String, String> entry : debugRenders.entrySet()) {
+                fontRenderer.drawStringWithShadow(entry.getKey() + ": " + entry.getValue(), 10f, debugY, 0xFFFFFFFF);
+                debugY += 10f;
+            }
         }
     }
 
