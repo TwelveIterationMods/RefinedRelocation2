@@ -375,7 +375,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 for (int i = 0; i < selectionEnd; i++) {
                     char charAt = getText().charAt(i);
                     if (charAt == '\n' || i + 1 == selectionEnd) {
-                        if (i >= selectionStart) {
+                        if (i >= selectionStart && linesPassed < scrollOffset + getVisibleRows()) {
                             int offsetX = 0;
                             int unselectedScrolledStartIndex = currentLineStartIndex + lineScrollOffset;
                             if (unselectedScrolledStartIndex < selectionStart) {
@@ -387,7 +387,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                             if (currentLineStartIndex + lineScrollOffset > selectionStart) {
                                 scrolledStartIndex += lineScrollOffset;
                             }
-                            if (scrolledStartIndex <= i) {
+                            if (scrolledStartIndex <= i && linesPassed >= scrollOffset) {
                                 String selectedLineText = getText().substring(scrolledStartIndex, charAt == '\n' ? i : i + 1);
                                 int selectedLineWidth = fontRenderer.getStringWidth(selectedLineText);
                                 int selectionX = x + offsetX + 1;
