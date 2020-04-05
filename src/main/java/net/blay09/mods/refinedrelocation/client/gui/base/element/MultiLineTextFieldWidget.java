@@ -155,8 +155,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     }
 
     private void deleteBack(boolean wholeWord) {
-        int cursorPosition = getCursorPosition();
-        int deleteCount = 1;
+        int cursorPosition = Math.max(selectionEnd, getCursorPosition());
+        int deleteCount = Math.max(1, getSelectedText().length());
         if (wholeWord) {
             deleteCount = cursorPosition - getStartOfWord(cursorPosition);
         }
@@ -172,8 +172,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     }
 
     private void deleteFront(boolean wholeWord) {
-        int cursorPosition = getCursorPosition();
-        int deleteCount = 1;
+        int cursorPosition = Math.min(selectionEnd, getCursorPosition());
+        int deleteCount = Math.max(1, getSelectedText().length());
         if (wholeWord) {
             deleteCount = getStartOfNextWord(cursorPosition) - cursorPosition;
         }
@@ -182,6 +182,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         if (cursorPosition < text.length()) {
             text = text.substring(0, cursorPosition) + text.substring(cursorPosition + deleteCount);
             setText(text);
+
+            setCursorPosition(cursorPosition);
             renderCache = null;
         }
     }
