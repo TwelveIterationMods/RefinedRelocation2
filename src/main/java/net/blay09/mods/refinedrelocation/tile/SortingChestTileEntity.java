@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IClearable;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,8 @@ import javax.annotation.Nullable;
 public class SortingChestTileEntity extends TileMod implements ITickableTileEntity,
         INamedContainerProvider,
         INameable,
-        IChestLid {
+        IChestLid,
+        IClearable {
 
     private static final int EVENT_NUM_PLAYERS = 1;
 
@@ -167,7 +169,10 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Override
     public void read(CompoundNBT compound) {
         super.read(compound);
-        itemHandler.deserializeNBT(compound.getCompound("ItemHandler"));
+        CompoundNBT itemHandlerCompound = compound.getCompound("ItemHandler");
+        itemHandlerCompound.putInt("Size", chestType.getInventorySize());
+        this.itemHandler.deserializeNBT(itemHandlerCompound);
+
         sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
 
         rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
@@ -312,6 +317,13 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
             if (!rest.isEmpty()) {
                 world.addEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5, rest));
             }
+        }
+    }
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
 }
