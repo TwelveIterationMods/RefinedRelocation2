@@ -16,7 +16,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModContainers {
-    public static ContainerType<ContainerBlockExtender> blockExtender;
+    public static ContainerType<BlockExtenderContainer> blockExtender;
     public static ContainerType<ContainerFastHopper> fastHopper;
     public static ContainerType<SortingChestContainer> sortingChest;
 
@@ -34,7 +34,7 @@ public class ModContainers {
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity instanceof TileBlockExtender) {
                 Direction clickedFace = Direction.byIndex(clickedFaceIndex);
-                ContainerBlockExtender container = new ContainerBlockExtender(windowId, inv, (TileBlockExtender) tileEntity);
+                BlockExtenderContainer container = new BlockExtenderContainer(windowId, inv, (TileBlockExtender) tileEntity);
                 container.setClickedFace(clickedFace);
                 return container;
             }

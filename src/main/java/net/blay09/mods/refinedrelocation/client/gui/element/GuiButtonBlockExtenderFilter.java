@@ -2,8 +2,7 @@ package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.SizableButton;
-import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
-import net.minecraft.client.gui.widget.button.Button;
+import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
 import net.minecraft.client.resources.I18n;
 
 public class GuiButtonBlockExtenderFilter extends SizableButton {
@@ -18,7 +17,7 @@ public class GuiButtonBlockExtenderFilter extends SizableButton {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        String key = isOutputFilter ? ContainerBlockExtender.KEY_CONFIGURE_OUTPUT_FILTER : ContainerBlockExtender.KEY_CONFIGURE_INPUT_FILTER;
+        String key = isOutputFilter ? BlockExtenderContainer.KEY_CONFIGURE_OUTPUT_FILTER : BlockExtenderContainer.KEY_CONFIGURE_INPUT_FILTER;
         RefinedRelocationAPI.sendContainerMessageToServer(key, isOutputFilter ? 1 : 0);
     }
 

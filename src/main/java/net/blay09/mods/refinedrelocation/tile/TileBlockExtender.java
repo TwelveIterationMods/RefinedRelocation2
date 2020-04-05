@@ -2,9 +2,8 @@ package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.ModTileEntities;
-import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
+import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
@@ -138,15 +137,24 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
 
     private final ItemStackHandler itemHandlerUpgrades = new ItemStackHandler(3) {
         @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (isUpgradeItem(stack)) {
-                return stack;
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            if (!isUpgradeItem(stack)) {
+                return false;
             }
 
             for (int i = 0; i < getSlots(); i++) {
                 if (getStackInSlot(i).getItem() == stack.getItem()) {
-                    return stack;
+                    return false;
                 }
+            }
+
+            return super.isItemValid(slot, stack);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            if (!isItemValid(slot, stack)) {
+                return stack;
             }
 
             return super.insertItem(slot, stack, simulate);
@@ -160,7 +168,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     };
 
     private boolean isUpgradeItem(ItemStack stack) {
-        return stack.getItem() != ModItems.stackLimiter && stack.getItem() != ModItems.outputFilter && stack.getItem() != ModItems.inputFilter && stack.getItem() != ModItems.slotLock;
+        return stack.getItem() == ModItems.stackLimiter || stack.getItem() == ModItems.outputFilter || stack.getItem() == ModItems.inputFilter || stack.getItem() == ModItems.slotLock;
     }
 
     private final Direction[] sideMappings = new Direction[5];
@@ -361,7 +369,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ContainerBlockExtender(i, playerInventory, this);
+        return new BlockExtenderContainer(i, playerInventory, this);
     }
 
 }

@@ -5,7 +5,7 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
-import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
+import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
                 for (RelativeSide side : RelativeSide.values()) {
                     if (side != RelativeSide.FRONT) {
                         tileEntity.setSideMapping(side, null);
-                        RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_TOGGLE_SIDE, side.ordinal(), -1);
+                        RefinedRelocationAPI.sendContainerMessageToServer(BlockExtenderContainer.KEY_TOGGLE_SIDE, side.ordinal(), -1);
                     }
                 }
             }
@@ -71,7 +71,7 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
         }
 
         tileEntity.setSideMapping(side, facing);
-        RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_TOGGLE_SIDE, side.ordinal(), facing != null ? facing.getIndex() : -1);
+        RefinedRelocationAPI.sendContainerMessageToServer(BlockExtenderContainer.KEY_TOGGLE_SIDE, side.ordinal(), facing != null ? facing.getIndex() : -1);
     }
 
     @Override

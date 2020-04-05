@@ -17,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerBlockExtender extends BaseContainer {
+public class BlockExtenderContainer extends BaseContainer {
 
     public static final String KEY_TOGGLE_SIDE = "ToggleSide";
     public static final String KEY_SIDE_INDEX = "SideIndex";
@@ -33,7 +33,7 @@ public class ContainerBlockExtender extends BaseContainer {
     private final Direction[] lastSideMapping = new Direction[5];
     private int lastStackLimiterLimit;
 
-    public ContainerBlockExtender(int windowId, PlayerInventory playerInventory, TileBlockExtender tileEntity) {
+    public BlockExtenderContainer(int windowId, PlayerInventory playerInventory, TileBlockExtender tileEntity) {
         super(ModContainers.blockExtender, windowId);
 
         this.player = playerInventory.player;
@@ -134,11 +134,17 @@ public class ContainerBlockExtender extends BaseContainer {
             ItemStack slotStack = slot.getStack();
             itemStack = slotStack.copy();
 
-            if (index < 27) {
-                if (!mergeItemStack(slotStack, 27, inventorySlots.size(), true)) {
+            if(index < 3) {
+                if (!mergeItemStack(slotStack, 3, 30, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(slotStack, 0, 27, false)) {
+            } else if (index < 30) {
+                if (!mergeItemStack(slotStack, 0, 3, false)) {
+                    return ItemStack.EMPTY;
+                } else if (!mergeItemStack(slotStack, 27, inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!mergeItemStack(slotStack, 0, 30, false)) {
                 return ItemStack.EMPTY;
             }
 

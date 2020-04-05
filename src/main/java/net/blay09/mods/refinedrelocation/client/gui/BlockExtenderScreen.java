@@ -9,7 +9,7 @@ import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonBlockExtend
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiButtonStackLimiter;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiSideButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiTooltipButton;
-import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
+import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtender> {
+public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContainer> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/block_extender.png");
     private static final int UPDATE_INTERVAL = 20;
@@ -47,7 +47,7 @@ public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtend
     private int ticksSinceUpdate;
     private int lastSentStackLimit;
 
-    public BlockExtenderScreen(ContainerBlockExtender container, PlayerInventory playerInventory, ITextComponent displayName) {
+    public BlockExtenderScreen(BlockExtenderContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
         this.clickedFace = container.getClickedFace();
@@ -146,7 +146,7 @@ public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtend
         ticksSinceUpdate++;
         if (ticksSinceUpdate >= UPDATE_INTERVAL) {
             if (lastSentStackLimit != tileEntity.getStackLimiterLimit()) {
-                RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_STACK_LIMITER, tileEntity.getStackLimiterLimit());
+                RefinedRelocationAPI.sendContainerMessageToServer(BlockExtenderContainer.KEY_STACK_LIMITER, tileEntity.getStackLimiterLimit());
                 lastSentStackLimit = tileEntity.getStackLimiterLimit();
             }
             ticksSinceUpdate = 0;
@@ -189,7 +189,7 @@ public class BlockExtenderScreen extends ModContainerScreen<ContainerBlockExtend
 
     @Override
     public boolean onGuiAboutToClose() {
-        RefinedRelocationAPI.sendContainerMessageToServer(ContainerBlockExtender.KEY_STACK_LIMITER, tileEntity.getStackLimiterLimit());
+        RefinedRelocationAPI.sendContainerMessageToServer(BlockExtenderContainer.KEY_STACK_LIMITER, tileEntity.getStackLimiterLimit());
         return true;
     }
 }
