@@ -124,6 +124,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         }
 
         // Horizontal Scrolling
+        // Reset the scroll offset we got from Vanilla's implementation, since that considered the text as one single line
+        lineScrollOffset = 0;
         final int innerWidth = width - PADDING;
         final int startOfLine = getStartOfLine(cursorPosition, 1);
         final int endOfLine = getEndOfLine(cursorPosition, 1);
@@ -131,6 +133,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         final String lineText = text.substring(startOfLine, endOfLine);
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
         final String renderText = fontRenderer.trimStringToWidth(lineText.substring(lineScrollOffset), innerWidth);
+        // Allow scrolling back when you get to the beginning
         if (cursorPositionX == lineScrollOffset) {
             lineScrollOffset -= renderText.length();
         }
@@ -144,12 +147,6 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         }
 
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-
-        debugRenders.put("StartOfLine", "" + startOfLine);
-        debugRenders.put("EndOfLine", "" + endOfLine);
-        debugRenders.put("CursorPosX", "" + cursorPositionX);
-        debugRenders.put("LineText", "" + lineText);
-        debugRenders.put("RenderText", "" + renderText);
     }
 
     private void scroll(int x, int y) {
