@@ -1,11 +1,12 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.client.gui.base.element.SizableButton;
 import net.blay09.mods.refinedrelocation.container.ContainerBlockExtender;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
-public class GuiButtonBlockExtenderFilter extends Button {
+public class GuiButtonBlockExtenderFilter extends SizableButton {
 
     private final boolean isOutputFilter;
 
