@@ -89,6 +89,11 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
     }
 
     @Override
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+        super.renderButton(mouseX, mouseY, partialTicks);
+    }
+
+    @Override
     public void addTooltip(List<String> list) {
         if (side == RelativeSide.FRONT) {
             list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:block_extender.front"));

@@ -77,7 +77,7 @@ public class GuiTextures {
             ),
             new GuiTextureSpriteButton( // FRONT
                     new GuiTextureSprite(80, 113, 16, 16),
-                    NONE,
+                    new GuiTextureSprite(80, 113, 16, 16),
                     NONE
             )
     };
