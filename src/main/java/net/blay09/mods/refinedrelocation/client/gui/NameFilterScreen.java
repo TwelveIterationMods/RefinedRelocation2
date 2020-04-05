@@ -43,6 +43,7 @@ public class NameFilterScreen extends FilterScreen<NameFilterContainer> implemen
         txtFilter.changeFocus(true);
         txtFilter.setCanLoseFocus(false);
         txtFilter.setText(initialText);
+        txtFilter.addHistoryEntry(initialText);
         addButton(txtFilter);
         setFocusedDefault(txtFilter);
 

@@ -7,8 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MultiLineTextFieldWidget extends TextFieldWidget implements IScrollTarget {
 
@@ -23,6 +22,10 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
     private String[] renderCache;
     private int lastRowCount;
+
+    private float ticksSinceLastHistory;
+    private List<String> history = new ArrayList<>();
+    private List<String> redoHistory = new ArrayList<>();
 
     private Map<String, String> debugRenders = new HashMap<>();
 
@@ -232,6 +235,21 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
         this.field_212956_h = Screen.hasShiftDown();
 
+        String keyName = GLFW.glfwGetKeyName(keyCode, scanCode);
+        if ("z".equals(keyName) && Screen.hasControlDown() && !Screen.hasShiftDown() && !Screen.hasAltDown()) {
+            if (!history.isEmpty()) {
+                String redoText = getText();
+                redoHistory.add(redoText);
+                setText(history.remove(history.size() - 1));
+            }
+        } else if (("z".equals(keyName) && Screen.hasControlDown() && Screen.hasShiftDown() && !Screen.hasAltDown() || ("y".equals(keyName) && Screen.hasControlDown() && !Screen.hasShiftDown() && !Screen.hasAltDown()))) {
+            if (!redoHistory.isEmpty()) {
+                String undoText = getText();
+                setText(redoHistory.remove(redoHistory.size() - 1));
+                history.add(undoText);
+            }
+        }
+
         if (Screen.isPaste(keyCode)) {
             String clipboardString = Minecraft.getInstance().keyboardListener.getClipboardString();
             String[] lines = clipboardString.split("\n");
@@ -306,7 +324,32 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        boolean result = super.keyPressed(keyCode, scanCode, modifiers);
+
+        updateHistory();
+        return result;
+    }
+
+    @Override
+    public boolean charTyped(char charCode, int keyCode) {
+        boolean result = super.charTyped(charCode, keyCode);
+        updateHistory();
+        return result;
+    }
+
+    private void updateHistory() {
+        int historyIntervalSeconds = 5;
+        if (ticksSinceLastHistory >= 20 * historyIntervalSeconds) {
+            String lastHistoryText = null;
+            if (!history.isEmpty()) {
+                lastHistoryText = history.get(history.size() - 1);
+            }
+            String text = getText();
+            if (!Objects.equals(lastHistoryText, text)) {
+                history.add(text);
+            }
+            ticksSinceLastHistory = 0;
+        }
     }
 
     private void addNewLine() {
@@ -324,6 +367,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
+        ticksSinceLastHistory += partialTicks;
+
         if (getVisible()) {
             fill(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
             fill(x, y, x + width, y + height, 0xFF000000);
@@ -468,4 +513,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         onTextChanged(getText());
     }
 
+    public void addHistoryEntry(String text) {
+        history.add(text);
+    }
 }
