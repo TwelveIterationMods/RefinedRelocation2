@@ -1,11 +1,9 @@
 package net.blay09.mods.refinedrelocation;
 
-import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.*;
 import net.blay09.mods.refinedrelocation.client.ModRenderers;
 import net.blay09.mods.refinedrelocation.client.ModScreens;
-import net.blay09.mods.refinedrelocation.compat.RefinedRelocationAddon;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
@@ -17,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -26,8 +25,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 @Mod.EventBusSubscriber
 @Mod(RefinedRelocation.MOD_ID)
@@ -43,8 +40,6 @@ public class RefinedRelocation {
             return new ItemStack(ModBlocks.sortingChests[SortingChestType.WOOD.ordinal()]);
         }
     };
-
-    private static final List<RefinedRelocationAddon> inbuiltAddons = Lists.newArrayList();
 
     public RefinedRelocation() {
         RefinedRelocationAPI.__internal__setupAPI(new InternalMethodsImpl());
@@ -72,10 +67,6 @@ public class RefinedRelocation {
 
     private void registerBlocks(RegistryEvent.Register<Block> event) {
         ModBlocks.register(event.getRegistry());
-
-        for (RefinedRelocationAddon addon : inbuiltAddons) {
-            addon.registerBlocks(event.getRegistry());
-        }
     }
 
     private void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
@@ -85,10 +76,6 @@ public class RefinedRelocation {
     private void registerItems(RegistryEvent.Register<Item> event) {
         ModItems.register(event.getRegistry());
         ModBlocks.registerItemBlocks(event.getRegistry());
-
-        for (RefinedRelocationAddon addon : inbuiltAddons) {
-            addon.registerItems(event.getRegistry());
-        }
     }
 
     private void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -109,18 +96,19 @@ public class RefinedRelocation {
     private void setupClient(FMLClientSetupEvent event) {
         ModScreens.register();
         ModRenderers.register();
-
-        for (RefinedRelocationAddon addon : inbuiltAddons) {
-            addon.setupClient();
-        }
     }
 
     private void finishLoading(FMLLoadCompleteEvent event) {
         CreativeTabFilter.gatherCreativeTabs();
         ModFilter.gatherMods();
+
+        if (ModList.get().isLoaded("ironchest")) {
+            try {
+                Class.forName("net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon").newInstance();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.error("Failed to load Iron Chest compat", e);
+            }
+        }
     }
 
-    public static List<RefinedRelocationAddon> getInbuiltAddons() {
-        return inbuiltAddons;
-    }
 }

@@ -7,14 +7,17 @@ import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.container.SortingChestContainer;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.SoundCategory;
@@ -298,5 +301,17 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
 
     public int getNumPlayersUsing() {
         return numPlayersUsing;
+    }
+
+    public void restoreItems(ListNBT items) {
+        for (INBT item : items) {
+            CompoundNBT compound = (CompoundNBT) item;
+            int slot = compound.getByte("Slot");
+            ItemStack itemStack = ItemStack.read(compound);
+            ItemStack rest = itemHandler.insertItem(slot, itemStack, false);
+            if (!rest.isEmpty()) {
+                world.addEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5, rest));
+            }
+        }
     }
 }

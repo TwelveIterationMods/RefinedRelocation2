@@ -26,7 +26,7 @@ public class SortingChestContainer extends BaseContainer implements IContainerWi
         int rowCount = chestType.getInventorySize() / rowSize;
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < rowSize; j++) {
-                addSlot(new SlotItemHandler(tileEntity.getItemHandler(), j + i * 9, 8 + j * 18, 18 + i * 18));
+                addSlot(new SlotItemHandler(tileEntity.getItemHandler(), j + i * rowSize, 8 + j * 18, 18 + i * 18));
             }
         }
 

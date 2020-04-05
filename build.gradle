@@ -76,6 +76,17 @@ repositories {
     maven {
         url "https://minecraft.curseforge.com/api/maven/"
     }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    flatDir {
+        dirs "run/obfmods"
+    }
 }
 
 dependencies {
@@ -86,7 +97,9 @@ dependencies {
     ])
 
     compileOnly "inventory-tweaks:InventoryTweaks:1.64+dev.146"
-    compileOnly "iron-chests:ironchest:1.15.2:10.0.3"
+    runtimeOnly fg.deobf("ignored:ironchest:1.15.2-10.0.3")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:6.0.0.2:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:6.0.0.2")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
