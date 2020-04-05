@@ -4,10 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
+import net.blay09.mods.refinedrelocation.container.AddFilterContainer;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -19,22 +19,17 @@ import java.util.List;
 
 public class GuiAddFilterButton extends GuiImageButton implements ITooltipElement {
 
-    private final AddFilterScreen parentGui;
     private IFilter currentFilter;
 
-    public GuiAddFilterButton(int x, int y, AddFilterScreen parentGui) {
+    public GuiAddFilterButton(int x, int y) {
         super(x, y, 151, 27, GuiTextures.BUTTON_NONE, it -> {
         });
-        this.parentGui = parentGui;
     }
 
     @Override
     public void onClick(double p_194829_1_, double p_194829_3_) {
         if (currentFilter != null) {
-            RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_ADD_FILTER, currentFilter.getIdentifier());
-            if (!currentFilter.hasConfiguration()) {
-                Minecraft.getInstance().displayGuiScreen(parentGui.getParentGui());
-            }
+            RefinedRelocationAPI.sendContainerMessageToServer(AddFilterContainer.KEY_ADD_FILTER, currentFilter.getIdentifier());
         }
     }
 

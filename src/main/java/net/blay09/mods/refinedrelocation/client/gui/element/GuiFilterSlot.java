@@ -53,7 +53,8 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     public void onClick(double mouseX, double mouseY) {
         IFilter filter = rootFilter.getFilter(index);
         if (filter == null) {
-            Minecraft.getInstance().displayGuiScreen(new AddFilterScreen(parentGui, parentGui.getPlayerInventory(), parentGui.getTitle()));
+            RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_OPEN_ADD_FILTER, 0);
+            // Minecraft.getInstance().displayGuiScreen(new AddFilterScreen(parentGui, parentGui.getPlayerInventory(), parentGui.getTitle()));
         } else {
             RefinedRelocationAPI.sendContainerMessageToServer(RootFilterContainer.KEY_EDIT_FILTER, index);
         }

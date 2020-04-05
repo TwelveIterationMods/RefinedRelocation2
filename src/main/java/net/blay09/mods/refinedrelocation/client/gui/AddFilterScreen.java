@@ -8,31 +8,28 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollBar;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiScrollPane;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.IScrollTarget;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiAddFilterButton;
-import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
+import net.blay09.mods.refinedrelocation.container.AddFilterContainer;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> implements IScrollTarget {
+public class AddFilterScreen extends ModContainerScreen<AddFilterContainer> implements IScrollTarget {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RefinedRelocation.MOD_ID, "textures/gui/add_filter.png");
 
-    private final RootFilterScreen parentGui;
     private final GuiAddFilterButton[] filterButtons = new GuiAddFilterButton[3];
     private final List<IFilter> filterList;
 
     private int currentOffset;
 
-    public AddFilterScreen(RootFilterScreen parentGui, PlayerInventory playerInventory, ITextComponent displayName) {
-        super(parentGui.getContainer(), playerInventory, displayName);
-        this.parentGui = parentGui;
-        filterList = FilterRegistry.getApplicableFilters(t -> t.isFilterUsable(parentGui.getContainer().getTileEntity()));
+    public AddFilterScreen(AddFilterContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
+        super(container, playerInventory, displayName);
+        filterList = FilterRegistry.getApplicableFilters(t -> t.isFilterUsable(container.getTileEntity()));
         ySize = 210;
     }
 
@@ -48,22 +45,12 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
 
         int y = guiTop + 28;
         for (int i = 0; i < filterButtons.length; i++) {
-            filterButtons[i] = new GuiAddFilterButton(guiLeft + 8, y, this);
+            filterButtons[i] = new GuiAddFilterButton(guiLeft + 8, y);
             addButton(filterButtons[i]);
             y += filterButtons[i].getHeight();
         }
 
         setCurrentOffset(0);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            Minecraft.getInstance().displayGuiScreen(parentGui);
-            return true;
-        }
-
-        return super.keyPressed(keyCode, scanCode, modifier);
     }
 
     @Override
@@ -77,7 +64,7 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        font.drawString(I18n.format("container.refinedrelocation:add_filter"), 8, 6, 4210752);
+        font.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
         font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
@@ -108,10 +95,6 @@ public class AddFilterScreen extends ModContainerScreen<RootFilterContainer> imp
             }
             filterButtons[i].setCurrentFilter(filter);
         }
-    }
-
-    public RootFilterScreen getParentGui() {
-        return parentGui;
     }
 
 }

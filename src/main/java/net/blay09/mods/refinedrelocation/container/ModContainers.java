@@ -10,7 +10,6 @@ import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -20,6 +19,7 @@ public class ModContainers {
     public static ContainerType<ContainerFastHopper> fastHopper;
     public static ContainerType<SortingChestContainer> sortingChest;
 
+    public static ContainerType<AddFilterContainer> addFilter;
     public static ContainerType<RootFilterContainer> rootFilter;
     public static ContainerType<NameFilterContainer> nameFilter;
     public static ContainerType<ChecklistFilterContainer> checklistFilter;
@@ -27,6 +27,17 @@ public class ModContainers {
     public static ContainerType<RootFilterContainer> blockExtenderOutputFilter;
 
     public static void register(IForgeRegistry<ContainerType<?>> registry) {
+        registry.register(addFilter = register("add_filter", (windowId, inv, data) -> {
+            BlockPos pos = data.readBlockPos();
+
+            TileEntity tileEntity = inv.player.world.getTileEntity(pos);
+            if (tileEntity != null) {
+                return new AddFilterContainer(windowId, inv, tileEntity);
+            }
+
+            throw new RuntimeException("Could not open container screen");
+        }));
+
         registry.register(blockExtender = register("block_extender", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
 
@@ -35,7 +46,7 @@ public class ModContainers {
                 return new BlockExtenderContainer(windowId, inv, (TileBlockExtender) tileEntity);
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(sortingChest = register("sorting_chest", (windowId, inv, data) -> {
@@ -46,7 +57,7 @@ public class ModContainers {
                 return new SortingChestContainer(windowId, inv, (SortingChestTileEntity) tileEntity);
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(fastHopper = register("fast_hopper", (windowId, inv, data) -> {
@@ -57,7 +68,7 @@ public class ModContainers {
                 return new ContainerFastHopper(windowId, inv, (FastHopperTileEntity) tileEntity);
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(rootFilter = register("root_filter", (windowId, inv, data) -> {
@@ -68,7 +79,7 @@ public class ModContainers {
                 return new RootFilterContainer(windowId, inv, tileEntity);
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(nameFilter = register("name_filter", (windowId, inv, data) -> {
@@ -78,15 +89,15 @@ public class ModContainers {
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity != null) {
                 Container container = inv.player.openContainer;
-                if (container instanceof RootFilterContainer) {
-                    IFilter filter = ((RootFilterContainer) container).getRootFilter().getFilter(filterIndex);
+                if (container instanceof IRootFilterContainer) {
+                    IFilter filter = ((IRootFilterContainer) container).getRootFilter().getFilter(filterIndex);
                     if (filter != null) {
                         return new NameFilterContainer(windowId, inv, tileEntity, (NameFilter) filter);
                     }
                 }
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(checklistFilter = register("checklist_filter", (windowId, inv, data) -> {
@@ -96,15 +107,15 @@ public class ModContainers {
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity != null) {
                 Container container = inv.player.openContainer;
-                if (container instanceof RootFilterContainer) {
-                    IFilter filter = ((RootFilterContainer) container).getRootFilter().getFilter(filterIndex);
+                if (container instanceof IRootFilterContainer) {
+                    IFilter filter = ((IRootFilterContainer) container).getRootFilter().getFilter(filterIndex);
                     if (filter != null) {
                         return new ChecklistFilterContainer(windowId, inv, tileEntity, (IChecklistFilter) filter);
                     }
                 }
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(blockExtenderInputFilter = register("block_extender_input_filter", (windowId, inv, data) -> {
@@ -116,7 +127,7 @@ public class ModContainers {
                 return new RootFilterContainer(rootFilter, windowId, inv, tileEntity, tileBlockExtender.getInputFilter());
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
 
         registry.register(blockExtenderOutputFilter = register("block_extender_output_filter", (windowId, inv, data) -> {
@@ -128,7 +139,7 @@ public class ModContainers {
                 return new RootFilterContainer(rootFilter, windowId, inv, tileEntity, tileBlockExtender.getOutputFilter());
             }
 
-            return null;
+            throw new RuntimeException("Could not open container screen");
         }));
     }
 

@@ -15,22 +15,21 @@ import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.inventory.container.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class RootFilterContainer extends FilterContainer {
+public class RootFilterContainer extends FilterContainer implements IRootFilterContainer {
 
     public static final String KEY_ROOT_FILTER = "RootFilter";
-    public static final String KEY_ADD_FILTER = "AddFilter";
+    public static final String KEY_OPEN_ADD_FILTER = "OpenAddFilter";
     public static final String KEY_EDIT_FILTER = "EditFilter";
     public static final String KEY_DELETE_FILTER = "DeleteFilter";
     public static final String KEY_PRIORITY = "Priority";
@@ -140,33 +139,20 @@ public class RootFilterContainer extends FilterContainer {
     @Override
     public void receivedMessageServer(IContainerMessage message) {
         switch (message.getKey()) {
-            case KEY_ADD_FILTER: {
-                String typeId = message.getStringValue();
-                IFilter filter = FilterRegistry.createFilter(typeId);
-                if (filter == null) {
-                    // Client tried to create a filter that doesn't exist. Bad client!
-                    return;
-                }
+            case KEY_OPEN_ADD_FILTER:
+                INamedContainerProvider containerProvider = new INamedContainerProvider() {
+                    @Override
+                    public ITextComponent getDisplayName() {
+                        return new TranslationTextComponent("container.refinedrelocation:add_filter");
+                    }
 
-                if (rootFilter.getFilterCount() >= 3) {
-                    // Client tried to create more than three filters. Bad client!
-                    return;
-                }
-
-                rootFilter.addFilter(filter);
-                tileEntity.markDirty();
-                lastFilterCount = rootFilter.getFilterCount();
-                syncFilterList();
-                RefinedRelocationAPI.updateFilterPreview(entityPlayer, tileEntity, rootFilter);
-                INamedContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
-                if (filterConfig != null) {
-                    NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
-                        it.writeBlockPos(tileEntity.getPos());
-                        it.writeInt(rootFilter.getFilterCount() - 1);
-                    });
-                }
+                    @Override
+                    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                        return new AddFilterContainer(windowId, playerInventory, tileEntity);
+                    }
+                };
+                NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, containerProvider, tileEntity.getPos());
                 break;
-            }
             case KEY_EDIT_FILTER: {
                 int index = message.getIntValue();
                 if (index < 0 || index >= rootFilter.getFilterCount()) {
@@ -236,6 +222,7 @@ public class RootFilterContainer extends FilterContainer {
         }
     }
 
+    @Override
     public IRootFilter getRootFilter() {
         return rootFilter;
     }
