@@ -14,7 +14,7 @@ public interface ISimpleFilter extends INBTSerializable<INBT> {
     boolean passes(TileEntity tilePos, ItemStack itemStack);
 
     @Nullable
-    default INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+    default INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex) {
         return null;
     }
 

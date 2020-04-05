@@ -79,8 +79,8 @@ public class RefinedRelocationAPI {
         internalMethods.updateFilterPreview(player, tileEntity, filter);
     }
 
-    public static void openRootFilterGui(PlayerEntity player, TileEntity tileEntity) {
-        internalMethods.openRootFilterGui(player, tileEntity);
+    public static void openRootFilterGui(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex) {
+        internalMethods.openRootFilterGui(player, tileEntity, rootFilterIndex);
     }
 
     public static void returnToParentContainer() {

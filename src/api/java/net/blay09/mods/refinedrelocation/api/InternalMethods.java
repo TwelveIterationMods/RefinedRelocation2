@@ -43,7 +43,7 @@ public interface InternalMethods {
 
     void syncContainerValue(String key, CompoundNBT value, Iterable<IContainerListener> listeners);
 
-    void openRootFilterGui(PlayerEntity player, TileEntity tileEntity);
+    void openRootFilterGui(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex);
 
     void updateFilterPreview(PlayerEntity player, TileEntity tileEntity, ISimpleFilter filter);
 

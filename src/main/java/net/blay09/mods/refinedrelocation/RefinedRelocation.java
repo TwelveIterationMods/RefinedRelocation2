@@ -99,6 +99,7 @@ public class RefinedRelocation {
         DeferredWorkQueue.runLater(() -> {
             CapabilitySimpleFilter.register();
             CapabilityRootFilter.register();
+            CapabilityMultiRootFilter.register();
             CapabilitySortingGridMember.register();
             CapabilitySortingInventory.register();
             CapabilitySortingUpgradable.register();

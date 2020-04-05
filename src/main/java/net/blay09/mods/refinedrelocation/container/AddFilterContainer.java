@@ -1,10 +1,10 @@
 package net.blay09.mods.refinedrelocation.container;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IContainerMessage;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,8 +23,9 @@ public class AddFilterContainer extends BaseContainer implements IRootFilterCont
     private final TileEntity tileEntity;
     private final PlayerEntity player;
     private final IRootFilter rootFilter;
+    private final int rootFilterIndex;
 
-    public AddFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity) {
+    public AddFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, int rootFilterIndex) {
         super(ModContainers.addFilter, windowId);
         this.tileEntity = tileEntity;
 
@@ -32,7 +33,8 @@ public class AddFilterContainer extends BaseContainer implements IRootFilterCont
 
         addPlayerInventory(playerInventory, 128);
 
-        rootFilter = tileEntity.getCapability(CapabilityRootFilter.CAPABILITY).orElseGet(RootFilter::new);
+        this.rootFilterIndex = rootFilterIndex;
+        this.rootFilter = RefinedRelocationUtils.getRootFilter(tileEntity, rootFilterIndex).orElseGet(RootFilter::new);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class AddFilterContainer extends BaseContainer implements IRootFilterCont
                 tileEntity.markDirty();
                 syncFilterList();
                 RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
-                INamedContainerProvider filterConfig = filter.getConfiguration(player, tileEntity);
+                INamedContainerProvider filterConfig = filter.getConfiguration(player, tileEntity, rootFilterIndex);
                 if (filterConfig != null) {
                     NetworkHooks.openGui((ServerPlayerEntity) player, filterConfig, it -> {
                         it.writeBlockPos(tileEntity.getPos());

@@ -90,7 +90,7 @@ public class BlockExtenderContainer extends BaseContainer {
                 break;
             case KEY_CONFIGURE_INPUT_FILTER:
                 tileEntity.getInputFilter().ifPresent(it -> {
-                    INamedContainerProvider config = it.getConfiguration(player, tileEntity);
+                    INamedContainerProvider config = it.getConfiguration(player, tileEntity, 0);
                     if (config != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) player, config, tileEntity.getPos());
                     }
@@ -98,7 +98,7 @@ public class BlockExtenderContainer extends BaseContainer {
                 break;
             case KEY_CONFIGURE_OUTPUT_FILTER:
                 tileEntity.getOutputFilter().ifPresent(it -> {
-                    INamedContainerProvider config = it.getConfiguration(player, tileEntity);
+                    INamedContainerProvider config = it.getConfiguration(player, tileEntity, 1);
                     if (config != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) player, config, tileEntity.getPos());
                     }

@@ -148,7 +148,7 @@ public class FastHopperBlock extends ContainerBlock {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FastHopperTileEntity) {
                 if (player.isShiftKeyDown()) {
-                    RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+                    RefinedRelocationAPI.openRootFilterGui(player, tileEntity, 0);
                 } else {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (FastHopperTileEntity) tileEntity, it -> it.writeBlockPos(pos));
                 }

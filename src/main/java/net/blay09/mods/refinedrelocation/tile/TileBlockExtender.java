@@ -2,6 +2,8 @@ package net.blay09.mods.refinedrelocation.tile;
 
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.ModTileEntities;
+import net.blay09.mods.refinedrelocation.api.Capabilities;
+import net.blay09.mods.refinedrelocation.api.filter.IMultiRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
@@ -32,11 +34,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class TileBlockExtender extends TileMod implements ITickableTileEntity, INamedContainerProvider, IDroppableItemHandler {
-
-    public TileBlockExtender() {
-        super(ModTileEntities.blockExtender);
-    }
+public class TileBlockExtender extends TileMod implements ITickableTileEntity, INamedContainerProvider, IDroppableItemHandler, IMultiRootFilter {
 
     private class ItemHandlerWrapper implements IItemHandler {
         private final TileEntity tileEntity;
@@ -172,8 +170,8 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     }
 
     private final Direction[] sideMappings = new Direction[5];
-    private final IRootFilter inputFilter = new RootFilter().setContainerType(ModContainers.blockExtenderInputFilter);
-    private final IRootFilter outputFilter = new RootFilter().setContainerType(ModContainers.blockExtenderOutputFilter);
+    private final IRootFilter inputFilter = new RootFilter();
+    private final IRootFilter outputFilter = new RootFilter();
     private int stackLimiterLimit = 64;
 
     private boolean hasStackLimiter;
@@ -183,6 +181,15 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     private TileEntity cachedConnectedTile;
     private final ItemHandlerWrapper[] cachedItemHandlers = new ItemHandlerWrapper[6];
     private final Direction[] cachedFacingToFacingMappings = new Direction[6];
+
+    public TileBlockExtender() {
+        super(ModTileEntities.blockExtender);
+    }
+
+    @Override
+    public IRootFilter getRootFilter(int index) {
+        return index == 0 ? inputFilter : outputFilter;
+    }
 
     @Nullable
     public Direction getSideMapping(RelativeSide side) {
@@ -272,6 +279,10 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == Capabilities.MULTI_ROOT_FILTER) {
+            return LazyOptional.of(() -> this).cast();
+        }
+
         if (cachedConnectedTile != null) {
             Direction ioSide = getSideMapping(side);
             if (ioSide != null) {
@@ -288,7 +299,7 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
                             cachedItemHandlers[cacheIdx] = new ItemHandlerWrapper(cachedConnectedTile, ioSide, itemHandler);
                         });
                     }
-                    return LazyOptional.of(() -> (T) cachedItemHandlers[cacheIdx]);
+                    return LazyOptional.of(() -> cachedItemHandlers[cacheIdx]).cast();
                 }
 
                 return cachedConnectedTile.getCapability(cap, ioSide);

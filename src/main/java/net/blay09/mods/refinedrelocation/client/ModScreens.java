@@ -13,7 +13,5 @@ public class ModScreens {
         ScreenManager.registerFactory(ModContainers.checklistFilter, ChecklistFilterScreen::new);
         ScreenManager.registerFactory(ModContainers.rootFilter, RootFilterScreen::new);
         ScreenManager.registerFactory(ModContainers.addFilter, AddFilterScreen::new);
-        ScreenManager.registerFactory(ModContainers.blockExtenderInputFilter, RootFilterScreen::new);
-        ScreenManager.registerFactory(ModContainers.blockExtenderOutputFilter, RootFilterScreen::new);
     }
 }

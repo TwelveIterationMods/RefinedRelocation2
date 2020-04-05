@@ -177,7 +177,7 @@ public class NameFilter implements IFilter {
 
     @Nullable
     @Override
-    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex) {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {

@@ -230,12 +230,12 @@ public class InternalMethodsImpl implements InternalMethods {
     }
 
     @Override
-    public void openRootFilterGui(PlayerEntity player, TileEntity tileEntity) {
+    public void openRootFilterGui(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex) {
         if (player.world.isRemote) {
             NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos()));
         } else {
-            tileEntity.getCapability(Capabilities.ROOT_FILTER).ifPresent(rootFilter -> {
-                INamedContainerProvider filterConfig = rootFilter.getConfiguration(player, tileEntity);
+            RefinedRelocationUtils.getRootFilter(tileEntity, rootFilterIndex).ifPresent(rootFilter -> {
+                INamedContainerProvider filterConfig = rootFilter.getConfiguration(player, tileEntity, rootFilterIndex);
                 NetworkHooks.openGui((ServerPlayerEntity) player, filterConfig, tileEntity.getPos());
             });
         }

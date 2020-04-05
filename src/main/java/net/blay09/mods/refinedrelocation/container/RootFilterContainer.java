@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.container;
 
+import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.Priority;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -8,9 +9,7 @@ import net.blay09.mods.refinedrelocation.api.container.ReturnCallback;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingInventory;
-import net.blay09.mods.refinedrelocation.filter.FilterRegistry;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,7 +20,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -39,6 +37,7 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
     private final PlayerEntity entityPlayer;
     private final TileEntity tileEntity;
     private final IRootFilter rootFilter;
+    private final int rootFilterIndex;
 
     private ReturnCallback returnCallback;
     private ISortingInventory sortingInventory;
@@ -47,16 +46,13 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
     private int lastPriority;
     private final boolean[] lastBlacklist = new boolean[3];
 
-    public RootFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity) {
-        this(ModContainers.rootFilter, windowId, playerInventory, tileEntity, tileEntity.getCapability(CapabilityRootFilter.CAPABILITY));
-    }
-
-    public RootFilterContainer(ContainerType<RootFilterContainer> containerType, int windowId, PlayerInventory playerInventory, TileEntity tileEntity, LazyOptional<IRootFilter> rootFilter) {
-        super(containerType, windowId);
+    public RootFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, int rootFilterIndex) {
+        super(ModContainers.rootFilter, windowId);
 
         this.entityPlayer = playerInventory.player;
         this.tileEntity = tileEntity;
-        this.rootFilter = rootFilter.orElseGet(RootFilter::new);
+        this.rootFilter = RefinedRelocationUtils.getRootFilter(tileEntity, rootFilterIndex).orElseGet(RootFilter::new);
+        this.rootFilterIndex = rootFilterIndex;
         sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY)
                 .orElseGet(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
 
@@ -148,10 +144,13 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
 
                     @Override
                     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return new AddFilterContainer(windowId, playerInventory, tileEntity);
+                        return new AddFilterContainer(windowId, playerInventory, tileEntity, rootFilterIndex);
                     }
                 };
-                NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, containerProvider, tileEntity.getPos());
+                NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, containerProvider, it -> {
+                    it.writeBlockPos(tileEntity.getPos());
+                    it.writeByte(rootFilterIndex);
+                });
                 break;
             case KEY_EDIT_FILTER: {
                 int index = message.getIntValue();
@@ -161,7 +160,7 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
                 }
                 IFilter filter = rootFilter.getFilter(index);
                 if (filter != null) {
-                    INamedContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity);
+                    INamedContainerProvider filterConfig = filter.getConfiguration(entityPlayer, tileEntity, rootFilterIndex);
                     if (filterConfig != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
                             it.writeBlockPos(tileEntity.getPos());

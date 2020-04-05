@@ -3,12 +3,10 @@ package net.blay09.mods.refinedrelocation.filter;
 import com.google.common.collect.Lists;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,12 +23,6 @@ import java.util.List;
 public class RootFilter implements IRootFilter {
 
     private final List<SubFilterWrapper> filterList = Lists.newArrayList();
-    private ContainerType<RootFilterContainer> containerType = ModContainers.rootFilter;
-
-    public RootFilter setContainerType(ContainerType<RootFilterContainer> containerType) {
-        this.containerType = containerType;
-        return this;
-    }
 
     @Override
     public int getFilterCount() {
@@ -118,11 +109,11 @@ public class RootFilter implements IRootFilter {
 
     @Nullable
     @Override
-    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity) {
+    public INamedContainerProvider getConfiguration(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex) {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new RootFilterContainer(containerType, i, playerInventory, tileEntity, LazyOptional.of(() -> RootFilter.this));
+                return new RootFilterContainer(i, playerInventory, tileEntity, rootFilterIndex);
             }
 
             @Override

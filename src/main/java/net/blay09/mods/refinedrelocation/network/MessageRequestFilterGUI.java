@@ -35,7 +35,7 @@ public class MessageRequestFilterGUI {
 
             TileEntity tileEntity = player.world.getTileEntity(message.pos);
             if (tileEntity != null) {
-                RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+                RefinedRelocationAPI.openRootFilterGui(player, tileEntity, 0);
             }
         });
         context.setPacketHandled(true);

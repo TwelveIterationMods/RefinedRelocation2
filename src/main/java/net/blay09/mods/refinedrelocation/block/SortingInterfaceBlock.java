@@ -50,7 +50,7 @@ public class SortingInterfaceBlock extends ContainerBlock {
         if (world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity != null) {
-                RefinedRelocationAPI.openRootFilterGui(player, tileEntity);
+                RefinedRelocationAPI.openRootFilterGui(player, tileEntity, 0);
             }
         }
 

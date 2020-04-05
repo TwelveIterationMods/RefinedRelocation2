@@ -1,5 +1,7 @@
 package net.blay09.mods.refinedrelocation;
 
+import net.blay09.mods.refinedrelocation.api.Capabilities;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.tile.IDroppableItemHandler;
 import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.minecraft.block.BlockState;
@@ -14,6 +16,15 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 
 public class RefinedRelocationUtils {
+
+    public static LazyOptional<IRootFilter> getRootFilter(TileEntity tileEntity, int rootFilterIndex) {
+        LazyOptional<IRootFilter> foundRootFilter = tileEntity.getCapability(Capabilities.MULTI_ROOT_FILTER).map(it -> it.getRootFilter(rootFilterIndex));
+        if (foundRootFilter.isPresent()) {
+            return foundRootFilter;
+        }
+
+        return rootFilterIndex == 0 ? tileEntity.getCapability(Capabilities.ROOT_FILTER) : LazyOptional.empty();
+    }
 
     public static void dropItemHandler(World world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);

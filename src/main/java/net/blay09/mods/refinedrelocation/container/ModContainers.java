@@ -23,16 +23,18 @@ public class ModContainers {
     public static ContainerType<RootFilterContainer> rootFilter;
     public static ContainerType<NameFilterContainer> nameFilter;
     public static ContainerType<ChecklistFilterContainer> checklistFilter;
-    public static ContainerType<RootFilterContainer> blockExtenderInputFilter;
-    public static ContainerType<RootFilterContainer> blockExtenderOutputFilter;
 
     public static void register(IForgeRegistry<ContainerType<?>> registry) {
         registry.register(addFilter = register("add_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
+            int rootFilterIndex = 0;
+            if(data.readableBytes() > 0) {
+                rootFilterIndex = data.readByte();
+            }
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity != null) {
-                return new AddFilterContainer(windowId, inv, tileEntity);
+                return new AddFilterContainer(windowId, inv, tileEntity, rootFilterIndex);
             }
 
             throw new RuntimeException("Could not open container screen");
@@ -73,10 +75,14 @@ public class ModContainers {
 
         registry.register(rootFilter = register("root_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
+            int rootFilterIndex = 0;
+            if(data.readableBytes() > 0) {
+                rootFilterIndex = data.readByte();
+            }
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
-            if (tileEntity != null && tileEntity.getCapability(CapabilityRootFilter.CAPABILITY).isPresent()) {
-                return new RootFilterContainer(windowId, inv, tileEntity);
+            if (tileEntity != null) {
+                return new RootFilterContainer(windowId, inv, tileEntity, rootFilterIndex);
             }
 
             throw new RuntimeException("Could not open container screen");
@@ -113,30 +119,6 @@ public class ModContainers {
                         return new ChecklistFilterContainer(windowId, inv, tileEntity, (IChecklistFilter) filter);
                     }
                 }
-            }
-
-            throw new RuntimeException("Could not open container screen");
-        }));
-
-        registry.register(blockExtenderInputFilter = register("block_extender_input_filter", (windowId, inv, data) -> {
-            BlockPos pos = data.readBlockPos();
-
-            TileEntity tileEntity = inv.player.world.getTileEntity(pos);
-            if (tileEntity instanceof TileBlockExtender) {
-                TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
-                return new RootFilterContainer(rootFilter, windowId, inv, tileEntity, tileBlockExtender.getInputFilter());
-            }
-
-            throw new RuntimeException("Could not open container screen");
-        }));
-
-        registry.register(blockExtenderOutputFilter = register("block_extender_output_filter", (windowId, inv, data) -> {
-            BlockPos pos = data.readBlockPos();
-
-            TileEntity tileEntity = inv.player.world.getTileEntity(pos);
-            if (tileEntity instanceof TileBlockExtender) {
-                TileBlockExtender tileBlockExtender = (TileBlockExtender) tileEntity;
-                return new RootFilterContainer(rootFilter, windowId, inv, tileEntity, tileBlockExtender.getOutputFilter());
             }
 
             throw new RuntimeException("Could not open container screen");
