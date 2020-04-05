@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation.item;
 
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
+import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
 import net.blay09.mods.refinedrelocation.block.SortingChestBlock;
 import net.blay09.mods.refinedrelocation.capability.CapabilitySortingUpgradable;
@@ -90,7 +91,7 @@ public class SortingUpgradeItem extends Item {
         }
 
         tileEntity.clear();
-        BlockState newState = ModBlocks.sortingChest.getDefaultState().with(SortingChestBlock.FACING, state.get(ChestBlock.FACING));
+        BlockState newState = ModBlocks.sortingChests[SortingChestType.WOOD.ordinal()].getDefaultState().with(SortingChestBlock.FACING, state.get(ChestBlock.FACING));
         world.setBlockState(pos, newState);
         SortingChestTileEntity tileSortingChest = (SortingChestTileEntity) world.getTileEntity(pos);
         if (tileSortingChest != null) {

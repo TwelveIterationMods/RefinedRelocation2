@@ -31,7 +31,7 @@ public class AddFilterContainer extends BaseContainer implements IRootFilterCont
 
         player = playerInventory.player;
 
-        addPlayerInventory(playerInventory, 128);
+        addPlayerInventory(playerInventory, 8, 128);
 
         this.rootFilterIndex = rootFilterIndex;
         this.rootFilter = RefinedRelocationUtils.getRootFilter(tileEntity, rootFilterIndex).orElseGet(RootFilter::new);

@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation;
 
+import net.blay09.mods.refinedrelocation.block.SortingChestBlock;
 import net.blay09.mods.refinedrelocation.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -7,11 +8,13 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ModTileEntities {
 
-    public static TileEntityType<SortingChestTileEntity> sortingChest;
+    public static List<TileEntityType<SortingChestTileEntity>> sortingChests;
     public static TileEntityType<TileBlockExtender> blockExtender;
     public static TileEntityType<FastHopperTileEntity> fastHopper;
     public static TileEntityType<FilteredHopperTileEntity> filteredHopper;
@@ -19,8 +22,14 @@ public class ModTileEntities {
     public static TileEntityType<TileSortingInterface> sortingInterface;
 
     public static void registerTileEntities(IForgeRegistry<TileEntityType<?>> registry) {
+        sortingChests = new ArrayList<>();
+        for (SortingChestBlock sortingChest : ModBlocks.sortingChests) {
+            TileEntityType<SortingChestTileEntity> tileEntityType = build(() -> new SortingChestTileEntity(sortingChest.getChestType()), sortingChest);
+            sortingChests.add(tileEntityType);
+            registry.register(tileEntityType);
+        }
+
         registry.registerAll(
-                sortingChest = build(SortingChestTileEntity::new, ModBlocks.sortingChest),
                 blockExtender = build(TileBlockExtender::new, ModBlocks.blockExtender),
                 fastHopper = build(FastHopperTileEntity::new, ModBlocks.fastHopper),
                 filteredHopper = build(FilteredHopperTileEntity::new, ModBlocks.filteredHopper),

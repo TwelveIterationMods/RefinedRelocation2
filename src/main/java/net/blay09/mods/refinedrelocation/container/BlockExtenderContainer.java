@@ -42,7 +42,7 @@ public class BlockExtenderContainer extends BaseContainer {
             addSlot(new SlotItemHandler(tileEntity.getItemHandlerUpgrades(), i, 152, 22 + i * 18));
         }
 
-        addPlayerInventory(playerInventory, 94);
+        addPlayerInventory(playerInventory, 8, 94);
     }
 
     public TileBlockExtender getTileEntity() {

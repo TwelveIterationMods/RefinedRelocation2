@@ -40,7 +40,7 @@ public class ChecklistFilterContainer extends FilterContainer implements IContai
 		this.filter = filter;
 		lastStates = new byte[filter.getOptionCount()];
 
-		addPlayerInventory(playerInventory, 128);
+		addPlayerInventory(playerInventory, 8, 128);
 	}
 
 	public IChecklistFilter getFilter() {

@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.container.SortingChestContainer;
@@ -8,19 +9,17 @@ import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class SortingChestScreen extends ModContainerScreen<SortingChestContainer> {
-
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
     private final SortingChestTileEntity tileEntity;
 
     public SortingChestScreen(SortingChestContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
-        this.ySize = 168;
+        this.xSize = tileEntity.getChestType().getGuiWidth();
+        this.ySize = tileEntity.getChestType().getGuiHeight();
     }
 
     @Override
@@ -33,9 +32,17 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
-        Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
-        blit(guiLeft, guiTop, 0, 0, xSize, 3 * 18 + 17);
-        blit(guiLeft, guiTop + 3 * 18 + 17, 0, 126, xSize, 96);
+        SortingChestType chestType = tileEntity.getChestType();
+        Minecraft.getInstance().getTextureManager().bindTexture(chestType.getGuiTextureLocation());
+        if (chestType == SortingChestType.WOOD || chestType == SortingChestType.IRON) {
+            int inventoryRows = chestType.getInventorySize() / chestType.getContainerRowSize();
+            blit(guiLeft, guiTop, 0, 0, xSize, inventoryRows * 18 + 17);
+            blit(guiLeft, guiTop + inventoryRows * 18 + 17, 0, 125, xSize, 97);
+        } else {
+            int textureSizeX = chestType.getGuiTextureWidth();
+            int textureSizeY = chestType.getGuiTextureHeight();
+            blit(guiLeft, guiTop, 0, 0, xSize, ySize, textureSizeX, textureSizeY);
+        }
     }
 
     @Override
@@ -43,7 +50,9 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         font.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
-        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+
+        int inventoryTitleX = (tileEntity.getChestType().getGuiWidth() - 162) / 2;
+        font.drawString(I18n.format("container.inventory"), inventoryTitleX, ySize - 96 + 2, 4210752);
     }
 
 }

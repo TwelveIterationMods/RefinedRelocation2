@@ -1,33 +1,19 @@
 {
   "result": {
-    "item": "refinedrelocation:sorting_iron_chest",
-    "data": 1
+    "item": "refinedrelocation:sorting_gold_chest"
   },
   "type": "crafting_shaped",
   "pattern": [
-    " B ",
-    "RCR",
-    " H "
+    "III",
+    "ICI",
+    "III"
   ],
   "key": {
-    "B": {
-      "item": "minecraft:writable_book"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    },
     "C": {
-      "item": "ironchest:iron_chest",
-      "data": 1
+      "item": "refinedrelocation:sorting_iron_chest"
     },
-    "H": {
-      "item": "minecraft:hopper"
+    "I": {
+      "item": "minecraft:gold_ingot"
     }
-  },
-  "conditions": [
-    {
-      "type": "forge:mod_loaded",
-      "modid": "ironchest"
-    }
-  ]
+  }
 }

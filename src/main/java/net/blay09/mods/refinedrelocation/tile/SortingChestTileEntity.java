@@ -1,7 +1,7 @@
 package net.blay09.mods.refinedrelocation.tile;
 
 
-import net.blay09.mods.refinedrelocation.ModTileEntities;
+import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -14,6 +14,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.SoundCategory;
@@ -39,16 +40,11 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
 
     private static final int EVENT_NUM_PLAYERS = 1;
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(27) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            markDirty();
-            sortingInventory.onSlotChanged(slot);
-        }
-    };
+    private final ItemStackHandler itemHandler;
 
     private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
     private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
+    private final SortingChestType chestType;
 
     private float lidAngle;
     private float prevLidAngle;
@@ -57,8 +53,21 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
 
     private ITextComponent customName;
 
-    public SortingChestTileEntity() {
-        super(ModTileEntities.sortingChest);
+    public SortingChestTileEntity(SortingChestType chestType) {
+        super(chestType.getTileEntityType());
+        this.chestType = chestType;
+
+        itemHandler = new ItemStackHandler(chestType.getInventorySize()) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                markDirty();
+                sortingInventory.onSlotChanged(slot);
+            }
+        };
+    }
+
+    public SortingChestType getChestType() {
+        return chestType;
     }
 
     @Override
@@ -71,6 +80,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         baseTick();
         sortingInventory.onUpdate(this);
 
+        ticksSinceSync++;
         if (!world.isRemote && numPlayersUsing != 0 && (ticksSinceSync + pos.getX() + pos.getY() + pos.getZ()) % 200 == 0) {
             numPlayersUsing = calculatePlayersUsing();
         }
@@ -219,7 +229,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
 
     @Override
     public String getUnlocalizedName() {
-        return "container.refinedrelocation:sorting_chest";
+        return "container.refinedrelocation:" + chestType.getRegistryName();
     }
 
     @Override
@@ -284,5 +294,9 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Override
     public float getLidAngle(float partialTicks) {
         return MathHelper.lerp(partialTicks, this.prevLidAngle, this.lidAngle);
+    }
+
+    public int getNumPlayersUsing() {
+        return numPlayersUsing;
     }
 }

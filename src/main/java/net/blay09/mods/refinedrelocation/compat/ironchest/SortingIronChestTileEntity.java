@@ -1,17 +1,19 @@
 //package net.blay09.mods.refinedrelocation.compat.ironchest;
 //
-//import com.progwml6.ironchest.common.blocks.IronChestType;
-//import com.progwml6.ironchest.common.tileentity.TileEntityIronChest;
+//import com.progwml6.ironchest.common.block.IronChestBlock;
+//import com.progwml6.ironchest.common.block.IronChestsTypes;
+//import com.progwml6.ironchest.common.block.tileentity.GenericIronChestTileEntity;
 //import net.blay09.mods.refinedrelocation.api.Capabilities;
 //import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 //import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 //import net.minecraft.block.Block;
 //import net.minecraft.item.ItemStack;
-//import net.minecraft.nbt.NBTTagCompound;
+//import net.minecraft.nbt.CompoundNBT;
+//import net.minecraft.tileentity.ITickableTileEntity;
 //import net.minecraft.tileentity.TileEntityType;
-//import net.minecraft.util.EnumFacing;
-//import net.minecraft.util.ITickable;
+//import net.minecraft.util.Direction;
 //import net.minecraft.util.text.ITextComponent;
+//import net.minecraft.util.text.TranslationTextComponent;
 //import net.minecraftforge.common.capabilities.Capability;
 //import net.minecraftforge.common.util.LazyOptional;
 //import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,14 +22,15 @@
 //import javax.annotation.Nullable;
 //import java.util.Locale;
 //
-//public class TileSortingIronChest extends TileEntityIronChest implements ITickable {
+//public class SortingIronChestTileEntity extends GenericIronChestTileEntity implements ITickableTileEntity {
 //
 //    private final InvWrapper invWrapper = new InvWrapper(this);
 //    private final ISortingInventory sortingInventory = Capabilities.getDefaultInstance(Capabilities.SORTING_INVENTORY);
 //    private final IRootFilter rootFilter = Capabilities.getDefaultInstance(Capabilities.ROOT_FILTER);
+//    private boolean isFirstTick;
 //
-//    public TileSortingIronChest(TileEntityType<?> type, IronChestType chestType, Block blockToUse) {
-//        super(type, chestType, blockToUse);
+//    public SortingIronChestTileEntity(TileEntityType<?> type, IronChestsTypes chestType, Block blockToUse) {
+//        super(type, chestType, () -> blockToUse);
 //    }
 //
 //    public void onContentsChanged(int slot) {
@@ -36,14 +39,12 @@
 //    }
 //
 //    @Override
-//    public void onFirstTick() {
-//        super.onFirstTick();
-//        sortingInventory.onFirstTick(this);
-//    }
-//
-//    @Override
 //    public void tick() {
-//        super.tick();
+//        if (isFirstTick) {
+//            sortingInventory.onFirstTick(this);
+//            isFirstTick = false;
+//        }
+//
 //        sortingInventory.onUpdate(this);
 //    }
 //
@@ -60,7 +61,7 @@
 //    }
 //
 //    @Override
-//    public NBTTagCompound write(NBTTagCompound compound) {
+//    public CompoundNBT write(CompoundNBT compound) {
 //        super.write(compound);
 //        compound.put("SortingInventory", sortingInventory.serializeNBT());
 //        compound.put("RootFilter", rootFilter.serializeNBT());
@@ -68,7 +69,7 @@
 //    }
 //
 //    @Override
-//    public void read(NBTTagCompound compound) {
+//    public void read(CompoundNBT compound) {
 //        super.read(compound);
 //        sortingInventory.deserializeNBT(compound.getCompound("SortingInventory"));
 //
@@ -77,11 +78,13 @@
 //
 //    @Override
 //    public ITextComponent getName() {
-//        return hasCustomName() ? super.getName() : "container.refinedrelocation:ironchest.sorting_chest_" + getIronChestType().name().toLowerCase(Locale.ENGLISH);
+//        return hasCustomName()
+//                ? super.getName()
+//                : new TranslationTextComponent("container.refinedrelocation:ironchest.sorting_chest_" + getChestType().name().toLowerCase(Locale.ENGLISH));
 //    }
 //
 //    @Override
-//    public void setInventorySlotContents(int index, @Nullable ItemStack stack) {
+//    public void setInventorySlotContents(int index, ItemStack stack) {
 //        super.setInventorySlotContents(index, stack);
 //        onContentsChanged(index);
 //    }
@@ -95,7 +98,7 @@
 //
 //    @Nullable
 //    @Override
-//    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable EnumFacing side) {
+//    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
 //        LazyOptional<T> result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> invWrapper));
 //        if (!result.isPresent()) {
 //            result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
@@ -116,52 +119,52 @@
 //        return super.getCapability(cap, side);
 //    }
 //
-//    public static class Iron extends TileSortingIronChest {
+//    public static class Iron extends SortingIronChestTileEntity {
 //        public Iron() {
-//            super(IronChestType.IRON);
+//            super(IronChestAddon.sortingIronChestTile, IronChestsTypes.IRON, IronChestAddon.sortingIronChest);
 //        }
 //    }
 //
-//    public static class Dirt extends TileSortingIronChest {
+//    /*public static class Dirt extends SortingIronChestTileEntity {
 //        public Dirt() {
-//            super(IronChestType.DIRTCHEST9000);
+//            super(IronChestsTypes.DIRT);
 //        }
 //    }
 //
-//    public static class Obsidian extends TileSortingIronChest {
+//    public static class Obsidian extends SortingIronChestTileEntity {
 //        public Obsidian() {
-//            super(IronChestType.OBSIDIAN);
+//            super(IronChestsTypes.OBSIDIAN);
 //        }
 //    }
 //
-//    public static class Crystal extends TileSortingIronChest {
+//    public static class Crystal extends SortingIronChestTileEntity {
 //        public Crystal() {
-//            super(IronChestType.CRYSTAL);
+//            super(IronChestsTypes.CRYSTAL);
 //        }
 //    }
 //
-//    public static class Diamond extends TileSortingIronChest {
+//    public static class Diamond extends SortingIronChestTileEntity {
 //        public Diamond() {
-//            super(IronChestType.DIAMOND);
+//            super(IronChestsTypes.DIAMOND);
 //        }
 //    }
 //
-//    public static class Copper extends TileSortingIronChest {
+//    public static class Copper extends SortingIronChestTileEntity {
 //        public Copper() {
-//            super(IronChestType.COPPER);
+//            super(IronChestsTypes.COPPER);
 //        }
 //    }
 //
-//    public static class Gold extends TileSortingIronChest {
+//    public static class Gold extends SortingIronChestTileEntity {
 //        public Gold() {
-//            super(IronChestType.GOLD);
+//            super(IronChestsTypes.GOLD);
 //        }
 //    }
 //
-//    public static class Silver extends TileSortingIronChest {
+//    public static class Silver extends SortingIronChestTileEntity {
 //        public Silver() {
-//            super(IronChestType.SILVER);
+//            super(IronChestsTypes.SILVER);
 //        }
-//    }
+//    }*/
 //
 //}

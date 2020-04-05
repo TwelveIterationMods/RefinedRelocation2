@@ -1,18 +1,20 @@
 //package net.blay09.mods.refinedrelocation.compat.ironchest;
 //
-//import com.progwml6.ironchest.common.blocks.IronChestType;
+//import com.progwml6.ironchest.common.block.IronChestsTypes;
 //import net.blay09.mods.refinedrelocation.RefinedRelocation;
 //import net.minecraft.block.Block;
-//import net.minecraft.block.BlockContainer;
+//import net.minecraft.block.BlockState;
+//import net.minecraft.block.ContainerBlock;
 //import net.minecraft.block.material.Material;
-//import net.minecraft.block.state.IBlockState;
 //import net.minecraft.entity.Entity;
-//import net.minecraft.entity.EntityLivingBase;
-//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.entity.LivingEntity;
+//import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.tileentity.TileEntity;
 //import net.minecraft.util.*;
 //import net.minecraft.util.math.BlockPos;
+//import net.minecraft.util.math.BlockRayTraceResult;
+//import net.minecraft.util.math.shapes.ISelectionContext;
 //import net.minecraft.util.math.shapes.VoxelShape;
 //import net.minecraft.world.Explosion;
 //import net.minecraft.world.IBlockReader;
@@ -21,15 +23,15 @@
 //
 //import javax.annotation.Nullable;
 //
-//public class BlockSortingIronChest extends BlockContainer {
+//public class BlockSortingIronChest extends ContainerBlock {
 //
 //    public static final String name = "sorting_iron_chest";
 //    public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 //
-//    private final IronChestType ironChestType;
+//    private final IronChestsTypes ironChestType;
 //    private Block delegateBlock;
 //
-//    public BlockSortingIronChest(IronChestType ironChestType) {
+//    public BlockSortingIronChest(IronChestsTypes ironChestType) {
 //        super(Properties.create(Material.IRON).hardnessAndResistance(3f));
 //        this.ironChestType = ironChestType;
 //    }
@@ -39,25 +41,13 @@
 //    }
 //
 //    @Override
-//    public VoxelShape getShape(IBlockState state, IBlockReader world, BlockPos pos) {
-//        return delegateBlock.getShape(state, world, pos);
+//    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+//        return delegateBlock.getShape(state, world, pos, context);
 //    }
 //
 //    @Override
-//    @SuppressWarnings("deprecation")
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
-//
-//    @Override
-//    @SuppressWarnings("deprecation")
-//    public EnumBlockRenderType getRenderType(IBlockState state) {
-//        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-//    }
-//
-//    @Override
-//    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-//        return delegateBlock.onBlockActivated(state, world, pos, player, hand, facing, hitX, hitY, hitZ);
+//    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+//        return delegateBlock.onBlockActivated(state, world, pos, player, hand, hit);
 //    }
 //
 //    @Nullable
@@ -65,67 +55,67 @@
 //    public TileEntity createNewTileEntity(IBlockReader world) {
 //        switch (ironChestType) {
 //            case GOLD:
-//                return new TileSortingIronChest.Gold();
+//                return new SortingIronChestTileEntity.Gold();
 //            case DIAMOND:
-//                return new TileSortingIronChest.Diamond();
+//                return new SortingIronChestTileEntity.Diamond();
 //            case COPPER:
-//                return new TileSortingIronChest.Copper();
+//                return new SortingIronChestTileEntity.Copper();
 //            case SILVER:
-//                return new TileSortingIronChest.Silver();
+//                return new SortingIronChestTileEntity.Silver();
 //            case CRYSTAL:
-//                return new TileSortingIronChest.Crystal();
+//                return new SortingIronChestTileEntity.Crystal();
 //            case OBSIDIAN:
-//                return new TileSortingIronChest.Obsidian();
-//            case DIRTCHEST9000:
-//                return new TileSortingIronChest.Dirt();
+//                return new SortingIronChestTileEntity.Obsidian();
+//            case DIRT:
+//                return new SortingIronChestTileEntity.Dirt();
 //            default:
-//                return new TileSortingIronChest.Iron();
+//                return new SortingIronChestTileEntity.Iron();
 //        }
 //    }
 //
 //    @Override
-//    public void onBlockAdded(IBlockState state, World world, BlockPos pos, IBlockState oldState) {
-//        delegateBlock.onBlockAdded(state, world, pos, oldState);
+//    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+//        delegateBlock.onBlockAdded(state, world, pos, oldState, isMoving);
 //    }
 //
 //    @Override
-//    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, @Nullable EntityLivingBase placer, ItemStack itemStack) {
+//    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
 //        delegateBlock.onBlockPlacedBy(world, pos, state, placer, itemStack);
 //    }
 //
 //    @Override
-//    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean isMoving) {
+//    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 //        delegateBlock.onReplaced(state, world, pos, newState, isMoving);
 //    }
 //
 //    @Override
-//    public float getExplosionResistance(IBlockState state, IWorldReader world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
+//    public float getExplosionResistance(BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
 //        return delegateBlock.getExplosionResistance(state, world, pos, exploder, explosion);
 //    }
 //
 //    @Override
-//    public boolean hasComparatorInputOverride(IBlockState state) {
+//    public boolean hasComparatorInputOverride(BlockState state) {
 //        return delegateBlock.hasComparatorInputOverride(state);
 //    }
 //
 //    @Override
-//    public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
+//    public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
 //        return delegateBlock.getComparatorInputOverride(state, world, pos);
 //    }
 //
 //    @Nullable
 //    @Override
-//    public EnumFacing[] getValidRotations(IBlockState state, IBlockReader world, BlockPos pos) {
+//    public Direction[] getValidRotations(BlockState state, IBlockReader world, BlockPos pos) {
 //        return delegateBlock.getValidRotations(state, world, pos);
 //    }
 //
 //    @Override
-//    public IBlockState rotate(IBlockState state, Rotation rotation) {
+//    public BlockState rotate(BlockState state, Rotation rotation) {
 //        return delegateBlock.rotate(state, rotation);
 //    }
 //
 //    @Override
-//    public IBlockState mirror(IBlockState state, Mirror mirror) {
+//    public BlockState mirror(BlockState state, Mirror mirror) {
 //        return delegateBlock.mirror(state, mirror);
 //    }
 //

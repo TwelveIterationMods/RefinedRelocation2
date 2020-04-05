@@ -13,7 +13,9 @@ public class ModTextures {
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
         if (event.getMap().getTextureLocation().equals(Atlases.CHEST_ATLAS)) {
-            event.addSprite(SortingChestTileEntityRenderer.TEXTURE);
+            for (SortingChestType chestType : SortingChestType.values()) {
+                event.addSprite(chestType.getTextureLocation());
+            }
         }
     }
 

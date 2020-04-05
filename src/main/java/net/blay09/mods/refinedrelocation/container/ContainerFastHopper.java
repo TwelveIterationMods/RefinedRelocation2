@@ -10,7 +10,7 @@ public class ContainerFastHopper extends BaseContainer {
 
     private final FastHopperTileEntity tileEntity;
 
-    public ContainerFastHopper(int windowId, PlayerInventory player, FastHopperTileEntity tileEntity) {
+    public ContainerFastHopper(int windowId, PlayerInventory playerInventory, FastHopperTileEntity tileEntity) {
         super(ModContainers.fastHopper, windowId);
 
         this.tileEntity = tileEntity;
@@ -19,7 +19,7 @@ public class ContainerFastHopper extends BaseContainer {
             addSlot(new SlotItemHandlerCareless(tileEntity.getItemHandler(), i, 44 + i * 18, 20));
         }
 
-        addPlayerInventory(player, 51);
+        addPlayerInventory(playerInventory, 8, 51);
     }
 
     public FastHopperTileEntity getTileEntity() {

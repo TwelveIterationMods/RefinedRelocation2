@@ -1,59 +1,44 @@
 //package net.blay09.mods.refinedrelocation.compat.ironchest;
 //
-//import com.google.common.primitives.SignedBytes;
-//import com.progwml6.ironchest.common.blocks.IronChestType;
+//import com.mojang.blaze3d.matrix.MatrixStack;
 //import net.blay09.mods.refinedrelocation.RefinedRelocation;
-//import net.blay09.mods.refinedrelocation.RefinedRelocationConfig;
-//import net.blay09.mods.refinedrelocation.client.render.ModelLidOverlay;
-//import net.blay09.mods.refinedrelocation.client.render.RenderUtils;
-//import net.blay09.mods.refinedrelocation.client.render.SafeTESR;
-//import net.minecraft.block.Block;
-//import net.minecraft.block.state.IBlockState;
-//import net.minecraft.client.Minecraft;
-//import net.minecraft.client.renderer.GlStateManager;
-//import net.minecraft.client.renderer.entity.RenderEntityItem;
-//import net.minecraft.client.renderer.entity.model.ModelChest;
-//import net.minecraft.entity.item.EntityItem;
-//import net.minecraft.item.ItemStack;
-//import net.minecraft.util.EnumFacing;
+//import net.minecraft.client.renderer.IRenderTypeBuffer;
+//import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+//import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 //import net.minecraft.util.ResourceLocation;
-//import org.lwjgl.opengl.GL11;
 //
-//import javax.annotation.Nullable;
-//import java.util.Random;
+//public class RenderSortingIronChest extends TileEntityRenderer<SortingIronChestTileEntity> {
 //
-//public class RenderSortingIronChest extends SafeTESR<TileSortingIronChest> {
+//    private static final ResourceLocation[] OVERLAY = new ResourceLocation[]{
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/iron_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/gold_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/diamond_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/copper_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/silver_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/crystal_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/obsidian_chest_overlay.png"),
+//            new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/dirt_chest_overlay.png"),
+//    };
 //
-//	private static final ResourceLocation[] OVERLAY = new ResourceLocation[] {
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/iron_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/gold_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/diamond_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/copper_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/silver_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/crystal_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/obsidian_chest_overlay.png"),
-//			new ResourceLocation(RefinedRelocation.MOD_ID, "textures/blocks/dirt_chest_overlay.png"),
-//	};
+//    private static float[][] shifts = {{0.3F, 0.45F, 0.3F}, {0.7F, 0.45F, 0.3F}, {0.3F, 0.45F, 0.7F}, {0.7F, 0.45F, 0.7F}, {0.3F, 0.1F, 0.3F},
+//            {0.7F, 0.1F, 0.3F}, {0.3F, 0.1F, 0.7F}, {0.7F, 0.1F, 0.7F}, {0.5F, 0.32F, 0.5F}};
 //
-//	private static float[][] shifts = { { 0.3F, 0.45F, 0.3F }, { 0.7F, 0.45F, 0.3F }, { 0.3F, 0.45F, 0.7F }, { 0.7F, 0.45F, 0.7F }, { 0.3F, 0.1F, 0.3F },
-//			{ 0.7F, 0.1F, 0.3F }, { 0.3F, 0.1F, 0.7F }, { 0.7F, 0.1F, 0.7F }, { 0.5F, 0.32F, 0.5F } };
+//    private static final float halfPI = (float) (Math.PI / 2.0);
 //
-//	private static final float halfPI = (float) (Math.PI / 2.0);
+//    public RenderSortingIronChest(TileEntityRendererDispatcher dispatcher) {
+//        super(dispatcher);
+//    }
 //
-//	private static EntityItem entityItem;
+//	/*private static EntityItem entityItem;
 //
 //	private final Random random = new Random();
 //	private final ModelChest model = new ModelChest();
 //	private final ModelLidOverlay modelLidOverlay = new ModelLidOverlay();
-//	private RenderEntityItem itemRenderer;
+//	private RenderEntityItem itemRenderer;*/
 //
-//	public RenderSortingIronChest(Block block) {
-//		super(block);
-//	}
-//
-//	@Override
-//	protected void renderTileEntityAt(TileSortingIronChest tileEntity, double x, double y, double z, float partialTicks, int destroyStage, @Nullable IBlockState state) {
-//		if (tileEntity.isInvalid()) {
+//    @Override
+//    public void render(SortingIronChestTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+//		/*if (tileEntity.isInvalid()) {
 //			return;
 //		}
 //
@@ -182,12 +167,12 @@
 //			}
 //
 //			GlStateManager.popMatrix();
-//		}
+//		}*/
 //
-//	}
+//    }
 //
-//	@Override
+//	/*@Override
 //	protected boolean shouldRenderNameTag(TileSortingIronChest tileEntity) {
 //		return tileEntity.hasCustomName() && RefinedRelocationConfig.renderChestNameTags;
-//	}
+//	}*/
 //}

@@ -56,7 +56,7 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
         sortingInventory = tileEntity.getCapability(CapabilitySortingInventory.CAPABILITY)
                 .orElseGet(() -> Capabilities.getDefaultInstance(CapabilitySortingInventory.CAPABILITY));
 
-        addPlayerInventory(playerInventory, hasSortingInventory() ? 128 : 84);
+        addPlayerInventory(playerInventory, 8, hasSortingInventory() ? 128 : 84);
     }
 
     @Override

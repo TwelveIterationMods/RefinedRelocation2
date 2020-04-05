@@ -31,15 +31,15 @@ public class BaseContainer extends Container implements IContainerNetworked {
 
     }
 
-    protected void addPlayerInventory(PlayerInventory playerInventory, int offsetY) {
+    protected void addPlayerInventory(PlayerInventory playerInventory, int offsetX, int offsetY) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, offsetY + i * 18));
+                addSlot(new Slot(playerInventory, j + i * 9 + 9, offsetX + j * 18, offsetY + i * 18));
             }
         }
 
         for (int i = 0; i < 9; i++) {
-            addSlot(new Slot(playerInventory, i, 8 + i * 18, offsetY + 58));
+            addSlot(new Slot(playerInventory, i, offsetX + i * 18, offsetY + 58));
         }
     }
 

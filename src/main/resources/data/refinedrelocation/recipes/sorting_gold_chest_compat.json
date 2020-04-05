@@ -1,7 +1,7 @@
 {
   "result": {
     "item": "refinedrelocation:sorting_iron_chest",
-    "data": 7
+    "data": 1
   },
   "type": "crafting_shaped",
   "pattern": [
@@ -18,7 +18,7 @@
     },
     "C": {
       "item": "ironchest:iron_chest",
-      "data": 7
+      "data": 1
     },
     "H": {
       "item": "minecraft:hopper"

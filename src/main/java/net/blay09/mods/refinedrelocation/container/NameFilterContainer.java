@@ -35,7 +35,7 @@ public class NameFilterContainer extends FilterContainer implements IContainerRe
         this.rootFilterIndex = rootFilterIndex;
         this.filter = filter;
 
-        addPlayerInventory(playerInventory, 128);
+        addPlayerInventory(playerInventory, 8, 128);
     }
 
     @Override

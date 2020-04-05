@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.container;
 
 import invtweaks.api.container.ChestContainer;
+import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.blay09.mods.refinedrelocation.util.IContainerWithDoor;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,13 +21,16 @@ public class SortingChestContainer extends BaseContainer implements IContainerWi
 
         this.tileEntity = tileEntity;
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
+        SortingChestType chestType = tileEntity.getChestType();
+        int rowSize = chestType.getContainerRowSize();
+        int rowCount = chestType.getInventorySize() / rowSize;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < rowSize; j++) {
                 addSlot(new SlotItemHandler(tileEntity.getItemHandler(), j + i * 9, 8 + j * 18, 18 + i * 18));
             }
         }
 
-        addPlayerInventory(playerInventory, 85);
+        addPlayerInventory(playerInventory, (chestType.getGuiWidth() - 162) / 2 + 1, rowCount * 18 + 32);
 
         tileEntity.openChest(playerInventory.player);
     }
@@ -43,11 +47,12 @@ public class SortingChestContainer extends BaseContainer implements IContainerWi
             ItemStack slotStack = slot.getStack();
             itemStack = slotStack.copy();
 
-            if (index < 27) {
-                if (!mergeItemStack(slotStack, 27, inventorySlots.size(), true)) {
+            int inventoryStartIndex = tileEntity.getChestType().getInventorySize();
+            if (index < inventoryStartIndex) {
+                if (!mergeItemStack(slotStack, inventoryStartIndex, inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(slotStack, 0, 27, false)) {
+            } else if (!mergeItemStack(slotStack, 0, inventoryStartIndex, false)) {
                 return ItemStack.EMPTY;
             }
 

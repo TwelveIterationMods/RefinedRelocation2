@@ -5,7 +5,7 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.capability.*;
 import net.blay09.mods.refinedrelocation.client.ModRenderers;
 import net.blay09.mods.refinedrelocation.client.ModScreens;
-import net.blay09.mods.refinedrelocation.compat.RefinedAddon;
+import net.blay09.mods.refinedrelocation.compat.RefinedRelocationAddon;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.*;
 import net.blay09.mods.refinedrelocation.network.NetworkHandler;
@@ -40,11 +40,11 @@ public class RefinedRelocation {
     public static final ItemGroup itemGroup = new ItemGroup(MOD_ID) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModBlocks.sortingChest);
+            return new ItemStack(ModBlocks.sortingChests[SortingChestType.WOOD.ordinal()]);
         }
     };
 
-    private static final List<RefinedAddon> inbuiltAddons = Lists.newArrayList();
+    private static final List<RefinedRelocationAddon> inbuiltAddons = Lists.newArrayList();
 
     public RefinedRelocation() {
         RefinedRelocationAPI.__internal__setupAPI(new InternalMethodsImpl());
@@ -73,7 +73,7 @@ public class RefinedRelocation {
     private void registerBlocks(RegistryEvent.Register<Block> event) {
         ModBlocks.register(event.getRegistry());
 
-        for (RefinedAddon addon : inbuiltAddons) {
+        for (RefinedRelocationAddon addon : inbuiltAddons) {
             addon.registerBlocks(event.getRegistry());
         }
     }
@@ -86,7 +86,7 @@ public class RefinedRelocation {
         ModItems.register(event.getRegistry());
         ModBlocks.registerItemBlocks(event.getRegistry());
 
-        for (RefinedAddon addon : inbuiltAddons) {
+        for (RefinedRelocationAddon addon : inbuiltAddons) {
             addon.registerItems(event.getRegistry());
         }
     }
@@ -110,7 +110,7 @@ public class RefinedRelocation {
         ModScreens.register();
         ModRenderers.register();
 
-        for (RefinedAddon addon : inbuiltAddons) {
+        for (RefinedRelocationAddon addon : inbuiltAddons) {
             addon.setupClient();
         }
     }
@@ -120,7 +120,7 @@ public class RefinedRelocation {
         ModFilter.gatherMods();
     }
 
-    public static List<RefinedAddon> getInbuiltAddons() {
+    public static List<RefinedRelocationAddon> getInbuiltAddons() {
         return inbuiltAddons;
     }
 }

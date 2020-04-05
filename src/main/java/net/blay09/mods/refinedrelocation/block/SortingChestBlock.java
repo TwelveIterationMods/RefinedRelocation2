@@ -1,8 +1,7 @@
 package net.blay09.mods.refinedrelocation.block;
 
-import net.blay09.mods.refinedrelocation.ModTileEntities;
-import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
+import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -34,14 +33,14 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity> {
 
-    public static final String name = "sorting_chest";
-    public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private static final VoxelShape SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
+    private final SortingChestType chestType;
 
-    public SortingChestBlock() {
-        super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f), () -> ModTileEntities.sortingChest);
+    public SortingChestBlock(SortingChestType chestType) {
+        super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f), chestType::getTileEntityType);
+        this.chestType = chestType;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -116,7 +115,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new SortingChestTileEntity();
+        return new SortingChestTileEntity(chestType);
     }
 
     @Override
@@ -129,4 +128,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
         return RefinedRelocationUtils.getComparatorInputOverride(state, world, pos);
     }
 
+    public SortingChestType getChestType() {
+        return chestType;
+    }
 }

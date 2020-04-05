@@ -1,0 +1,11 @@
+{
+	"parent": "refinedrelocation:item/sorting_chest",
+	"textures": {
+		"0": "refinedrelocation:block/diamond_chest_bottom",
+		"1": "refinedrelocation:block/diamond_chest_front",
+		"3": "refinedrelocation:block/diamond_chest_lid_top",
+		"4": "refinedrelocation:block/diamond_chest_side",
+		"6": "refinedrelocation:block/chest_lock",
+		"particle": "refinedrelocation:block/chest_bottom"
+	}
+}
