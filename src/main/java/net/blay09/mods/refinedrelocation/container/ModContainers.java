@@ -29,14 +29,10 @@ public class ModContainers {
     public static void register(IForgeRegistry<ContainerType<?>> registry) {
         registry.register(blockExtender = register("block_extender", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
-            int clickedFaceIndex = data.readByte();
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity instanceof TileBlockExtender) {
-                Direction clickedFace = Direction.byIndex(clickedFaceIndex);
-                BlockExtenderContainer container = new BlockExtenderContainer(windowId, inv, (TileBlockExtender) tileEntity);
-                container.setClickedFace(clickedFace);
-                return container;
+                return new BlockExtenderContainer(windowId, inv, (TileBlockExtender) tileEntity);
             }
 
             return null;

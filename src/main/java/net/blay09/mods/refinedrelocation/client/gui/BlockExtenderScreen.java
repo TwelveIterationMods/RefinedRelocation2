@@ -32,7 +32,6 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
     private static final int UPDATE_INTERVAL = 20;
 
     private final TileBlockExtender tileEntity;
-    private final Direction clickedFace;
 
     private GuiButtonStackLimiter btnStackLimiter;
     private GuiButtonBlockExtenderFilter btnInputFilter;
@@ -50,7 +49,6 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
     public BlockExtenderScreen(BlockExtenderContainer container, PlayerInventory playerInventory, ITextComponent displayName) {
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
-        this.clickedFace = container.getClickedFace();
         ySize = 176;
     }
 
@@ -58,30 +56,12 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
     public void init() {
         super.init();
 
-        RelativeSide centerFace = RelativeSide.fromFacing(tileEntity.getFacing(), clickedFace);
-        RelativeSide topFace = RelativeSide.TOP;
-        RelativeSide leftFace;
-        if (clickedFace.getAxis() == Direction.Axis.Y) {
-            centerFace = RelativeSide.FRONT;
-            topFace = RelativeSide.TOP;
-            leftFace = RelativeSide.LEFT;
-        } else if (tileEntity.getFacing().getAxis() == Direction.Axis.Y) {
-            leftFace = clickedFace.getAxis() == Direction.Axis.Z ? centerFace.rotateX() : centerFace.rotateX().getOpposite();
-            if (tileEntity.getFacing().getAxisDirection() == Direction.AxisDirection.POSITIVE) {
-                leftFace = leftFace.getOpposite();
-                topFace = RelativeSide.FRONT;
-            } else {
-                topFace = RelativeSide.BACK;
-            }
-        } else {
-            leftFace = centerFace.rotateY();
-        }
-        addButton(new GuiSideButton(guiLeft + 9, guiTop + 40, tileEntity, leftFace));
-        addButton(new GuiSideButton(guiLeft + 26, guiTop + 40, tileEntity, centerFace));
-        addButton(new GuiSideButton(guiLeft + 43, guiTop + 40, tileEntity, leftFace.getOpposite()));
-        addButton(new GuiSideButton(guiLeft + 60, guiTop + 40, tileEntity, centerFace.getOpposite()));
-        addButton(new GuiSideButton(guiLeft + 26, guiTop + 23, tileEntity, topFace));
-        addButton(new GuiSideButton(guiLeft + 26, guiTop + 57, tileEntity, topFace.getOpposite()));
+        addButton(new GuiSideButton(guiLeft + 9, guiTop + 40, tileEntity, RelativeSide.LEFT));
+        addButton(new GuiSideButton(guiLeft + 26, guiTop + 40, tileEntity, RelativeSide.FRONT));
+        addButton(new GuiSideButton(guiLeft + 43, guiTop + 40, tileEntity, RelativeSide.RIGHT));
+        addButton(new GuiSideButton(guiLeft + 60, guiTop + 40, tileEntity, RelativeSide.BACK));
+        addButton(new GuiSideButton(guiLeft + 26, guiTop + 23, tileEntity, RelativeSide.TOP));
+        addButton(new GuiSideButton(guiLeft + 26, guiTop + 57, tileEntity, RelativeSide.BOTTOM));
 
         btnStackLimiter = new GuiButtonStackLimiter(0, 0, 24, 16, tileEntity);
         btnStackLimiter.visible = false;

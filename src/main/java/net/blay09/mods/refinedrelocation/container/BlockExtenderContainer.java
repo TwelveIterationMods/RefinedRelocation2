@@ -28,7 +28,6 @@ public class BlockExtenderContainer extends BaseContainer {
 
     private final PlayerEntity player;
     private final TileBlockExtender tileEntity;
-    private Direction clickedFace;
 
     private final Direction[] lastSideMapping = new Direction[5];
     private int lastStackLimiterLimit;
@@ -48,14 +47,6 @@ public class BlockExtenderContainer extends BaseContainer {
 
     public TileBlockExtender getTileEntity() {
         return tileEntity;
-    }
-
-    public Direction getClickedFace() {
-        return clickedFace;
-    }
-
-    public void setClickedFace(Direction clickedFace) {
-        this.clickedFace = clickedFace;
     }
 
     @Override
