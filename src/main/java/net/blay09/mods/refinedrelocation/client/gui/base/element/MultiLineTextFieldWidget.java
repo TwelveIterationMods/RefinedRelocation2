@@ -151,7 +151,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
     private void scroll(int x, int y) {
         lineScrollOffset = Math.max(lineScrollOffset + x, 0);
-        scrollOffset = Math.max(scrollOffset + y, 0);
+        scrollOffset = Math.max(Math.min(scrollOffset + y, getRowCount() - getVisibleRows()), 0);
     }
 
     private void deleteBack(boolean wholeWord) {
