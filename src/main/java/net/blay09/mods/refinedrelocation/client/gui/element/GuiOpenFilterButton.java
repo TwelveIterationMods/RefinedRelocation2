@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 
 public class GuiOpenFilterButton extends GuiImageButton {
 
-    public GuiOpenFilterButton(int x, int y, TileEntity tileEntity) {
-        super(x, y, 12, 12, GuiTextures.OPEN_FILTER, it -> NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos())));
+    public GuiOpenFilterButton(int x, int y, TileEntity tileEntity, int rootFilterIndex) {
+        super(x, y, 12, 12, GuiTextures.OPEN_FILTER, it -> NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos(), rootFilterIndex)));
     }
 
 }

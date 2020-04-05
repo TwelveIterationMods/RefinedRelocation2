@@ -176,8 +176,8 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity) {
-        return new GuiOpenFilterButton(guiContainer.getGuiLeft() + guiContainer.getXSize() - 18, guiContainer.getGuiTop() + 4, tileEntity);
+    public Button createOpenFilterButton(ContainerScreen<?> guiContainer, TileEntity tileEntity, int rootFilterIndex) {
+        return new GuiOpenFilterButton(guiContainer.getGuiLeft() + guiContainer.getXSize() - 18, guiContainer.getGuiTop() + 4, tileEntity, rootFilterIndex);
     }
 
     @Override
@@ -232,7 +232,7 @@ public class InternalMethodsImpl implements InternalMethods {
     @Override
     public void openRootFilterGui(PlayerEntity player, TileEntity tileEntity, int rootFilterIndex) {
         if (player.world.isRemote) {
-            NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos()));
+            NetworkHandler.channel.sendToServer(new MessageRequestFilterGUI(tileEntity.getPos(), rootFilterIndex));
         } else {
             RefinedRelocationUtils.getRootFilter(tileEntity, rootFilterIndex).ifPresent(rootFilter -> {
                 INamedContainerProvider filterConfig = rootFilter.getConfiguration(player, tileEntity, rootFilterIndex);

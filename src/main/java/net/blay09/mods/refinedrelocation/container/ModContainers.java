@@ -2,7 +2,6 @@ package net.blay09.mods.refinedrelocation.container;
 
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
-import net.blay09.mods.refinedrelocation.capability.CapabilityRootFilter;
 import net.blay09.mods.refinedrelocation.filter.NameFilter;
 import net.blay09.mods.refinedrelocation.tile.FastHopperTileEntity;
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
@@ -28,7 +27,7 @@ public class ModContainers {
         registry.register(addFilter = register("add_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
             int rootFilterIndex = 0;
-            if(data.readableBytes() > 0) {
+            if (data.readableBytes() > 0) {
                 rootFilterIndex = data.readByte();
             }
 
@@ -76,7 +75,7 @@ public class ModContainers {
         registry.register(rootFilter = register("root_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
             int rootFilterIndex = 0;
-            if(data.readableBytes() > 0) {
+            if (data.readableBytes() > 0) {
                 rootFilterIndex = data.readByte();
             }
 
@@ -90,7 +89,8 @@ public class ModContainers {
 
         registry.register(nameFilter = register("name_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
-            int filterIndex = data.readInt();
+            int rootFilterIndex = data.readByte();
+            int filterIndex = data.readByte();
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity != null) {
@@ -98,7 +98,7 @@ public class ModContainers {
                 if (container instanceof IRootFilterContainer) {
                     IFilter filter = ((IRootFilterContainer) container).getRootFilter().getFilter(filterIndex);
                     if (filter != null) {
-                        return new NameFilterContainer(windowId, inv, tileEntity, (NameFilter) filter);
+                        return new NameFilterContainer(windowId, inv, tileEntity, rootFilterIndex, (NameFilter) filter);
                     }
                 }
             }
@@ -108,7 +108,8 @@ public class ModContainers {
 
         registry.register(checklistFilter = register("checklist_filter", (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
-            int filterIndex = data.readInt();
+            int rootFilterIndex = data.readByte();
+            int filterIndex = data.readByte();
 
             TileEntity tileEntity = inv.player.world.getTileEntity(pos);
             if (tileEntity != null) {
@@ -116,7 +117,7 @@ public class ModContainers {
                 if (container instanceof IRootFilterContainer) {
                     IFilter filter = ((IRootFilterContainer) container).getRootFilter().getFilter(filterIndex);
                     if (filter != null) {
-                        return new ChecklistFilterContainer(windowId, inv, tileEntity, (IChecklistFilter) filter);
+                        return new ChecklistFilterContainer(windowId, inv, tileEntity, rootFilterIndex, (IChecklistFilter) filter);
                     }
                 }
             }

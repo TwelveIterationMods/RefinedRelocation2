@@ -61,7 +61,8 @@ public class AddFilterContainer extends BaseContainer implements IRootFilterCont
                 if (filterConfig != null) {
                     NetworkHooks.openGui((ServerPlayerEntity) player, filterConfig, it -> {
                         it.writeBlockPos(tileEntity.getPos());
-                        it.writeInt(rootFilter.getFilterCount() - 1);
+                        it.writeByte(rootFilterIndex);
+                        it.writeByte(rootFilter.getFilterCount() - 1);
                     });
                 }
                 break;

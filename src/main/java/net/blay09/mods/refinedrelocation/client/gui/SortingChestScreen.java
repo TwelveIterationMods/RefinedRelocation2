@@ -27,7 +27,7 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
     public void init() {
         super.init();
 
-        addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity));
+        addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity, 0));
     }
 
     @Override

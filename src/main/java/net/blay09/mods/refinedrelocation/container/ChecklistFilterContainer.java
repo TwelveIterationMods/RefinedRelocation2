@@ -24,17 +24,19 @@ public class ChecklistFilterContainer extends FilterContainer implements IContai
 
 	private final PlayerEntity player;
 	private final TileEntity tileEntity;
+	private final int rootFilterIndex;
 	private final IChecklistFilter filter;
 
 	private final byte[] lastStates;
 	private int ticksSinceUpdate = UPDATE_INTERVAL;
 	private ReturnCallback returnCallback;
 
-	public ChecklistFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, IChecklistFilter filter) {
+	public ChecklistFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, int rootFilterIndex, IChecklistFilter filter) {
 		super(ModContainers.checklistFilter, windowId);
 
 		this.player = playerInventory.player;
 		this.tileEntity = tileEntity;
+		this.rootFilterIndex = rootFilterIndex;
 		this.filter = filter;
 		lastStates = new byte[filter.getOptionCount()];
 
@@ -148,5 +150,10 @@ public class ChecklistFilterContainer extends FilterContainer implements IContai
 	@Override
 	public ReturnCallback getReturnCallback() {
 		return returnCallback;
+	}
+
+	@Override
+	public int getRootFilterIndex() {
+		return rootFilterIndex;
 	}
 }

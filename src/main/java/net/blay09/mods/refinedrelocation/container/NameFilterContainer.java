@@ -21,16 +21,18 @@ public class NameFilterContainer extends FilterContainer implements IContainerRe
     private final PlayerEntity player;
     private final TileEntity tileEntity;
     private final NameFilter filter;
+    private final int rootFilterIndex;
 
     private String lastValue = "";
 
     private boolean guiNeedsUpdate;
     private ReturnCallback returnCallback;
 
-    public NameFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, NameFilter filter) {
+    public NameFilterContainer(int windowId, PlayerInventory playerInventory, TileEntity tileEntity, int rootFilterIndex, NameFilter filter) {
         super(ModContainers.nameFilter, windowId);
         this.player = playerInventory.player;
         this.tileEntity = tileEntity;
+        this.rootFilterIndex = rootFilterIndex;
         this.filter = filter;
 
         addPlayerInventory(playerInventory, 128);
@@ -127,5 +129,10 @@ public class NameFilterContainer extends FilterContainer implements IContainerRe
     @Override
     public ReturnCallback getReturnCallback() {
         return returnCallback;
+    }
+
+    @Override
+    public int getRootFilterIndex() {
+        return rootFilterIndex;
     }
 }

@@ -16,7 +16,7 @@ public abstract class FilterScreen<T extends FilterContainer> extends ModContain
         super.init();
 
         if (hasOpenFilterButton()) {
-            addButton(new GuiOpenFilterButton(guiLeft + xSize - 17, guiTop + 5, container.getTileEntity()));
+            addButton(new GuiOpenFilterButton(guiLeft + xSize - 17, guiTop + 5, container.getTileEntity(), container.getRootFilterIndex()));
         }
     }
 

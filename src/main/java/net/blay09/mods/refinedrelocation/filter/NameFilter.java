@@ -181,7 +181,7 @@ public class NameFilter implements IFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new NameFilterContainer(i, playerInventory, tileEntity, NameFilter.this);
+                return new NameFilterContainer(i, playerInventory, tileEntity, rootFilterIndex, NameFilter.this);
             }
 
             @Override

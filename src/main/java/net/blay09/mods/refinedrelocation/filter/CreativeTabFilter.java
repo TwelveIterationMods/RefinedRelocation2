@@ -154,7 +154,7 @@ public class CreativeTabFilter implements IChecklistFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new ChecklistFilterContainer(i, playerInventory, tileEntity, CreativeTabFilter.this);
+                return new ChecklistFilterContainer(i, playerInventory, tileEntity, rootFilterIndex, CreativeTabFilter.this);
             }
 
             @Override

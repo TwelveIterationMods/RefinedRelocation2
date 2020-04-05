@@ -164,7 +164,8 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
                     if (filterConfig != null) {
                         NetworkHooks.openGui((ServerPlayerEntity) entityPlayer, filterConfig, it -> {
                             it.writeBlockPos(tileEntity.getPos());
-                            it.writeInt(index);
+                            it.writeByte(rootFilterIndex);
+                            it.writeByte(index);
                         });
                     }
                 }
@@ -246,5 +247,10 @@ public class RootFilterContainer extends FilterContainer implements IRootFilterC
 
     public boolean canReturnFromFilter() {
         return tileEntity instanceof INamedContainerProvider;
+    }
+
+    @Override
+    public int getRootFilterIndex() {
+        return rootFilterIndex;
     }
 }

@@ -11,18 +11,22 @@ import java.util.function.Supplier;
 
 public class MessageRequestFilterGUI {
     private final BlockPos pos;
+    private final int rootFilterIndex;
 
-    public MessageRequestFilterGUI(BlockPos pos) {
+    public MessageRequestFilterGUI(BlockPos pos, int rootFilterIndex) {
         this.pos = pos;
+        this.rootFilterIndex = rootFilterIndex;
     }
 
     public static void encode(MessageRequestFilterGUI message, PacketBuffer buf) {
         buf.writeBlockPos(message.pos);
+        buf.writeByte(message.rootFilterIndex);
     }
 
     public static MessageRequestFilterGUI decode(PacketBuffer buf) {
         BlockPos pos = buf.readBlockPos();
-        return new MessageRequestFilterGUI(pos);
+        int rootFilterIndex = buf.readByte();
+        return new MessageRequestFilterGUI(pos, rootFilterIndex);
     }
 
     public static void handle(MessageRequestFilterGUI message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -35,7 +39,7 @@ public class MessageRequestFilterGUI {
 
             TileEntity tileEntity = player.world.getTileEntity(message.pos);
             if (tileEntity != null) {
-                RefinedRelocationAPI.openRootFilterGui(player, tileEntity, 0);
+                RefinedRelocationAPI.openRootFilterGui(player, tileEntity, message.rootFilterIndex);
             }
         });
         context.setPacketHandled(true);

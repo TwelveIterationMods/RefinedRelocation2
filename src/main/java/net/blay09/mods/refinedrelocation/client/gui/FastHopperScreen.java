@@ -28,7 +28,7 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
         super.init();
 
         if (tileEntity instanceof FilteredHopperTileEntity) {
-            addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity));
+            addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity, 0));
         }
     }
 

@@ -295,7 +295,7 @@ public class PresetFilter implements IChecklistFilter {
         return new INamedContainerProvider() {
             @Override
             public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                return new ChecklistFilterContainer(i, playerInventory, tileEntity, PresetFilter.this);
+                return new ChecklistFilterContainer(i, playerInventory, tileEntity, rootFilterIndex, PresetFilter.this);
             }
 
             @Override

@@ -11,4 +11,6 @@ public abstract class FilterContainer extends BaseContainer {
     }
 
     public abstract TileEntity getTileEntity();
+
+    public abstract int getRootFilterIndex();
 }
