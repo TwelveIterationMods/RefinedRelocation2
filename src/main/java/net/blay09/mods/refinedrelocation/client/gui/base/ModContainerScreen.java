@@ -67,11 +67,13 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
         super.render(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
 
-        for (IGuiEventListener child : saneChildren) {
+        for (int i = saneChildren.size() - 1; i >= 0; i--) {
+            IGuiEventListener child = saneChildren.get(i);
             if (child instanceof ITooltipElement && child.isMouseOver(mouseX, mouseY)) {
                 List<String> tooltip = new ArrayList<>();
                 ((ITooltipElement) child).addTooltip(tooltip);
                 renderTooltip(tooltip, mouseX, mouseY);
+                break;
             }
         }
     }
