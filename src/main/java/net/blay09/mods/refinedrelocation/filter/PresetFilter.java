@@ -228,7 +228,7 @@ public class PresetFilter implements IChecklistFilter {
         ListNBT list = new ListNBT();
         for (int i = 0; i < presetStates.length; i++) {
             if (presetStates[i]) {
-                list.add(StringNBT.valueOf(presetList.get(i).getId()));
+                list.add(new StringNBT(presetList.get(i).getId()));
             }
         }
         return list;

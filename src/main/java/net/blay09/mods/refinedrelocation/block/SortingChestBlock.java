@@ -13,9 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityMerger;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -23,15 +21,13 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity> {
+public class SortingChestBlock extends ContainerBlock {
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -39,14 +35,8 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
     private final SortingChestType chestType;
 
     public SortingChestBlock(SortingChestType chestType) {
-        super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f), chestType::getTileEntityType);
+        super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3f));
         this.chestType = chestType;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public TileEntityMerger.ICallbackWrapper<? extends ChestTileEntity> func_225536_a_(BlockState p_225536_1_, World p_225536_2_, BlockPos p_225536_3_, boolean p_225536_4_) {
-        return TileEntityMerger.ICallback::func_225537_b_;
     }
 
     @Override
@@ -91,7 +81,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof SortingChestTileEntity) {
@@ -99,7 +89,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return true;
     }
 
     @Override

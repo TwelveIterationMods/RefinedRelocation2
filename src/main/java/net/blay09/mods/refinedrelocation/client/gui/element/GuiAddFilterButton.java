@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
@@ -8,7 +8,6 @@ import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.AddFilterContainer;
-import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -44,8 +43,8 @@ public class GuiAddFilterButton extends GuiImageButton implements ITooltipElemen
         if (currentFilter != null) {
             IDrawable filterIcon = currentFilter.getFilterIcon();
             if (filterIcon != null) {
-                RenderSystem.color4f(1f, 1f, 1f, 1f);
-                filterIcon.draw(x + 2, y + height / 2f - 12, 24, 24, getBlitOffset());
+                GlStateManager.color4f(1f, 1f, 1f, 1f);
+                filterIcon.draw(x + 2, y + height / 2f - 12, 24, 24, blitOffset);
             }
 
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;

@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
 import net.blay09.mods.refinedrelocation.container.ContainerFastHopper;
@@ -34,7 +34,7 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
         minecraft.getTextureManager().bindTexture(TEXTURE);
         this.blit(guiLeft, guiTop, 0, 0, xSize, ySize);
     }

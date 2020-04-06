@@ -1,12 +1,8 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.model.Material;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum SortingChestType {
     WOOD(27, 9, "sorting_chest", "normal", new ResourceLocation("textures/gui/container/generic_54.png"), 176, 168, 256, 256),
@@ -23,9 +19,6 @@ public enum SortingChestType {
     private final int guiHeight;
     private final int guiTextureWidth;
     private final int guiTextureHeight;
-
-    @OnlyIn(Dist.CLIENT)
-    private Material material;
 
     SortingChestType(int inventorySize, int containerRowSize, String registryName, String texture, ResourceLocation guiTextureLocation, int guiWidth, int guiHeight, int guiTextureWidth, int guiTextureHeight) {
         this.inventorySize = inventorySize;
@@ -48,16 +41,7 @@ public enum SortingChestType {
     }
 
     public ResourceLocation getTextureLocation() {
-        return new ResourceLocation(RefinedRelocation.MOD_ID, "entity/sorting_chest/" + texture);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public Material getMaterial() {
-        if (material == null) {
-            material = new Material(Atlases.CHEST_ATLAS, getTextureLocation());
-        }
-
-        return material;
+        return new ResourceLocation(RefinedRelocation.MOD_ID, "textures/entity/sorting_chest/" + texture + ".png");
     }
 
     public int getInventorySize() {

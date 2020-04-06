@@ -143,11 +143,11 @@ public class FastHopperBlock extends ContainerBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FastHopperTileEntity) {
-                if (player.isShiftKeyDown()) {
+                if (player.isSneaking()) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity, 0);
                 } else {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (FastHopperTileEntity) tileEntity, it -> it.writeBlockPos(pos));
@@ -155,7 +155,7 @@ public class FastHopperBlock extends ContainerBlock {
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return true;
     }
 
     @Override

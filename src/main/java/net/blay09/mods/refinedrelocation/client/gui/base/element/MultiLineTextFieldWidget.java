@@ -508,9 +508,9 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         }
 
         setText(resultText);
-        clampCursorPosition(lvt_4_1_ + lvt_7_2_);
+        func_212422_f(lvt_4_1_ + lvt_7_2_);
         setSelectionPos(getCursorPosition());
-        onTextChanged(getText());
+        func_212951_d(getText());
     }
 
     public void addHistoryEntry(String text) {

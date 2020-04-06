@@ -4,12 +4,10 @@ import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
-import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -35,13 +33,13 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         texture.bind();
-        texture.draw(x, y, getBlitOffset());
+        texture.draw(x, y, blitOffset);
 
         IFilter filter = rootFilter.getFilter(index);
         if (filter != null) {
             IDrawable filterIcon = filter.getFilterIcon();
             if (filterIcon != null) {
-                filterIcon.draw(x, y, 24, 24, getBlitOffset());
+                filterIcon.draw(x, y, 24, 24, blitOffset);
             }
         }
         if (parentGui.isTopMostElement(this, mouseX, mouseY)) {

@@ -97,9 +97,6 @@ dependencies {
     ])
 
     compileOnly "inventory-tweaks:InventoryTweaks:1.64+dev.146"
-    runtimeOnly fg.deobf("ignored:ironchest:1.15.2-10.0.3")
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:6.0.0.2:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:6.0.0.2")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

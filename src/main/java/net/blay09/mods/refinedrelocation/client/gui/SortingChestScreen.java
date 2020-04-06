@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.GuiOpenFilterButton;
@@ -31,7 +31,7 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
         SortingChestType chestType = tileEntity.getChestType();
         Minecraft.getInstance().getTextureManager().bindTexture(chestType.getGuiTextureLocation());
         if (chestType == SortingChestType.WOOD || chestType == SortingChestType.IRON) {

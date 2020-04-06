@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
@@ -46,14 +46,14 @@ public class GuiChecklistEntry extends Button {
             fill(x, y, x + width, y + height, 0x66FFFFFF);
         }
 
-        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
 
         if (currentOption != -1) {
             texture.bind();
             if (filter.isOptionChecked(currentOption)) {
-                textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, getBlitOffset());
+                textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, blitOffset);
             } else {
-                texture.draw(x + 1, y + height / 2f - 11 / 2f, getBlitOffset());
+                texture.draw(x + 1, y + height / 2f - 11 / 2f, blitOffset);
             }
 
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;

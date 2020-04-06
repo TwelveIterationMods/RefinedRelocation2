@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
@@ -90,7 +90,7 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1f, 1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
         if (container.hasSortingInventory()) {
             Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         } else {
@@ -101,11 +101,11 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
 
         final int x = guiLeft + 10;
         final int y = guiTop + 37;
-        RenderSystem.enableBlend();
+        GlStateManager.enableBlend();
         textureSeparator.bind();
-        textureSeparator.draw(x + 30, y, getBlitOffset());
-        textureSeparator.draw(x + 70, y, getBlitOffset());
-        RenderSystem.disableBlend();
+        textureSeparator.draw(x + 30, y, blitOffset);
+        textureSeparator.draw(x + 70, y, blitOffset);
+        GlStateManager.disableBlend();
     }
 
     @Override

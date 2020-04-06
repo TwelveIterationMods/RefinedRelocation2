@@ -104,7 +104,7 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
 
         IGuiEventListener focused = this.getFocused();
         if (focused instanceof TextFieldWidget) {
-            if (focused.keyPressed(keyCode, scanCode, modifier) || ((TextFieldWidget) focused).canWrite()) {
+            if (focused.keyPressed(keyCode, scanCode, modifier) || ((TextFieldWidget) focused).func_212955_f()) {
                 return true;
             }
         }
