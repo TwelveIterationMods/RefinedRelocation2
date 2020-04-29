@@ -26,13 +26,13 @@ public enum RelativeSide {
                 return baseFacing.getOpposite();
             case LEFT:
                 if (baseFacing.getAxis() == Direction.Axis.Y) {
-                    return Direction.WEST;
+                    return Direction.EAST;
                 } else {
                     return baseFacing.rotateY();
                 }
             case RIGHT:
                 if (baseFacing.getAxis() == Direction.Axis.Y) {
-                    return Direction.EAST;
+                    return Direction.WEST;
                 } else {
                     return baseFacing.rotateYCCW();
                 }
