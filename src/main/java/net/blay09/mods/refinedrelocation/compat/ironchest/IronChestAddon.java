@@ -1,5 +1,12 @@
 package net.blay09.mods.refinedrelocation.compat.ironchest;
 
+
+import java.lang.reflect.Field;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.blay09.mods.refinedrelocation.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.SortingChestType;
@@ -30,10 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.Objects;
 
 public class IronChestAddon {
 
@@ -45,44 +48,51 @@ public class IronChestAddon {
     private Field chestUpgradeType;
 
     public IronChestAddon() {
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register( this );
 
         try {
-            ironChestTileEntity = Class.forName("com.progwml6.ironchest.common.block.tileentity.GenericIronChestTileEntity");
-            lidAngleField = ironChestTileEntity.getDeclaredField("lidAngle");
-            lidAngleField.setAccessible(true);
+            ironChestTileEntity = Class.forName( "com.progwml6.ironchest.common.block.tileentity.GenericIronChestTileEntity" );
+            lidAngleField = ironChestTileEntity.getDeclaredField( "lidAngle" );
+            lidAngleField.setAccessible( true );
 
-            chestUpgradeItem = Class.forName("com.progwml6.ironchest.common.item.ChestUpgradeItem");
-            chestUpgradeType = chestUpgradeItem.getDeclaredField("type");
-            chestUpgradeType.setAccessible(true);
-        } catch (ClassNotFoundException | NoSuchFieldException e) {
-            logger.error("Could not setup IronChests compat - some features may not work as expected!", e);
+            chestUpgradeItem = Class.forName( "com.progwml6.ironchest.common.item.ChestUpgradeItem" );
+            chestUpgradeType = chestUpgradeItem.getDeclaredField( "type" );
+            chestUpgradeType.setAccessible( true );
+        }
+        catch( ClassNotFoundException | NoSuchFieldException e ) {
+            logger.error( "Could not setup IronChests compat - some features may not work as expected!", e );
         }
     }
 
     @SubscribeEvent
-    public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (chestUpgradeType == null || chestUpgradeItem == null) {
-            logger.error("Could not upgrade sorting chest because IronChest compat did not setup correctly");
+    public void onPlayerRightClickBlock( PlayerInteractEvent.RightClickBlock event ) {
+        ItemStack itemStack = event.getItemStack();
+        String registryName = Objects.toString( itemStack.getItem().getRegistryName() );
+        if( !registryName.startsWith( "ironchest:" ) || !registryName.contains( "upgrade" ) ) {
             return;
         }
 
-        ItemStack itemStack = event.getItemStack();
-        if (event.getWorld().isRemote || itemStack.isEmpty() || !(chestUpgradeItem.isAssignableFrom(itemStack.getItem().getClass()))) {
+        if( chestUpgradeType == null || chestUpgradeItem == null ) {
+            logger.error( "Could not upgrade sorting chest because IronChest compat did not setup correctly" );
+            return;
+        }
+
+        if( event.getWorld().isRemote || itemStack.isEmpty() || !(chestUpgradeItem.isAssignableFrom( itemStack.getItem().getClass() )) ) {
             return;
         }
 
         String upgradeName;
         try {
-            upgradeName = ((Enum<?>) chestUpgradeType.get(itemStack.getItem())).name();
-        } catch (IllegalAccessException e) {
-            logger.error("Could not upgrade sorting chest because IronChest compat did not setup correctly", e);
+            upgradeName = ((Enum<?>) chestUpgradeType.get( itemStack.getItem() )).name();
+        }
+        catch( IllegalAccessException e ) {
+            logger.error( "Could not upgrade sorting chest because IronChest compat did not setup correctly", e );
             return;
         }
 
         SortingChestType sourceType;
         SortingChestType targetType;
-        switch (upgradeName) {
+        switch( upgradeName ) {
             case "WOOD_TO_IRON":
                 sourceType = SortingChestType.WOOD;
                 targetType = SortingChestType.IRON;
@@ -101,65 +111,77 @@ public class IronChestAddon {
 
         World world = event.getWorld();
         BlockPos pos = event.getPos();
-        BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof SortingChestBlock)) {
+        BlockState state = world.getBlockState( pos );
+        if( !(state.getBlock() instanceof SortingChestBlock) ) {
             return;
         }
 
-        if (((SortingChestBlock) state.getBlock()).getChestType() != sourceType) {
+        if( ((SortingChestBlock) state.getBlock()).getChestType() != sourceType ) {
             return;
         }
 
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (!(tileEntity instanceof SortingChestTileEntity)) {
+        TileEntity tileEntity = world.getTileEntity( pos );
+        if( !(tileEntity instanceof SortingChestTileEntity) ) {
             return;
         }
 
         SortingChestTileEntity tileSortingChest = (SortingChestTileEntity) tileEntity;
-        if (tileSortingChest.getNumPlayersUsing() > 0) {
+        if( tileSortingChest.getNumPlayersUsing() > 0 ) {
             return;
         }
 
-        Direction facing = state.get(SortingChestBlock.FACING);
-        CompoundNBT serialized = tileEntity.write(new CompoundNBT());
-        IClearable.clearObj(tileEntity);
-        BlockState newState = ModBlocks.sortingChests[targetType.ordinal()].getDefaultState().with(SortingChestBlock.FACING, facing);
-        world.setBlockState(pos, newState);
+        Direction facing = state.get( SortingChestBlock.FACING );
+        CompoundNBT serialized = tileEntity.write( new CompoundNBT() );
+        IClearable.clearObj( tileEntity );
+        BlockState newState = ModBlocks.sortingChests[targetType.ordinal()].getDefaultState().with( SortingChestBlock.FACING, facing );
+        world.setBlockState( pos, newState );
 
-        TileEntity newTileEntity = world.getTileEntity(pos);
-        if (newTileEntity instanceof SortingChestTileEntity) {
-            newTileEntity.read(serialized);
+        TileEntity newTileEntity = world.getTileEntity( pos );
+        if( newTileEntity instanceof SortingChestTileEntity ) {
+            newTileEntity.read( serialized );
         }
 
-        if (!event.getPlayer().abilities.isCreativeMode) {
-            itemStack.shrink(1);
+        if( !event.getPlayer().abilities.isCreativeMode ) {
+            itemStack.shrink( 1 );
         }
 
-        event.setCanceled(true);
+        event.setCanceled( true );
     }
 
-    private class IronChestCapabilityProvider implements ICapabilityProvider, ISortingUpgradable {
+    private class IronChestCapabilityProvider implements ICapabilityProvider,
+                                                         ISortingUpgradable {
+
         @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            return Capabilities.SORTING_UPGRADABLE.orEmpty(cap, LazyOptional.of(() -> this));
+        public <T> LazyOptional<T> getCapability( @Nonnull Capability<T> cap, @Nullable Direction side ) {
+            return Capabilities.SORTING_UPGRADABLE.orEmpty( cap, LazyOptional.of( () -> this ) );
         }
 
         @Override
-        public boolean applySortingUpgrade(TileEntity tileEntity, ItemStack itemStack, PlayerEntity player, World world, BlockPos pos, Direction side, double hitX, double hitY, double hitZ, Hand hand) {
+        public boolean applySortingUpgrade( TileEntity tileEntity,
+                                            ItemStack itemStack,
+                                            PlayerEntity player,
+                                            World world,
+                                            BlockPos pos,
+                                            Direction side,
+                                            double hitX,
+                                            double hitY,
+                                            double hitZ,
+                                            Hand hand ) {
             try {
-                if (lidAngleField == null || lidAngleField.getFloat(tileEntity) > 0) {
+                if( lidAngleField == null || lidAngleField.getFloat( tileEntity ) > 0 ) {
                     return false;
                 }
-            } catch (IllegalAccessException e) {
-                logger.error("Failed to upgrade chest due to incompatibility", e);
+            }
+            catch( IllegalAccessException e ) {
+                logger.error( "Failed to upgrade chest due to incompatibility", e );
                 return false;
             }
 
-            BlockState state = world.getBlockState(pos);
-            String registryName = Objects.toString(state.getBlock().getRegistryName());
+            BlockState state = world.getBlockState( pos );
+            String registryName = Objects.toString( state.getBlock().getRegistryName() );
             SortingChestType chestType;
-            switch (registryName) {
+            switch( registryName ) {
                 case "ironchest:iron_chest":
                     chestType = SortingChestType.IRON;
                     break;
@@ -172,23 +194,23 @@ public class IronChestAddon {
                 default:
                     return false;
             }
-            CompoundNBT storedData = tileEntity.write(new CompoundNBT());
-            Direction facing = state.get(HorizontalBlock.HORIZONTAL_FACING);
+            CompoundNBT storedData = tileEntity.write( new CompoundNBT() );
+            Direction facing = state.get( HorizontalBlock.HORIZONTAL_FACING );
             SortingChestBlock sortingChestBlock = ModBlocks.sortingChests[chestType.ordinal()];
-            IClearable.clearObj(tileEntity);
-            world.setBlockState(pos, sortingChestBlock.getDefaultState().with(SortingChestBlock.FACING, facing));
-            SortingChestTileEntity sortingChest = (SortingChestTileEntity) world.getTileEntity(pos);
-            if (sortingChest != null) {
-                sortingChest.restoreItems(storedData.getList("Items", Constants.NBT.TAG_COMPOUND));
+            IClearable.clearObj( tileEntity );
+            world.setBlockState( pos, sortingChestBlock.getDefaultState().with( SortingChestBlock.FACING, facing ) );
+            SortingChestTileEntity sortingChest = (SortingChestTileEntity) world.getTileEntity( pos );
+            if( sortingChest != null ) {
+                sortingChest.restoreItems( storedData.getList( "Items", Constants.NBT.TAG_COMPOUND ) );
             }
             return true;
         }
     }
 
     @SubscribeEvent
-    public void attachCapabilities(AttachCapabilitiesEvent<TileEntity> event) {
-        if (ironChestTileEntity != null && ironChestTileEntity.isAssignableFrom(event.getObject().getClass())) {
-            event.addCapability(new ResourceLocation(RefinedRelocation.MOD_ID, "sorting_upgradable"), new IronChestCapabilityProvider());
+    public void attachCapabilities( AttachCapabilitiesEvent<TileEntity> event ) {
+        if( ironChestTileEntity != null && ironChestTileEntity.isAssignableFrom( event.getObject().getClass() ) ) {
+            event.addCapability( new ResourceLocation( RefinedRelocation.MOD_ID, "sorting_upgradable" ), new IronChestCapabilityProvider() );
         }
     }
 
