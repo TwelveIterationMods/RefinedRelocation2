@@ -97,6 +97,13 @@ dependencies {
     ])
 
     compileOnly "inventory-tweaks:InventoryTweaks:1.64+dev.146"
+
+    def obfModsDir = new File("run/obfmods")
+    obfModsDir.eachFile { file ->
+        def parts = file.name.split('-', 2)
+        def dep = "ignored:" + parts[0] + ":" + parts[1].replace(".jar", "");
+        runtimeOnly fg.deobf(dep)
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

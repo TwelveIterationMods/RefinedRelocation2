@@ -48,11 +48,11 @@ public class IronChestAddon {
         MinecraftForge.EVENT_BUS.register(this);
 
         try {
-            ironChestTileEntity = Class.forName("com.progwml6.ironchest.common.block.tileentity.GenericIronChestTileEntity");
+            ironChestTileEntity = Class.forName("com.progwml6.ironchest.common.tileentity.IronChestTileEntity");
             lidAngleField = ironChestTileEntity.getDeclaredField("lidAngle");
             lidAngleField.setAccessible(true);
 
-            chestUpgradeItem = Class.forName("com.progwml6.ironchest.common.item.ChestUpgradeItem");
+            chestUpgradeItem = Class.forName("com.progwml6.ironchest.common.items.ChestChangerItem");
             chestUpgradeType = chestUpgradeItem.getDeclaredField("type");
             chestUpgradeType.setAccessible(true);
         } catch (ClassNotFoundException | NoSuchFieldException e) {
@@ -62,12 +62,17 @@ public class IronChestAddon {
 
     @SubscribeEvent
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        ItemStack itemStack = event.getItemStack();
+        String registryName = Objects.toString( itemStack.getItem().getRegistryName() );
+        if( !registryName.startsWith( "ironchest:" ) || !registryName.contains( "upgrade" ) ) {
+            return;
+        }
+
         if (chestUpgradeType == null || chestUpgradeItem == null) {
             logger.error("Could not upgrade sorting chest because IronChest compat did not setup correctly");
             return;
         }
 
-        ItemStack itemStack = event.getItemStack();
         if (event.getWorld().isRemote || itemStack.isEmpty() || !(chestUpgradeItem.isAssignableFrom(itemStack.getItem().getClass()))) {
             return;
         }
@@ -83,15 +88,15 @@ public class IronChestAddon {
         SortingChestType sourceType;
         SortingChestType targetType;
         switch (upgradeName) {
-            case "WOOD_TO_IRON":
+            case "WOOD_IRON":
                 sourceType = SortingChestType.WOOD;
                 targetType = SortingChestType.IRON;
                 break;
-            case "IRON_TO_GOLD":
+            case "IRON_GOLD":
                 sourceType = SortingChestType.IRON;
                 targetType = SortingChestType.GOLD;
                 break;
-            case "GOLD_TO_DIAMOND":
+            case "GOLD_DIAMOND":
                 sourceType = SortingChestType.GOLD;
                 targetType = SortingChestType.DIAMOND;
                 break;
