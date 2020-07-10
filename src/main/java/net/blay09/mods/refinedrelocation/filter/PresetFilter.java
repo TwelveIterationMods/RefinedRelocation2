@@ -300,7 +300,7 @@ public class PresetFilter implements IChecklistFilter {
 
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent("refinedrelocation:any_filter");
+                return new TranslationTextComponent(PresetFilter.this.getLangKey());
             }
         };
     }

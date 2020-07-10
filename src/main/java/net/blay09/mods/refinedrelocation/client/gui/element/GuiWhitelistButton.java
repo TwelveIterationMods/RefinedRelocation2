@@ -1,17 +1,19 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
-import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
+
+import static net.blay09.mods.refinedrelocation.util.TextUtils.formattedTranslation;
 
 public class GuiWhitelistButton extends GuiImageButton implements ITickableElement, ITooltipElement {
 
@@ -21,7 +23,8 @@ public class GuiWhitelistButton extends GuiImageButton implements ITickableEleme
     private boolean lastBlacklist;
 
     public GuiWhitelistButton(int x, int y, RootFilterScreen parentGui, GuiFilterSlot parentSlot) {
-        super(x, y, 8, 8, GuiTextures.FILTER_WHITELIST, it -> {});
+        super(x, y, 8, 8, GuiTextures.FILTER_WHITELIST, it -> {
+        });
         this.parentGui = parentGui;
         this.parentSlot = parentSlot;
         visible = false;
@@ -49,10 +52,10 @@ public class GuiWhitelistButton extends GuiImageButton implements ITickableEleme
     }
 
     @Override
-    public void addTooltip(List<String> list) {
+    public void addTooltip(List<ITextProperties> list) {
         boolean nowBlacklist = parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
-        list.add(TextFormatting.WHITE + (nowBlacklist ? I18n.format("gui.refinedrelocation:root_filter.blacklist") : I18n.format("gui.refinedrelocation:root_filter.whitelist")));
-        list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:root_filter.click_to_toggle"));
+        list.add(formattedTranslation(TextFormatting.WHITE, nowBlacklist ? "gui.refinedrelocation:root_filter.blacklist" : "gui.refinedrelocation:root_filter.whitelist"));
+        list.add(formattedTranslation(TextFormatting.YELLOW, "gui.refinedrelocation:root_filter.click_to_toggle"));
     }
 
 }

@@ -125,18 +125,6 @@ public class FastHopperBlock extends ContainerBlock {
         builder.add(FACING, ENABLED);
     }
 
-    @Nullable
-    @Override
-    public Direction[] getValidRotations(BlockState state, IBlockReader world, BlockPos pos) {
-        return new Direction[]{
-                Direction.NORTH,
-                Direction.EAST,
-                Direction.SOUTH,
-                Direction.WEST,
-                Direction.DOWN,
-        };
-    }
-
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
         updateState(state, world, pos);
@@ -147,7 +135,7 @@ public class FastHopperBlock extends ContainerBlock {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FastHopperTileEntity) {
-                if (player.isShiftKeyDown()) {
+                if (player.isSneaking()) {
                     RefinedRelocationAPI.openRootFilterGui(player, tileEntity, 0);
                 } else {
                     NetworkHooks.openGui((ServerPlayerEntity) player, (FastHopperTileEntity) tileEntity, it -> it.writeBlockPos(pos));

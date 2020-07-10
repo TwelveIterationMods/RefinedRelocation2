@@ -6,6 +6,7 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.container.SortingChestContainer;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -167,8 +168,8 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         CompoundNBT itemHandlerCompound = compound.getCompound("ItemHandler");
         itemHandlerCompound.putInt("Size", chestType.getInventorySize());
         this.itemHandler.deserializeNBT(itemHandlerCompound);

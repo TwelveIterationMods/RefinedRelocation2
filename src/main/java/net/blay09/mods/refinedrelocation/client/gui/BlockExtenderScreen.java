@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
@@ -20,9 +21,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
@@ -75,11 +77,11 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
         btnOutputFilter.visible = false;
         addButton(btnOutputFilter);
 
-        btnSlotLock = new GuiTooltipButton(0, 0, 64, 16, I18n.format("gui.refinedrelocation:block_extender.slot_lock"), it -> {
+        btnSlotLock = new GuiTooltipButton(0, 0, 64, 16, new TranslationTextComponent("gui.refinedrelocation:block_extender.slot_lock"), it -> {
         }) {
             @Override
-            public void addTooltip(List<String> list) {
-                list.add(I18n.format("tooltip.refinedrelocation:slot_lock"));
+            public void addTooltip(List<ITextProperties> list) {
+                list.add(new TranslationTextComponent("tooltip.refinedrelocation:slot_lock"));
             }
         };
         btnSlotLock.visible = false;
@@ -133,11 +135,11 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
         }
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    @Override // drawGuiContainerBackgroundLayer
+    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+        blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);
 
         // Render upgrade conflicts
         PlayerEntity player = Minecraft.getInstance().player;
@@ -155,16 +157,9 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
             }
             if (conflictSlot != -1) {
                 Slot slot = container.getUpgradeSlot(conflictSlot);
-                AbstractGui.fill(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
+                AbstractGui.fill(matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x55FF0000);
             }
         }
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        font.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
-        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

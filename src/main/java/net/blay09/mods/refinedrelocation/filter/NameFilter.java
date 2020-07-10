@@ -186,7 +186,7 @@ public class NameFilter implements IFilter {
 
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent("refinedrelocation:any_filter");
+                return new TranslationTextComponent(NameFilter.this.getLangKey());
             }
         };
     }

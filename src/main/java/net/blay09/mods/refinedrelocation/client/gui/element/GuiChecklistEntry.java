@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
@@ -10,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiChecklistEntry extends Button {
 
@@ -20,7 +22,7 @@ public class GuiChecklistEntry extends Button {
     private int currentOption = -1;
 
     public GuiChecklistEntry(int x, int y, IChecklistFilter filter) {
-        super(x, y, 151, 11, "", it -> {
+        super(x, y, 151, 11, new StringTextComponent(""), it -> {
         });
         this.filter = filter;
         texture = GuiTextures.CHECKLIST;
@@ -41,9 +43,9 @@ public class GuiChecklistEntry extends Button {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (isMouseOver(mouseX, mouseY)) {
-            fill(x, y, x + width, y + height, 0x66FFFFFF);
+            fill(matrixStack, x, y, x + width, y + height, 0x66FFFFFF);
         }
 
         RenderSystem.color4f(1f, 1f, 1f, 1f);
@@ -51,13 +53,13 @@ public class GuiChecklistEntry extends Button {
         if (currentOption != -1) {
             texture.bind();
             if (filter.isOptionChecked(currentOption)) {
-                textureChecked.draw(x + 1, y + height / 2f - 11 / 2f, getBlitOffset());
+                textureChecked.draw(matrixStack, x + 1, y + height / 2f - 11 / 2f, getBlitOffset());
             } else {
-                texture.draw(x + 1, y + height / 2f - 11 / 2f, getBlitOffset());
+                texture.draw(matrixStack, x + 1, y + height / 2f - 11 / 2f, getBlitOffset());
             }
 
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-            drawString(fontRenderer, I18n.format(filter.getOptionLangKey(currentOption)), x + 14, y + height / 2 - fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
+            drawString(matrixStack, fontRenderer, I18n.format(filter.getOptionLangKey(currentOption)), x + 14, y + height / 2 - fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
         }
     }
 

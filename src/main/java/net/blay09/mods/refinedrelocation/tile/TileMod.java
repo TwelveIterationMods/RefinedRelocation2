@@ -1,12 +1,11 @@
 package net.blay09.mods.refinedrelocation.tile;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -19,8 +18,8 @@ public class TileMod extends TileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         readFromNBTSynced(compound);
     }
 
@@ -44,7 +43,7 @@ public class TileMod extends TileEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT compound) {
+    public void handleUpdateTag(BlockState state, CompoundNBT compound) {
         readFromNBTSynced(compound);
     }
 

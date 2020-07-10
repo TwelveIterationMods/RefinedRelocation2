@@ -1,11 +1,13 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiScrollBar extends Button implements ITickableElement {
 
@@ -25,7 +27,7 @@ public class GuiScrollBar extends Button implements ITickableElement {
     private int lastOffset;
 
     public GuiScrollBar(int x, int y, int height, IScrollTarget scrollTarget) {
-        super(x, y, 7, height, "", it -> {
+        super(x, y, 7, height, new StringTextComponent(""), it -> {
         });
         this.scrollTarget = scrollTarget;
         updateBarPosition();
@@ -82,7 +84,7 @@ public class GuiScrollBar extends Button implements ITickableElement {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (mouseClickY != -1) {
             float pixelsPerFilter = (height - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
             if (pixelsPerFilter != 0) {
@@ -96,11 +98,11 @@ public class GuiScrollBar extends Button implements ITickableElement {
 
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         scrollbarTop.bind();
-        scrollbarTop.draw(x - 2, y - 1, getBlitOffset());
-        scrollbarBottom.draw(x - 2, y + height - 1, getBlitOffset());
-        scrollbarMiddle.draw(x - 2, y + 2, 11, height - 3, getBlitOffset());
+        scrollbarTop.draw(matrixStack, x - 2, y - 1, getBlitOffset());
+        scrollbarBottom.draw(matrixStack, x - 2, y + height - 1, getBlitOffset());
+        scrollbarMiddle.draw(matrixStack, x - 2, y + 2, 11, height - 3, getBlitOffset());
 //
-        fill(x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
+        fill(matrixStack, x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
     }
 
     public void setCurrentOffset(int offset) {

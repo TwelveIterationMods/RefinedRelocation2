@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
@@ -11,12 +12,14 @@ import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import static net.blay09.mods.refinedrelocation.util.TextUtils.formattedTranslation;
 
 public class GuiSideButton extends GuiImageButton implements ITooltipElement {
 
@@ -75,32 +78,27 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
         if (side != RelativeSide.FRONT) {
             FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
             char sideChar = getFacingChar(tileEntity.getSideMapping(side));
             float labelX = x + width / 2f - fontRenderer.getStringWidth(String.valueOf(sideChar)) / 2f;
             float labelY = y + height / 2f - fontRenderer.FONT_HEIGHT / 2f;
             RenderSystem.translatef(0.5f, 0.5f, 0);
-            fontRenderer.drawString(String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);
+            fontRenderer.drawString(matrixStack, String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);
             RenderSystem.translatef(-0.5f, -0.5f, 0);
         }
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks) {
-        super.renderButton(mouseX, mouseY, partialTicks);
-    }
-
-    @Override
-    public void addTooltip(List<String> list) {
+    public void addTooltip(List<ITextProperties> list) {
         if (side == RelativeSide.FRONT) {
-            list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:block_extender.front"));
+            list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:block_extender.front"));
         } else {
             Direction mapping = tileEntity.getSideMapping(side);
-            list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:block_extender.side_tooltip", TextFormatting.WHITE + I18n.format("gui.refinedrelocation:block_extender.side_" + (mapping != null ? mapping.getName() : "none"))));
-            list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:block_extender.toggle_side"));
+            list.add(formattedTranslation(TextFormatting.YELLOW, "gui.refinedrelocation:block_extender.side_tooltip", formattedTranslation(TextFormatting.WHITE, "gui.refinedrelocation:block_extender.side_" + (mapping != null ? mapping.getString() : "none"))));
+            list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:block_extender.toggle_side"));
         }
     }
 

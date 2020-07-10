@@ -28,7 +28,7 @@ public class BlockHighlightHandler {
     @SubscribeEvent
     public static void onBlockHighlight(DrawHighlightEvent.HighlightBlock event) {
         PlayerEntity player = Minecraft.getInstance().player;
-        if (player == null || !player.isShiftKeyDown()) {
+        if (player == null || !player.isSneaking()) {
             return;
         }
 

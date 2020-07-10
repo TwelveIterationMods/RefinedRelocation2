@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
 import net.blay09.mods.refinedrelocation.network.MessageFilterPreview;
@@ -30,18 +30,19 @@ public class FilterPreviewHandler {
                 IFilterPreviewGui gui = (IFilterPreviewGui) event.getGui();
                 PlayerEntity entityPlayer = Minecraft.getInstance().player;
                 Container container = gui.getFilterContainer();
-                RenderSystem.pushMatrix();
-                RenderSystem.translatef(0, 0, 200);
+                final MatrixStack matrixStack = event.getMatrixStack();
+                matrixStack.push();
+                matrixStack.translate(0, 0, 200);
                 for (Slot slot : container.inventorySlots) {
                     if (slot.inventory == entityPlayer.inventory) {
                         int guiLeft = gui.getFilterGuiLeft();
                         int guiTop = gui.getFilterGuiTop();
                         if (slotStates[slot.getSlotIndex()] == MessageFilterPreview.STATE_SUCCESS) {
-                            AbstractGui.fill(guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x5500FF00);
+                            AbstractGui.fill(matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, guiLeft + slot.xPos + 16, guiTop + slot.yPos + 16, 0x5500FF00);
                         }
                     }
                 }
-                RenderSystem.popMatrix();
+                matrixStack.pop();
             } else {
                 slotStates = null;
             }

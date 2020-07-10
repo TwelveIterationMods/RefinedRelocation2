@@ -9,6 +9,7 @@ import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
 import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -255,8 +256,8 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         byte[] mappings = compound.getByteArray("SideMappings");
         if (mappings.length == 5) {

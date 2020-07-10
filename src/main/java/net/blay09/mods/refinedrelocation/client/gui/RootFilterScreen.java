@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -18,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class RootFilterScreen extends FilterScreen<RootFilterContainer> implements IFilterPreviewGui, IHasContainer<RootFilterContainer> {
 
@@ -68,7 +70,7 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
         }
 
         if (container.hasSortingInventory()) {
-            addButton(new LabelWidget(guiLeft + 10, guiTop + 65, I18n.format("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            addButton(new LabelWidget(font, guiLeft + 10, guiTop + 65, new TranslationTextComponent("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
             addButton(new GuiButtonPriority(guiLeft + 10, guiTop + 80, 100, 20, container.getSortingInventory()));
         }
     }
@@ -88,8 +90,8 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
         }
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    @Override // drawGuiContainerBackgroundLayer
+    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         if (container.hasSortingInventory()) {
             Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
@@ -97,29 +99,27 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
             Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE_NO_PRIORITY);
         }
 
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+        blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);
 
         final int x = guiLeft + 10;
         final int y = guiTop + 37;
         RenderSystem.enableBlend();
         textureSeparator.bind();
-        textureSeparator.draw(x + 30, y, getBlitOffset());
-        textureSeparator.draw(x + 70, y, getBlitOffset());
+        textureSeparator.draw(matrixStack,x + 30, y, getBlitOffset());
+        textureSeparator.draw(matrixStack,x + 70, y, getBlitOffset());
         RenderSystem.disableBlend();
     }
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
+    @Override // drawGuiContainerForegroundLayer
+    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
         TileEntity tileEntity = container.getTileEntity();
         ITextComponent displayName = null;
         if (tileEntity instanceof INameable) {
             displayName = ((INameable) tileEntity).getDisplayName();
         }
 
-        font.drawString(displayName != null ? I18n.format("container.refinedrelocation:root_filter_with_name", displayName.getFormattedText()) : I18n.format("container.refinedrelocation:root_filter"), 8, 6, 4210752);
-        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        font.func_238422_b_(matrixStack, displayName != null ? new TranslationTextComponent("container.refinedrelocation:root_filter_with_name", displayName) : new TranslationTextComponent("container.refinedrelocation:root_filter"), 8, 6, 4210752);
+        font.drawString(matrixStack, I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
     @Override

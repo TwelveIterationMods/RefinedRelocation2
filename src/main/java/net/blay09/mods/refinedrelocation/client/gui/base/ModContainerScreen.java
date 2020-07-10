@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.MultiLineTextFieldWidget;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -8,6 +9,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -62,17 +64,17 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        func_230459_a_(matrixStack, mouseX, mouseY); // renderHoveredTooltip
 
         for (int i = saneChildren.size() - 1; i >= 0; i--) {
             IGuiEventListener child = saneChildren.get(i);
             if (child instanceof ITooltipElement && child.isMouseOver(mouseX, mouseY)) {
-                List<String> tooltip = new ArrayList<>();
+                List<ITextProperties> tooltip = new ArrayList<>();
                 ((ITooltipElement) child).addTooltip(tooltip);
-                renderTooltip(tooltip, mouseX, mouseY);
+                renderTooltip(matrixStack, tooltip, mouseX, mouseY);
                 break;
             }
         }

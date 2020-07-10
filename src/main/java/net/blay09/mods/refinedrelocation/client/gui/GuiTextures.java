@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiTextureSprite;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiTextureSpriteButton;
@@ -8,12 +9,12 @@ public class GuiTextures {
 
     public static final GuiTextureSprite NONE = new GuiTextureSprite(0, 0, 0, 0) {
         @Override
-        public void draw(double x, double y, double zLevel) {
+        public void draw(MatrixStack matrixStack, double x, double y, double zLevel) {
             // NOP
         }
 
         @Override
-        public void draw(double x, double y, double width, double height, double zLevel) {
+        public void draw(MatrixStack matrixStack, double x, double y, double width, double height, double zLevel) {
             // NOP
         }
     };

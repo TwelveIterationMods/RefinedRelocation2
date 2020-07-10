@@ -1,5 +1,7 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 public class GuiTextureSpriteButton {
 
     private final GuiTextureSprite texture;
@@ -24,7 +26,7 @@ public class GuiTextureSpriteButton {
         return disabledTexture;
     }
 
-    public void draw(int x, int y, int width, int height, float zLevel) {
-        texture.draw(x, y, width, height, zLevel);
+    public void draw(MatrixStack matrixStack, int x, int y, int width, int height, float zLevel) {
+        texture.draw(matrixStack, x, y, width, height, zLevel);
     }
 }

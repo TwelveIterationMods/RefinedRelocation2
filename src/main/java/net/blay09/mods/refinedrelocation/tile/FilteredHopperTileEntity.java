@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.tile;
 import net.blay09.mods.refinedrelocation.ModTileEntities;
 import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -61,9 +62,9 @@ public class FilteredHopperTileEntity extends FastHopperTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT tagCompound) {
-        super.read(tagCompound);
-        rootFilter.deserializeNBT(tagCompound.getCompound("RootFilter"));
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
+        rootFilter.deserializeNBT(compound.getCompound("RootFilter"));
     }
 
 }

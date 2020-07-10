@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.refinedrelocation.tile.SortingChestTileEntity;
 import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.model.Material;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,7 +25,7 @@ public enum SortingChestType {
     private final int guiTextureHeight;
 
     @OnlyIn(Dist.CLIENT)
-    private Material material;
+    private RenderMaterial material;
 
     SortingChestType(int inventorySize, int containerRowSize, String registryName, String texture, ResourceLocation guiTextureLocation, int guiWidth, int guiHeight, int guiTextureWidth, int guiTextureHeight) {
         this.inventorySize = inventorySize;
@@ -52,9 +52,9 @@ public enum SortingChestType {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public Material getMaterial() {
+    public RenderMaterial getMaterial() {
         if (material == null) {
-            material = new Material(Atlases.CHEST_ATLAS, getTextureLocation());
+            material = new RenderMaterial(Atlases.CHEST_ATLAS, getTextureLocation());
         }
 
         return material;

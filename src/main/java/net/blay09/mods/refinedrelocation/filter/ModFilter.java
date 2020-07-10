@@ -189,7 +189,7 @@ public class ModFilter implements IChecklistFilter {
 
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent("container.refinedrelocation:any_filter");
+                return new TranslationTextComponent(ModFilter.this.getLangKey());
             }
         };
     }

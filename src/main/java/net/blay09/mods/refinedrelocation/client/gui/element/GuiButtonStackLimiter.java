@@ -5,20 +5,24 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.SizableButton;
 import net.blay09.mods.refinedrelocation.tile.TileBlockExtender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
+
+import static net.blay09.mods.refinedrelocation.util.TextUtils.formattedTranslation;
 
 public class GuiButtonStackLimiter extends SizableButton implements ITickableElement, ITooltipElement {
 
     private final TileBlockExtender blockExtender;
 
     public GuiButtonStackLimiter(int x, int y, int width, int height, TileBlockExtender blockExtender) {
-        super(x, y, width, height, "", it -> {
+        super(x, y, width, height, new StringTextComponent(""), it -> {
         });
         this.blockExtender = blockExtender;
     }
@@ -67,15 +71,14 @@ public class GuiButtonStackLimiter extends SizableButton implements ITickableEle
 
     @Override
     public void tick() {
-        setMessage(String.valueOf(blockExtender.getStackLimiterLimit()));
+        setMessage(new StringTextComponent(String.valueOf(blockExtender.getStackLimiterLimit())));
     }
 
     @Override
-    public void addTooltip(List<String> list) {
-        list.add(I18n.format("gui.refinedrelocation:block_extender.stack_limiter"));
-        list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:block_extender.stack_limiter_increase"));
-        list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:block_extender.stack_limiter_decrease"));
+    public void addTooltip(List<ITextProperties> list) {
+        list.add(new TranslationTextComponent("gui.refinedrelocation:block_extender.stack_limiter"));
+        list.add(formattedTranslation(TextFormatting.GREEN, "gui.refinedrelocation:block_extender.stack_limiter_increase"));
+        list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:block_extender.stack_limiter_decrease"));
     }
-
 
 }

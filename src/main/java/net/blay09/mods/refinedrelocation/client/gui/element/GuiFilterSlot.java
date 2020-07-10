@@ -1,20 +1,24 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
-import net.blay09.mods.refinedrelocation.client.gui.AddFilterScreen;
-import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
+import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
+
+import static net.blay09.mods.refinedrelocation.util.TextUtils.formattedTranslation;
 
 public class GuiFilterSlot extends Button implements ITooltipElement {
 
@@ -24,7 +28,7 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     private final int index;
 
     public GuiFilterSlot(int x, int y, RootFilterScreen parentGui, IRootFilter rootFilter, int index) {
-        super(x, y, 24, 24, "", it -> {
+        super(x, y, 24, 24, new StringTextComponent(""), it -> {
         });
         this.parentGui = parentGui;
         this.rootFilter = rootFilter;
@@ -33,19 +37,19 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         texture.bind();
-        texture.draw(x, y, getBlitOffset());
+        texture.draw(matrixStack, x, y, getBlitOffset());
 
         IFilter filter = rootFilter.getFilter(index);
         if (filter != null) {
             IDrawable filterIcon = filter.getFilterIcon();
             if (filterIcon != null) {
-                filterIcon.draw(x, y, 24, 24, getBlitOffset());
+                filterIcon.draw(matrixStack, x, y, 24, 24, getBlitOffset());
             }
         }
         if (parentGui.isTopMostElement(this, mouseX, mouseY)) {
-            fill(x + 1, y + 1, x + width - 1, y + height - 1, 0x99FFFFFF);
+            fill(matrixStack, x + 1, y + 1, x + width - 1, y + height - 1, 0x99FFFFFF);
         }
     }
 
@@ -61,17 +65,17 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     }
 
     @Override
-    public void addTooltip(List<String> list) {
+    public void addTooltip(List<ITextProperties> list) {
         IFilter filter = rootFilter.getFilter(index);
         if (filter == null) {
-            list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:root_filter.no_filter_set"));
-            list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:root_filter.click_to_add_filter"));
+            list.add(formattedTranslation(TextFormatting.GRAY, "gui.refinedrelocation:root_filter.no_filter_set"));
+            list.add(formattedTranslation(TextFormatting.YELLOW, "gui.refinedrelocation:root_filter.click_to_add_filter"));
         } else {
-            list.add(I18n.format(filter.getLangKey()));
+            list.add(new TranslationTextComponent(filter.getLangKey()));
             if (filter.hasConfiguration()) {
-                list.add(TextFormatting.YELLOW + I18n.format("gui.refinedrelocation:root_filter.click_to_configure"));
+                list.add(formattedTranslation(TextFormatting.YELLOW, "gui.refinedrelocation:root_filter.click_to_configure"));
             } else {
-                list.add(TextFormatting.GRAY + I18n.format("gui.refinedrelocation:root_filter.not_configurable"));
+                list.add(formattedTranslation(TextFormatting.GRAY, "gui.refinedrelocation:root_filter.not_configurable"));
             }
         }
     }

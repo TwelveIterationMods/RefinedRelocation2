@@ -7,10 +7,14 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
+
+import static net.blay09.mods.refinedrelocation.util.TextUtils.formattedTranslation;
 
 public class GuiButtonPriority extends Button implements ITooltipElement, ITickableElement {
 
@@ -19,7 +23,7 @@ public class GuiButtonPriority extends Button implements ITooltipElement, ITicka
     private int currentIndex = 2;
 
     public GuiButtonPriority(int x, int y, int width, int height, ISortingInventory sortingInventory) {
-        super(x, y, width, height, I18n.format(values[2].getLangKey()), it -> {
+        super(x, y, width, height, new TranslationTextComponent(values[2].getLangKey()), it -> {
         });
         this.sortingInventory = sortingInventory;
     }
@@ -44,7 +48,7 @@ public class GuiButtonPriority extends Button implements ITooltipElement, ITicka
             }
 
             currentIndex = Math.max(0, Math.min(values.length - 1, oldIndex));
-            setMessage(I18n.format(values[currentIndex].getLangKey()));
+            setMessage(new TranslationTextComponent(values[currentIndex].getLangKey()));
             sortingInventory.setPriority(values[currentIndex].getPriority());
         } else {
             currentIndex = -1;
@@ -85,21 +89,21 @@ public class GuiButtonPriority extends Button implements ITooltipElement, ITicka
             }
         }
 
-        setMessage(currentIndex != -1 ? I18n.format(values[currentIndex].getLangKey()) : I18n.format("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority()));
+        setMessage(currentIndex != -1 ? new TranslationTextComponent(values[currentIndex].getLangKey()) : new TranslationTextComponent("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority()));
     }
 
     @Override
-    public void addTooltip(List<String> list) {
+    public void addTooltip(List<ITextProperties> list) {
         if (!Screen.hasShiftDown()) {
-            list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:root_filter.priority_increase"));
-            list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:root_filter.priority_decrease"));
+            list.add(formattedTranslation(TextFormatting.GREEN, "gui.refinedrelocation:root_filter.priority_increase"));
+            list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:root_filter.priority_decrease"));
         } else {
-            list.add(TextFormatting.GREEN + I18n.format("gui.refinedrelocation:root_filter.priority_increase10"));
-            list.add(TextFormatting.RED + I18n.format("gui.refinedrelocation:root_filter.priority_decrease10"));
+            list.add(formattedTranslation(TextFormatting.GREEN, "gui.refinedrelocation:root_filter.priority_increase10"));
+            list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:root_filter.priority_decrease10"));
         }
         if (currentIndex != -1) {
-            list.add("");
-            list.add(I18n.format("gui.refinedrelocation:root_filter.priority_tooltip", values[currentIndex].getPriority()));
+            list.add(new StringTextComponent(""));
+            list.add(new TranslationTextComponent("gui.refinedrelocation:root_filter.priority_tooltip", values[currentIndex].getPriority()));
         }
     }
 

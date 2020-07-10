@@ -18,7 +18,7 @@ import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -58,7 +58,7 @@ public class SortingUpgradeItem extends Item {
             if (tileEntity != null && tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing).isPresent()) {
                 LazyOptional<ISortingUpgradable> sortingUpgradableCap = tileEntity.getCapability(CapabilitySortingUpgradable.CAPABILITY, facing);
                 return sortingUpgradableCap.map(sortingUpgradable -> {
-                    Vec3d hit = context.getHitVec();
+                    Vector3d hit = context.getHitVec();
                     if (sortingUpgradable.applySortingUpgrade(tileEntity, itemStack, player, world, pos, facing, hit.x, hit.y, hit.z, hand)) {
                         if (!player.abilities.isCreativeMode) {
                             itemStack.shrink(1);

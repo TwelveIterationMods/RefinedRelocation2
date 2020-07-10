@@ -138,7 +138,7 @@ public class IronChestAddon {
 
         TileEntity newTileEntity = world.getTileEntity( pos );
         if( newTileEntity instanceof SortingChestTileEntity ) {
-            newTileEntity.read( serialized );
+            newTileEntity.read( newState, serialized );
         }
 
         if( !event.getPlayer().abilities.isCreativeMode ) {

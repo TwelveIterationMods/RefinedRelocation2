@@ -1,10 +1,12 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -30,7 +32,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     private Map<String, String> debugRenders = new HashMap<>();
 
     public MultiLineTextFieldWidget(int x, int y, int width, int height) {
-        super(Minecraft.getInstance().fontRenderer, x, y, width, height, "");
+        super(Minecraft.getInstance().fontRenderer, x, y, width, height, new StringTextComponent(""));
         fontRenderer = Minecraft.getInstance().fontRenderer;
     }
 
@@ -135,7 +137,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
         final int cursorPositionX = Math.min(getLineLength(cursorPosition), cursorPosition - startOfLine);
         final String lineText = text.substring(startOfLine, endOfLine);
         lineScrollOffset = Math.max(Math.min(lineScrollOffset, lineText.length()), 0);
-        final String renderText = fontRenderer.trimStringToWidth(lineText.substring(lineScrollOffset), innerWidth);
+        final String renderText = fontRenderer.func_238412_a_(lineText.substring(lineScrollOffset), innerWidth);
         // Allow scrolling back when you get to the beginning
         if (cursorPositionX == lineScrollOffset) {
             lineScrollOffset -= renderText.length();
@@ -215,8 +217,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 int lineRenderStartIndex = Math.max(startOfLine + lineScrollOffset, 0);
                 int lineRenderEndIndex = Math.max(0, endOfLine);
                 if (lineRenderStartIndex <= lineRenderEndIndex) {
-                    String renderText = fontRenderer.trimStringToWidth(getText().substring(lineRenderStartIndex, lineRenderEndIndex), width - PADDING);
-                    setCursorPosition(startOfLine + fontRenderer.trimStringToWidth(renderText, (int) relX).length() + lineScrollOffset);
+                    String renderText = fontRenderer.func_238412_a_(getText().substring(lineRenderStartIndex, lineRenderEndIndex), width - PADDING);
+                    setCursorPosition(startOfLine + fontRenderer.func_238412_a_(renderText, (int) relX).length() + lineScrollOffset);
                 } else {
                     setCursorPosition(endOfLine);
                 }
@@ -366,12 +368,12 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         ticksSinceLastHistory += partialTicks;
 
         if (getVisible()) {
-            fill(x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
-            fill(x, y, x + width, y + height, 0xFF000000);
+            fill(matrixStack, x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
+            fill(matrixStack, x, y, x + width, y + height, 0xFF000000);
 
             if (renderCache == null) {
                 renderCache = getText().split("\n", -1);
@@ -387,8 +389,8 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                     continue;
                 }
 
-                String renderText = fontRenderer.trimStringToWidth(renderCache[i].substring(lineScrollOffset), width - PADDING);
-                fontRenderer.drawStringWithShadow(renderText, this.x + PADDING, this.y + PADDING + y, active ? ENABLED_COLOR : DISABLED_COLOR);
+                String renderText = fontRenderer.func_238412_a_(renderCache[i].substring(lineScrollOffset), width - PADDING);
+                fontRenderer.drawStringWithShadow(matrixStack, renderText, this.x + PADDING, this.y + PADDING + y, active ? ENABLED_COLOR : DISABLED_COLOR);
             }
 
             int cursorLine = 0;
@@ -406,7 +408,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
                 if (startIndex <= endIndex) {
                     int cursorX = x + fontRenderer.getStringWidth(getText().substring(startIndex, endIndex)) + PADDING;
                     int cursorY = y + (cursorLine - scrollOffset) * fontRenderer.FONT_HEIGHT + PADDING;
-                    AbstractGui.fill(cursorX, cursorY, cursorX + 1, cursorY + 9, -3092272);
+                    AbstractGui.fill(matrixStack, cursorX, cursorY, cursorX + 1, cursorY + 9, -3092272);
                 }
             }
 
@@ -449,7 +451,7 @@ public class MultiLineTextFieldWidget extends TextFieldWidget implements IScroll
 
             float debugY = 10f;
             for (Map.Entry<String, String> entry : debugRenders.entrySet()) {
-                fontRenderer.drawStringWithShadow(entry.getKey() + ": " + entry.getValue(), 10f, debugY, 0xFFFFFFFF);
+                fontRenderer.drawStringWithShadow(matrixStack, entry.getKey() + ": " + entry.getValue(), 10f, debugY, 0xFFFFFFFF);
                 debugY += 10f;
             }
         }

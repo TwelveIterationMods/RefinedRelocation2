@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewGui;
@@ -11,7 +12,6 @@ import net.blay09.mods.refinedrelocation.client.gui.element.GuiChecklistEntry;
 import net.blay09.mods.refinedrelocation.container.ChecklistFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -30,6 +30,10 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
         super(container, playerInventory, displayName);
         this.filter = container.getFilter();
         ySize = 210;
+        field_238742_p_ = 8;
+        field_238743_q_ = 6;
+        field_238744_r_ = 8;
+        field_238745_s_ = ySize - 96 + 2;
     }
 
     @Override
@@ -52,19 +56,11 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
         setCurrentOffset(0);
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    @Override // drawGuiContainerBackgroundLayer
+    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
-        font.drawString(I18n.format(filter.getLangKey()), 8, 6, 4210752);
-        font.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+        blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
     @Override

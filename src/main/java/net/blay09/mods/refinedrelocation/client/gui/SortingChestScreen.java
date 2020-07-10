@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
@@ -29,30 +30,28 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
         addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity, 0));
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    @Override // drawGuiContainerBackgroundLayer
+    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         SortingChestType chestType = tileEntity.getChestType();
         Minecraft.getInstance().getTextureManager().bindTexture(chestType.getGuiTextureLocation());
         if (chestType == SortingChestType.WOOD || chestType == SortingChestType.IRON) {
             int inventoryRows = chestType.getInventorySize() / chestType.getContainerRowSize();
-            blit(guiLeft, guiTop, 0, 0, xSize, inventoryRows * 18 + 17);
-            blit(guiLeft, guiTop + inventoryRows * 18 + 17, 0, 125, xSize, 97);
+            blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, inventoryRows * 18 + 17);
+            blit(matrixStack, guiLeft, guiTop + inventoryRows * 18 + 17, 0, 125, xSize, 97);
         } else {
             int textureSizeX = chestType.getGuiTextureWidth();
             int textureSizeY = chestType.getGuiTextureHeight();
-            blit(guiLeft, guiTop, 0, 0, xSize, ySize, textureSizeX, textureSizeY);
+            blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize, textureSizeX, textureSizeY);
         }
     }
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
-        font.drawString(getTitle().getFormattedText(), 8, 6, 4210752);
+    @Override // drawGuiContainerForegroundLayer
+    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
+        font.func_238422_b_(matrixStack, getTitle(), 8, 6, 4210752);
 
         int inventoryTitleX = (tileEntity.getChestType().getGuiWidth() - 162) / 2;
-        font.drawString(I18n.format("container.inventory"), inventoryTitleX, ySize - 96 + 2, 4210752);
+        font.drawString(matrixStack, I18n.format("container.inventory"), inventoryTitleX, ySize - 96 + 2, 4210752);
     }
 
 }

@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -27,12 +28,12 @@ public class GuiTextureSprite implements IDrawable {
     }
 
     @Override
-    public void draw(double x, double y, double zLevel) {
-        AbstractGui.blit((int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
+    public void draw(MatrixStack matrixStack, double x, double y, double zLevel) {
+        AbstractGui.blit(matrixStack, (int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
     }
 
     @Override
-    public void draw(double x, double y, double width, double height, double zLevel) {
-        AbstractGui.blit((int) x, (int) y, (int) width, (int) height, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
+    public void draw(MatrixStack matrixStack, double x, double y, double width, double height, double zLevel) {
+        AbstractGui.blit(matrixStack, (int) x, (int) y, (int) width, (int) height, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
     }
 }
