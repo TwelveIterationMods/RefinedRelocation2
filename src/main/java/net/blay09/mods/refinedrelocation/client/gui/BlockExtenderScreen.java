@@ -52,6 +52,7 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
         ySize = 176;
+        field_238745_s_= ySize - 96 + 2;
     }
 
     @Override

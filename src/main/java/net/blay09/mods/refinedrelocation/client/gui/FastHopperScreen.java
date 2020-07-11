@@ -21,6 +21,7 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
         this.ySize = 133;
+        field_238745_s_= ySize - 96 + 2;
     }
 
     @Override
