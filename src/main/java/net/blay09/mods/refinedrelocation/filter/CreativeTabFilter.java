@@ -159,7 +159,7 @@ public class CreativeTabFilter implements IChecklistFilter {
 
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent("container.refinedrelocation:creativeTabFilter");
+                return new TranslationTextComponent("container.refinedrelocation:creative_tab_filter");
             }
         };
     }
