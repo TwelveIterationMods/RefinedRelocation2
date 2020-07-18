@@ -213,7 +213,7 @@ public class PresetFilter implements IChecklistFilter {
     }
 
     @Override
-    public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
+    public boolean passes(TileEntity tileEntity, ItemStack itemStack, ItemStack originalStack) {
         Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(itemStack.getItem());
         for (int i = 0; i < presetList.size(); i++) {
             if (presetStates[i] && presetList.get(i).passes(itemStack, tags)) {

@@ -55,7 +55,7 @@ public class NameFilter implements IFilter {
     }
 
     @Override
-    public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
+    public boolean passes(TileEntity tileEntity, ItemStack itemStack, ItemStack originalStack) {
         String itemName = null;
         Collection<ResourceLocation> tags = null;
         Pattern[] patterns = getPatterns();

@@ -104,7 +104,7 @@ public class ModFilter implements IChecklistFilter {
     }
 
     @Override
-    public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
+    public boolean passes(TileEntity tileEntity, ItemStack itemStack, ItemStack originalStack) {
         ResourceLocation resourceLocation = itemStack.getItem().getRegistryName();
         if (resourceLocation != null) {
             ModWithName modWithName = modList.get(resourceLocation.getNamespace());

@@ -59,7 +59,7 @@ public class CreativeTabFilter implements IChecklistFilter {
     }
 
     @Override
-    public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
+    public boolean passes(TileEntity tileEntity, ItemStack itemStack, ItemStack originalStack) {
         Collection<ItemGroup> itemTabs = itemStack.getItem().getCreativeTabs();
         for (ItemGroup itemTab : itemTabs) {
             if (itemTab == null) {

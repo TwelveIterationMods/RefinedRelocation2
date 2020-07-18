@@ -64,6 +64,8 @@ public class AddFilterContainer extends BaseContainer implements IRootFilterCont
                         it.writeByte(rootFilterIndex);
                         it.writeByte(rootFilter.getFilterCount() - 1);
                     });
+                } else {
+                    RefinedRelocationAPI.openRootFilterGui(player, tileEntity, rootFilterIndex);
                 }
                 break;
             }

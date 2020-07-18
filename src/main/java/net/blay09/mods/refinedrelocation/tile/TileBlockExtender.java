@@ -6,7 +6,6 @@ import net.blay09.mods.refinedrelocation.api.Capabilities;
 import net.blay09.mods.refinedrelocation.api.filter.IMultiRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.container.BlockExtenderContainer;
-import net.blay09.mods.refinedrelocation.container.ModContainers;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.block.BlockState;
@@ -65,16 +64,16 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
         }
 
         @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        public boolean isItemValid(int slot, @Nonnull ItemStack itemStack) {
             if (hasSlotLock) {
-                if (stack.isEmpty() || getStackInSlot(slot).isEmpty()) {
+                if (itemStack.isEmpty() || getStackInSlot(slot).isEmpty()) {
                     return false;
                 }
             }
 
             if (hasInputFilter) {
                 //noinspection RedundantIfStatement
-                if (stack.isEmpty() || !inputFilter.passes(tileEntity, stack)) {
+                if (itemStack.isEmpty() || !inputFilter.passes(tileEntity, itemStack, itemStack)) {
                     return false;
                 }
             }
@@ -120,7 +119,8 @@ public class TileBlockExtender extends TileMod implements ITickableTileEntity, I
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (hasOutputFilter) {
-                if (!outputFilter.passes(tileEntity, getStackInSlot(slot))) {
+                final ItemStack itemStack = getStackInSlot(slot);
+                if (!outputFilter.passes(tileEntity, itemStack, itemStack)) {
                     return ItemStack.EMPTY;
                 }
             }

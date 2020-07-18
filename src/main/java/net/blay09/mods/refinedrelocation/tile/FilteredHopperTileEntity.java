@@ -26,7 +26,7 @@ public class FilteredHopperTileEntity extends FastHopperTileEntity {
         return new ItemStackHandler(5) {
             @Override
             public ItemStack insertItem(int slot, ItemStack itemStack, boolean simulate) {
-                if (itemStack.isEmpty() || !rootFilter.passes(FilteredHopperTileEntity.this, itemStack)) {
+                if (itemStack.isEmpty() || !rootFilter.passes(FilteredHopperTileEntity.this, itemStack, itemStack)) {
                     return itemStack;
                 }
                 return super.insertItem(slot, itemStack, simulate);

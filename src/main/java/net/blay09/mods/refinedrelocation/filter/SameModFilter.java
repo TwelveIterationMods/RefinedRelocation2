@@ -30,13 +30,13 @@ public class SameModFilter implements IFilter {
     }
 
     @Override
-    public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
+    public boolean passes(TileEntity tileEntity, ItemStack itemStack, ItemStack originalStack) {
         LazyOptional<IItemHandler> itemHandlerCap = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
         return itemHandlerCap.map(itemHandler -> {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 ItemStack otherStack = itemHandler.getStackInSlot(i);
                 if (!otherStack.isEmpty()) {
-                    if (itemStack.getItem() == otherStack.getItem()) {
+                    if (otherStack == originalStack || itemStack.getItem() == otherStack.getItem()) {
                         return true;
                     }
 

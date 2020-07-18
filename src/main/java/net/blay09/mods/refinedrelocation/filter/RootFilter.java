@@ -63,14 +63,14 @@ public class RootFilter implements IRootFilter {
     }
 
     @Override
-    public boolean passes(TileEntity tileEntity, ItemStack itemStack) {
+    public boolean passes(TileEntity tileEntity, ItemStack itemStack, ItemStack originalStack) {
         if (itemStack.isEmpty()) {
             return false;
         }
 
         boolean passes = false;
         for (SubFilterWrapper filter : filterList) {
-            boolean filterPasses = filter.getFilter().passes(tileEntity, itemStack);
+            boolean filterPasses = filter.getFilter().passes(tileEntity, itemStack, originalStack);
             if (filterPasses && filter.isBlacklist()) {
                 return false;
             }

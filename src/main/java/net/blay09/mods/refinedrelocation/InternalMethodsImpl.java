@@ -119,7 +119,7 @@ public class InternalMethodsImpl implements InternalMethods {
                     ISortingInventory memberInventory = (ISortingInventory) member;
                     LazyOptional<? extends ISimpleFilter> filter = memberInventory.getFilter();
                     final ItemStack testStack = restStack;
-                    boolean passes = filter.filter(it -> it.passes(memberInventory.getTileEntity(), testStack)).isPresent();
+                    boolean passes = filter.filter(it -> it.passes(memberInventory.getTileEntity(), testStack, itemStack)).isPresent();
                     if (passes) {
                         passingList.add(memberInventory);
                     }
@@ -248,7 +248,7 @@ public class InternalMethodsImpl implements InternalMethods {
             for (int i = 0; i < slotStates.length; i++) {
                 ItemStack itemStack = entityPlayer.inventory.getStackInSlot(i);
                 if (!itemStack.isEmpty()) {
-                    slotStates[i] = (byte) (filter.passes(tileEntity, itemStack) ? MessageFilterPreview.STATE_SUCCESS : MessageFilterPreview.STATE_FAILURE);
+                    slotStates[i] = (byte) (filter.passes(tileEntity, itemStack, itemStack) ? MessageFilterPreview.STATE_SUCCESS : MessageFilterPreview.STATE_FAILURE);
                 }
             }
 
