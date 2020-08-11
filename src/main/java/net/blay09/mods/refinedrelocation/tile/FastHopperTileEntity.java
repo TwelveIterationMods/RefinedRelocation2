@@ -163,7 +163,7 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
         super.write(tagCompound);
         tagCompound.put("ItemHandler", itemHandler.serializeNBT());
         if (customName != null) {
-            tagCompound.putString("CustomName", customName.getUnformattedComponentText());
+            tagCompound.putString("CustomName", customName.getString());
         }
 
         return tagCompound;

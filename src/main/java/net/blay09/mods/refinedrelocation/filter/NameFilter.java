@@ -88,7 +88,7 @@ public class NameFilter implements IFilter {
                     }
                 } else {
                     if (itemName == null) {
-                        itemName = itemStack.getDisplayName().getUnformattedComponentText();
+                        itemName = itemStack.getDisplayName().getString();
                     }
                     if (pattern.matcher(itemName).matches()) {
                         return true;
@@ -120,6 +120,8 @@ public class NameFilter implements IFilter {
                 } else if (patternsSplit[i].startsWith("mod:") && patternsSplit[i].length() > 4) {
                     patternsSplit[i] = patternsSplit[i].substring(4).toLowerCase(Locale.ENGLISH).replace(' ', '*');
                     cachedNameFilterType[i] = NameFilterType.MOD;
+                } else if (patternsSplit[i].isEmpty()) {
+                    continue;
                 }
                 WILDCARD_MATCHER.reset(patternsSplit[i]);
                 StringBuffer sb = new StringBuffer();

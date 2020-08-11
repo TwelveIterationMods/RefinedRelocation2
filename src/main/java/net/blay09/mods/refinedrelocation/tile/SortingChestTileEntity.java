@@ -198,7 +198,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
         compound.put("SortingInventory", sortingInventory.serializeNBT());
         compound.put("RootFilter", rootFilter.serializeNBT());
         if (customName != null) {
-            compound.putString("CustomName", customName.getUnformattedComponentText());
+            compound.putString("CustomName", customName.getString());
         }
 
         return compound;
@@ -207,7 +207,7 @@ public class SortingChestTileEntity extends TileMod implements ITickableTileEnti
     @Override
     public CompoundNBT writeToNBTSynced(CompoundNBT compound) {
         if (customName != null) {
-            compound.putString("CustomName", customName.getUnformattedComponentText());
+            compound.putString("CustomName", customName.getString());
         }
         return compound;
     }

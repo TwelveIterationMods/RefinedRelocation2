@@ -85,7 +85,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
         if (itemStack.hasDisplayName()) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof SortingChestTileEntity) {
-                ((SortingChestTileEntity) tileEntity).setCustomName(itemStack.getDisplayName().getUnformattedComponentText());
+                ((SortingChestTileEntity) tileEntity).setCustomName(itemStack.getDisplayName().getString());
             }
         }
     }
