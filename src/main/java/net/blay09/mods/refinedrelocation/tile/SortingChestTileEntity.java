@@ -29,6 +29,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -38,6 +40,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
+@OnlyIn(value = Dist.CLIENT, _interface = IChestLid.class)
 public class SortingChestTileEntity extends TileMod implements ITickableTileEntity,
         INamedContainerProvider,
         INameable,
