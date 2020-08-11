@@ -31,7 +31,7 @@ public class AddFilterScreen extends ModContainerScreen<AddFilterContainer> impl
         super(container, playerInventory, displayName);
         filterList = FilterRegistry.getApplicableFilters(t -> t.isFilterUsable(container.getTileEntity()));
         ySize = 210;
-        field_238745_s_= ySize - 96 + 2;
+        playerInventoryTitleY = ySize - 96 + 2;
     }
 
     @Override
@@ -54,8 +54,8 @@ public class AddFilterScreen extends ModContainerScreen<AddFilterContainer> impl
         setCurrentOffset(0);
     }
 
-    @Override // drawGuiContainerBackgroundLayer
-    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);

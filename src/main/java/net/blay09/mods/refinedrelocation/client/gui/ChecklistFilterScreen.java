@@ -30,10 +30,10 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
         super(container, playerInventory, displayName);
         this.filter = container.getFilter();
         ySize = 210;
-        field_238742_p_ = 8;
-        field_238743_q_ = 6;
-        field_238744_r_ = 8;
-        field_238745_s_ = ySize - 96 + 2;
+        titleX = 8;
+        titleY = 6;
+        playerInventoryTitleX = 8;
+        playerInventoryTitleY = ySize - 96 + 2;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
         setCurrentOffset(0);
     }
 
-    @Override // drawGuiContainerBackgroundLayer
-    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         Minecraft.getInstance().getTextureManager().bindTexture(TEXTURE);
         blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);

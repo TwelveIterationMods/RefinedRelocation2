@@ -45,7 +45,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public TileEntityMerger.ICallbackWrapper<? extends ChestTileEntity> func_225536_a_(BlockState p_225536_1_, World p_225536_2_, BlockPos p_225536_3_, boolean p_225536_4_) {
+    public TileEntityMerger.ICallbackWrapper<? extends ChestTileEntity> combine(BlockState p_225536_1_, World p_225536_2_, BlockPos p_225536_3_, boolean p_225536_4_) {
         return TileEntityMerger.ICallback::func_225537_b_;
     }
 

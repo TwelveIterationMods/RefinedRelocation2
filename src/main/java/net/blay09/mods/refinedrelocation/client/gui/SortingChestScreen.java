@@ -30,8 +30,8 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
         addButton(new GuiOpenFilterButton(guiLeft + xSize - 20, guiTop + 4, tileEntity, 0));
     }
 
-    @Override // drawGuiContainerBackgroundLayer
-    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         SortingChestType chestType = tileEntity.getChestType();
         Minecraft.getInstance().getTextureManager().bindTexture(chestType.getGuiTextureLocation());
@@ -47,7 +47,7 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
     }
 
     @Override // drawGuiContainerForegroundLayer
-    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
         font.func_238422_b_(matrixStack, getTitle(), 8, 6, 4210752);
 
         int inventoryTitleX = (tileEntity.getChestType().getGuiWidth() - 162) / 2;

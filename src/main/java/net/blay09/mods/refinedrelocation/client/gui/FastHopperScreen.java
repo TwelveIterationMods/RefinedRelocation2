@@ -21,7 +21,7 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
         super(container, playerInventory, displayName);
         this.tileEntity = container.getTileEntity();
         this.ySize = 133;
-        field_238745_s_= ySize - 96 + 2;
+        playerInventoryTitleY = ySize - 96 + 2;
     }
 
     @Override
@@ -33,8 +33,8 @@ public class FastHopperScreen extends ModContainerScreen<ContainerFastHopper> {
         }
     }
 
-    @Override // drawGuiContainerBackgroundLayer
-    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         minecraft.getTextureManager().bindTexture(TEXTURE);
         this.blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);

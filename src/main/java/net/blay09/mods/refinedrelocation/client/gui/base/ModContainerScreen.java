@@ -104,7 +104,7 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
             getMinecraft().player.closeScreen();
         }
 
-        IGuiEventListener focused = this.getFocused();
+        IGuiEventListener focused = this.getListener();
         if (focused instanceof TextFieldWidget) {
             if (focused.keyPressed(keyCode, scanCode, modifier) || ((TextFieldWidget) focused).canWrite()) {
                 return true;

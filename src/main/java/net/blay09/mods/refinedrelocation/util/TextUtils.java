@@ -8,7 +8,7 @@ public class TextUtils {
 
     public static ITextComponent formattedTranslation(TextFormatting formatting, String langKey, Object... args) {
         final TranslationTextComponent translationTextComponent = new TranslationTextComponent(langKey, args);
-        translationTextComponent.func_240699_a_(formatting);
+        translationTextComponent.mergeStyle(formatting);
         return translationTextComponent;
     }
 }
