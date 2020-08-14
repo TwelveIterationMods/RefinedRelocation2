@@ -8,6 +8,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 
@@ -52,7 +53,7 @@ public class GuiWhitelistButton extends GuiImageButton implements ITickableEleme
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> list) {
+    public void addTooltip(List<ITextComponent> list) {
         boolean nowBlacklist = parentGui.getContainer().getRootFilter().isBlacklist(parentSlot.getFilterIndex());
         list.add(formattedTranslation(TextFormatting.WHITE, nowBlacklist ? "gui.refinedrelocation:root_filter.blacklist" : "gui.refinedrelocation:root_filter.whitelist"));
         list.add(formattedTranslation(TextFormatting.YELLOW, "gui.refinedrelocation:root_filter.click_to_toggle"));

@@ -11,10 +11,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 
@@ -65,7 +62,7 @@ public class GuiFilterSlot extends Button implements ITooltipElement {
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> list) {
+    public void addTooltip(List<ITextComponent> list) {
         IFilter filter = rootFilter.getFilter(index);
         if (filter == null) {
             list.add(formattedTranslation(TextFormatting.GRAY, "gui.refinedrelocation:root_filter.no_filter_set"));

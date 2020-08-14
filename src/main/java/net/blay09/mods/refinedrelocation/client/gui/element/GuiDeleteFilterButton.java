@@ -7,6 +7,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.GuiImageButton;
 import net.blay09.mods.refinedrelocation.container.RootFilterContainer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 
@@ -59,7 +60,7 @@ public class GuiDeleteFilterButton extends GuiImageButton implements ITickableEl
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> list) {
+    public void addTooltip(List<ITextComponent> list) {
         list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:root_filter.delete_filter"));
         if (!active) {
             list.add(formattedTranslation(TextFormatting.YELLOW, "gui.refinedrelocation:root_filter.hold_shift_to_delete"));

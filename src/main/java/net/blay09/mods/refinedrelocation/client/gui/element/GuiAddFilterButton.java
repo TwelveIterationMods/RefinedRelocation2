@@ -12,6 +12,7 @@ import net.blay09.mods.refinedrelocation.container.AddFilterContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -59,7 +60,7 @@ public class GuiAddFilterButton extends GuiImageButton implements ITooltipElemen
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> tooltip) {
+    public void addTooltip(List<ITextComponent> tooltip) {
         if (currentFilter != null) {
             for (String text : I18n.format(currentFilter.getDescriptionLangKey()).split("\\\\n")) {
                 tooltip.add(new StringTextComponent(text));

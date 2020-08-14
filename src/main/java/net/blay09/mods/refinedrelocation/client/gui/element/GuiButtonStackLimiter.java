@@ -8,10 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 
@@ -75,7 +72,7 @@ public class GuiButtonStackLimiter extends SizableButton implements ITickableEle
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> list) {
+    public void addTooltip(List<ITextComponent> list) {
         list.add(new TranslationTextComponent("gui.refinedrelocation:block_extender.stack_limiter"));
         list.add(formattedTranslation(TextFormatting.GREEN, "gui.refinedrelocation:block_extender.stack_limiter_increase"));
         list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:block_extender.stack_limiter_decrease"));

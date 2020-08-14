@@ -24,7 +24,7 @@ public class LabelWidget extends Widget {
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        fontRenderer.func_238422_b_(matrixStack, text, x, y, textColor);
+        fontRenderer.func_238422_b_(matrixStack, text.func_241878_f(), x, y, textColor);
     }
 
 }

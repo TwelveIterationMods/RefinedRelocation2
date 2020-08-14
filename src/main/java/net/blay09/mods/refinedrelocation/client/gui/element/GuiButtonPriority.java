@@ -7,10 +7,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 
@@ -93,7 +90,7 @@ public class GuiButtonPriority extends Button implements ITooltipElement, ITicka
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> list) {
+    public void addTooltip(List<ITextComponent> list) {
         if (!Screen.hasShiftDown()) {
             list.add(formattedTranslation(TextFormatting.GREEN, "gui.refinedrelocation:root_filter.priority_increase"));
             list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:root_filter.priority_decrease"));

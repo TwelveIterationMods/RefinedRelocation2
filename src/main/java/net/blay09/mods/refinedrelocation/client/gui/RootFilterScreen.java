@@ -118,7 +118,8 @@ public class RootFilterScreen extends FilterScreen<RootFilterContainer> implemen
             displayName = ((INameable) tileEntity).getDisplayName();
         }
 
-        font.func_238422_b_(matrixStack, displayName != null ? new TranslationTextComponent("container.refinedrelocation:root_filter_with_name", displayName) : new TranslationTextComponent("container.refinedrelocation:root_filter"), 8, 6, 4210752);
+        final TranslationTextComponent title = displayName != null ? new TranslationTextComponent("container.refinedrelocation:root_filter_with_name", displayName) : new TranslationTextComponent("container.refinedrelocation:root_filter");
+        font.func_238422_b_(matrixStack, title.func_241878_f(), 8, 6, 4210752);
         font.drawString(matrixStack, I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

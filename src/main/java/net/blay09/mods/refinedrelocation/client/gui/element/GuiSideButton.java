@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 
@@ -92,7 +93,7 @@ public class GuiSideButton extends GuiImageButton implements ITooltipElement {
     }
 
     @Override
-    public void addTooltip(List<ITextProperties> list) {
+    public void addTooltip(List<ITextComponent> list) {
         if (side == RelativeSide.FRONT) {
             list.add(formattedTranslation(TextFormatting.RED, "gui.refinedrelocation:block_extender.front"));
         } else {

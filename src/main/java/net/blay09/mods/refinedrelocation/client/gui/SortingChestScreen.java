@@ -48,7 +48,7 @@ public class SortingChestScreen extends ModContainerScreen<SortingChestContainer
 
     @Override // drawGuiContainerForegroundLayer
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        font.func_238422_b_(matrixStack, getTitle(), 8, 6, 4210752);
+        font.func_238422_b_(matrixStack, getTitle().func_241878_f(), 8, 6, 4210752);
 
         int inventoryTitleX = (tileEntity.getChestType().getGuiWidth() - 162) / 2;
         font.drawString(matrixStack, I18n.format("container.inventory"), inventoryTitleX, ySize - 96 + 2, 4210752);

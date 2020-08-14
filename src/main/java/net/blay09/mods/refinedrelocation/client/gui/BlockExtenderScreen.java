@@ -81,7 +81,7 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderContain
         btnSlotLock = new GuiTooltipButton(0, 0, 64, 16, new TranslationTextComponent("gui.refinedrelocation:block_extender.slot_lock"), it -> {
         }) {
             @Override
-            public void addTooltip(List<ITextProperties> list) {
+            public void addTooltip(List<ITextComponent> list) {
                 list.add(new TranslationTextComponent("tooltip.refinedrelocation:slot_lock"));
             }
         };

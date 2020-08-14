@@ -72,9 +72,9 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
         for (int i = saneChildren.size() - 1; i >= 0; i--) {
             IGuiEventListener child = saneChildren.get(i);
             if (child instanceof ITooltipElement && child.isMouseOver(mouseX, mouseY)) {
-                List<ITextProperties> tooltip = new ArrayList<>();
+                List<ITextComponent> tooltip = new ArrayList<>();
                 ((ITooltipElement) child).addTooltip(tooltip);
-                renderTooltip(matrixStack, tooltip, mouseX, mouseY);
+                func_243308_b(matrixStack, tooltip, mouseX, mouseY);
                 break;
             }
         }
