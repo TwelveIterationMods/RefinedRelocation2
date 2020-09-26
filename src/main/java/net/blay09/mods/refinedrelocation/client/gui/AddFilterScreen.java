@@ -48,7 +48,7 @@ public class AddFilterScreen extends ModContainerScreen<AddFilterContainer> impl
         for (int i = 0; i < filterButtons.length; i++) {
             filterButtons[i] = new GuiAddFilterButton(guiLeft + 8, y);
             addButton(filterButtons[i]);
-            y += filterButtons[i].getHeight();
+            y += filterButtons[i].getHeightRealms();
         }
 
         setCurrentOffset(0);

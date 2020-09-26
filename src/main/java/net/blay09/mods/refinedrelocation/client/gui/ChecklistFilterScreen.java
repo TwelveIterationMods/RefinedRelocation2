@@ -50,7 +50,7 @@ public class ChecklistFilterScreen extends FilterScreen<ChecklistFilterContainer
         for (int i = 0; i < entries.length; i++) {
             entries[i] = new GuiChecklistEntry(guiLeft + 8, y, filter);
             addButton(entries[i]);
-            y += entries[i].getHeight();
+            y += entries[i].getHeightRealms();
         }
 
         setCurrentOffset(0);

@@ -14,7 +14,7 @@ public class LabelWidget extends Widget {
     public int textColor;
 
     public LabelWidget(FontRenderer fontRenderer, int x, int y, ITextComponent text, int textColor) {
-        super(x, y, fontRenderer.func_238414_a_(text), fontRenderer.FONT_HEIGHT, text);
+        super(x, y, fontRenderer.getStringPropertyWidth(text), fontRenderer.FONT_HEIGHT, text);
         this.fontRenderer = fontRenderer;
         this.x = x;
         this.y = y;

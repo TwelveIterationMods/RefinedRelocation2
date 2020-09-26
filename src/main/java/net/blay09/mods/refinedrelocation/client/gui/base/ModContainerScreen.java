@@ -67,7 +67,7 @@ public abstract class ModContainerScreen<T extends Container> extends ContainerS
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        func_230459_a_(matrixStack, mouseX, mouseY); // renderHoveredTooltip
+        renderHoveredTooltip(matrixStack, mouseX, mouseY);
 
         for (int i = saneChildren.size() - 1; i >= 0; i--) {
             IGuiEventListener child = saneChildren.get(i);

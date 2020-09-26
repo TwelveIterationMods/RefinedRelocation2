@@ -14,16 +14,17 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class RefinedRelocationUtils {
 
-    public static LazyOptional<IRootFilter> getRootFilter(TileEntity tileEntity, int rootFilterIndex) {
-        LazyOptional<IRootFilter> foundRootFilter = tileEntity.getCapability(Capabilities.MULTI_ROOT_FILTER).map(it -> it.getRootFilter(rootFilterIndex));
+    public static Optional<IRootFilter> getRootFilter(TileEntity tileEntity, int rootFilterIndex) {
+        Optional<IRootFilter> foundRootFilter = tileEntity.getCapability(Capabilities.MULTI_ROOT_FILTER).map(it -> it.getRootFilter(rootFilterIndex));
         if (foundRootFilter.isPresent()) {
             return foundRootFilter;
         }
 
-        return rootFilterIndex == 0 ? tileEntity.getCapability(Capabilities.ROOT_FILTER) : LazyOptional.empty();
+        return rootFilterIndex == 0 ? tileEntity.getCapability(Capabilities.ROOT_FILTER).resolve() : Optional.empty();
     }
 
     public static void dropItemHandler(World world, BlockPos pos) {
