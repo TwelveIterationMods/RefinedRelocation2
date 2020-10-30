@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FastHopperTileEntity extends TileMod implements ITickableTileEntity, INamedContainerProvider, INameable {
 
@@ -112,6 +113,10 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
 
                 cooldown = 20;
             }
+
+            for (ItemEntity itemEntity : findItemsAbove()) {
+                pullItem(itemEntity);
+            }
         }
     }
 
@@ -128,6 +133,10 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
         }
 
         return LazyOptional.empty();
+    }
+
+    private List<ItemEntity> findItemsAbove() {
+        return IHopper.COLLECTION_AREA_SHAPE.toBoundingBoxList().stream().flatMap((aabb) -> world.getEntitiesWithinAABB(ItemEntity.class, aabb.offset(pos.getX(), pos.getY(), pos.getZ()), EntityPredicates.IS_ALIVE).stream()).collect(Collectors.toList());
     }
 
     private void pushItem(int sourceSlot, IItemHandler targetItemHandler) {
