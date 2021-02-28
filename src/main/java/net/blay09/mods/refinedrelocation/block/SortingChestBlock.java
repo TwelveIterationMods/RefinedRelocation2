@@ -104,7 +104,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestTileEntity
 
     @Override
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean what) {
-        if (state.getBlock() != newState.getBlock()) {
+        if (!state.isIn(newState.getBlock())) {
             RefinedRelocationUtils.dropItemHandler(world, pos);
             world.updateComparatorOutputLevel(pos, this);
         }

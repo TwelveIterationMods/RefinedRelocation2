@@ -153,8 +153,10 @@ public class FastHopperBlock extends ContainerBlock {
 
     @Override
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        RefinedRelocationUtils.dropItemHandler(world, pos);
-        world.updateComparatorOutputLevel(pos, this);
+        if (!state.isIn(newState.getBlock())) {
+            RefinedRelocationUtils.dropItemHandler(world, pos);
+            world.updateComparatorOutputLevel(pos, this);
+        }
         super.onReplaced(state, world, pos, newState, isMoving);
     }
 
