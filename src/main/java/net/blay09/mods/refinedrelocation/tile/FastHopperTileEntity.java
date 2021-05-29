@@ -180,6 +180,7 @@ public class FastHopperTileEntity extends TileMod implements ITickableTileEntity
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         itemHandler.deserializeNBT(compound.getCompound("ItemHandler"));
         customName = compound.contains("CustomName") ? new StringTextComponent(compound.getString("CustomName")) : null;
     }
