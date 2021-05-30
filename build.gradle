@@ -1,8 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
         mavenCentral()
+        maven { url = "https://maven.minecraftforge.net" }
     }
     // This is only here while FG is under active development
     configurations.classpath {
@@ -91,10 +90,6 @@ repositories {
     maven {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
     }
     flatDir {
         dirs "run/obfmods"
