@@ -1,0 +1,35 @@
+modLoader="javafml"
+loaderVersion="[37,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/ModdingForBlockheads/RefinedRelocation2/issues"
+
+[[mods]]
+modId="refinedrelocation"
+version="${file.jarVersion}"
+displayName="Refined Relocation"
+displayURL="https://blay09.net/mods/refinedrelocation"
+logoFile="refinedrelocation-icon.png"
+credits="BlayTheNinth"
+authors="BlayTheNinth"
+description='''
+Adds sorting networks, filter systems, block extenders and more.
+'''
+
+[[dependencies.refinedrelocation]]
+    modId="forge"
+    mandatory=true
+    versionRange="[37,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.refinedrelocation]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17.1,1.18)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.refinedrelocation]]
+    modId="balm"
+    mandatory=true
+    versionRange="[1.7.0,)"
+    ordering="NONE"
+    side="BOTH"

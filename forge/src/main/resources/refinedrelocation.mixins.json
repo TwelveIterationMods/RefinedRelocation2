@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.blay09.mods.refinedrelocation.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "refmap": "refmap.refinedrelocation.json",
+  "mixins": [
+    "AbstractContainerMenuAccessor",
+    "CreativeModeTabAccessor"
+  ],
+  "client": [
+    "LevelRendererAccessor",
+    "EditBoxAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
