@@ -1,4 +1,4 @@
-# Hardcore Revival
+# Refined Relocation 2
 
 Minecraft Mod. Sorting Chests. Block Extenders. Hoppers.
 

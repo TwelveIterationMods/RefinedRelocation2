@@ -1,48 +1,48 @@
 {
   "schemaVersion": 1,
-  "id": "cookingforblockheads",
+  "id": "refinedrelocation",
   "version": "${version}",
 
-  "name": "Cooking for Blockheads",
-  "description": "Adds a cooking book and multiblock kitchens that only shows recipes you can make with what you currently have in your inventory.",
+  "name": "Refined Relocation 2",
+  "description": "Adds sorting networks, filter systems, block extenders and more.",
   "authors": [
     "BlayTheNinth",
     "ZerotS"
   ],
   "contact": {
-    "homepage": "https://blay09.net/mods/cookingforblockheads",
-    "sources": "https://github.com/ModdingForBlockheads/CookingForBlockheads",
-    "issues": "https://github.com/ModdingForBlockheads/CookingForBlockheads/issues"
+    "homepage": "https://blay09.net/mods/refinedrelocation",
+    "sources": "https://github.com/ModdingForBlockheads/RefinedRelocation2",
+    "issues": "https://github.com/ModdingForBlockheads/RefinedRelocation2/issues"
   },
 
   "license": "All Rights Reserved",
-  "icon": "cookingforblockheads-icon.png",
+  "icon": "refinedrelocation-icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.blay09.mods.craftingtweaks.FabricCookingForBlockheads"
+      "net.blay09.mods.refinedrelocation.FabricRefinedRelocation"
     ],
     "client": [
-      "net.blay09.mods.craftingtweaks.client.FabricCookingForBlockheadsClient"
+      "net.blay09.mods.refinedrelocation.client.FabricRefinedRelocationClient"
     ],
     "modmenu": [
-      "net.blay09.mods.craftingtweaks.compat.ModMenuIntegration"
+      "net.blay09.mods.refinedrelocation.compat.ModMenuIntegration"
     ],
     "rei_plugins": [
-      "net.blay09.mods.craftingtweaks.compat.RoughlyEnoughItemsIntegration"
+      "net.blay09.mods.refinedrelocation.compat.RoughlyEnoughItemsIntegration"
     ]
   },
   "mixins": [
-    "cookingforblockheads.mixins.json"
+    "refinedrelocation.mixins.json"
   ],
   "depends": {
     "cloth-config2": ">=5.0.34",
-    "balm-fabric": ">=1.1.0",
+    "balm-fabric": ">=2.2.0",
     "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": "1.17.x",
-    "java": ">=16"
+    "minecraft": "1.18.x",
+    "java": ">=17"
   },
   "suggests": {
     "modmenu": "*"
