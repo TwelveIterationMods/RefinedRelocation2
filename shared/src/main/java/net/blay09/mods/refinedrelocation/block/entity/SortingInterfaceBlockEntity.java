@@ -1,7 +1,11 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
+import net.blay09.mods.balm.api.provider.BalmProvider;
+import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
+import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.config.RefinedRelocationConfig;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -21,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class SortingInterfaceBlockEntity extends BalmBlockEntity implements IDroppableItemHandler, OnLoadHandler {
 
@@ -116,30 +121,20 @@ public class SortingInterfaceBlockEntity extends BalmBlockEntity implements IDro
         return getBlockState().getValue(BlockStateProperties.FACING);
     }
 
+    @Override
+    public List<BalmProvider<?>> getProviders() {
+        return Lists.newArrayList(
+                new BalmProvider<>(IRootFilter.class, rootFilter),
+                new BalmProvider<>(ISimpleFilter.class, rootFilter),
+                new BalmProvider<>(ISortingInventory.class, sortingInventory),
+                new BalmProvider<>(ISortingGridMember.class, sortingInventory)
+        );
+    }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         LazyOptional<T> result = super.getCapability(cap, side);
-        if (!result.isPresent()) {
-            result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.SORTING_INVENTORY.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
-        }
-
         if (!result.isPresent() && cachedConnectedTile != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return cachedConnectedTile.getCapability(cap, getFacing().getOpposite()).cast();
         }

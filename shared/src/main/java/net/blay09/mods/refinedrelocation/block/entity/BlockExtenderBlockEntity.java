@@ -1,9 +1,11 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
+import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.refinedrelocation.item.ModItems;
 import net.blay09.mods.refinedrelocation.api.filter.IMultiRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
@@ -32,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppableItemHandler, IMultiRootFilter, OnLoadHandler {
 
@@ -267,13 +270,16 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         updateUpgrades();
     }
 
+    @Override
+    public List<BalmProvider<?>> getProviders() {
+        return Lists.newArrayList(
+                new BalmProvider<>(IMultiRootFilter.class, this)
+        );
+    }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == Capabilities.MULTI_ROOT_FILTER) {
-            return LazyOptional.of(() -> this).cast();
-        }
-
         if (cachedConnectedBlockEntity != null) {
             Direction ioSide = getSideMapping(side);
             if (ioSide != null) {

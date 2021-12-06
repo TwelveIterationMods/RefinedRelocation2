@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.DefaultContainer;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 
 public class FastHopperBlockEntity extends BalmBlockEntity implements BalmMenuProvider, BalmContainerProvider, Nameable {
 
-    private static final Predicate<? super Entity> HAS_ITEM_HANDLER = (entity) -> entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
+    private static final Predicate<? super Entity> HAS_ITEM_HANDLER = (entity) -> Balm.getProviders().getProvider(entity, Container.class) != null;
 
     private final Container container = createItemHandler();
 
@@ -128,7 +129,7 @@ public class FastHopperBlockEntity extends BalmBlockEntity implements BalmMenuPr
             return LazyOptional.of(() -> new InvWrapper(((Container) entity)));
         }
 
-        return LazyOptional.empty();
+        return null;
     }
 
     private List<ItemEntity> findItemsAbove() {
@@ -136,17 +137,17 @@ public class FastHopperBlockEntity extends BalmBlockEntity implements BalmMenuPr
     }
 
     private void pushItem(int sourceSlot, Container targetItemHandler) {
-        ItemStack sourceStack = container.extractItem(sourceSlot, Items.AIR.getItemStackLimit(ItemStack.EMPTY), true);
+        ItemStack sourceStack = container.extractItem(sourceSlot, Items.AIR.getMaxStackSize(), true);
         ItemStack restStack = ItemHandlerHelper.insertItem(targetItemHandler, sourceStack, false);
         container.extractItem(sourceSlot, restStack.isEmpty() ? sourceStack.getCount() : sourceStack.getCount() - restStack.getCount(), false);
     }
 
     private void pullItem(Container sourceItemHandler) {
         for (int i = 0; i < sourceItemHandler.getContainerSize(); i++) {
-            ItemStack sourceStack = sourceItemHandler.extractItem(i, Items.AIR.getItemStackLimit(ItemStack.EMPTY), true);
+            ItemStack sourceStack = sourceItemHandler.extractItem(i, Items.AIR.getMaxStackSize(), true);
             if (!sourceStack.isEmpty()) {
                 ItemStack restStack = ItemHandlerHelper.insertItem(container, sourceStack, false);
-                sourceItemHandler.extractItem(i, restStack.isEmpty() ? Items.AIR.getItemStackLimit(ItemStack.EMPTY) : sourceStack.getCount() - restStack.getCount(), false);
+                sourceItemHandler.extractItem(i, restStack.isEmpty() ? Items.AIR.getMaxStackSize() : sourceStack.getCount() - restStack.getCount(), false);
                 break;
             }
         }

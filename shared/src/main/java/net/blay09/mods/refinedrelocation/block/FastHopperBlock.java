@@ -10,6 +10,7 @@ import net.blay09.mods.refinedrelocation.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -156,8 +157,12 @@ public class FastHopperBlock extends BaseEntityBlock {
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity != null) {
-            LazyOptional<IItemHandler> itemHandlerCap = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-            return itemHandlerCap.map(ItemHandlerHelper::calcRedstoneFromInventory).orElse(0);
+            Container container = Balm.getProviders().getProvider(blockEntity, Container.class);
+            if (container != null) {
+                return ItemHandlerHelper.calcRedstoneFromInventory(container);
+            }
+
+            return 0;
         }
 
         return 0;

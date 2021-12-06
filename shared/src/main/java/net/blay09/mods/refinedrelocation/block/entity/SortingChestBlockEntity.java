@@ -1,13 +1,19 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
 
+import com.google.common.collect.Lists;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
+import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
+import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
+import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.blay09.mods.refinedrelocation.grid.SortingInventory;
@@ -41,6 +47,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 
 @OnlyIn(value = Dist.CLIENT, _interface = LidBlockEntity.class)
@@ -209,28 +216,14 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
         saveAdditional(tag);
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        LazyOptional<T> result = super.getCapability(cap, side);
-
-        if (!result.isPresent()) {
-            result = Capabilities.SORTING_GRID_MEMBER.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.SORTING_INVENTORY.orEmpty(cap, LazyOptional.of(() -> sortingInventory));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.ROOT_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
-        }
-
-        if (!result.isPresent()) {
-            result = Capabilities.SIMPLE_FILTER.orEmpty(cap, LazyOptional.of(() -> rootFilter));
-        }
-
-        return result;
+    public List<BalmProvider<?>> getProviders() {
+        return Lists.newArrayList(
+                new BalmProvider<>(ISortingGridMember.class, sortingInventory),
+                new BalmProvider<>(ISortingInventory.class, sortingInventory),
+                new BalmProvider<>(IRootFilter.class, rootFilter),
+                new BalmProvider<>(ISimpleFilter.class, rootFilter)
+        );
     }
 
     public String getUnlocalizedName() {
@@ -311,7 +304,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
             CompoundTag compound = (CompoundTag) item;
             int slot = compound.getByte("Slot");
             ItemStack itemStack = ItemStack.of(compound);
-            ItemStack rest = container.insertItem(slot, itemStack, false);
+            ItemStack rest = ContainerUtils.insertItem(container, slot, itemStack, false);
             if (!rest.isEmpty()) {
                 level.addFreshEntity(new ItemEntity(level, worldPosition.getX() + 0.5f, worldPosition.getY() + 0.5f, worldPosition.getZ() + 0.5, rest));
             }
