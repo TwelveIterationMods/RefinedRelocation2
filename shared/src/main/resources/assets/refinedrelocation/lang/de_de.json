@@ -52,7 +52,7 @@
   "gui.refinedrelocation:block_extender.stack_limiter_increase": "Klicken zum Erhöhen",
   "gui.refinedrelocation:block_extender.stack_limiter_decrease": "Rechtsklick zum Verringern",
   "gui.refinedrelocation:block_extender.configure": "Konfigurieren",
-  "itemGroup.refinedrelocation": "Refined Relocation 2",
+  "itemGroup.refinedrelocation.refinedrelocation": "Refined Relocation 2",
   "filter.refinedrelocation:name_filter": "Namensfilter",
   "filter.refinedrelocation:name_filter.description": "Textbasierter Namensfilter",
   "filter.refinedrelocation:same_item_filter": "Item-Übereinstimmungsfilter",
