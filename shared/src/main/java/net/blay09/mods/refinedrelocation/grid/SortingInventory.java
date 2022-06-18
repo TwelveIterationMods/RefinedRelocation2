@@ -1,7 +1,9 @@
 package net.blay09.mods.refinedrelocation.grid;
 
 import com.google.common.collect.Lists;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
@@ -19,7 +21,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
 
     @Override
     public Container getContainer() {
-        return getBlockEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+        return Balm.getProviders().getProvider(getBlockEntity(), Container.class);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
     @Override
     protected void onLoad() {
         super.onLoad();
-        filter = getBlockEntity().getCapability(Capabilities.ROOT_FILTER);
+        filter = Balm.getProviders().getProvider(getBlockEntity(), IRootFilter.class);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
     public static final String KEY_BLACKLIST_INDEX = "FilterIndex";
 
     private final Player player;
-    private final BlockEntity tileEntity;
+    private final BlockEntity blockEntity;
     private final IRootFilter rootFilter;
     private final int rootFilterIndex;
 
@@ -49,14 +49,17 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
     private int lastPriority;
     private final boolean[] lastBlacklist = new boolean[3];
 
-    public RootFilterMenu(int windowId, Inventory playerInventory, BlockEntity tileEntity, int rootFilterIndex) {
+    public RootFilterMenu(int windowId, Inventory playerInventory, BlockEntity blockEntity, int rootFilterIndex) {
         super(ModMenus.rootFilter.get(), windowId);
 
         this.player = playerInventory.player;
-        this.tileEntity = tileEntity;
-        this.rootFilter = RefinedRelocationUtils.getRootFilter(tileEntity, rootFilterIndex).orElseGet(RootFilter::new);
+        this.blockEntity = blockEntity;
+        this.rootFilter = RefinedRelocationUtils.getRootFilter(blockEntity, rootFilterIndex).orElseGet(RootFilter::new);
         this.rootFilterIndex = rootFilterIndex;
-        sortingInventory = tileEntity.getCapability(Capabilities.SORTING_INVENTORY).orElseGet(SortingInventory::new);
+        sortingInventory = Balm.getProviders().getProvider(blockEntity, ISortingInventory.class);
+        if(sortingInventory == null) {
+            sortingInventory = new SortingInventory();
+        }
 
         addPlayerInventory(playerInventory, 8, hasSortingInventory() ? 128 : 84);
     }
@@ -67,7 +70,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
 
         if (rootFilter.getFilterCount() != lastFilterCount) {
             syncFilterList();
-            RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
+            RefinedRelocationAPI.updateFilterPreview(player, blockEntity, rootFilter);
         }
 
         for (int i = 0; i < lastBlacklist.length; i++) {
@@ -90,7 +93,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
     @Override
     public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
         super.clicked(slotId, dragType, clickTypeIn, player);
-        RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
+        RefinedRelocationAPI.updateFilterPreview(player, blockEntity, rootFilter);
     }
 
     private void syncFilterList() {
@@ -105,7 +108,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
 
     @Override
     public BlockEntity getBlockEntity() {
-        return tileEntity;
+        return blockEntity;
     }
 
     @Override
@@ -146,12 +149,12 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
 
                     @Override
                     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new AddFilterMenu(windowId, playerInventory, tileEntity, rootFilterIndex);
+                        return new AddFilterMenu(windowId, playerInventory, blockEntity, rootFilterIndex);
                     }
 
                     @Override
                     public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-                        buf.writeBlockPos(tileEntity.getBlockPos());
+                        buf.writeBlockPos(blockEntity.getBlockPos());
                         buf.writeByte(rootFilterIndex);
                     }
                 };
@@ -165,7 +168,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
                 }
                 IFilter filter = rootFilter.getFilter(index);
                 if (filter != null) {
-                    MenuProvider filterConfig = filter.getConfiguration(player, tileEntity, rootFilterIndex, index);
+                    MenuProvider filterConfig = filter.getConfiguration(player, blockEntity, rootFilterIndex, index);
                     if (filterConfig != null) {
                         Balm.getNetworking().openGui(player, filterConfig);
                     }
@@ -179,7 +182,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
                     return;
                 }
                 rootFilter.removeFilter(index);
-                tileEntity.setChanged();
+                blockEntity.setChanged();
                 break;
             }
             case KEY_PRIORITY:
@@ -190,7 +193,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
                 }
 
                 sortingInventory.setPriority(value);
-                tileEntity.setChanged();
+                blockEntity.setChanged();
                 break;
             case KEY_BLACKLIST: {
                 CompoundTag tagCompound = message.getNBTValue();
@@ -200,8 +203,8 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
                     return;
                 }
                 rootFilter.setIsBlacklist(index, tagCompound.getBoolean(KEY_BLACKLIST));
-                tileEntity.setChanged();
-                RefinedRelocationAPI.updateFilterPreview(player, tileEntity, rootFilter);
+                blockEntity.setChanged();
+                RefinedRelocationAPI.updateFilterPreview(player, blockEntity, rootFilter);
                 break;
             }
         }
@@ -229,7 +232,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
     }
 
     public boolean hasSortingInventory() {
-        return tileEntity.getCapability(Capabilities.SORTING_INVENTORY).isPresent();
+        return Balm.getProviders().getProvider(blockEntity, ISortingInventory.class) != null;
     }
 
     public ISortingInventory getSortingInventory() {
@@ -247,7 +250,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
     }
 
     public boolean canReturnFromFilter() {
-        return tileEntity instanceof MenuProvider;
+        return blockEntity instanceof MenuProvider;
     }
 
     @Override

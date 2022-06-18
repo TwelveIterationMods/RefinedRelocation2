@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.item;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.refinedrelocation.block.ModBlocks;
 import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.api.ISortingUpgradable;
@@ -51,9 +52,9 @@ public class SortingUpgradeItem extends Item {
             }
 
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity != null && blockEntity.getCapability(Capabilities.SORTING_UPGRADABLE, facing).isPresent()) {
-                LazyOptional<ISortingUpgradable> sortingUpgradableCap = blockEntity.getCapability(Capabilities.SORTING_UPGRADABLE, facing);
-                return sortingUpgradableCap.map(sortingUpgradable -> {
+            if (blockEntity != null) {
+                ISortingUpgradable sortingUpgradable = Balm.getProviders().getProvider(blockEntity, ISortingUpgradable.class);
+                if (sortingUpgradable != null) {
                     Vec3 hit = context.getClickLocation();
                     if (sortingUpgradable.applySortingUpgrade(blockEntity, itemStack, player, level, pos, facing, hit.x, hit.y, hit.z, hand)) {
                         if (!player.getAbilities().instabuild) {
@@ -62,9 +63,8 @@ public class SortingUpgradeItem extends Item {
 
                         return InteractionResult.SUCCESS;
                     }
-
-                    return InteractionResult.PASS;
-                }).orElse(InteractionResult.PASS);
+                }
+                return InteractionResult.PASS;
             }
         }
 

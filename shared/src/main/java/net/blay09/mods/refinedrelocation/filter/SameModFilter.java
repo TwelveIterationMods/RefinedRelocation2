@@ -1,8 +1,10 @@
 package net.blay09.mods.refinedrelocation.filter;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
+import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -22,7 +24,7 @@ public class SameModFilter implements IFilter {
 
     @Override
     public boolean isFilterUsable(BlockEntity blockEntity) {
-        return blockEntity.getCapability(Capabilities.SORTING_INVENTORY).isPresent();
+        return Balm.getProviders().getProvider(blockEntity, ISortingInventory.class) != null;
     }
 
     @Override

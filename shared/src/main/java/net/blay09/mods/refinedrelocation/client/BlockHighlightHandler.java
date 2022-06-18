@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.BlockHighlightDrawEvent;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGrid;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
@@ -29,27 +30,24 @@ public class BlockHighlightHandler {
         BlockHitResult hitResult = event.getHitResult();
         BlockEntity blockEntity = world.getBlockEntity(hitResult.getBlockPos());
         if (blockEntity != null) {
-            ISortingGridMember sortingMemberCap = blockEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, hitResult.getDirection());
-            //noinspection ConstantConditions - null check is necessary because some mods still didn't quite understand what Nonnull means
-            if (sortingMemberCap != null) {
-                sortingMemberCap.ifPresent(sortingMember -> {
-                    ISortingGrid sortingGrid = sortingMember.getSortingGrid();
-                    if (sortingGrid != null) {
-                        Camera camera = event.getCamera();
-                        double camX = camera.getPosition().x;
-                        double camY = camera.getPosition().y;
-                        double camZ = camera.getPosition().z;
-                        for (ISortingGridMember member : sortingGrid.getMembers()) {
-                            BlockEntity memberTile = member.getBlockEntity();
-                            BlockPos pos = memberTile.getBlockPos();
-                            BlockState blockState = world.getBlockState(pos);
-                            VoxelShape shape = blockState.getShape(world, pos, CollisionContext.of(player));
-                            VertexConsumer vertexBuilder = event.getMultiBufferSource().getBuffer(RenderType.lines());
-                            LevelRendererAccessor.callRenderShape(event.getPoseStack(), vertexBuilder, shape, pos.getX() - camX, pos.getY() - camY, pos.getZ() - camZ, 1f, 1f, 0f, 0.75f);
-                        }
-                        event.setCanceled(true);
+            ISortingGridMember sortingMember = Balm.getProviders().getProvider(blockEntity, ISortingGridMember.class);
+            if (sortingMember != null) {
+                ISortingGrid sortingGrid = sortingMember.getSortingGrid();
+                if (sortingGrid != null) {
+                    Camera camera = event.getCamera();
+                    double camX = camera.getPosition().x;
+                    double camY = camera.getPosition().y;
+                    double camZ = camera.getPosition().z;
+                    for (ISortingGridMember member : sortingGrid.getMembers()) {
+                        BlockEntity memberTile = member.getBlockEntity();
+                        BlockPos pos = memberTile.getBlockPos();
+                        BlockState blockState = world.getBlockState(pos);
+                        VoxelShape shape = blockState.getShape(world, pos, CollisionContext.of(player));
+                        VertexConsumer vertexBuilder = event.getMultiBufferSource().getBuffer(RenderType.lines());
+                        LevelRendererAccessor.callRenderShape(event.getPoseStack(), vertexBuilder, shape, pos.getX() - camX, pos.getY() - camY, pos.getZ() - camZ, 1f, 1f, 0f, 0.75f);
                     }
-                });
+                    event.setCanceled(true);
+                }
             }
         }
     }

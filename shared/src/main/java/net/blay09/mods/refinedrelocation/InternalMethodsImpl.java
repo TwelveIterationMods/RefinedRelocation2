@@ -53,7 +53,7 @@ public class InternalMethodsImpl implements InternalMethods {
             if (level.hasChunkAt(facingPos)) {
                 BlockEntity blockEntity = level.getChunk(facingPos).getBlockEntity(facingPos);
                 if (blockEntity != null) {
-                    ISortingGridMember otherMember = RefinedRelocationUtils.orNull(blockEntity.getCapability(Capabilities.SORTING_GRID_MEMBER, facing.getOpposite()));
+                    ISortingGridMember otherMember = Balm.getProviders().getProvider(blockEntity, ISortingGridMember.class);
                     if (otherMember != null && otherMember.getSortingGrid() != null) {
                         if (sortingGrid != null) {
                             ((SortingGrid) sortingGrid).mergeWith(otherMember.getSortingGrid());
@@ -97,7 +97,7 @@ public class InternalMethodsImpl implements InternalMethods {
             return;
         }
 
-        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, Items.AIR.getItemStackLimit(ItemStack.EMPTY), true);
+        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, Items.AIR.getMaxStackSize(), true);
         if (restStack.isEmpty()) {
             return;
         }
@@ -106,9 +106,9 @@ public class InternalMethodsImpl implements InternalMethods {
         if (sortingGrid != null) {
             for (ISortingGridMember member : sortingGrid.getMembers()) {
                 if (member instanceof ISortingInventory memberInventory) {
-                    LazyOptional<? extends ISimpleFilter> filter = memberInventory.getFilter();
+                    ISimpleFilter filter = memberInventory.getFilter();
                     final ItemStack testStack = restStack;
-                    boolean passes = filter.filter(it -> it.passes(memberInventory.getBlockEntity(), testStack, itemStack)).isPresent();
+                    boolean passes = filter.passes(memberInventory.getBlockEntity(), testStack, itemStack);
                     if (passes) {
                         passingList.add(memberInventory);
                     }

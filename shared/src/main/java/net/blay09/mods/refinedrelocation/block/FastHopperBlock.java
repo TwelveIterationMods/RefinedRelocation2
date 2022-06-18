@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.block;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -159,7 +160,7 @@ public class FastHopperBlock extends BaseEntityBlock {
         if (blockEntity != null) {
             Container container = Balm.getProviders().getProvider(blockEntity, Container.class);
             if (container != null) {
-                return ItemHandlerHelper.calcRedstoneFromInventory(container);
+                return ContainerUtils.calcRedstoneFromInventory(container);
             }
 
             return 0;

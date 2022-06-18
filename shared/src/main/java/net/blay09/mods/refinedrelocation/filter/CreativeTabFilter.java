@@ -7,12 +7,12 @@ import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.menu.ChecklistFilterMenu;
 import net.blay09.mods.refinedrelocation.mixin.CreativeModeTabAccessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -64,42 +64,41 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
-        Collection<CreativeModeTab> itemTabs = itemStack.getItem().getCreativeTabs();
-        for (CreativeModeTab itemTab : itemTabs) {
-            if (itemTab == null) {
-                continue;
-            }
-            int shiftedTabIndex = itemTab.getId();
-            if (itemTab.getId() >= CreativeModeTab.TAB_SEARCH.getId()) {
-                shiftedTabIndex--;
-            }
-            if (itemTab.getId() >= CreativeModeTab.TAB_INVENTORY.getId()) {
-                shiftedTabIndex--;
-            }
-            if (itemTab.getId() >= CreativeModeTab.TAB_HOTBAR.getId()) {
-                shiftedTabIndex--;
-            }
-            if (tabStates[shiftedTabIndex]) {
-                return true;
-            }
+        CreativeModeTab itemTab = itemStack.getItem().getItemCategory();
+        if (itemTab == null) {
+            return false;
         }
-        return false;
+
+        int shiftedTabIndex = itemTab.getId();
+        if (itemTab.getId() >= CreativeModeTab.TAB_SEARCH.getId()) {
+            shiftedTabIndex--;
+        }
+        if (itemTab.getId() >= CreativeModeTab.TAB_INVENTORY.getId()) {
+            shiftedTabIndex--;
+        }
+        if (itemTab.getId() >= CreativeModeTab.TAB_HOTBAR.getId()) {
+            shiftedTabIndex--;
+        }
+
+        return tabStates[shiftedTabIndex];
     }
 
     @Override
-    public Tag serializeNBT() {
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
         for (int i = 0; i < tabStates.length; i++) {
             if (tabStates[i]) {
                 list.add(StringTag.valueOf(creativeTabs[i]));
             }
         }
-        return list;
+        tag.put("Tabs", list);
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
-        ListTag list = (ListTag) nbt;
+    public void deserializeNBT(CompoundTag tag) {
+        ListTag list = tag.getList("Tabs", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
             String tabLabel = list.getString(i);
             for (int j = 0; j < creativeTabs.length; j++) {
@@ -162,7 +161,7 @@ public class CreativeTabFilter implements IChecklistFilter {
 
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent("container.refinedrelocation:creative_tab_filter");
+                return Component.translatable("container.refinedrelocation:creative_tab_filter");
             }
 
             @Override
