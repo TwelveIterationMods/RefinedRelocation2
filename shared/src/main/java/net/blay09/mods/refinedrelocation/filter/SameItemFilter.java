@@ -50,16 +50,15 @@ public class SameItemFilter implements IFilter {
     }
 
     @Override
-    public Tag serializeNBT() {
-        CompoundTag compound = new CompoundTag();
-        compound.putBoolean("IgnoreNBT", ignoreNBT);
-        return compound;
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putBoolean("IgnoreNBT", ignoreNBT);
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
-        CompoundTag compound = (CompoundTag) nbt;
-        ignoreNBT = compound.getBoolean("IgnoreNBT");
+    public void deserializeNBT(CompoundTag tag) {
+        ignoreNBT = tag.getBoolean("IgnoreNBT");
     }
 
 

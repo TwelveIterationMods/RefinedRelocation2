@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class PriorityButton extends Button implements ITooltipElement, ITickable
     private int currentIndex = 2;
 
     public PriorityButton(int x, int y, int width, int height, ISortingInventory sortingInventory) {
-        super(x, y, width, height, new TranslatableComponent(values[2].getLangKey()), it -> {
+        super(x, y, width, height, Component.translatable(values[2].getLangKey()), it -> {
         });
         this.sortingInventory = sortingInventory;
     }
@@ -48,7 +46,7 @@ public class PriorityButton extends Button implements ITooltipElement, ITickable
             }
 
             currentIndex = Math.max(0, Math.min(values.length - 1, oldIndex));
-            setMessage(new TranslatableComponent(values[currentIndex].getLangKey()));
+            setMessage(Component.translatable(values[currentIndex].getLangKey()));
             sortingInventory.setPriority(values[currentIndex].getPriority());
         } else {
             currentIndex = -1;
@@ -89,7 +87,7 @@ public class PriorityButton extends Button implements ITooltipElement, ITickable
             }
         }
 
-        setMessage(currentIndex != -1 ? new TranslatableComponent(values[currentIndex].getLangKey()) : new TranslatableComponent("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority()));
+        setMessage(currentIndex != -1 ? Component.translatable(values[currentIndex].getLangKey()) : Component.translatable("gui.refinedrelocation:root_filter.priority_custom", sortingInventory.getPriority()));
     }
 
     @Override
@@ -102,8 +100,8 @@ public class PriorityButton extends Button implements ITooltipElement, ITickable
             list.add(formattedTranslation(ChatFormatting.RED, "gui.refinedrelocation:root_filter.priority_decrease10"));
         }
         if (currentIndex != -1) {
-            list.add(new TextComponent(""));
-            list.add(new TranslatableComponent("gui.refinedrelocation:root_filter.priority_tooltip", values[currentIndex].getPriority()));
+            list.add(Component.empty());
+            list.add(Component.translatable("gui.refinedrelocation:root_filter.priority_tooltip", values[currentIndex].getPriority()));
         }
     }
 

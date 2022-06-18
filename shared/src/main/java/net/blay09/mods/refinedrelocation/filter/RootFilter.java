@@ -10,7 +10,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -120,7 +119,7 @@ public class RootFilter implements IRootFilter {
 
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent("refinedrelocation:root_filter");
+                return Component.translatable("refinedrelocation:root_filter");
             }
 
             @Override

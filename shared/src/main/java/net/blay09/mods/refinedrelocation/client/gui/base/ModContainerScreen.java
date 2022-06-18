@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.client.gui.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.mixin.ScreenAccessor;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.MultiLineTextFieldWidget;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -101,7 +102,7 @@ public abstract class ModContainerScreen<T extends AbstractContainerMenu> extend
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifier) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            getMinecraft().player.closeContainer();
+            Minecraft.getInstance().player.closeContainer();
         }
 
         GuiEventListener focused = this.getFocused();

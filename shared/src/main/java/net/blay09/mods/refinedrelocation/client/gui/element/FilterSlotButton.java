@@ -12,8 +12,6 @@ import net.blay09.mods.refinedrelocation.menu.RootFilterMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class FilterSlotButton extends Button implements ITooltipElement {
     private final int index;
 
     public FilterSlotButton(int x, int y, RootFilterScreen parentGui, IRootFilter rootFilter, int index) {
-        super(x, y, 24, 24, new TextComponent(""), it -> {
+        super(x, y, 24, 24, Component.empty(), it -> {
         });
         this.parentGui = parentGui;
         this.rootFilter = rootFilter;
@@ -70,7 +68,7 @@ public class FilterSlotButton extends Button implements ITooltipElement {
             list.add(formattedTranslation(ChatFormatting.GRAY, "gui.refinedrelocation:root_filter.no_filter_set"));
             list.add(formattedTranslation(ChatFormatting.YELLOW, "gui.refinedrelocation:root_filter.click_to_add_filter"));
         } else {
-            list.add(new TranslatableComponent(filter.getLangKey()));
+            list.add(Component.translatable(filter.getLangKey()));
             if (filter.hasConfiguration()) {
                 list.add(formattedTranslation(ChatFormatting.YELLOW, "gui.refinedrelocation:root_filter.click_to_configure"));
             } else {

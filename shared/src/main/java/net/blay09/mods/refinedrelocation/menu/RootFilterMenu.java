@@ -15,7 +15,6 @@ import net.blay09.mods.refinedrelocation.grid.SortingInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -142,7 +141,7 @@ public class RootFilterMenu extends AbstractFilterMenu implements IRootFilterMen
                 MenuProvider menuProvider = new BalmMenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return new TranslatableComponent("container.refinedrelocation:add_filter");
+                        return Component.translatable("container.refinedrelocation:add_filter");
                     }
 
                     @Override

@@ -30,7 +30,7 @@ public class FilterPreviewHandler {
                     if (slot.container == player.getInventory()) {
                         int guiLeft = screen.getFilterLeftPos();
                         int guiTop = screen.getFilterTopPos();
-                        if (slotStates[slot.getSlotIndex()] == FilterPreviewMessage.STATE_SUCCESS) {
+                        if (slotStates[slot.getContainerSlot()] == FilterPreviewMessage.STATE_SUCCESS) {
                             GuiComponent.fill(poseStack, guiLeft + slot.x, guiTop + slot.y, guiLeft + slot.x + 16, guiTop + slot.y + 16, 0x5500FF00);
                         }
                     }

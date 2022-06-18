@@ -7,7 +7,7 @@ import net.blay09.mods.refinedrelocation.SortingChestType;
 import net.blay09.mods.refinedrelocation.block.ModBlocks;
 import net.blay09.mods.refinedrelocation.block.SortingChestBlock;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.ArrayList;
@@ -26,15 +26,15 @@ public class ModBlockEntities {
         sortingChests = new ArrayList<>();
         for (SortingChestBlock sortingChest : ModBlocks.sortingChests) {
             SortingChestType chestType = sortingChest.getChestType();
-            DeferredObject<BlockEntityType<SortingChestBlockEntity>> deferredObject = blockEntities.registerBlockEntity(id(chestType.getRegistryName()), (pos, state) -> new SortingChestBlockEntity(sortingChest.getChestType(), pos, state), sortingChest);
+            DeferredObject<BlockEntityType<SortingChestBlockEntity>> deferredObject = blockEntities.registerBlockEntity(id(chestType.getRegistryName()), (pos, state) -> new SortingChestBlockEntity(sortingChest.getChestType(), pos, state), () -> new Block[]{sortingChest});
             sortingChests.add(deferredObject);
         }
 
-        blockExtender = blockEntities.registerBlockEntity(id("block_extender"), BlockExtenderBlockEntity::new, ModBlocks.blockExtender);
-        fastHopper = blockEntities.registerBlockEntity(id("fast_hopper"), FastHopperBlockEntity::new, ModBlocks.fastHopper);
-        filteredHopper = blockEntities.registerBlockEntity(id("filtered_hopper"), FilteredHopperBlockEntity::new, ModBlocks.filteredHopper);
-        sortingConnector = blockEntities.registerBlockEntity(id("sorting_connector"), SortingConnectorBlockEntity::new, ModBlocks.sortingConnector);
-        sortingInterface = blockEntities.registerBlockEntity(id("sorting_interface"), SortingInterfaceBlockEntity::new, ModBlocks.sortingInterface);
+        blockExtender = blockEntities.registerBlockEntity(id("block_extender"), BlockExtenderBlockEntity::new, () -> new Block[]{ModBlocks.blockExtender});
+        fastHopper = blockEntities.registerBlockEntity(id("fast_hopper"), FastHopperBlockEntity::new, () -> new Block[]{ModBlocks.fastHopper});
+        filteredHopper = blockEntities.registerBlockEntity(id("filtered_hopper"), FilteredHopperBlockEntity::new, () -> new Block[]{ModBlocks.filteredHopper});
+        sortingConnector = blockEntities.registerBlockEntity(id("sorting_connector"), SortingConnectorBlockEntity::new, () -> new Block[]{ModBlocks.sortingConnector});
+        sortingInterface = blockEntities.registerBlockEntity(id("sorting_interface"), SortingInterfaceBlockEntity::new, () -> new Block[]{ModBlocks.sortingInterface});
     }
 
     private static ResourceLocation id(String path) {

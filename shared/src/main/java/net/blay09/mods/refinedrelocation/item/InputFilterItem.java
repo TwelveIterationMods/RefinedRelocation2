@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.item;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -18,7 +17,7 @@ public class InputFilterItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(new TranslatableComponent("tooltip.refinedrelocation:block_extender_module"));
+        tooltip.add(Component.translatable("tooltip.refinedrelocation:block_extender_module"));
     }
 
 }

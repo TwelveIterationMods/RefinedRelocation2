@@ -4,14 +4,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiTextureSpriteButton;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ImageButton extends Button {
 
     private GuiTextureSpriteButton texture;
 
     public ImageButton(int x, int y, int width, int height, GuiTextureSpriteButton texture, OnPress onPress) {
-        super(x, y, width, height, new TextComponent(""), onPress);
+        super(x, y, width, height, Component.empty(), onPress);
         this.texture = texture;
     }
 

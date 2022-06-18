@@ -6,7 +6,7 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ScrollBarWidget extends Button implements ITickableElement {
 
@@ -26,7 +26,7 @@ public class ScrollBarWidget extends Button implements ITickableElement {
     private int lastOffset;
 
     public ScrollBarWidget(int x, int y, int height, IScrollTarget scrollTarget) {
-        super(x, y, 7, height, new TextComponent(""), it -> {
+        super(x, y, 7, height, Component.empty(), it -> {
         });
         this.scrollTarget = scrollTarget;
         updateBarPosition();

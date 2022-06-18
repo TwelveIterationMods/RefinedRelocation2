@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ChecklistEntryButton extends Button {
 
@@ -22,7 +22,7 @@ public class ChecklistEntryButton extends Button {
     private int currentOption = -1;
 
     public ChecklistEntryButton(int x, int y, IChecklistFilter filter) {
-        super(x, y, 151, 11, new TextComponent(""), it -> {
+        super(x, y, 151, 11, Component.empty(), it -> {
         });
         this.filter = filter;
         texture = GuiTextures.CHECKLIST;

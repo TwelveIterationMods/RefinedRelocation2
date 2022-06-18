@@ -16,7 +16,6 @@ import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -75,11 +74,11 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderMenu> {
         btnOutputFilter.visible = false;
         addRenderableWidget(btnOutputFilter);
 
-        slotLockButton = new TooltipButton(0, 0, 64, 16, new TranslatableComponent("gui.refinedrelocation:block_extender.slot_lock"), it -> {
+        slotLockButton = new TooltipButton(0, 0, 64, 16, Component.translatable("gui.refinedrelocation:block_extender.slot_lock"), it -> {
         }) {
             @Override
             public void addTooltip(List<Component> list) {
-                list.add(new TranslatableComponent("tooltip.refinedrelocation:slot_lock"));
+                list.add(Component.translatable("tooltip.refinedrelocation:slot_lock"));
             }
         };
         slotLockButton.visible = false;

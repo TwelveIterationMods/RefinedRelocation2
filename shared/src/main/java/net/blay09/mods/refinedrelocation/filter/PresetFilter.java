@@ -9,15 +9,19 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.menu.ChecklistFilterMenu;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,9 +30,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PresetFilter implements IChecklistFilter {
 
@@ -45,7 +50,7 @@ public class PresetFilter implements IChecklistFilter {
             return id;
         }
 
-        public abstract boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags);
+        public abstract boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags);
     }
 
     private static final Map<String, Preset> presetMap = Maps.newHashMap();
@@ -53,123 +58,103 @@ public class PresetFilter implements IChecklistFilter {
 
     public static final Preset ORES = new Preset("ores") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            for (ResourceLocation tag : tags) {
-                if (tag.getPath().equals("ores")) {
-                    return true;
-                }
-            }
-            return false;
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
+            TagKey<Item> tag = Balm.getRegistries().getItemTag(new ResourceLocation("balm", "ores"));
+            return itemStack.is(tag);
         }
     };
 
     public static final Preset INGOTS = new Preset("ingots") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            for (ResourceLocation tag : tags) {
-                if (tag.getPath().equals("ingots")) {
-                    return true;
-                }
-            }
-            return false;
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
+            TagKey<Item> tag = Balm.getRegistries().getItemTag(new ResourceLocation("balm", "ingots"));
+            return itemStack.is(tag);
         }
     };
 
     public static final Preset NUGGETS = new Preset("nuggets") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            for (ResourceLocation tag : tags) {
-                if (tag.getPath().equals("nuggets")) {
-                    return true;
-                }
-            }
-            return false;
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
+            TagKey<Item> tag = Balm.getRegistries().getItemTag(new ResourceLocation("balm", "nuggets"));
+            return itemStack.is(tag);
         }
     };
 
     public static final Preset GEMS = new Preset("gems") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            for (ResourceLocation tag : tags) {
-                if (tag.getPath().equals("gems")) {
-                    return true;
-                }
-            }
-            return false;
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
+            TagKey<Item> tag = Balm.getRegistries().getItemTag(new ResourceLocation("balm", "gems"));
+            return itemStack.is(tag);
         }
     };
 
     public static final Preset DYES = new Preset("dyes") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            for (ResourceLocation tag : tags) {
-                if (tag.getPath().equals("dyes")) {
-                    return true;
-                }
-            }
-            return false;
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
+            TagKey<Item> tag = Balm.getRegistries().getItemTag(new ResourceLocation("balm", "dyes"));
+            return itemStack.is(tag);
         }
     };
 
     public static final Preset FOOD = new Preset("food") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.getItem().isEdible();
         }
     };
 
     public static final Preset FUEL_ITEMS = new Preset("fuel") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return Balm.getHooks().getBurnTime(itemStack) > 0;
         }
     };
 
     public static final Preset BLOCKS = new Preset("blocks") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.getItem() instanceof BlockItem;
         }
     };
 
     public static final Preset UNSTACKABLE = new Preset("unstackable") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.getMaxStackSize() <= 1;
         }
     };
 
     public static final Preset REPAIRABLE = new Preset("repairable") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
-            return itemStack.getItem().isRepairable(itemStack);
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
+            return Balm.getHooks().isRepairable(itemStack);
         }
     };
 
     public static final Preset WEAPONS = new Preset("weapons") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.getItem() instanceof SwordItem || itemStack.getItem() instanceof BowItem;
         }
     };
 
     public static final Preset ARMORS = new Preset("armors") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.getItem() instanceof ArmorItem;
         }
     };
 
     public static final Preset TOOLS = new Preset("tools") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.getItem() == Items.CARROT_ON_A_STICK || itemStack.getItem() == Items.FLINT_AND_STEEL || itemStack.getItem() instanceof DiggerItem || itemStack.getItem() instanceof FishingRodItem || itemStack.getItem() instanceof ShearsItem;
         }
     };
 
     public static final Preset ENCHANTED = new Preset("enchanted") {
         @Override
-        public boolean passes(ItemStack itemStack, Collection<ResourceLocation> tags) {
+        public boolean passes(ItemStack itemStack, Set<TagKey<Item>> tags) {
             return itemStack.isEnchanted();
         }
     };
@@ -212,7 +197,8 @@ public class PresetFilter implements IChecklistFilter {
 
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
-        Collection<ResourceLocation> tags = ItemTags.getAllTags().getMatchingTags(itemStack.getItem());
+        ResourceKey<Item> resourceKey = Registry.ITEM.getResourceKey(itemStack.getItem()).orElseThrow(IllegalArgumentException::new);
+        Set<TagKey<Item>> tags = Holder.Reference.createStandAlone(Registry.ITEM, resourceKey).tags().collect(Collectors.toSet());
         for (int i = 0; i < presetList.size(); i++) {
             if (presetStates[i] && presetList.get(i).passes(itemStack, tags)) {
                 return true;
@@ -222,19 +208,21 @@ public class PresetFilter implements IChecklistFilter {
     }
 
     @Override
-    public Tag serializeNBT() {
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
         for (int i = 0; i < presetStates.length; i++) {
             if (presetStates[i]) {
                 list.add(StringTag.valueOf(presetList.get(i).getId()));
             }
         }
-        return list;
+        tag.put("Presets", list);
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
-        ListTag list = (ListTag) nbt;
+    public void deserializeNBT(CompoundTag tag) {
+        ListTag list = tag.getList("Presets", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
             Preset preset = presetMap.get(list.getString(i));
             if (preset != null) {
@@ -297,7 +285,7 @@ public class PresetFilter implements IChecklistFilter {
 
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent(PresetFilter.this.getLangKey());
+                return Component.translatable(PresetFilter.this.getLangKey());
             }
 
             @Override

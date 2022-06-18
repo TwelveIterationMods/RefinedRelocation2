@@ -53,12 +53,12 @@ public class SameModFilter implements IFilter {
     }
 
     @Override
-    public Tag serializeNBT() {
+    public CompoundTag serializeNBT() {
         return new CompoundTag();
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
+    public void deserializeNBT(CompoundTag tag) {
     }
 
     @Override

@@ -24,8 +24,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -195,7 +193,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
         rootFilter.deserializeNBT(tag.getCompound("RootFilter"));
 
         customName = tag.contains("CustomName")
-                ? new TextComponent(tag.getString("CustomName"))
+                ? Component.literal(tag.getString("CustomName"))
                 : null;
     }
 
@@ -232,7 +230,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent(getUnlocalizedName());
+        return Component.translatable(getUnlocalizedName());
     }
 
     @Override
@@ -247,7 +245,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
     }
 
     public void setCustomName(String customName) {
-        this.customName = new TextComponent(customName);
+        this.customName = Component.literal(customName);
     }
 
     @Override
@@ -257,7 +255,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
 
     @Override
     public Component getName() {
-        return customName != null ? customName : new TranslatableComponent(getUnlocalizedName());
+        return customName != null ? customName : Component.translatable(getUnlocalizedName());
     }
 
     @Nullable

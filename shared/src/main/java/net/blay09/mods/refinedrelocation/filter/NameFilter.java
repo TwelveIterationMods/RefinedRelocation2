@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.filter;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
@@ -10,14 +11,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,9 +28,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 public class NameFilter implements IFilter {
 
@@ -60,29 +64,29 @@ public class NameFilter implements IFilter {
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
         String itemName = null;
-        Collection<ResourceLocation> tags = null;
+        Set<TagKey<Item>> tags = null;
         Pattern[] patterns = getPatterns();
         for (int i = 0; i < patterns.length; i++) {
             Pattern pattern = patterns[i];
             if (pattern != null) {
                 if (cachedNameFilterType[i] == NameFilterType.TAG) {
                     if (tags == null) {
-                        tags = ItemTags.getAllTags().getMatchingTags(itemStack.getItem());
+                        tags = itemStack.getTags().collect(Collectors.toSet());
                     }
                     Matcher matcher = pattern.matcher("");
-                    for (ResourceLocation tag : tags) {
+                    for (TagKey<Item> tag : tags) {
                         matcher.reset(tag.toString());
                         if (matcher.matches()) {
                             return true;
                         }
 
-                        matcher.reset(tag.getPath());
+                        matcher.reset(tag.location().getPath());
                         if (matcher.matches()) {
                             return true;
                         }
                     }
                 } else if (cachedNameFilterType[i] == NameFilterType.MOD) {
-                    ResourceLocation registryName = itemStack.getItem().getRegistryName();
+                    ResourceLocation registryName = Balm.getRegistries().getKey(itemStack.getItem());
                     if (registryName != null) {
                         Matcher matcher = pattern.matcher(registryName.getNamespace());
                         if (matcher.matches()) {
@@ -147,16 +151,15 @@ public class NameFilter implements IFilter {
     }
 
     @Override
-    public Tag serializeNBT() {
-        CompoundTag compound = new CompoundTag();
-        compound.putString("Patterns", value);
-        return compound;
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("Patterns", value);
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
-        CompoundTag compound = (CompoundTag) nbt;
-        value = compound.getString("Patterns");
+    public void deserializeNBT(CompoundTag tag) {
+        value = tag.getString("Patterns");
     }
 
     @Override
@@ -191,7 +194,7 @@ public class NameFilter implements IFilter {
 
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent(NameFilter.this.getLangKey());
+                return Component.translatable(NameFilter.this.getLangKey());
             }
 
             @Override

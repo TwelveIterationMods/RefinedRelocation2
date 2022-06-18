@@ -10,12 +10,12 @@ import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.menu.ChecklistFilterMenu;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -105,7 +105,7 @@ public class ModFilter implements IChecklistFilter {
 
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
-        ResourceLocation resourceLocation = itemStack.getItem().getRegistryName();
+        ResourceLocation resourceLocation = Balm.getRegistries().getKey(itemStack.getItem());
         if (resourceLocation != null) {
             ModWithName modWithName = modList.get(resourceLocation.getNamespace());
             return modWithName != null && modStates[modWithName.getIndex()];
@@ -114,19 +114,21 @@ public class ModFilter implements IChecklistFilter {
     }
 
     @Override
-    public Tag serializeNBT() {
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
         for (int i = 0; i < modStates.length; i++) {
             if (modStates[i]) {
                 list.add(StringTag.valueOf(modIds[i]));
             }
         }
-        return list;
+        tag.put("Mods", list);
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
-        ListTag list = (ListTag) nbt;
+    public void deserializeNBT(CompoundTag tag) {
+        ListTag list = tag.getList("Mods", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
             String modId = list.getString(i);
             for (int j = 0; j < modIds.length; j++) {
@@ -188,7 +190,7 @@ public class ModFilter implements IChecklistFilter {
 
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent(ModFilter.this.getLangKey());
+                return Component.translatable(ModFilter.this.getLangKey());
             }
 
             @Override

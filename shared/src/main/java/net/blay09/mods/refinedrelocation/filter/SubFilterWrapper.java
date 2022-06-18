@@ -37,7 +37,7 @@ public class SubFilterWrapper {
 	public static SubFilterWrapper loadFromNBT(CompoundTag tagCompound) {
 		IFilter filter = FilterRegistry.createFilter(tagCompound.getString("Type"));
 		if(filter != null) {
-			filter.deserializeNBT(tagCompound.get("Data"));
+			filter.deserializeNBT(tagCompound.getCompound("Data"));
 			SubFilterWrapper wrapper = new SubFilterWrapper(filter);
 			wrapper.isBlacklist = tagCompound.getBoolean("IsBlacklist");
 			return wrapper;

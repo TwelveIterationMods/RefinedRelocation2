@@ -11,8 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
@@ -178,7 +176,7 @@ public class FastHopperBlockEntity extends BalmBlockEntity implements BalmMenuPr
     @Override
     public void load(CompoundTag tag) {
         container.deserializeNBT(tag.getCompound("ItemHandler"));
-        customName = tag.contains("CustomName") ? new TextComponent(tag.getString("CustomName")) : null;
+        customName = tag.contains("CustomName") ? Component.literal(tag.getString("CustomName")) : null;
     }
 
     public String getUnlocalizedName() {
@@ -187,7 +185,7 @@ public class FastHopperBlockEntity extends BalmBlockEntity implements BalmMenuPr
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent(getUnlocalizedName());
+        return Component.translatable(getUnlocalizedName());
     }
 
     @Override
@@ -203,7 +201,7 @@ public class FastHopperBlockEntity extends BalmBlockEntity implements BalmMenuPr
 
     @Override
     public Component getName() {
-        return customName != null ? customName : new TranslatableComponent(getUnlocalizedName());
+        return customName != null ? customName : Component.translatable(getUnlocalizedName());
     }
 
     @Override

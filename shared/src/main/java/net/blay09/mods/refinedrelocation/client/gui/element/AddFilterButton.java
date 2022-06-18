@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -62,7 +61,7 @@ public class AddFilterButton extends ImageButton implements ITooltipElement {
     public void addTooltip(List<Component> tooltip) {
         if (currentFilter != null) {
             for (String text : I18n.get(currentFilter.getDescriptionLangKey()).split("\\\\n")) {
-                tooltip.add(new TextComponent(text));
+                tooltip.add(Component.literal(text));
             }
         }
     }

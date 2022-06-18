@@ -3,14 +3,14 @@ package net.blay09.mods.refinedrelocation.client.gui.base.element;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ScrollPaneWidget extends AbstractWidget {
 
     private final ScrollBarWidget scrollBar;
 
     public ScrollPaneWidget(ScrollBarWidget scrollBar, int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent(""));
+        super(x, y, width, height, Component.empty());
         this.scrollBar = scrollBar;
     }
 

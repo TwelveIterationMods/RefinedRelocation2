@@ -12,7 +12,7 @@ public class SizableButton extends Button {
 
     @Override
     protected void renderBg(PoseStack poseSTack, Minecraft mc, int mouseX, int mouseY) {
-        int textureY = getYImage(isHovered());
+        int textureY = getYImage(isHovered);
         blit(poseSTack, x, y, 0, 46 + textureY * 20, width / 2, height / 2);
         blit(poseSTack, x, y + height / 2, 0, 46 + textureY * 20 + 12, width / 2, height / 2);
         blit(poseSTack, x + width / 2, y, 200 - width / 2, 46 + textureY * 20, width / 2, height / 2);

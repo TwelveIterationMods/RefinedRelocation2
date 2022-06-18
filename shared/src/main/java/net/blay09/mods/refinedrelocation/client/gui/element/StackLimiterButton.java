@@ -7,10 +7,7 @@ import net.blay09.mods.refinedrelocation.block.entity.BlockExtenderBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public class StackLimiterButton extends SizableButton implements ITickableElemen
     private final BlockExtenderBlockEntity blockExtender;
 
     public StackLimiterButton(int x, int y, int width, int height, BlockExtenderBlockEntity blockExtender) {
-        super(x, y, width, height, new TextComponent(""), it -> {
+        super(x, y, width, height, Component.empty(), it -> {
         });
         this.blockExtender = blockExtender;
     }
@@ -40,7 +37,7 @@ public class StackLimiterButton extends SizableButton implements ITickableElemen
     public void onClick(double mouseX, double mouseY, int mouseButton) {
         int limit = blockExtender.getStackLimiterLimit();
         int index = (int) (Math.log(limit) / Math.log(2));
-        int maxStackSize = Items.AIR.getItemStackLimit(ItemStack.EMPTY);
+        int maxStackSize = Items.AIR.getMaxStackSize();
         int maxIndex = (int) (Math.log(maxStackSize) / Math.log(2));
         if (mouseButton == 0) {
             if (index < maxIndex) {
@@ -64,19 +61,19 @@ public class StackLimiterButton extends SizableButton implements ITickableElemen
             limit--;
         }
 
-        limit = Mth.clamp(limit, 1, Items.AIR.getItemStackLimit(ItemStack.EMPTY));
+        limit = Mth.clamp(limit, 1, Items.AIR.getMaxStackSize());
         blockExtender.setStackLimiterLimit(limit);
         return true;
     }
 
     @Override
     public void tick() {
-        setMessage(new TextComponent(String.valueOf(blockExtender.getStackLimiterLimit())));
+        setMessage(Component.literal(String.valueOf(blockExtender.getStackLimiterLimit())));
     }
 
     @Override
     public void addTooltip(List<Component> list) {
-        list.add(new TranslatableComponent("gui.refinedrelocation:block_extender.stack_limiter"));
+        list.add(Component.translatable("gui.refinedrelocation:block_extender.stack_limiter"));
         list.add(formattedTranslation(ChatFormatting.GREEN, "gui.refinedrelocation:block_extender.stack_limiter_increase"));
         list.add(formattedTranslation(ChatFormatting.RED, "gui.refinedrelocation:block_extender.stack_limiter_decrease"));
     }

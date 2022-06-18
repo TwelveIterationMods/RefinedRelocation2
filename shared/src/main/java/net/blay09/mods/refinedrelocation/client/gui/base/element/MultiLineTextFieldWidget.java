@@ -7,7 +7,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -33,7 +33,7 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
     private Map<String, String> debugRenders = new HashMap<>();
 
     public MultiLineTextFieldWidget(int x, int y, int width, int height) {
-        super(Minecraft.getInstance().font, x, y, width, height, new TextComponent(""));
+        super(Minecraft.getInstance().font, x, y, width, height, Component.empty());
         font = Minecraft.getInstance().font;
     }
 

@@ -1,6 +1,7 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
 import com.google.common.collect.Lists;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.api.container.DefaultContainer;
@@ -17,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -50,18 +50,17 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         }
 
         public boolean revalidate() {
-            Container itemHandlerCap = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
-            itemHandlerCap.ifPresent(itemHandler -> baseHandler = itemHandler);
-            return itemHandlerCap.isPresent();
+            baseHandler = Balm.getProviders().getProvider(blockEntity, facing, Container.class);
+            return baseHandler != null;
         }
 
         @Override
-        public int getSlots() {
+        public int getContainerSize() {
             return baseHandler.getContainerSize();
         }
 
         @Override
-        public ItemStack getStackInSlot(int slot) {
+        public ItemStack getItem(int slot) {
             return baseHandler.getItem(slot);
         }
 
@@ -131,8 +130,8 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         }
 
         @Override
-        public int getSlotLimit(int slot) {
-            return baseHandler.getContainerSize();
+        public int getMaxStackSize() {
+            return baseHandler.getMaxStackSize();
         }
     }
 
@@ -370,7 +369,7 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         return new BalmMenuProvider() {
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent(getUnlocalizedName());
+                return Component.translatable(getUnlocalizedName());
             }
 
             @Override

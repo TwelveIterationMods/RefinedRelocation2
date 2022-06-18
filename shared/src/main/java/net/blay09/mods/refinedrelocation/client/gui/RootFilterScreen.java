@@ -12,7 +12,6 @@ import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.menu.RootFilterMenu;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
@@ -70,7 +69,7 @@ public class RootFilterScreen extends FilterScreen<RootFilterMenu> implements IF
         }
 
         if (menu.hasSortingInventory()) {
-            addRenderableWidget(new LabelWidget(font, leftPos + 10, topPos + 65, new TranslatableComponent("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            addRenderableWidget(new LabelWidget(font, leftPos + 10, topPos + 65, Component.translatable("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
             addRenderableWidget(new PriorityButton(leftPos + 10, topPos + 80, 100, 20, menu.getSortingInventory()));
         }
     }
@@ -118,7 +117,7 @@ public class RootFilterScreen extends FilterScreen<RootFilterMenu> implements IF
             displayName = nameable.getDisplayName();
         }
 
-        final TranslatableComponent title = displayName != null ? new TranslatableComponent("container.refinedrelocation:root_filter_with_name", displayName) : new TranslatableComponent("container.refinedrelocation:root_filter");
+        final var title = displayName != null ? Component.translatable("container.refinedrelocation:root_filter_with_name", displayName) : Component.translatable("container.refinedrelocation:root_filter");
         font.draw(poseStack, title.getVisualOrderText(), 8, 6, 4210752);
         font.draw(poseStack, I18n.get("container.inventory"), 8, imageHeight - 96 + 2, 4210752);
     }

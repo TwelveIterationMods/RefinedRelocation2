@@ -82,7 +82,7 @@ public class BlockExtenderMenu extends AbstractBaseMenu {
                 }
             }
             case KEY_STACK_LIMITER -> {
-                int stackSizeLimit = Mth.clamp(message.getIntValue(), 1, Items.AIR.getItemStackLimit(ItemStack.EMPTY));
+                int stackSizeLimit = Mth.clamp(message.getIntValue(), 1, Items.AIR.getMaxStackSize());
                 blockExtender.setStackLimiterLimit(stackSizeLimit);
                 lastStackLimiterLimit = stackSizeLimit;
             }
