@@ -7,14 +7,10 @@ import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.filter.RootFilter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class FilteredHopperBlockEntity extends FastHopperBlockEntity {
@@ -25,7 +21,7 @@ public class FilteredHopperBlockEntity extends FastHopperBlockEntity {
     }
 
     @Override
-    protected Container createItemHandler() {
+    protected DefaultContainer createContainer() {
         return new DefaultContainer(5) {
             @Override
             public boolean canPlaceItem(int slot, ItemStack itemStack) {

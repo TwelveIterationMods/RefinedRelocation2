@@ -28,9 +28,6 @@
     ],
     "modmenu": [
       "net.blay09.mods.refinedrelocation.compat.ModMenuIntegration"
-    ],
-    "rei_plugins": [
-      "net.blay09.mods.refinedrelocation.compat.RoughlyEnoughItemsIntegration"
     ]
   },
   "mixins": [

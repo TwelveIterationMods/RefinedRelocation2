@@ -21,11 +21,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 
 public class CreativeTabFilter implements IChecklistFilter {
 
@@ -120,7 +117,6 @@ public class CreativeTabFilter implements IChecklistFilter {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public IDrawable getFilterIcon() {
         return GuiTextures.CREATIVE_TAB_FILTER_ICON;
     }

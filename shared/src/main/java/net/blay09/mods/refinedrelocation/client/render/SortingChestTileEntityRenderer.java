@@ -12,7 +12,7 @@ public class SortingChestTileEntityRenderer extends ChestRenderer<SortingChestBl
         super(context);
     }
 
-    @Override
+//    @Override TODO oof
     protected Material getMaterial(SortingChestBlockEntity tileEntity, ChestType chestType) {
         return tileEntity.getChestType().getMaterial();
     }

@@ -93,8 +93,8 @@ public abstract class ModContainerScreen<T extends AbstractContainerMenu> extend
 
     @Override
     protected <V extends GuiEventListener & NarratableEntry> V addWidget(V widget) {
-        ((ScreenAccessor) this).getChildren().add(widget);
-        ((ScreenAccessor) this).getNarratables().add(widget);
+        ((ScreenAccessor) this).balm_getChildren().add(widget);
+        ((ScreenAccessor) this).balm_getNarratables().add(widget);
         this.saneChildren.add(widget);
         return widget;
     }

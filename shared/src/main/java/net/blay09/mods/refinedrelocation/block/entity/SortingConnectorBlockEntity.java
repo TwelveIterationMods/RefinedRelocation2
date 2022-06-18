@@ -25,11 +25,6 @@ public class SortingConnectorBlockEntity extends BalmBlockEntity implements OnLo
     }
 
     @Override
-    public void onChunkUnloaded() {
-        sortingGridMember.onInvalidate(this);
-    }
-
-    @Override
     public void setRemoved() {
         super.setRemoved();
         sortingGridMember.onInvalidate(this);

@@ -20,7 +20,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -38,36 +37,56 @@ import java.util.List;
 
 public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppableItemHandler, IMultiRootFilter, OnLoadHandler {
 
-    private class ItemHandlerWrapper implements Container {
+    private class ContainerWrapper implements Container {
         private final BlockEntity blockEntity;
         private final Direction facing;
-        private Container baseHandler;
+        private Container baseContainer;
 
-        public ItemHandlerWrapper(BlockEntity blockEntity, @Nullable Direction facing, Container baseHandler) {
+        public ContainerWrapper(BlockEntity blockEntity, @Nullable Direction facing, Container baseContainer) {
             this.blockEntity = blockEntity;
             this.facing = facing;
-            this.baseHandler = baseHandler;
+            this.baseContainer = baseContainer;
         }
 
         public boolean revalidate() {
-            baseHandler = Balm.getProviders().getProvider(blockEntity, facing, Container.class);
-            return baseHandler != null;
+            baseContainer = Balm.getProviders().getProvider(blockEntity, facing, Container.class);
+            return baseContainer != null;
         }
 
         @Override
         public int getContainerSize() {
-            return baseHandler.getContainerSize();
+            return baseContainer.getContainerSize();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return baseContainer.isEmpty();
         }
 
         @Override
         public ItemStack getItem(int slot) {
-            return baseHandler.getItem(slot);
+            return baseContainer.getItem(slot);
         }
 
         @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack itemStack) {
+        public ItemStack removeItem(int slot, int count) {
+            return baseContainer.removeItem(slot, count);
+        }
+
+        @Override
+        public ItemStack removeItemNoUpdate(int slot) {
+            return baseContainer.removeItemNoUpdate(slot);
+        }
+
+        @Override
+        public void setItem(int slot, ItemStack itemStack) {
+            baseContainer.setItem(slot, itemStack);
+        }
+
+        @Override
+        public boolean canPlaceItem(int slot, @Nonnull ItemStack itemStack) {
             if (hasSlotLock) {
-                if (itemStack.isEmpty() || getStackInSlot(slot).isEmpty()) {
+                if (itemStack.isEmpty() || getItem(slot).isEmpty()) {
                     return false;
                 }
             }
@@ -82,60 +101,75 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
             return true;
         }
 
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (!isItemValid(slot, stack)) {
-                return stack;
-            }
-
-            if (hasStackLimiter) {
-                int space = stackLimiterLimit - getStackInSlot(slot).getCount();
-                if (space <= 0) {
-                    return stack;
-                }
-                int amount = Math.min(stack.getCount(), space);
-                if (amount < stack.getCount()) {
-                    ItemStack insertStack = ItemHandlerHelper.copyStackWithSize(stack, amount);
-                    ItemStack restStack = baseHandler.insertItem(slot, insertStack, simulate);
-                    int initialRest = stack.getCount() - amount;
-                    if (initialRest > 0) {
-                        ItemStack otherRestStack = ItemHandlerHelper.copyStackWithSize(stack, initialRest);
-                        if (restStack.isEmpty()) {
-                            return otherRestStack;
-                        }
-                        if (ItemHandlerHelper.canItemStacksStack(stack, restStack)) {
-                            restStack.grow(initialRest);
-                        } else if (!level.isClientSide) {
-                            // If the remainder item is different than the input item upon failed insertion that's most likely a bug or bad game mechanic, so drop the other rest item in the world rather than having it disappear.
-                            level.addFreshEntity(new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, otherRestStack));
-                        }
-                    }
-                    return restStack;
-                }
-            }
-
-            return baseHandler.insertItem(slot, stack, simulate);
-        }
-
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (hasOutputFilter) {
-                final ItemStack itemStack = getStackInSlot(slot);
-                if (!outputFilter.passes(blockEntity, itemStack, itemStack)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-
-            return baseHandler.extractItem(slot, amount, simulate);
-        }
+//        @Override // TODO oof
+//        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+//            if (!canPlaceItem(slot, stack)) {
+//                return stack;
+//            }
+//
+//            if (hasStackLimiter) {
+//                int space = stackLimiterLimit - getItem(slot).getCount();
+//                if (space <= 0) {
+//                    return stack;
+//                }
+//                int amount = Math.min(stack.getCount(), space);
+//                if (amount < stack.getCount()) {
+//                    ItemStack insertStack = ContainerUtils.copyStackWithSize(stack, amount);
+//                    ItemStack restStack = ContainerUtils.insertItem(baseContainer, slot, insertStack, simulate);
+//                    int initialRest = stack.getCount() - amount;
+//                    if (initialRest > 0) {
+//                        ItemStack otherRestStack = ContainerUtils.copyStackWithSize(stack, initialRest);
+//                        if (restStack.isEmpty()) {
+//                            return otherRestStack;
+//                        }
+//                        if (ContainerUtils.canItemStacksStack(stack, restStack)) {
+//                            restStack.grow(initialRest);
+//                        } else if (!level.isClientSide) {
+//                            // If the remainder item is different than the input item upon failed insertion that's most likely a bug or bad game mechanic, so drop the other rest item in the world rather than having it disappear.
+//                            level.addFreshEntity(new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, otherRestStack));
+//                        }
+//                    }
+//                    return restStack;
+//                }
+//            }
+//
+//            return ContainerUtils.insertItem(baseContainer, slot, stack, simulate);
+//        }
+//
+//        @Override
+//        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+//            if (hasOutputFilter) {
+//                final ItemStack itemStack = getItem(slot);
+//                if (!outputFilter.passes(blockEntity, itemStack, itemStack)) {
+//                    return ItemStack.EMPTY;
+//                }
+//            }
+//
+//            return ContainerUtils.extractItem(baseContainer, slot, amount, simulate);
+//        }
 
         @Override
         public int getMaxStackSize() {
-            return baseHandler.getMaxStackSize();
+            return baseContainer.getMaxStackSize();
+        }
+
+        @Override
+        public void setChanged() {
+            baseContainer.setChanged();
+        }
+
+        @Override
+        public boolean stillValid(Player player) {
+            return baseContainer.stillValid(player);
+        }
+
+        @Override
+        public void clearContent() {
+            baseContainer.clearContent();
         }
     }
 
-    private final Container itemHandlerUpgrades = new DefaultContainer(3) {
+    private final DefaultContainer itemHandlerUpgrades = new DefaultContainer(3) {
         @Override
         public boolean canPlaceItem(int slot, @Nonnull ItemStack stack) {
             if (!isUpgradeItem(stack)) {
@@ -172,7 +206,7 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
     private boolean hasInputFilter;
     private boolean hasOutputFilter;
     private BlockEntity cachedConnectedBlockEntity;
-    private final ItemHandlerWrapper[] cachedItemHandlers = new ItemHandlerWrapper[6];
+    private final ContainerWrapper[] cachedItemHandlers = new ContainerWrapper[6];
     private final Direction[] cachedFacingToFacingMappings = new Direction[6];
 
     public BlockExtenderBlockEntity(BlockPos pos, BlockState state) {
@@ -241,7 +275,7 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         }
 
         compound.putByteArray("SideMappings", mappings);
-        compound.put("Upgrades", itemHandlerUpgrades.serializeNBT());
+        compound.put("Upgrades", itemHandlerUpgrades.serialize());
         compound.putByte("StackLimiter", (byte) stackLimiterLimit);
         compound.put("InputFilter", inputFilter.serializeNBT());
         compound.put("OutputFilter", outputFilter.serializeNBT());
@@ -262,7 +296,7 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
             }
         }
 
-        itemHandlerUpgrades.deserializeNBT(compound.getCompound("Upgrades"));
+        itemHandlerUpgrades.deserialize(compound.getCompound("Upgrades"));
         stackLimiterLimit = compound.getByte("StackLimiter");
         inputFilter.deserializeNBT(compound.getCompound("InputFilter"));
         outputFilter.deserializeNBT(compound.getCompound("OutputFilter"));
@@ -276,32 +310,32 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         );
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cachedConnectedBlockEntity != null) {
-            Direction ioSide = getSideMapping(side);
-            if (ioSide != null) {
-                if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && requiresItemHandlerWrapping()) {
-                    int cacheIdx = ioSide.get3DDataValue();
-                    if (cachedItemHandlers[cacheIdx] != null) {
-                        if (!cachedItemHandlers[cacheIdx].revalidate()) {
-                            cachedItemHandlers[cacheIdx] = null;
-                            return LazyOptional.empty();
-                        }
-                    } else {
-                        LazyOptional<IItemHandler> itemHandlerCap = cachedConnectedBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ioSide);
-                        itemHandlerCap.ifPresent(itemHandler -> cachedItemHandlers[cacheIdx] = new ItemHandlerWrapper(cachedConnectedBlockEntity, ioSide, itemHandler));
-                    }
-                    return LazyOptional.of(() -> cachedItemHandlers[cacheIdx]).cast();
-                }
-
-                return cachedConnectedBlockEntity.getCapability(cap, ioSide);
-            }
-        }
-
-        return super.getCapability(cap, side);
-    }
+//    @Nonnull TODO dynamic providers
+//    @Override
+//    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+//        if (cachedConnectedBlockEntity != null) {
+//            Direction ioSide = getSideMapping(side);
+//            if (ioSide != null) {
+//                if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && requiresItemHandlerWrapping()) {
+//                    int cacheIdx = ioSide.get3DDataValue();
+//                    if (cachedItemHandlers[cacheIdx] != null) {
+//                        if (!cachedItemHandlers[cacheIdx].revalidate()) {
+//                            cachedItemHandlers[cacheIdx] = null;
+//                            return LazyOptional.empty();
+//                        }
+//                    } else {
+//                        LazyOptional<IItemHandler> itemHandlerCap = cachedConnectedBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ioSide);
+//                        itemHandlerCap.ifPresent(itemHandler -> cachedItemHandlers[cacheIdx] = new ItemHandlerWrapper(cachedConnectedBlockEntity, ioSide, itemHandler));
+//                    }
+//                    return LazyOptional.of(() -> cachedItemHandlers[cacheIdx]).cast();
+//                }
+//
+//                return cachedConnectedBlockEntity.getCapability(cap, ioSide);
+//            }
+//        }
+//
+//        return super.getCapability(cap, side);
+//    }
 
     private boolean requiresItemHandlerWrapping() {
         return hasStackLimiter || hasSlotLock || hasInputFilter || hasOutputFilter;

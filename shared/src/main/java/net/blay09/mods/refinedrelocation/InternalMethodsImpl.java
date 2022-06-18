@@ -2,6 +2,7 @@ package net.blay09.mods.refinedrelocation;
 
 import com.google.common.collect.Lists;
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.refinedrelocation.api.InternalMethods;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
@@ -16,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerListener;
@@ -92,12 +94,12 @@ public class InternalMethodsImpl implements InternalMethods {
     @Override
     public void insertIntoSortingGrid(ISortingInventory sortingInventory, int fromSlotIndex, ItemStack itemStack) {
         List<ISortingInventory> passingList = Lists.newArrayList();
-        IItemHandler itemHandler = RefinedRelocationUtils.orNull(sortingInventory.getContainer());
-        if (itemHandler == null) {
+        Container container = sortingInventory.getContainer();
+        if (container == null) {
             return;
         }
 
-        ItemStack restStack = itemHandler.extractItem(fromSlotIndex, Items.AIR.getMaxStackSize(), true);
+        ItemStack restStack = ContainerUtils.extractItem(container, fromSlotIndex, Items.AIR.getMaxStackSize(), true);
         if (restStack.isEmpty()) {
             return;
         }
@@ -107,8 +109,7 @@ public class InternalMethodsImpl implements InternalMethods {
             for (ISortingGridMember member : sortingGrid.getMembers()) {
                 if (member instanceof ISortingInventory memberInventory) {
                     ISimpleFilter filter = memberInventory.getFilter();
-                    final ItemStack testStack = restStack;
-                    boolean passes = filter.passes(memberInventory.getBlockEntity(), testStack, itemStack);
+                    boolean passes = filter.passes(memberInventory.getBlockEntity(), restStack, itemStack);
                     if (passes) {
                         passingList.add(memberInventory);
                     }
@@ -124,14 +125,14 @@ public class InternalMethodsImpl implements InternalMethods {
                 while (!restStack.isEmpty() && !passingList.isEmpty() && targetInventory != null) {
                     // Insert stack into passing inventories
                     int insertCount = restStack.getCount();
-                    IItemHandler targetItemHandler = RefinedRelocationUtils.orNull(targetInventory.getContainer());
-                    if (targetItemHandler != null) {
-                        restStack = ItemHandlerHelper.insertItemStacked(targetItemHandler, restStack, false);
+                    Container targetContainer = targetInventory.getContainer();
+                    if (targetContainer != null) {
+                        restStack = ContainerUtils.insertItemStacked(targetContainer, restStack, false);
                     }
 
                     int actuallyInserted = insertCount - restStack.getCount();
                     if (actuallyInserted > 0) {
-                        ItemStack movedStack = itemHandler.extractItem(fromSlotIndex, actuallyInserted, false);
+                        ItemStack movedStack = ContainerUtils.extractItem(container, fromSlotIndex, actuallyInserted, false);
                         if (movedStack.getCount() != actuallyInserted) {
                             // This would mean we just duped an item. This should only be possible if someone implements IItemHandler incorrectly, so crash and make it more likely to be reported.
                             throw new RuntimeException("Refined Relocation ran into a major problem with the connected inventory " + sortingInventory + ". Please report this at https://github.com/blay09/RefinedRelocation2/issues.");

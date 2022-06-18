@@ -1,13 +1,13 @@
 package net.blay09.mods.refinedrelocation;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.refinedrelocation.api.filter.IMultiRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.block.entity.IDroppableItemHandler;
 import net.blay09.mods.refinedrelocation.util.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,7 +47,7 @@ public class RefinedRelocationUtils {
         if (blockEntity != null) {
             Container container = Balm.getProviders().getProvider(blockEntity, Container.class);
             if(container != null) {
-                return ItemHandlerHelper.calcRedstoneFromInventory(container);
+                return AbstractContainerMenu.getRedstoneSignalFromContainer(container);
             }
             return 0;
         }

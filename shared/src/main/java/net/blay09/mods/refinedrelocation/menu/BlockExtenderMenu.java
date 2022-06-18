@@ -3,6 +3,7 @@ package net.blay09.mods.refinedrelocation.menu;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.container.IMenuMessage;
+import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
 import net.blay09.mods.refinedrelocation.block.entity.BlockExtenderBlockEntity;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.core.Direction;
@@ -86,18 +87,20 @@ public class BlockExtenderMenu extends AbstractBaseMenu {
                 blockExtender.setStackLimiterLimit(stackSizeLimit);
                 lastStackLimiterLimit = stackSizeLimit;
             }
-            case KEY_CONFIGURE_INPUT_FILTER -> blockExtender.getInputFilter().ifPresent(it -> {
-                MenuProvider config = it.getConfiguration(player, blockExtender, 0, 0);
+            case KEY_CONFIGURE_INPUT_FILTER -> {
+                IRootFilter filter = blockExtender.getInputFilter();
+                MenuProvider config = filter.getConfiguration(player, blockExtender, 0, 0);
                 if (config != null) {
                     Balm.getNetworking().openGui(player, config);
                 }
-            });
-            case KEY_CONFIGURE_OUTPUT_FILTER -> blockExtender.getOutputFilter().ifPresent(it -> {
-                MenuProvider config = it.getConfiguration(player, blockExtender, 1, 0);
+            }
+            case KEY_CONFIGURE_OUTPUT_FILTER -> {
+                IRootFilter filter = blockExtender.getOutputFilter();
+                MenuProvider config = filter.getConfiguration(player, blockExtender, 1, 0);
                 if (config != null) {
                     Balm.getNetworking().openGui(player, config);
                 }
-            });
+            }
         }
     }
 
@@ -119,7 +122,7 @@ public class BlockExtenderMenu extends AbstractBaseMenu {
             ItemStack slotStack = slot.getItem();
             itemStack = slotStack.copy();
 
-            if(index < 3) {
+            if (index < 3) {
                 if (!moveItemStackTo(slotStack, 3, 30, true)) {
                     return ItemStack.EMPTY;
                 }

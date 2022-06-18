@@ -40,15 +40,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 
-@OnlyIn(value = Dist.CLIENT, _interface = LidBlockEntity.class)
 public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenuProvider,
         BalmContainerProvider,
         OnLoadHandler,
@@ -58,7 +54,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
 
     private static final int EVENT_NUM_PLAYERS = 1;
 
-    private final Container container;
+    private final DefaultContainer container;
 
     private final ISortingInventory sortingInventory = new SortingInventory();
     private final IRootFilter rootFilter = new RootFilter();
@@ -177,16 +173,11 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
     }
 
     @Override
-    public void onChunkUnloaded() {
-        sortingInventory.onInvalidate(this);
-    }
-
-    @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         CompoundTag itemHandlerCompound = tag.getCompound("ItemHandler");
         itemHandlerCompound.putInt("Size", chestType.getInventorySize());
-        this.container.deserializeNBT(itemHandlerCompound);
+        this.container.deserialize(itemHandlerCompound);
 
         sortingInventory.deserialize(tag.getCompound("SortingInventory"));
 
@@ -201,7 +192,7 @@ public class SortingChestBlockEntity extends BalmBlockEntity implements BalmMenu
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
 
-        tag.put("ItemHandler", container.serializeNBT());
+        tag.put("ItemHandler", container.serialize());
         tag.put("SortingInventory", sortingInventory.serialize());
         tag.put("RootFilter", rootFilter.serializeNBT());
         if (customName != null) {

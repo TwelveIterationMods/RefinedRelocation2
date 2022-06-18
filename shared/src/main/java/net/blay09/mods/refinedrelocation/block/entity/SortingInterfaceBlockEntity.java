@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -91,11 +89,6 @@ public class SortingInterfaceBlockEntity extends BalmBlockEntity implements IDro
     }
 
     @Override
-    public void onChunkUnloaded() {
-        sortingInventory.onInvalidate(this);
-    }
-
-    @Override
     public void load(CompoundTag compound) {
         super.load(compound);
         sortingInventory.deserialize(compound.getCompound("SortingInventory"));
@@ -131,16 +124,16 @@ public class SortingInterfaceBlockEntity extends BalmBlockEntity implements IDro
         );
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        LazyOptional<T> result = super.getCapability(cap, side);
-        if (!result.isPresent() && cachedConnectedTile != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return cachedConnectedTile.getCapability(cap, getFacing().getOpposite()).cast();
-        }
-
-        return result;
-    }
+//    @Nonnull // TODO dynamic providers
+//    @Override
+//    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+//        LazyOptional<T> result = super.getCapability(cap, side);
+//        if (!result.isPresent() && cachedConnectedTile != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+//            return cachedConnectedTile.getCapability(cap, getFacing().getOpposite()).cast();
+//        }
+//
+//        return result;
+//    }
 
     public String getUnlocalizedName() {
         return "container.refinedrelocation:sorting_interface";

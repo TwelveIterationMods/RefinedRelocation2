@@ -7,11 +7,9 @@ import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class SameModFilter implements IFilter {
 
@@ -29,29 +27,25 @@ public class SameModFilter implements IFilter {
 
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
-        LazyOptional<IItemHandler> itemHandlerCap = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-        return itemHandlerCap.map(itemHandler -> {
-            for (int i = 0; i < itemHandler.getSlots(); i++) {
-                ItemStack otherStack = itemHandler.getStackInSlot(i);
+        Container container = Balm.getProviders().getProvider(blockEntity, Container.class);
+        if(container != null) {
+            for (int i = 0; i < container.getContainerSize(); i++) {
+                ItemStack otherStack = container.getItem(i);
                 if (!otherStack.isEmpty()) {
                     if (otherStack == originalStack || itemStack.getItem() == otherStack.getItem()) {
                         return true;
                     }
 
-                    String modId = itemStack.getItem().getCreatorModId(itemStack);
-                    String otherModId = otherStack.getItem().getCreatorModId(otherStack);
-                    if (modId == null || otherModId == null || "minecraft".equals(modId) || "minecraft".equals(otherModId)) {
-                        return false;
-                    }
-
+                    String modId = Balm.getRegistries().getKey(itemStack.getItem()).getNamespace();
+                    String otherModId = Balm.getRegistries().getKey(otherStack.getItem()).getNamespace();
                     if (modId.equals(otherModId)) {
                         return true;
                     }
                 }
             }
+        }
 
-            return false;
-        }).orElse(false);
+        return false;
     }
 
     @Override
@@ -74,7 +68,6 @@ public class SameModFilter implements IFilter {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public IDrawable getFilterIcon() {
         return GuiTextures.SAME_MOD_FILTER_ICON;
     }

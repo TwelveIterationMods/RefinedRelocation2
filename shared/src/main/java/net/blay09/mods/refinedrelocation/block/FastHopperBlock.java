@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -160,7 +161,7 @@ public class FastHopperBlock extends BaseEntityBlock {
         if (blockEntity != null) {
             Container container = Balm.getProviders().getProvider(blockEntity, Container.class);
             if (container != null) {
-                return ContainerUtils.calcRedstoneFromInventory(container);
+                return AbstractContainerMenu.getRedstoneSignalFromContainer(container);
             }
 
             return 0;
