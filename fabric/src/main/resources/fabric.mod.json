@@ -10,9 +10,9 @@
     "ZerotS"
   ],
   "contact": {
-    "homepage": "https://blay09.net/mods/refinedrelocation",
-    "sources": "https://github.com/ModdingForBlockheads/RefinedRelocation2",
-    "issues": "https://github.com/ModdingForBlockheads/RefinedRelocation2/issues"
+    "homepage": "https://mods.twelveiterations.com/mc/refined-relocation/",
+    "sources": "https://github.com/TwelveIterationMods/RefinedRelocation2",
+    "issues": "https://github.com/TwelveIterationMods/RefinedRelocation2/issues"
   },
 
   "license": "All Rights Reserved",
@@ -34,11 +34,10 @@
     "refinedrelocation.mixins.json"
   ],
   "depends": {
-    "cloth-config2": ">=5.0.34",
-    "balm-fabric": ">=4.2.0",
-    "fabricloader": ">=0.14.7",
+    "balm-fabric": ">=7.0.0",
+    "fabricloader": ">=0.14.21",
     "fabric": "*",
-    "minecraft": "1.19.x",
+    "minecraft": ">=1.20",
     "java": ">=17"
   },
   "suggests": {
@@ -47,7 +46,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/scGAfXC"
+        "modmenu.discord": "https://discord.gg/VAfZ2Nau6j"
       }
     }
   }

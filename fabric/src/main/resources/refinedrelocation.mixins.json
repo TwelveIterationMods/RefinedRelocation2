@@ -4,8 +4,7 @@
   "package": "net.blay09.mods.refinedrelocation.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AbstractContainerMenuAccessor",
-    "CreativeModeTabAccessor"
+    "AbstractContainerMenuAccessor"
   ],
   "client": [
     "LevelRendererAccessor",

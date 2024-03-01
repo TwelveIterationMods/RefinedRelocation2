@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "refinedrelocation.refmap.json",
   "mixins": [
-    "AbstractContainerMenuAccessor",
-    "CreativeModeTabAccessor"
+    "AbstractContainerMenuAccessor"
   ],
   "client": [
     "LevelRendererAccessor",
