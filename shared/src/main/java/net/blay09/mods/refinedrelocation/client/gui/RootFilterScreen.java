@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
@@ -10,6 +9,7 @@ import net.blay09.mods.refinedrelocation.api.grid.ISortingInventory;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.LabelWidget;
 import net.blay09.mods.refinedrelocation.client.gui.element.*;
 import net.blay09.mods.refinedrelocation.menu.RootFilterMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -69,7 +69,11 @@ public class RootFilterScreen extends FilterScreen<RootFilterMenu> implements IF
         }
 
         if (menu.hasSortingInventory()) {
-            addRenderableWidget(new LabelWidget(font, leftPos + 10, topPos + 65, Component.translatable("gui.refinedrelocation:root_filter.priority_label"), 0x404040));
+            addRenderableWidget(new LabelWidget(font,
+                    leftPos + 10,
+                    topPos + 65,
+                    Component.translatable("gui.refinedrelocation:root_filter.priority_label"),
+                    0x404040));
             addRenderableWidget(new PriorityButton(leftPos + 10, topPos + 80, 100, 20, menu.getSortingInventory()));
         }
     }
@@ -90,36 +94,32 @@ public class RootFilterScreen extends FilterScreen<RootFilterMenu> implements IF
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        if (menu.hasSortingInventory()) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
-        } else {
-            RenderSystem.setShaderTexture(0, TEXTURE_NO_PRIORITY);
-        }
 
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        final var texture = menu.hasSortingInventory() ? TEXTURE : TEXTURE_NO_PRIORITY;
+        guiGraphics.blit(texture, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         final int x = leftPos + 10;
         final int y = topPos + 37;
         RenderSystem.enableBlend();
-        textureSeparator.bind();
-        textureSeparator.draw(poseStack,x + 30, y, getBlitOffset());
-        textureSeparator.draw(poseStack,x + 70, y, getBlitOffset());
+        textureSeparator.draw(guiGraphics, x + 30, y);
+        textureSeparator.draw(guiGraphics, x + 70, y);
         RenderSystem.disableBlend();
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         BlockEntity blockEntity = menu.getBlockEntity();
         Component displayName = null;
         if (blockEntity instanceof Nameable nameable) {
             displayName = nameable.getDisplayName();
         }
 
-        final var title = displayName != null ? Component.translatable("container.refinedrelocation:root_filter_with_name", displayName) : Component.translatable("container.refinedrelocation:root_filter");
-        font.draw(poseStack, title.getVisualOrderText(), 8, 6, 4210752);
-        font.draw(poseStack, I18n.get("container.inventory"), 8, imageHeight - 96 + 2, 4210752);
+        final var title = displayName != null ? Component.translatable("container.refinedrelocation:root_filter_with_name",
+                displayName) : Component.translatable("container.refinedrelocation:root_filter");
+        guiGraphics.drawString(font, title.getVisualOrderText(), 8, 6, 4210752);
+        guiGraphics.drawString(font, I18n.get("container.inventory"), 8, imageHeight - 96 + 2, 4210752);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class GuiTextureSprite implements IDrawable {
@@ -22,17 +20,13 @@ public class GuiTextureSprite implements IDrawable {
         this.spriteHeight = spriteHeight;
     }
 
-    public void bind() {
-        RenderSystem.setShaderTexture(0, TEXTURE);
+    @Override
+    public void draw(GuiGraphics guiGraphics, double x, double y) {
+        guiGraphics.blit(TEXTURE, (int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
     }
 
     @Override
-    public void draw(PoseStack poseStack, double x, double y, double zLevel) {
-        GuiComponent.blit(poseStack, (int) x, (int) y, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
-    }
-
-    @Override
-    public void draw(PoseStack poseStack, double x, double y, double width, double height, double zLevel) {
-        GuiComponent.blit(poseStack, (int) x, (int) y, (int) width, (int) height, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
+    public void draw(GuiGraphics guiGraphics, double x, double y, double width, double height) {
+        guiGraphics.blit(TEXTURE, (int) x, (int) y, (int) width, (int) height, spriteX, spriteY, spriteWidth, spriteHeight, 256, 256);
     }
 }

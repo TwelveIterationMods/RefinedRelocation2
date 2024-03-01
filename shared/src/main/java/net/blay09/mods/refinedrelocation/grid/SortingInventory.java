@@ -54,7 +54,7 @@ public class SortingInventory extends SortingGridMember implements ISortingInven
             if (sortingGrid != null) {
                 sortingGrid.setSortingActive(true);
                 ItemStack itemStack = sortingStack.getContainer().getItem(sortingStack.getSlotIndex());
-                if (ItemStack.isSame(itemStack, sortingStack.getItemStack()) && ItemStack.isSameItemSameTags(itemStack, sortingStack.getItemStack())) {
+                if (ItemStack.isSameItemSameTags(itemStack, sortingStack.getItemStack())) {
                     RefinedRelocationAPI.insertIntoSortingGrid(this, sortingStack.getSlotIndex(), itemStack);
                 }
                 sortingGrid.setSortingActive(false);

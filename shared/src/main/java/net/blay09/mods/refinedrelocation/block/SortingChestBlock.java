@@ -3,7 +3,6 @@ package net.blay09.mods.refinedrelocation.block;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.refinedrelocation.RefinedRelocationUtils;
 import net.blay09.mods.refinedrelocation.SortingChestType;
-import net.blay09.mods.refinedrelocation.block.entity.BlockExtenderBlockEntity;
 import net.blay09.mods.refinedrelocation.block.entity.ModBlockEntities;
 import net.blay09.mods.refinedrelocation.block.entity.SortingChestBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -16,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -26,12 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SortingChestBlock extends AbstractChestBlock<SortingChestBlockEntity> {
 
@@ -41,7 +38,7 @@ public class SortingChestBlock extends AbstractChestBlock<SortingChestBlockEntit
     private final SortingChestType chestType;
 
     public SortingChestBlock(SortingChestType chestType) {
-        super(Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(3f), chestType::getTileEntityType);
+        super(Properties.of().sound(SoundType.WOOD).strength(3f), chestType::getBlockEntityType);
         this.chestType = chestType;
     }
 

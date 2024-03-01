@@ -2,11 +2,11 @@ package net.blay09.mods.refinedrelocation.block.entity;
 
 import com.google.common.collect.Lists;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.provider.BalmProvider;
+import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.refinedrelocation.item.ModItems;
 import net.blay09.mods.refinedrelocation.api.filter.IMultiRootFilter;
 import net.blay09.mods.refinedrelocation.api.filter.IRootFilter;
@@ -29,8 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +83,7 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
         }
 
         @Override
-        public boolean canPlaceItem(int slot, @Nonnull ItemStack itemStack) {
+        public boolean canPlaceItem(int slot, ItemStack itemStack) {
             if (hasSlotLock) {
                 if (itemStack.isEmpty() || getItem(slot).isEmpty()) {
                     return false;
@@ -171,7 +170,7 @@ public class BlockExtenderBlockEntity extends BalmBlockEntity implements IDroppa
 
     private final DefaultContainer itemHandlerUpgrades = new DefaultContainer(3) {
         @Override
-        public boolean canPlaceItem(int slot, @Nonnull ItemStack stack) {
+        public boolean canPlaceItem(int slot, ItemStack stack) {
             if (!isUpgradeItem(stack)) {
                 return false;
             }

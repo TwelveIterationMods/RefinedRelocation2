@@ -31,7 +31,7 @@ public class ModMenus {
                 rootFilterIndex = data.readByte();
             }
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity != null) {
                 return new AddFilterMenu(windowId, inv, blockEntity, rootFilterIndex);
             }
@@ -42,7 +42,7 @@ public class ModMenus {
         blockExtender = menus.registerMenu(id("block_extender"), (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity instanceof BlockExtenderBlockEntity blockExtender) {
                 return new BlockExtenderMenu(windowId, inv, blockExtender);
             }
@@ -53,7 +53,7 @@ public class ModMenus {
         sortingChest = menus.registerMenu(id("sorting_chest"), (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity instanceof SortingChestBlockEntity sortingChest) {
                 return new SortingChestMenu(windowId, inv, sortingChest);
             }
@@ -64,7 +64,7 @@ public class ModMenus {
         fastHopper = menus.registerMenu(id("fast_hopper"), (windowId, inv, data) -> {
             BlockPos pos = data.readBlockPos();
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity instanceof FastHopperBlockEntity fastHopper) {
                 return new FastHopperMenu(windowId, inv, fastHopper);
             }
@@ -79,7 +79,7 @@ public class ModMenus {
                 rootFilterIndex = data.readByte();
             }
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity != null) {
                 return new RootFilterMenu(windowId, inv, blockEntity, rootFilterIndex);
             }
@@ -92,7 +92,7 @@ public class ModMenus {
             int rootFilterIndex = data.readByte();
             int filterIndex = data.readByte();
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity != null) {
                 if (inv.player.containerMenu instanceof IRootFilterMenu rootFilterMenu) {
                     IFilter filter = rootFilterMenu.getRootFilter().getFilter(filterIndex);
@@ -110,7 +110,7 @@ public class ModMenus {
             int rootFilterIndex = data.readByte();
             int filterIndex = data.readByte();
 
-            BlockEntity blockEntity = inv.player.level.getBlockEntity(pos);
+            BlockEntity blockEntity = inv.player.level().getBlockEntity(pos);
             if (blockEntity != null) {
                 if (inv.player.containerMenu instanceof IRootFilterMenu rootFilterMenu) {
                     IFilter filter = rootFilterMenu.getRootFilter().getFilter(filterIndex);

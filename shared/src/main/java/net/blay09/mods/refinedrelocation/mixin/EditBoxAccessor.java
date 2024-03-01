@@ -1,5 +1,6 @@
 package net.blay09.mods.refinedrelocation.mixin;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -11,7 +12,7 @@ public interface EditBoxAccessor {
     void callOnValueChange(String value);
 
     @Invoker
-    void callRenderHighlight(int x, int y, int x2, int y2);
+    void callRenderHighlight(GuiGraphics guiGraphics, int x, int y, int x2, int y2);
 
     @Accessor
     void setDisplayPos(int displayPos);

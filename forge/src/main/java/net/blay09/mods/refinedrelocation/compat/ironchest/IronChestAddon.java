@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.blay09.mods.refinedrelocation.block.ModBlocks;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;

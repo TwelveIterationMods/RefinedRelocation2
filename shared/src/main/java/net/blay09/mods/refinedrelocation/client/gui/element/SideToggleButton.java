@@ -1,6 +1,5 @@
 package net.blay09.mods.refinedrelocation.client.gui.element;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
@@ -11,11 +10,12 @@ import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -78,15 +78,16 @@ public class SideToggleButton extends ImageButton implements ITooltipElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
         if (side != RelativeSide.FRONT) {
-            Font fontRenderer = Minecraft.getInstance().font;
+            Font font = Minecraft.getInstance().font;
             char sideChar = getFacingChar(tileEntity.getSideMapping(side));
-            float labelX = x + width / 2f - fontRenderer.width(String.valueOf(sideChar)) / 2f;
-            float labelY = y + height / 2f - fontRenderer.lineHeight / 2f;
+            int labelX = (int) (getX() + width / 2f - font.width(String.valueOf(sideChar)) / 2f);
+            int labelY = (int) (getY() + height / 2f - font.lineHeight / 2f);
+            final var poseStack = guiGraphics.pose();
             poseStack.translate(0.5f, 0.5f, 0);
-            fontRenderer.draw(poseStack, String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);
+            guiGraphics.drawString(font, String.valueOf(sideChar), labelX, labelY, 0xFFFFFFFF);
             poseStack.translate(-0.5f, -0.5f, 0);
         }
     }

@@ -1,10 +1,9 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.mixin.EditBoxAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -147,7 +146,7 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
         setDisplayPos(Math.max(Math.min(getDisplayPos(), lineText.length()), 0));
         final int offset = renderText.length() + getDisplayPos();
         if (cursorPositionX > offset) {
-            setDisplayPos(getDisplayPos()+ cursorPositionX - offset);
+            setDisplayPos(getDisplayPos() + cursorPositionX - offset);
         } else if (cursorPositionX <= getDisplayPos()) {
             setDisplayPos(-cursorPositionX);
         }
@@ -204,11 +203,11 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         setShiftPressed(Screen.hasShiftDown());
 
-        boolean isInside = mouseX >= x && mouseX < (x + width) && mouseY >= y && mouseY < (y + height);
+        boolean isInside = mouseX >= getX() && mouseX < (getX() + width) && mouseY >= getY() && mouseY < (getY() + height);
 
         if (isFocused() && isInside && mouseButton == 0) {
-            double relX = mouseX - x;
-            double relY = mouseY - y - font.lineHeight + 5;
+            double relX = mouseX - getX();
+            double relY = mouseY - getY() - font.lineHeight + 5;
             int lineNumber = Math.round((float) relY / (float) font.lineHeight) + scrollOffset + 1;
             int startOfLine = getStartOfLine(getEndOfLine(0, lineNumber), 1);
             int endOfLine = getEndOfLine(startOfLine, 1);
@@ -378,12 +377,12 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         ticksSinceLastHistory += partialTicks;
 
         if (isVisible()) {
-            fill(poseStack, x - 1, y - 1, x + width + 1, y + height + 1, 0xFFEEEEEE);
-            fill(poseStack, x, y, x + width, y + height, 0xFF000000);
+            guiGraphics.fill(getX() - 1, getY() - 1, getX() + width + 1, getY() + height + 1, 0xFFEEEEEE);
+            guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 
             if (renderCache == null) {
                 renderCache = getValue().split("\n", -1);
@@ -400,7 +399,7 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
                 }
 
                 String renderText = font.plainSubstrByWidth(renderCache[i].substring(getDisplayPos()), width - PADDING);
-                font.drawShadow(poseStack, renderText, this.x + PADDING, this.y + PADDING + y, active ? ENABLED_COLOR : DISABLED_COLOR);
+                guiGraphics.drawString(font, renderText, this.getX() + PADDING, this.getY() + PADDING + y, active ? ENABLED_COLOR : DISABLED_COLOR);
             }
 
             int cursorLine = 0;
@@ -416,9 +415,9 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
                 int startIndex = lastLineStartIdx + getDisplayPos();
                 int endIndex = getCursorPosition();
                 if (startIndex <= endIndex) {
-                    int cursorX = x + font.width(getValue().substring(startIndex, endIndex)) + PADDING;
-                    int cursorY = y + (cursorLine - scrollOffset) * font.lineHeight + PADDING;
-                    GuiComponent.fill(poseStack, cursorX, cursorY, cursorX + 1, cursorY + 9, -3092272);
+                    int cursorX = getX() + font.width(getValue().substring(startIndex, endIndex)) + PADDING;
+                    int cursorY = getY() + (cursorLine - scrollOffset) * font.lineHeight + PADDING;
+                    guiGraphics.fill(cursorX, cursorY, cursorX + 1, cursorY + 9, -3092272);
                 }
             }
 
@@ -447,9 +446,9 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
                             if (scrolledStartIndex <= i && linesPassed >= scrollOffset) {
                                 String selectedLineText = getValue().substring(scrolledStartIndex, charAt == '\n' ? i : i + 1);
                                 int selectedLineWidth = font.width(selectedLineText);
-                                int selectionX = x + offsetX + 1;
-                                int selectionY = y + (linesPassed - scrollOffset) * 9 + 1;
-                                ((EditBoxAccessor) this).callRenderHighlight(selectionX, selectionY, selectionX + selectedLineWidth + 1, selectionY + 9);
+                                int selectionX = getX() + offsetX + 1;
+                                int selectionY = getY() + (linesPassed - scrollOffset) * 9 + 1;
+                                ((EditBoxAccessor) this).callRenderHighlight(guiGraphics, selectionX, selectionY, selectionX + selectedLineWidth + 1, selectionY + 9);
                             }
                             lineSelectionStartIndex = i + 1;
                         }
@@ -459,10 +458,10 @@ public class MultiLineTextFieldWidget extends EditBox implements IScrollTarget {
                 }
             }
 
-            float debugY = 10f;
+            int debugY = 10;
             for (Map.Entry<String, String> entry : debugRenders.entrySet()) {
-                font.drawShadow(poseStack, entry.getKey() + ": " + entry.getValue(), 10f, debugY, 0xFFFFFFFF);
-                debugY += 10f;
+                guiGraphics.drawString(font, entry.getKey() + ": " + entry.getValue(), 10, debugY, 0xFFFFFFFF);
+                debugY += 10;
             }
         }
     }

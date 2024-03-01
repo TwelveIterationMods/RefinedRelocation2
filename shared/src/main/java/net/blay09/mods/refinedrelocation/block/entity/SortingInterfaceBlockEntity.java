@@ -1,9 +1,9 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
 import com.google.common.collect.Lists;
-import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.api.provider.BalmProvider;
+import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.refinedrelocation.api.filter.ISimpleFilter;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.config.RefinedRelocationConfig;
@@ -70,7 +70,7 @@ public class SortingInterfaceBlockEntity extends BalmBlockEntity implements IDro
             int i = currentDetectionSlot;
             ItemStack prevStack = lastInventory[i];
             ItemStack currentStack = itemHandler.getItem(i);
-            if (!ItemStack.isSame(prevStack, currentStack) || !ItemStack.isSameItemSameTags(prevStack, currentStack)) {
+            if (!ItemStack.isSameItemSameTags(prevStack, currentStack)) {
                 sortingInventory.onSlotChanged(i);
                 lastInventory[i] = currentStack.isEmpty() ? ItemStack.EMPTY : currentStack.copy();
             }

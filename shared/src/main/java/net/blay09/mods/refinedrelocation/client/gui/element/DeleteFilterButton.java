@@ -49,7 +49,7 @@ public class DeleteFilterButton extends ImageButton implements ITickableElement,
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return this.visible && mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+        return this.visible && mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
     }
 
     @Override

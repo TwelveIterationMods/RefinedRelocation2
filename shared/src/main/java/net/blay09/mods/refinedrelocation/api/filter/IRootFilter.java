@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.api.filter;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface IRootFilter extends ISimpleFilter {
     int getFilterCount();

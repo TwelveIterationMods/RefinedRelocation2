@@ -1,20 +1,20 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiTextureSprite;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiTextureSpriteButton;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class GuiTextures {
 
     public static final GuiTextureSprite NONE = new GuiTextureSprite(0, 0, 0, 0) {
         @Override
-        public void draw(PoseStack matrixStack, double x, double y, double zLevel) {
+        public void draw(GuiGraphics guiGraphics, double x, double y) {
             // NOP
         }
 
         @Override
-        public void draw(PoseStack matrixStack, double x, double y, double width, double height, double zLevel) {
+        public void draw(GuiGraphics guiGraphics, double x, double y, double width, double height) {
             // NOP
         }
     };

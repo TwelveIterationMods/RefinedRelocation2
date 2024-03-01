@@ -10,25 +10,22 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockHighlightHandler {
 
     public static void onBlockHighlight(BlockHighlightDrawEvent event) {
-        Player player = Minecraft.getInstance().player;
+        final var player = Minecraft.getInstance().player;
         if (player == null || !player.isShiftKeyDown()) {
             return;
         }
 
-        Level world = player.level;
-        BlockHitResult hitResult = event.getHitResult();
-        BlockEntity blockEntity = world.getBlockEntity(hitResult.getBlockPos());
+        final var level = player.level();
+        final var hitResult = event.getHitResult();
+        final var blockEntity = level.getBlockEntity(hitResult.getBlockPos());
         if (blockEntity != null) {
             ISortingGridMember sortingMember = Balm.getProviders().getProvider(blockEntity, ISortingGridMember.class);
             if (sortingMember != null) {
@@ -41,8 +38,8 @@ public class BlockHighlightHandler {
                     for (ISortingGridMember member : sortingGrid.getMembers()) {
                         BlockEntity memberTile = member.getBlockEntity();
                         BlockPos pos = memberTile.getBlockPos();
-                        BlockState blockState = world.getBlockState(pos);
-                        VoxelShape shape = blockState.getShape(world, pos, CollisionContext.of(player));
+                        BlockState blockState = level.getBlockState(pos);
+                        VoxelShape shape = blockState.getShape(level, pos, CollisionContext.of(player));
                         VertexConsumer vertexBuilder = event.getMultiBufferSource().getBuffer(RenderType.lines());
                         LevelRendererAccessor.callRenderShape(event.getPoseStack(), vertexBuilder, shape, pos.getX() - camX, pos.getY() - camY, pos.getZ() - camZ, 1f, 1f, 0f, 0.75f);
                     }

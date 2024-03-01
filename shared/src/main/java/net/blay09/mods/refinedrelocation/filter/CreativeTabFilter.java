@@ -6,48 +6,35 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.menu.ChecklistFilterMenu;
-import net.blay09.mods.refinedrelocation.mixin.CreativeModeTabAccessor;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CreativeTabFilter implements IChecklistFilter {
 
     public static final String ID = RefinedRelocation.MOD_ID + ":creative_tab_filter";
 
-    // These are the Inventory, Search and Hotbar tabs that we don't care about
-    private static final int IGNORED_TABS = 3;
-
-    public static String[] creativeTabs = new String[0];
-
-    public static void gatherCreativeTabs() {
-        creativeTabs = new String[CreativeModeTab.TABS.length - IGNORED_TABS];
-        int i = 0;
-        for (int j = 0; j < CreativeModeTab.TABS.length; j++) {
-            if (CreativeModeTab.TABS[j] == CreativeModeTab.TAB_INVENTORY
-                    || CreativeModeTab.TABS[j] == CreativeModeTab.TAB_SEARCH
-                    || CreativeModeTab.TABS[j] == CreativeModeTab.TAB_HOTBAR) {
-                continue;
-            }
-            creativeTabs[i] = ((CreativeModeTabAccessor) CreativeModeTab.TABS[j]).getLangId();
-            i++;
-        }
-    }
-
-    private final boolean[] tabStates = new boolean[creativeTabs.length];
+    private final List<CreativeModeTab> allTabs = CreativeModeTabs.allTabs();
+    public Set<ResourceLocation> enabledTabs = new HashSet<>();
 
     @Override
     public String getIdentifier() {
@@ -61,33 +48,22 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
-        CreativeModeTab itemTab = itemStack.getItem().getItemCategory();
-        if (itemTab == null) {
-            return false;
+        for (ResourceLocation creativeTabId : enabledTabs) {
+            final var creativeTab = BuiltInRegistries.CREATIVE_MODE_TAB.get(creativeTabId);
+            if (creativeTab.contains(itemStack)) {
+                return true;
+            }
         }
 
-        int shiftedTabIndex = itemTab.getId();
-        if (itemTab.getId() >= CreativeModeTab.TAB_SEARCH.getId()) {
-            shiftedTabIndex--;
-        }
-        if (itemTab.getId() >= CreativeModeTab.TAB_INVENTORY.getId()) {
-            shiftedTabIndex--;
-        }
-        if (itemTab.getId() >= CreativeModeTab.TAB_HOTBAR.getId()) {
-            shiftedTabIndex--;
-        }
-
-        return tabStates[shiftedTabIndex];
+        return false;
     }
 
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        ListTag list = new ListTag();
-        for (int i = 0; i < tabStates.length; i++) {
-            if (tabStates[i]) {
-                list.add(StringTag.valueOf(creativeTabs[i]));
-            }
+        final var tag = new CompoundTag();
+        final var list = new ListTag();
+        for (ResourceLocation tab : enabledTabs) {
+            list.add(StringTag.valueOf(tab.toString()));
         }
         tag.put("Tabs", list);
         return tag;
@@ -95,14 +71,9 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        ListTag list = tag.getList("Tabs", Tag.TAG_STRING);
+        final var list = tag.getList("Tabs", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
-            String tabLabel = list.getString(i);
-            for (int j = 0; j < creativeTabs.length; j++) {
-                if (creativeTabs[j].equals(tabLabel)) {
-                    tabStates[j] = true;
-                }
-            }
+            enabledTabs.add(new ResourceLocation(list.getString(i)));
         }
     }
 
@@ -123,22 +94,29 @@ public class CreativeTabFilter implements IChecklistFilter {
 
     @Override
     public String getOptionLangKey(int option) {
-        return "itemGroup." + creativeTabs[option];
+        final var creativeTabId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(allTabs.get(option));
+        return "itemGroup." + creativeTabId.toString().replace(':', '.');
     }
 
     @Override
     public void setOptionChecked(int option, boolean checked) {
-        tabStates[option] = checked;
+        final var creativeTabId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(allTabs.get(option));
+        if (checked) {
+            enabledTabs.add(creativeTabId);
+        } else {
+            enabledTabs.remove(creativeTabId);
+        }
     }
 
     @Override
     public boolean isOptionChecked(int option) {
-        return tabStates[option];
+        final var creativeTabId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(allTabs.get(option));
+        return enabledTabs.contains(creativeTabId);
     }
 
     @Override
     public int getOptionCount() {
-        return creativeTabs.length;
+        return allTabs.size();
     }
 
     @Override
@@ -157,7 +135,7 @@ public class CreativeTabFilter implements IChecklistFilter {
 
             @Override
             public Component getDisplayName() {
-                return Component.translatable("container.refinedrelocation:creative_tab_filter");
+                return Component.translatable("container.refinedrelocation.creative_tab_filter");
             }
 
             @Override

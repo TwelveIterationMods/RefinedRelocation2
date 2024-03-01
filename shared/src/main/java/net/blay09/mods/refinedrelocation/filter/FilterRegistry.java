@@ -6,7 +6,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;

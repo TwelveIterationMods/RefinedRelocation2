@@ -2,8 +2,7 @@ package net.blay09.mods.refinedrelocation.network;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class NBTMenuMessage extends MenuMessage {
 

@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.item.ModItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
@@ -9,20 +8,19 @@ import net.blay09.mods.refinedrelocation.client.gui.base.ModContainerScreen;
 import net.blay09.mods.refinedrelocation.client.gui.element.BlockExtenderFilterButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.StackLimiterButton;
 import net.blay09.mods.refinedrelocation.client.gui.element.SideToggleButton;
-import net.blay09.mods.refinedrelocation.client.gui.element.TooltipButton;
 import net.blay09.mods.refinedrelocation.menu.BlockExtenderMenu;
 import net.blay09.mods.refinedrelocation.block.entity.BlockExtenderBlockEntity;
 import net.blay09.mods.refinedrelocation.util.RelativeSide;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
 
 public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderMenu> {
 
@@ -74,13 +72,12 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderMenu> {
         btnOutputFilter.visible = false;
         addRenderableWidget(btnOutputFilter);
 
-        slotLockButton = new TooltipButton(0, 0, 64, 16, Component.translatable("gui.refinedrelocation:block_extender.slot_lock"), it -> {
-        }) {
-            @Override
-            public void addTooltip(List<Component> list) {
-                list.add(Component.translatable("tooltip.refinedrelocation:slot_lock"));
-            }
-        };
+        slotLockButton = Button.builder(Component.translatable("gui.refinedrelocation:block_extender.slot_lock"), it -> {
+                })
+                .pos(0, 0)
+                .size(64, 16)
+                .tooltip(Tooltip.create(Component.translatable("tooltip.refinedrelocation:slot_lock")))
+                .build();
         slotLockButton.visible = false;
         slotLockButton.active = false;
         addRenderableWidget(slotLockButton);
@@ -110,17 +107,17 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderMenu> {
 
         }
         btnStackLimiter.visible = stackLimiterIdx != -1;
-        btnStackLimiter.x = leftPos + 152 - btnStackLimiter.getWidth() - 3;
-        btnStackLimiter.y = topPos + 22 + stackLimiterIdx * 18;
+        btnStackLimiter.setX(leftPos + 152 - btnStackLimiter.getWidth() - 3);
+        btnStackLimiter.setY(topPos + 22 + stackLimiterIdx * 18);
         slotLockButton.visible = slotLockIdx != -1;
-        slotLockButton.x = leftPos + 152 - slotLockButton.getWidth() - 3;
-        slotLockButton.y = topPos + 22 + slotLockIdx * 18;
+        slotLockButton.setX(leftPos + 152 - slotLockButton.getWidth() - 3);
+        slotLockButton.setY(topPos + 22 + slotLockIdx * 18);
         btnInputFilter.visible = inputFilterIdx != -1;
-        btnInputFilter.x = leftPos + 152 - btnInputFilter.getWidth() - 3;
-        btnInputFilter.y = topPos + 22 + inputFilterIdx * 18;
+        btnInputFilter.setX(leftPos + 152 - btnInputFilter.getWidth() - 3);
+        btnInputFilter.setY(topPos + 22 + inputFilterIdx * 18);
         btnOutputFilter.visible = outputFilterIdx != -1;
-        btnOutputFilter.x = leftPos + 152 - btnOutputFilter.getWidth() - 3;
-        btnOutputFilter.y = topPos + 22 + outputFilterIdx * 18;
+        btnOutputFilter.setX(leftPos + 152 - btnOutputFilter.getWidth() - 3);
+        btnOutputFilter.setY(topPos + 22 + outputFilterIdx * 18);
 
         ticksSinceUpdate++;
         if (ticksSinceUpdate >= UPDATE_INTERVAL) {
@@ -133,10 +130,9 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         // Render upgrade conflicts
         Player player = Minecraft.getInstance().player;
@@ -154,7 +150,7 @@ public class BlockExtenderScreen extends ModContainerScreen<BlockExtenderMenu> {
             }
             if (conflictSlot != -1) {
                 Slot slot = menu.getUpgradeSlot(conflictSlot);
-                fill(poseStack, leftPos + slot.x, topPos + slot.y, leftPos + slot.x + 16, topPos + slot.y + 16, 0x55FF0000);
+                guiGraphics.fill(leftPos + slot.x, topPos + slot.y, leftPos + slot.x + 16, topPos + slot.y + 16, 0x55FF0000);
             }
         }
     }

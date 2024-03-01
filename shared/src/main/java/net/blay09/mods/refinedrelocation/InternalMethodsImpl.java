@@ -26,7 +26,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -215,7 +215,7 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     public void openRootFilterGui(Player player, BlockEntity blockEntity, int rootFilterIndex) {
-        if (player.level.isClientSide) {
+        if (player.level().isClientSide) {
             Balm.getNetworking().sendToServer(new RequestFilterScreenMessage(blockEntity.getBlockPos(), rootFilterIndex));
         } else {
             RefinedRelocationUtils.getRootFilter(blockEntity, rootFilterIndex).ifPresent(rootFilter -> {
@@ -227,7 +227,7 @@ public class InternalMethodsImpl implements InternalMethods {
 
     @Override
     public void updateFilterPreview(Player player, BlockEntity blockEntity, ISimpleFilter filter) {
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide) {
             byte[] slotStates = new byte[FilterPreviewMessage.INVENTORY_SLOT_COUNT];
             for (int i = 0; i < slotStates.length; i++) {
                 ItemStack itemStack = player.getInventory().getItem(i);

@@ -1,11 +1,11 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.mixin.ScreenAccessor;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.MultiLineTextFieldWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +26,11 @@ public abstract class ModContainerScreen<T extends AbstractContainerMenu> extend
     }
 
     @Override
-    @OverridingMethodsMustInvokeSuper
     protected void init() {
         super.init();
 
         if (shouldKeyRepeat) {
-            minecraft.keyboardHandler.setSendRepeatsToGui(true);
+            // TODO minecraft.keyboardHandler.setSendRepeatsToGui(true);
         }
     }
 
@@ -41,12 +39,11 @@ public abstract class ModContainerScreen<T extends AbstractContainerMenu> extend
     }
 
     @Override
-    @OverridingMethodsMustInvokeSuper
     public void onClose() {
         super.onClose();
 
         if (shouldKeyRepeat) {
-            minecraft.keyboardHandler.setSendRepeatsToGui(false);
+            // TODO minecraft.keyboardHandler.setSendRepeatsToGui(false);
         }
     }
 
@@ -64,17 +61,17 @@ public abstract class ModContainerScreen<T extends AbstractContainerMenu> extend
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        renderTooltip(poseStack, mouseX, mouseY);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(guiGraphics);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        renderTooltip(guiGraphics, mouseX, mouseY);
 
         for (int i = saneChildren.size() - 1; i >= 0; i--) {
             GuiEventListener child = saneChildren.get(i);
             if (child instanceof ITooltipElement && child.isMouseOver(mouseX, mouseY)) {
                 List<Component> tooltip = new ArrayList<>();
                 ((ITooltipElement) child).addTooltip(tooltip);
-                renderComponentTooltip(poseStack, tooltip, mouseX, mouseY);
+                guiGraphics.renderComponentTooltip(Minecraft.getInstance().font, tooltip, mouseX, mouseY);
                 break;
             }
         }
@@ -148,7 +145,7 @@ public abstract class ModContainerScreen<T extends AbstractContainerMenu> extend
         return super.mouseScrolled(mouseX, mouseY, button);
     }
 
-    public boolean isTopMostElement(Widget widget, double mouseX, double mouseY) {
+    public boolean isTopMostElement(AbstractWidget widget, double mouseX, double mouseY) {
         for (int i = saneChildren.size() - 1; i >= 0; i--) {
             GuiEventListener listener = saneChildren.get(i);
             if (listener.isMouseOver(mouseX, mouseY)) {

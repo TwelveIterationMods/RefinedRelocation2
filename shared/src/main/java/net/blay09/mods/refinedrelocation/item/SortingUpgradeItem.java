@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 public class SortingUpgradeItem extends Item {
 
     public SortingUpgradeItem() {
-        super(new Item.Properties().tab(ModItems.creativeModeTab));
+        super(new Item.Properties());
     }
 
     @Override

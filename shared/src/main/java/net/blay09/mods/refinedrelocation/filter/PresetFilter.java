@@ -9,18 +9,14 @@ import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.api.filter.IChecklistFilter;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.menu.ChecklistFilterMenu;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,7 +25,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -197,8 +193,7 @@ public class PresetFilter implements IChecklistFilter {
 
     @Override
     public boolean passes(BlockEntity blockEntity, ItemStack itemStack, ItemStack originalStack) {
-        ResourceKey<Item> resourceKey = Registry.ITEM.getResourceKey(itemStack.getItem()).orElseThrow(IllegalArgumentException::new);
-        Set<TagKey<Item>> tags = Holder.Reference.createStandAlone(Registry.ITEM, resourceKey).tags().collect(Collectors.toSet());
+        final var tags = itemStack.getTags().collect(Collectors.toSet());
         for (int i = 0; i < presetList.size(); i++) {
             if (presetStates[i] && presetList.get(i).passes(itemStack, tags)) {
                 return true;

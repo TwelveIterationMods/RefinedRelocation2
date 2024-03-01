@@ -13,7 +13,6 @@ public class RefinedRelocationClient {
 
         ModScreens.register(BalmClient.getScreens());
         ModRenderers.initialize(BalmClient.getRenderers());
-        ModTextures.initialize(BalmClient.getTextures());
 
         Balm.getEvents().onEvent(BlockHighlightDrawEvent.class, BlockHighlightHandler::onBlockHighlight);
         Balm.getEvents().onEvent(ScreenDrawEvent.Post.class, FilterPreviewHandler::onDrawScreen);

@@ -1,7 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.api.RefinedRelocationAPI;
 import net.blay09.mods.refinedrelocation.api.client.IFilterPreviewScreen;
@@ -9,6 +8,7 @@ import net.blay09.mods.refinedrelocation.client.gui.base.element.ScrollBarWidget
 import net.blay09.mods.refinedrelocation.client.gui.base.element.ScrollPaneWidget;
 import net.blay09.mods.refinedrelocation.client.gui.base.element.MultiLineTextFieldWidget;
 import net.blay09.mods.refinedrelocation.menu.NameFilterMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,10 +76,9 @@ public class NameFilterScreen extends FilterScreen<NameFilterMenu> implements IF
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     @Override

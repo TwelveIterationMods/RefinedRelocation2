@@ -1,8 +1,8 @@
 package net.blay09.mods.refinedrelocation.client.gui.base.element;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.client.gui.base.GuiTextureSpriteButton;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -11,23 +11,22 @@ public class ImageButton extends Button {
     private GuiTextureSpriteButton texture;
 
     public ImageButton(int x, int y, int width, int height, GuiTextureSpriteButton texture, OnPress onPress) {
-        super(x, y, width, height, Component.empty(), onPress);
+        super(x, y, width, height, Component.empty(), onPress, DEFAULT_NARRATION);
         this.texture = texture;
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+            isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            texture.bind();
             if (!active) {
-                texture.asDisabled().draw(poseStack, x, y, width, height, getBlitOffset());
+                texture.asDisabled().draw(guiGraphics, getX(), getY(), width, height);
             } else {
                 if (isHovered) {
-                    texture.asHovered().draw(poseStack, x, y, width, height, getBlitOffset());
+                    texture.asHovered().draw(guiGraphics, getX(), getY(), width, height);
                 } else {
-                    texture.draw(poseStack, x, y, width, height, getBlitOffset());
+                    texture.draw(guiGraphics, getX(), getY(), width, height);
                 }
             }
         }

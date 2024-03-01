@@ -1,13 +1,11 @@
 package net.blay09.mods.refinedrelocation.network;
 
-import net.blay09.mods.refinedrelocation.filter.CreativeTabFilter;
 import net.blay09.mods.refinedrelocation.filter.ModFilter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 public class LoginSyncListMessage {
 
-    public static final int TYPE_CREATIVE_TABS = 0;
     public static final int TYPE_MODS = 1;
 
     private final int type;
@@ -36,9 +34,7 @@ public class LoginSyncListMessage {
     }
 
     public static void handle(Player player, LoginSyncListMessage message) {
-        if (message.type == TYPE_CREATIVE_TABS) {
-            CreativeTabFilter.creativeTabs = message.values;
-        } else if (message.type == TYPE_MODS) {
+        if (message.type == TYPE_MODS) {
             ModFilter.setModList(message.values);
         }
     }

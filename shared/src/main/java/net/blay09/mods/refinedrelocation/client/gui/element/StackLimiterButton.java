@@ -2,10 +2,12 @@ package net.blay09.mods.refinedrelocation.client.gui.element;
 
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
-import net.blay09.mods.refinedrelocation.client.gui.base.element.SizableButton;
 import net.blay09.mods.refinedrelocation.block.entity.BlockExtenderBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
@@ -14,13 +16,12 @@ import java.util.List;
 
 import static net.blay09.mods.refinedrelocation.util.TextUtils.formattedTranslation;
 
-public class StackLimiterButton extends SizableButton implements ITickableElement, ITooltipElement {
+public class StackLimiterButton extends Button implements ITickableElement, ITooltipElement {
 
     private final BlockExtenderBlockEntity blockExtender;
 
     public StackLimiterButton(int x, int y, int width, int height, BlockExtenderBlockEntity blockExtender) {
-        super(x, y, width, height, Component.empty(), it -> {
-        });
+        super(x, y, width, height, Component.empty(), button -> {}, DEFAULT_NARRATION);
         this.blockExtender = blockExtender;
     }
 
@@ -77,5 +78,4 @@ public class StackLimiterButton extends SizableButton implements ITickableElemen
         list.add(formattedTranslation(ChatFormatting.GREEN, "gui.refinedrelocation:block_extender.stack_limiter_increase"));
         list.add(formattedTranslation(ChatFormatting.RED, "gui.refinedrelocation:block_extender.stack_limiter_decrease"));
     }
-
 }

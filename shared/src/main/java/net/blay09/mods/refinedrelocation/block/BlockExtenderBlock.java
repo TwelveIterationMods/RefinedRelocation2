@@ -25,12 +25,11 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockExtenderBlock extends BaseEntityBlock {
 
@@ -40,7 +39,7 @@ public class BlockExtenderBlock extends BaseEntityBlock {
     private static final VoxelShape RENDER_SHAPE = Shapes.create(1 / 16f, 1 / 16f, 1 / 16f, 15 / 16f, 15 / 16f, 15 / 16f);
 
     public BlockExtenderBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL).sound(SoundType.METAL).strength(3f));
+        super(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(3f));
     }
 
     @Override

@@ -27,7 +27,7 @@ public class RequestFilterScreenMessage {
     }
 
     public static void handle(ServerPlayer player, RequestFilterScreenMessage message) {
-        BlockEntity blockEntity = player.level.getBlockEntity(message.pos);
+        BlockEntity blockEntity = player.level().getBlockEntity(message.pos);
         if (blockEntity != null) {
             RefinedRelocationAPI.openRootFilterGui(player, blockEntity, message.rootFilterIndex);
         }

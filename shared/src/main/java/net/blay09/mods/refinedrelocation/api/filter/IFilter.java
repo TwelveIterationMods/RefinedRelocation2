@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.api.filter;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface IFilter extends ISimpleFilter, Comparable<IFilter> {
 	String getIdentifier();

@@ -3,7 +3,7 @@ package net.blay09.mods.refinedrelocation.filter;
 import net.blay09.mods.refinedrelocation.api.filter.IFilter;
 import net.minecraft.nbt.CompoundTag;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SubFilterWrapper {
 

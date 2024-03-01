@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "sorting_chests",
+      "prefix": "sorting_chests/"
+    }
+  ]
+}

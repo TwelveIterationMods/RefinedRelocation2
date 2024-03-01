@@ -2,7 +2,7 @@ package net.blay09.mods.refinedrelocation.api.grid;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface ISortingGridMember {
 	BlockEntity getBlockEntity();

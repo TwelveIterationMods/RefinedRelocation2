@@ -41,7 +41,7 @@ public enum SortingChestType {
         return registryName;
     }
 
-    public BlockEntityType<SortingChestBlockEntity> getTileEntityType() {
+    public BlockEntityType<SortingChestBlockEntity> getBlockEntityType() {
         return ModBlockEntities.sortingChests.get(ordinal()).get();
     }
 

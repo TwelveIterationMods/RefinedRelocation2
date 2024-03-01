@@ -32,22 +32,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class FastHopperBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing", facing -> facing != Direction.UP);
     public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
-
-    public static final String name = "fast_hopper";
-    public static final ResourceLocation registryName = new ResourceLocation(RefinedRelocation.MOD_ID, name);
 
     private static final VoxelShape INPUT_SHAPE = box(0.0D, 10.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape MIDDLE_SHAPE = box(4.0D, 4.0D, 4.0D, 12.0D, 10.0D, 12.0D);
@@ -65,7 +61,7 @@ public class FastHopperBlock extends BaseEntityBlock {
     private static final VoxelShape WEST_RAYTRACE_SHAPE = Shapes.or(Hopper.INSIDE, box(0.0D, 8.0D, 6.0D, 4.0D, 10.0D, 10.0D));
 
     public FastHopperBlock() {
-        super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(3f, 8f));
+        super(Properties.of().sound(SoundType.METAL).strength(3f, 8f));
     }
 
     @Override

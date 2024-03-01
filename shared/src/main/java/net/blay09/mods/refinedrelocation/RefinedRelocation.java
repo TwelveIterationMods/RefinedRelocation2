@@ -42,12 +42,10 @@ public class RefinedRelocation {
         Balm.initializeIfLoaded("ironchest", "net.blay09.mods.refinedrelocation.compat.ironchest.IronChestAddon");
 
         Balm.getEvents().onEvent(ServerStartedEvent.class, event -> {
-            CreativeTabFilter.gatherCreativeTabs();
             ModFilter.gatherMods();
         });
 
         Balm.getEvents().onEvent(PlayerLoginEvent.class, event -> {
-            Balm.getNetworking().sendTo(event.getPlayer(), new LoginSyncListMessage(LoginSyncListMessage.TYPE_CREATIVE_TABS, CreativeTabFilter.creativeTabs));
             Balm.getNetworking().sendTo(event.getPlayer(), new LoginSyncListMessage(LoginSyncListMessage.TYPE_MODS, ModFilter.modIds));
         });
     }

@@ -16,12 +16,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SortingConnectorBlock extends BaseEntityBlock {
 
@@ -52,7 +51,7 @@ public class SortingConnectorBlock extends BaseEntityBlock {
     };
 
     public SortingConnectorBlock() {
-        super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(0.3f));
+        super(Properties.of().sound(SoundType.METAL).strength(0.3f));
 
         BlockState state = defaultBlockState();
         for (BooleanProperty property : CONNECTIONS) {

@@ -1,9 +1,9 @@
 package net.blay09.mods.refinedrelocation.block.entity;
 
 import com.google.common.collect.Lists;
-import net.blay09.mods.balm.api.block.entity.BalmBlockEntity;
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.api.provider.BalmProvider;
+import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.refinedrelocation.api.grid.ISortingGridMember;
 import net.blay09.mods.refinedrelocation.grid.SortingGridMember;
 import net.minecraft.core.BlockPos;

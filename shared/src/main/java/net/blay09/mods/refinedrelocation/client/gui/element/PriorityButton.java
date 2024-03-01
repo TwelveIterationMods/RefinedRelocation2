@@ -22,7 +22,7 @@ public class PriorityButton extends Button implements ITooltipElement, ITickable
 
     public PriorityButton(int x, int y, int width, int height, ISortingInventory sortingInventory) {
         super(x, y, width, height, Component.translatable(values[2].getLangKey()), it -> {
-        });
+        }, DEFAULT_NARRATION);
         this.sortingInventory = sortingInventory;
     }
 

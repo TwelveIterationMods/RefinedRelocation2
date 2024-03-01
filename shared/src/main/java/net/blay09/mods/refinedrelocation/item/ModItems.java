@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.item;
 
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.refinedrelocation.RefinedRelocation;
 import net.blay09.mods.refinedrelocation.SortingChestType;
@@ -11,7 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class ModItems {
-    public static final CreativeModeTab creativeModeTab = Balm.getItems().createCreativeModeTab(id("refinedrelocation"), () -> new ItemStack(ModBlocks.sortingChests[SortingChestType.WOOD.ordinal()]));
+
+    public static DeferredObject<CreativeModeTab> creativeModeTab;
 
     public static Item sortingUpgrade = new SortingUpgradeItem();
     public static Item stackLimiter = new StackLimiterItem();
@@ -25,6 +26,9 @@ public class ModItems {
         items.registerItem(() -> inputFilter, id("input_filter"));
         items.registerItem(() -> outputFilter, id("output_filter"));
         items.registerItem(() -> slotLock, id("slot_lock"));
+
+        creativeModeTab = items.registerCreativeModeTab(() -> new ItemStack(ModBlocks.sortingChests[SortingChestType.WOOD.ordinal()]),
+                id(RefinedRelocation.MOD_ID));
     }
 
     private static ResourceLocation id(String path) {

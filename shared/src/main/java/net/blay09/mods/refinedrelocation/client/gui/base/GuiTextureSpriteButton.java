@@ -1,6 +1,6 @@
 package net.blay09.mods.refinedrelocation.client.gui.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class GuiTextureSpriteButton {
 
@@ -14,10 +14,6 @@ public class GuiTextureSpriteButton {
         this.disabledTexture = disabledTexture;
     }
 
-    public void bind() {
-        texture.bind();
-    }
-
     public GuiTextureSprite asHovered() {
         return hoveredTexture;
     }
@@ -26,7 +22,7 @@ public class GuiTextureSpriteButton {
         return disabledTexture;
     }
 
-    public void draw(PoseStack poseStack, int x, int y, int width, int height, float zLevel) {
-        texture.draw(poseStack, x, y, width, height, zLevel);
+    public void draw(GuiGraphics guiGraphics, int x, int y, int width, int height) {
+        texture.draw(guiGraphics, x, y, width, height);
     }
 }

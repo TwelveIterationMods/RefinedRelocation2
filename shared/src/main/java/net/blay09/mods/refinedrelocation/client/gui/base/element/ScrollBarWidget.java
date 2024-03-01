@@ -5,7 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.refinedrelocation.api.client.IDrawable;
 import net.blay09.mods.refinedrelocation.client.gui.GuiTextures;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITickableElement;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.network.chat.Component;
 
 public class ScrollBarWidget extends Button implements ITickableElement {
@@ -27,7 +29,7 @@ public class ScrollBarWidget extends Button implements ITickableElement {
 
     public ScrollBarWidget(int x, int y, int height, IScrollTarget scrollTarget) {
         super(x, y, 7, height, Component.empty(), it -> {
-        });
+        }, DEFAULT_NARRATION);
         this.scrollTarget = scrollTarget;
         updateBarPosition();
 
@@ -61,7 +63,7 @@ public class ScrollBarWidget extends Button implements ITickableElement {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (mouseX >= x && mouseX < x + getWidth() && mouseY >= barY && mouseY < barY + barHeight) {
+        if (mouseX >= getX() && mouseX < getX() + getWidth() && mouseY >= barY && mouseY < barY + barHeight) {
             mouseClickY = mouseY;
             indexWhenClicked = scrollTarget.getCurrentOffset();
         }
@@ -69,7 +71,8 @@ public class ScrollBarWidget extends Button implements ITickableElement {
 
     private void updateBarPosition() {
         barHeight = (int) (height * Math.min(1f, ((float) scrollTarget.getVisibleRows() / (Math.ceil(scrollTarget.getRowCount())))));
-        barY = y + ((height - barHeight) * scrollTarget.getCurrentOffset() / Math.max(1, (int) Math.ceil((scrollTarget.getRowCount())) - scrollTarget.getVisibleRows()));
+        barY = getY() + ((height - barHeight) * scrollTarget.getCurrentOffset() / Math.max(1,
+                (int) Math.ceil((scrollTarget.getRowCount())) - scrollTarget.getVisibleRows()));
     }
 
     @Override
@@ -83,7 +86,7 @@ public class ScrollBarWidget extends Button implements ITickableElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (mouseClickY != -1) {
             float pixelsPerFilter = (height - barHeight) / (float) Math.max(1, (int) Math.ceil(scrollTarget.getRowCount()) - scrollTarget.getVisibleRows());
             if (pixelsPerFilter != 0) {
@@ -96,12 +99,11 @@ public class ScrollBarWidget extends Button implements ITickableElement {
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        scrollbarTop.bind();
-        scrollbarTop.draw(poseStack, x - 2, y - 1, getBlitOffset());
-        scrollbarBottom.draw(poseStack, x - 2, y + height - 1, getBlitOffset());
-        scrollbarMiddle.draw(poseStack, x - 2, y + 2, 11, height - 3, getBlitOffset());
-//
-        fill(poseStack, x, barY, x + getWidth(), barY + barHeight, 0xFFAAAAAA);
+        scrollbarTop.draw(guiGraphics, getX() - 2, getY() - 1);
+        scrollbarBottom.draw(guiGraphics, getX() - 2, getY() + height - 1);
+        scrollbarMiddle.draw(guiGraphics, getX() - 2, getY() + 2, 11, height - 3);
+
+        guiGraphics.fill(getX(), barY, getX() + getWidth(), barY + barHeight, 0xFFAAAAAA);
     }
 
     public void setCurrentOffset(int offset) {

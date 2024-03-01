@@ -10,6 +10,7 @@ import net.blay09.mods.refinedrelocation.client.gui.RootFilterScreen;
 import net.blay09.mods.refinedrelocation.client.gui.base.ITooltipElement;
 import net.blay09.mods.refinedrelocation.menu.RootFilterMenu;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -26,7 +27,7 @@ public class FilterSlotButton extends Button implements ITooltipElement {
 
     public FilterSlotButton(int x, int y, RootFilterScreen parentGui, IRootFilter rootFilter, int index) {
         super(x, y, 24, 24, Component.empty(), it -> {
-        });
+        }, DEFAULT_NARRATION);
         this.parentGui = parentGui;
         this.rootFilter = rootFilter;
         this.index = index;
@@ -34,19 +35,18 @@ public class FilterSlotButton extends Button implements ITooltipElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        texture.bind();
-        texture.draw(poseStack, x, y, getBlitOffset());
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        texture.draw(guiGraphics, getX(), getY());
 
         IFilter filter = rootFilter.getFilter(index);
         if (filter != null) {
             IDrawable filterIcon = filter.getFilterIcon();
             if (filterIcon != null) {
-                filterIcon.draw(poseStack, x, y, 24, 24, getBlitOffset());
+                filterIcon.draw(guiGraphics, getX(), getY(), 24, 24);
             }
         }
         if (parentGui.isTopMostElement(this, mouseX, mouseY)) {
-            fill(poseStack, x + 1, y + 1, x + width - 1, y + height - 1, 0x99FFFFFF);
+            guiGraphics.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, 0x99FFFFFF);
         }
     }
 
